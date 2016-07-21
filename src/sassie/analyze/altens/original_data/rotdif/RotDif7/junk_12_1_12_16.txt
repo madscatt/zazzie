@@ -1,0 +1,99 @@
+date : 12/ 1/2015 at 12:16 
+Read NH vectors provided by user 
+
+
+Excluded residues : 
+
+ 
+
+ 50 residues selected
+
+====================== ISOTROPIC MODEL ================
+TAUc =  8.04 ns Diso =  2.07 ; Chi2 =  475.5643  ; Chi2/df =   9.7054 
+Quality Factor = 0.723 
+=======================================================
+
+********* MONTE CARLO error report for Isotropic model ********** 
+TAUc = 8.04 +/-  0.06 ns ; Diso = 2.07 +/-  0.02 
+
+***************************************************************** 
+
+Distribution of vectors :
+
+Sampling param KSI: 0.12859 ; Tensor components : -0.21136 -0.14520  0.35656 
+
+
+
+
+================== AXIALLY SYMMETRIC MODEL ====================== 
+
+Axially symmetric model, Final results : 
+
+TAUx =  9.00 ns ;  D/D =   1.37  ; alpha =   58 deg  ;  beta =   65 deg
+ 
+TAUC =  8.02 ns ; Chi2 =  112.7300 ; Chi2/df =   2.4507
+ 
+Dxx=Dyy =  1.85*10^7  Dzz =  2.54*10^7 
+
+================================================================== 
+
+F-Statistics ANISO vs. ISO: F= 49.35209, P= 2.02035e-14 
+
+
+********* MONTE CARLO error report for Axially Symmetric Model ************* 
+TAUx = 9.00 +/- 0.20 ns ; D/D = 1.37 +/- 0.06 ;
+alpha =  58 +/-   6 deg ; beta =  65 +/-   8 deg 
+**************************************************************************** 
+
+
+********* FINAL report for Axially Symmetric Model ************* 
+Dxx=Dyy =  1.85 +/-  0.04*10^7   Dz =  2.54 +/-  0.12*10^7 
+alpha =  58 +/-   6 deg ; beta =  65 +/-   8 deg 
+TAUc = 8.02 +/- 0.22 ns ; D/D = 1.37 +/- 0.06 ; TAUx = 9.00 +/- 0.20 ns 
+**************************************************************************** 
+Quality Factor for Axially Symmetric Model = 0.369 ; Corr.coeff =  0.8548 
+
+=================== FULLY ANISOTROPIC MODEL ===================== 
+Fully Anisotropic model, Final results : 
+
+Dxx =  1.68*10^7   Dyy =  2.03*10^7   Dzz =  2.48*10^7  
+
+alpha =   64 deg  beta =   61 deg  gamma =  173 deg  Chi2 =  28.023 Chi2/df=  0.637 
+
+TAUx = 9.90 ns  TAUy = 8.20 ns  TAUz = 6.71 ns 
+
+TAUc = 8.07 ns ; anisotropy = 1.34 ; rhombicity = 0.842 ; Dyy/Dxx = 1.208  Dzz/Dxx = 1.475 
+
+================================================================= 
+
+
+
+************** MONTE CARLO error report for fully anisotropic model *************
+Dxx =  1.68 +/-  0.04 *10^7
+Dyy =  2.03 +/-  0.05 *10^7
+Dzz =  2.48 +/-  0.06 *10^7
+*********************************************************************************
+
+
+*********** FINAL REPORT for fully anisotropic model ***********
+Dxx =  1.68 +/-  0.04 *10^7
+Dyy =  2.03 +/-  0.05 *10^7
+Dzz =  2.48 +/-  0.06 *10^7
+alpha =   64 +/-   8 deg
+beta =   61 +/-    3 deg
+gamma =  173 +/-   10 deg
+TAUc =  8.07 +/-  0.11 ns
+anisotropy =  1.34 +/-  0.04
+rhombicity =  0.842 +/-  0.173
+****************************************************************************
+
+(run <euler2all.m> to find alternative equivalent Euler angles)
+
+
+F-STATISTICS FULL. ANISO VS. AXIALLY-SYMMETRIC : F=    67 ; P= 5.02E-14
+
+
+F-STATISTICS FULL. ANISO VS. ISOTROPIC : F= 1.4e+02 ; P= 6.84E-26
+
+Quality Factor for Fully Anisotropic Model = 0.183 ; Corr.coeff =  0.9660 
+

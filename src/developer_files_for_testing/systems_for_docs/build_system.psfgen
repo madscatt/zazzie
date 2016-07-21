@@ -1,0 +1,63 @@
+topology /Users/curtisj/research/toppar/top_all27_prot_na.inp
+
+alias residue HIS HSE
+#alias atom ILE CD1 CD
+#alias atom SER HG HG1
+#alias atom CYS HG HG1
+
+segment IGYA {
+ first NTER
+ pdb output_building/chain_a.pdb
+ last CTER
+}
+
+coordpdb output_building/chain_a.pdb IGYA
+
+segment IGYB {
+ first NTER
+ pdb output_building/chain_b.pdb
+ last CTER
+}
+
+coordpdb output_building/chain_b.pdb IGYB
+
+segment IGYC {
+ first NTER
+ pdb output_building/chain_c.pdb
+ last CTER
+}
+
+coordpdb output_building/chain_c.pdb IGYC
+
+segment IGYD {
+ first NTER
+ pdb output_building/chain_d.pdb
+ last CTER
+}
+
+coordpdb output_building/chain_d.pdb IGYD
+
+patch DISU IGYA:23 IGYA:88
+patch DISU IGYA:134 IGYA:194 
+patch DISU IGYA:214 IGYB:235 
+patch DISU IGYB:22 IGYB:92    
+patch DISU IGYB:142 IGYB:208   
+patch DISU IGYB:237 IGYD:237  
+patch DISU IGYB:240 IGYD:240  
+patch DISU IGYB:242 IGYD:242     
+patch DISU IGYB:274 IGYB:340    
+patch DISU IGYB:390 IGYB:456 
+patch DISU IGYC:23 IGYC:88  
+patch DISU IGYC:134 IGYC:194 
+patch DISU IGYC:214 IGYD:235      
+patch DISU IGYD:22  IGYD:92     
+patch DISU IGYD:142 IGYD:208    
+patch DISU IGYD:274 IGYD:340   
+patch DISU IGYD:390 IGYD:456  
+
+guesscoord
+
+writepsf output_building/01_initial.psf
+
+writepdb output_building/01_initial.pdb
+

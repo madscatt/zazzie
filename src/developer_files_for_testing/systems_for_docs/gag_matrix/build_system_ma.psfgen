@@ -1,0 +1,20 @@
+topology /usr/local/bin/toppar/top_all27_prot_na.inp
+
+alias residue HIS HSE
+
+segment MA {
+ first none
+ pdb output_building/temp_hiv1_gag_ma.pdb
+ last CTER
+}
+
+coordpdb output_building/temp_hiv1_gag_ma.pdb MA
+
+patch GLYP MA:1
+ 
+guesscoord
+
+writepsf output_building/hiv1_gag_ma.psf
+
+writepdb output_building/hiv1_gag_ma.pdb
+
