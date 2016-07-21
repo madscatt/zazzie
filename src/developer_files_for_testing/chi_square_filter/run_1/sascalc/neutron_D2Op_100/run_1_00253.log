@@ -1,0 +1,15 @@
+# The sascalc log file is generated in consistent with xtal2sas so that it can be used by chi_square_filter
+# Some xtal2sas parameters may be N.A. for the present output
+1. source = neutron
+2. D2O % = 100.000
+3. PDB input file = /share/apps/genapp/sassie2test/results/users/sktest/test1/gag_start.pdb
+4. Output: P(R) function = temporarily N.A. 
+5. Output: Random point coordinates = N.A.
+6. Output: Output: information file = N.A.
+7. Output: I(q) .vs. q = run_1/sascalc/run_1_00253.iq
+8. Io =      1.000
+9. Dimensions = x: -88.07, 74.56, y: -42.05, 32.88, z: -49.81, 42.90
+10. Box diagonal = 201.64 ; Box size = x: 162.63, y: 74.94, z: 92.71
+11. # data points in R-space = N.A.
+12. Rg = 48.768496
+13. number of golden vectors used = 35
