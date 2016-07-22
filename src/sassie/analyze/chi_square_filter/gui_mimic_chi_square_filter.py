@@ -11,13 +11,13 @@ import os
 import sys
 import string
 
-global_install = False
+global_install = True
 
 if global_install:
 
-    import sassie.analyze.chi_square_filter as chi_square_filter
+    import sassie.analyze.chi_square_filter.chi_square_filter as chi_square_filter
     import sassie.interface.input_filter as input_filter
-    import sassie.interface.chi_square_filter_filter as chi_square_filter_filter
+    import sassie.interface.chi_square_filter.chi_square_filter_filter as chi_square_filter_filter
 
 else:
 

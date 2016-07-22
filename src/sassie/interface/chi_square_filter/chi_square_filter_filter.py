@@ -15,7 +15,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 import os,sys,string,locale,glob
-import input_filter
+import sassie.interface.input_filter as input_filter
 
 def parse_grammar(basis, error):
 
