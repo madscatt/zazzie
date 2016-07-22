@@ -1,3 +1,8 @@
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
+from __future__ import unicode_literals
+
 __author__ = 'curtisj'
 
 import shlex, string,sys
@@ -25,25 +30,25 @@ def parse_basis(basis):
     kd['rg'] = ['rg[i] == ','rg[i] ']
     kd['x2'] = ['x2[i] == ','x2[i] ']
 
-    if DEBUG: print 'original_basis = ',basis,'\n'
+    if DEBUG: print('original_basis = ' + basis + '\n')
 
     lexer = shlex.shlex(basis)
     original_tokenlist = []
     for token in lexer:
         original_tokenlist.append(str(token))
-    if DEBUG: print 'original_tokenlist = ',original_tokenlist
+    if DEBUG: print('original_tokenlist = ' + original_tokenlist)
    
     tokenlist = [] 
     number_of_tokens = len(original_tokenlist)
-    if DEBUG: print 'len(original_tokenlist) = ',len(original_tokenlist)
+    if DEBUG: print('len(original_tokenlist) = ',len(original_tokenlist))
 
     i=0
     while (i < number_of_tokens):
         this_token = original_tokenlist[i]
-        if DEBUG: print 'this_token = ',this_token,
+        if DEBUG: print('this_token = ',this_token),
         if i < number_of_tokens-1:
             next_token = original_tokenlist[i+1]
-            if DEBUG: print 'next_token = ',next_token
+            if DEBUG: print('next_token = ',next_token)
             if(this_token in ignore_list):
                 if(next_token in ignore_list):
                     if(this_token in word_list or next_token in word_list):
@@ -65,7 +70,7 @@ def parse_basis(basis):
             
             else: 
                 tokenlist.append(this_token)
-            #print 'this_token = ',this_token
+            #print('this_token = ',this_token)
         else:  
             if(this_token not in kd and not this_token.isdigit()):
 
@@ -77,7 +82,7 @@ def parse_basis(basis):
                 tokenlist.append(this_token)
         i+=1
 
-    if DEBUG: print 'tokenlist = ',tokenlist
+    if DEBUG: print('tokenlist = ',tokenlist)
 
     number_of_tokens = len(tokenlist)
     new_basis = ''
@@ -91,7 +96,7 @@ def parse_basis(basis):
             nwe = False
 
         if this_word in kd:
-            if DEBUG: print 'tw,nw = ',this_word,next_word
+            if DEBUG: print('tw,nw = ',this_word,next_word)
             if nwe:
                 if next_word not in ignore_list:
                     new_basis += kd[this_word][0]
@@ -101,7 +106,7 @@ def parse_basis(basis):
         else:
             new_basis += ' '+this_word+' ' 
 
-    if DEBUG: print 'new_basis = ',new_basis,'\n'
+    if DEBUG: print('new_basis = ',new_basis,'\n')
 
     return new_basis
 
@@ -151,9 +156,9 @@ if __name__ == '__main__':
     basis.append('(resid > 23 and resid < 68) and name "CA"')
 
     for i in xrange(5):
-        print '#####'
+        print('#####')
         new_basis = parse_basis(basis[i])
-        print ; print
+        print('\n','\n')
 
     import sasmol.sasmol as sasmol
     m = sasmol.SasMol(0)
@@ -168,16 +173,16 @@ if __name__ == '__main__':
     error,mask = m.get_subset_mask(python_basis)
 
     if(len(error)>0):
-        print 'error = ',error
+        print('error = ',error)
 
     import numpy
-    print numpy.sum(mask)
+    print(numpy.sum(mask))
     
     if(numpy.sum(mask)>0):
         error = m.copy_molecule_using_mask(sub_mol,mask,frame) 
 
     if(len(error)>0):
-        print 'error = ',error
+        print('error = ',error)
     else:
         sub_mol.write_pdb('new.pdb',frame,'w')
    
@@ -190,9 +195,9 @@ if __name__ == '__main__':
     #basis = 'rg < "3.8" and rg > "0.5"'
     
     basis_string = 'rg = 0.5 or rg > 1.2, rg < 2.5'
-    print 'basis_string = ',basis_string
+    print('basis_string = ',basis_string)
     python_basis = clean_up_weight_basis(basis_string)
-    print 'python_basis = ',python_basis
+    print('python_basis = ',python_basis)
 
     for basis in python_basis:
 
@@ -205,10 +210,10 @@ if __name__ == '__main__':
                 else:
                     mask_array.append(0)
         except:
-            print 'ERROR: failed to parse basis'
+            print('ERROR: failed to parse basis')
             sys.exit()
          
-        print 'mask_arrary = ', mask_array
+        print('mask_arrary = ', mask_array)
 
     ## END
     #'''
