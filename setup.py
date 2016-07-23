@@ -6,7 +6,7 @@ from __future__ import print_function
 from __future__ import unicode_literals
 
 '''
-    SASSIE  Copyright (C) 2011 Joseph E. Curtis
+    SASSIE  Copyright (C) 2011-2016 Joseph E. Curtis
     This program comes with ABSOLUTELY NO WARRANTY;
     This is free software, and you are welcome to redistribute it under certain
     conditions; see http://www.gnu.org/licenses/gpl-3.0.html for details.
@@ -45,11 +45,13 @@ from numpy.distutils.core import Extension, setup
 
 all_packages = ['sassie', 'sassie.util', 
     'sassie.interface', 'sassie.interface.chi_square_filter', 
-    'sassie.analyze', 'sassie.analyze.chi_square_filter',]
+    'sassie.analyze', 'sassie.analyze.chi_square_filter',
+    'sassie.calculate', 'sassie.calculate.sascalc',
+    'sassie.calculate.sascalc.sascalc_library']
 
-### begin user edit ###
-### begin user edit ###
-### begin user edit ###
+### end user edit ###
+### end user edit ###
+### end user edit ###
 
 # Third-party modules - we depend on numpy for everything
 import numpy
@@ -73,6 +75,8 @@ if int(sys.version[0]) > 2:
 
 if python_2_flag:
     all_packages = [x.encode('UTF8') for x in all_packages] 
+    # the next line does NOT work
+    #all_data_files = [x.encode('UTF8') for x in all_data_files] 
 
 
 setup(name='sassie',
@@ -94,9 +98,14 @@ setup(name='sassie',
 
     package_dir={'sassie':os.path.join('src','sassie')},
 	
-    packages = all_packages
+    packages = all_packages,
 
-	
-	)
+    package_data = {'':['sascalc_api.so']},
+   
 
+    )
 
+#    this data type must be parsed correctly if using string literals !!! ouch
+#    and it needs to be in setup() above
+
+#    data_files = all_data_files

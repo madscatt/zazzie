@@ -5,9 +5,9 @@ Driver method to run the SasCalc module
 import sys
 
 #import sassie.calculate.sascalc as sascalc
-import sassie.calculate.sascalc as sascalc
+import sassie.calculate.sascalc.sascalc as sascalc
 import sassie.interface.input_filter as input_filter
-import sassie.interface.sascalc_filter as sascalc_filter
+#import sassie.interface.sascalc_filter as sascalc_filter
 import multiprocessing
 
 svariables = {}
@@ -17,16 +17,8 @@ svariables = {}
 #### user input ####
 
 runname = 'run_0'
-#pdbfile = 'new_lysozyme.pdb'
-#dcdfile = 'new_lysozyme.dcd'
-#dcdfile = 'new_lysozyme.pdb'
-pdbfile = 'min3.pdb'
-dcdfile = 'c7.dcd'
-#dcdfile = 'c7_2000.dcd'
-#pdbfile = 'new_nist_mab.pdb'
-#dcdfile = '10000_new_nist_mab.dcd'
-#pdbfile = 'small.pdb'
-#dcdfile = '4000.dcd'
+pdbfile = '../../../developer_files_for_testing/sascalc/hiv1_gag.pdb'
+dcdfile = '../../../developer_files_for_testing/sascalc/hiv1_gag_200_frames.dcd' 
 
 xon = 'neutron'
 #xon = 'xray'
@@ -117,7 +109,8 @@ if len(error) > 0:
     print 'error = ', error
     sys.exit()
 else:
-    error=sascalc_filter.check_sascalc(variables)
+#    error=sascalc_filter.check_sascalc(variables)
+    error=[]
     if(len(error) != 0):
         print 'error = ',error
         sys.exit()

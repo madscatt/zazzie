@@ -1,4 +1,4 @@
-import sascalc_api
+import sassie.calculate.sascalc.sascalc_library.sascalc_api as sascalc_api
 import box_converge_lib
 import numpy, glob, os
 

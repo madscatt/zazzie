@@ -1,3 +1,4 @@
+from __future__ import print_function
 # System imports
 from distutils.core import *
 import os, platform
@@ -5,12 +6,6 @@ import os, platform
 os_type = platform.system()
 
 #os.environ["CC"] = "g++"
-
-### USER EDIT
-cpp_buildingBlock_dir=os.path.join('..','cpp_and_cuda_buildBlock')
-cuda_buildingBlock_dir=os.path.join('..','cpp_and_cuda_buildBlock')
-
-### END USER EDIT
 
 cpp_library_name = 'sascalc'
 cuda_library_name = 'cudaSascalc'
@@ -36,21 +31,21 @@ if os.path.isdir(cuda_dir):
 else:
     cuda_driver = False 
 
-if os.path.isfile(os.path.join(cpp_buildingBlock_dir,'lib','libsascalc.a')):
+if os.path.isfile(os.path.join('extensions','lib','libsascalc.a')):
     cpp_lib = True
 else:
     cpp_lib = False
 
-if os.path.isfile(os.path.join(cuda_buildingBlock_dir,'lib','libcudaSascalc.a')):
+if os.path.isfile(os.path.join('extensions','lib','libcudaSascalc.a')):
     cuda_lib = True
 else:
     cuda_lib = False
 
 if not cpp_lib and not cuda_lib:
-    print ("Either cpp or cuda lib needs to be pre-built")
+    print("Either cpp or cuda lib needs to be pre-built")
     exit(0)
 if cuda_lib and not cuda_driver:
-    print ("Cuda lib found but no cuda driver detected")
+    print("Cuda lib found but no cuda driver detected")
     exit(0)
 
 include_dir_names = [numpy_include]
@@ -58,12 +53,12 @@ library_dir_names = []
 library_names = []
 macros = []
 
-#cuda_driver = False
-#cuda_lib = False
+cuda_driver = False
+cuda_lib = False
 
 if cpp_lib:
-    include_dir_names.append(os.path.join(cpp_buildingBlock_dir,'src')) #include'))
-    library_dir_names.append(os.path.join(cpp_buildingBlock_dir,'lib'))
+    include_dir_names.append(os.path.join('extensions','src')) #include'))
+    library_dir_names.append(os.path.join('extensions','lib'))
     library_names.append(cpp_library_name)
     macros.append(('CPP_LIB','1'))
 if cuda_driver:
@@ -74,8 +69,8 @@ if cuda_driver:
     library_names.append('cudart')
     macros.append(('CUDA_DRIVER','1'))
 if cuda_lib:
-    include_dir_names.append(os.path.join(cuda_buildingBlock_dir,'src')) #include'))
-    library_dir_names.append(os.path.join(cuda_buildingBlock_dir,'lib'))
+    include_dir_names.append(os.path.join('extensions','src')) #include'))
+    library_dir_names.append(os.path.join('extensions','lib'))
     library_names.append(cpp_library_name) #ZHL hack
     library_names.append(cuda_library_name)
     macros.append(('CUDA_LIB','1'))
@@ -86,7 +81,7 @@ else:
     macros.append(('USE_CPU','1'))
 
 # extension module
-sascalc_api = Extension(name="sascalc_api",sources=['sascalc_api_extension.cpp'],
+sascalc_api = Extension(name="sascalc_api",sources=['sascalc_library_extension.cpp'],
                     include_dirs = include_dir_names,
                     library_dirs = library_dir_names,
                     libraries = library_names,
@@ -100,3 +95,17 @@ setup(  name        = "sascalc_api",
         ext_modules = [sascalc_api]
         )
 
+
+
+### post compilation file move
+
+try:
+    lib_file = os.path.join('build', 'lib*', 'sascalc_api.*')
+    os.system('mv ' + lib_file + ' .')
+except:
+    print('sascalc_api.* not found')
+    print('sascalc_api.* not found')
+    print('sascalc_api.* not found')
+    print('\nINSTALLATION FAILED\n')
+    print('INSTALLATION FAILED\n')
+    print('INSTALLATION FAILED\n')
