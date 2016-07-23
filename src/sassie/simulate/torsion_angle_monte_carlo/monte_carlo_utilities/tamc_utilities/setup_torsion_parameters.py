@@ -4,12 +4,11 @@ import sasmol.sasmol as sasmol
 import sasmol.sasmath as sasmath
 import sassie.simulate.energy.readpsf as readpsf
 import sassie.simulate.energy.readparam as readparam
-import sassie.simulate.monte_carlo.group_psf as group_psf
+import sassie.simulate.torsion_angle_monte_carlo.group_psf as group_psf
 import numpy
 import pprint
 
-import sassie.simulate.monte_carlo.monte_carlo_utilities.tamc_utilities.graph_traversal as traversal
-
+import sassie.simulate.torsion_angle_monte_carlo.monte_carlo_utilities.tamc_utilities.graph_traversal as traversal
 
 def assign_atom_types(mol, atoms):
 

@@ -1,8 +1,8 @@
 import sys,string,numpy
 import sasmol.sasmol as sasmol
 import sassie.util.sasconfig as sasconfig
-from sassie.simulate.monte_carlo.monte_carlo_utilities.tamc_utilities.sample_torsion import sample_torsion 
-from sassie.simulate.monte_carlo.monte_carlo_utilities.tamc_utilities.setup_torsion_parameters import setup_torsion_parameters 
+from sassie.simulate.torsion_angle_monte_carlo.monte_carlo_utilities.tamc_utilities.sample_torsion import sample_torsion 
+from sassie.simulate.torsion_angle_monte_carlo.monte_carlo_utilities.tamc_utilities.setup_torsion_parameters import setup_torsion_parameters 
 
 if sasconfig.__level__ == "DEBUG": DEBUG = True
 
@@ -11,11 +11,11 @@ class torsion_variables():
         pass
     def get_module(self, this_group_rotation):
         if this_group_rotation == 'protein_backbone_torsion':
-            from sassie.simulate.monte_carlo.monte_carlo_utilities.protein_backbone_torsion import protein_backbone_torsion_parameters as torsion_parameter_module
+            from sassie.simulate.torsion_angle_monte_carlo.monte_carlo_utilities.protein_backbone_torsion import protein_backbone_torsion_parameters as torsion_parameter_module
         elif this_group_rotation == 'single_stranded_nucleic_backbone_torsion':
-            from sassie.simulate.monte_carlo.monte_carlo_utilities.single_stranded_nucleic_backbone_torsion import single_stranded_nucleic_backbone_torsion_parameters as torsion_parameter_module
+            from sassie.simulate.torsion_angle_monte_carlo.monte_carlo_utilities.single_stranded_nucleic_backbone_torsion import single_stranded_nucleic_backbone_torsion_parameters as torsion_parameter_module
         elif this_group_rotation == 'isopeptide_bond_torsion':
-            from sassie.simulate.monte_carlo.monte_carlo_utilities.isopeptide_bond_torsion import isopeptide_bond_torsion_parameters as torsion_parameter_module
+            from sassie.simulate.torsion_angle_monte_carlo.monte_carlo_utilities.isopeptide_bond_torsion import isopeptide_bond_torsion_parameters as torsion_parameter_module
         self.torsion_parameter_module = torsion_parameter_module
 
 

@@ -12,7 +12,7 @@ except:
     print 'ERROR: forced to use the old sasmol'
 import sassie.util.sasconfig as sasconfig
 import sassie.util.basis_to_python as basis_to_python
-import sassie.simulate.monte_carlo.dna_overlap as dna_overlap
+import sassie.simulate.torsion_angle_monte_carlo.dna_overlap as dna_overlap
 
 # ??? THIS NEEDS TO BE DEBUGGED AND INTEGRATED INTO THE MAIN SASSIE BRANCH ???
 # try:
@@ -31,7 +31,6 @@ import sassie.simulate.monte_carlo.dna_overlap as dna_overlap
 use_sasmol_cpp = False
 
 if sasconfig.__level__ == "DEBUG": DEBUG = True
-
 
 class double_stranded_nucleic_variables():
     def __init__(self, parent = None):

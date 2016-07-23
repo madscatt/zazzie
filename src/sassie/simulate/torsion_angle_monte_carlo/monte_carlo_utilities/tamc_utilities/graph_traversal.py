@@ -7,7 +7,7 @@ import copy
 
 import sasmol.sasmol as sasmol
 
-import sassie.simulate.monte_carlo.group_psf as group_psf
+import sassie.simulate.torsion_angle_monte_carlo.group_psf as group_psf
 
 def get_bond_list(psf_data):
     """

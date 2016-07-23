@@ -5,8 +5,7 @@ $Id: gui_mimic_BDNA.py 3282 2016-07-15 05:08:59Z schowell $
 '''
 
 import sys
-import sassie.simulate.monte_carlo.monte_carlo as monte_carlo
-# import monte_carlo_ue as monte_carlo
+import sassie.simulate.torsion_angle_monte_carlo.monte_carlo as monte_carlo
 import sassie.interface.input_filter as input_filter
 import multiprocessing
 
@@ -17,8 +16,8 @@ svariables = {}
 #### user input ####
 
 # input files
-pdbfile = 'c36_dsDNA60_min.pdb'
-psffile = 'c36_dsDNA60.psf'
+pdbfile = '../../../developer_files_for_testing/torsion_angle_monte_carlo/c36_dsDNA60_min.pdb'
+psffile = '../../../developer_files_for_testing/torsion_angle_monte_carlo/c36_dsDNA60.psf'
 
 # output files
 dcdfile = 'dsDNA60.dcd'

@@ -18,8 +18,8 @@ svariables = {}
 
 runname = 'run_0'
 dcdfile = 'run_0.dcd'
-pdbfile = 'min3.pdb'
-psffile = 'refgag.psf'
+pdbfile = '../../../developer_files_for_testing/torsion_angle_monte_carlo/hiv1_gag.pdb'
+psffile = '../../../developer_files_for_testing/torsion_angle_monte_carlo/hiv1_gag.psf'
 psf_flag = True
 # psf_flag = False # sh: making this false to prevent crash
 

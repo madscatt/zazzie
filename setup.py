@@ -3,7 +3,7 @@
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
-from __future__ import unicode_literals
+#from __future__ import unicode_literals
 
 '''
     SASSIE  Copyright (C) 2011-2016 Joseph E. Curtis
@@ -47,7 +47,18 @@ all_packages = ['sassie', 'sassie.util',
     'sassie.interface', 'sassie.interface.chi_square_filter', 
     'sassie.analyze', 'sassie.analyze.chi_square_filter',
     'sassie.calculate', 'sassie.calculate.sascalc',
-    'sassie.calculate.sascalc.sascalc_library']
+    'sassie.calculate.sascalc.sascalc_library',
+    'sassie.simulate', 
+    'sassie.simulate.torsion_angle_monte_carlo',
+    'sassie.simulate.torsion_angle_monte_carlo.monte_carlo_utilities',
+    'sassie.simulate.torsion_angle_monte_carlo.monte_carlo_utilities.tamc_utilities',
+    'sassie.simulate.torsion_angle_monte_carlo.monte_carlo_utilities.protein_backbone_torsion',
+    'sassie.simulate.torsion_angle_monte_carlo.monte_carlo_utilities.single_stranded_nucleic_backbone_torsion',
+    'sassie.simulate.torsion_angle_monte_carlo.monte_carlo_utilities.isopeptide_bond_torsion',
+    'sassie.simulate.torsion_angle_monte_carlo.monte_carlo_utilities.double_stranded_nucleic',
+    'sassie.simulate.energy', 
+    'sassie.simulate.constraints'
+    ]
 
 ### end user edit ###
 ### end user edit ###
@@ -101,7 +112,11 @@ setup(name='sassie',
     packages = all_packages,
 
     package_data = {'':['sascalc_api.so']},
-   
+
+    ext_modules=[
+        Extension('sassie.simulate.torsion_angle_monte_carlo.ooverlap',['src/sassie/simulate/torsion_angle_monte_carlo/extensions/ooverlap/ooverlap.c'],include_dirs=[numpy_include]),
+    Extension('sassie.simulate.torsion_angle_monte_carlo.dna_overlap',['src/sassie/simulate/torsion_angle_monte_carlo/extensions/dna_overlap/dna_overlap.f'])
+        ]
 
     )
 

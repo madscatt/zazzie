@@ -6,8 +6,7 @@ $Id: gui_mimic_simplest_ncp.py 3103 2016-04-26 20:15:12Z schowell $
 import sys
 import multiprocessing
 import sassie.interface.input_filter as input_filter
-import sassie.simulate.monte_carlo.monte_carlo as monte_carlo
-# import monte_carlo
+import sassie.simulate.torsion_angle_monte_carlo.monte_carlo as monte_carlo
 
 svariables = {}
 
@@ -16,8 +15,8 @@ svariables = {}
 ################################# user input ##################################
 
 # input files
-pdbfile='c36_w601_ncp_min.pdb'
-psffile='c36_w601_ncp.psf'
+pdbfile='../../../developer_files_for_testing/torsion_angle_monte_carlo/c36_w601_ncp_min.pdb'
+psffile='../../../developer_files_for_testing/torsion_angle_monte_carlo/c36_w601_ncp.psf'
 
 # output file
 dcdfile='ncp_test.dcd'

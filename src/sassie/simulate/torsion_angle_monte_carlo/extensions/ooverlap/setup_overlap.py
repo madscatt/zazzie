@@ -1,3 +1,4 @@
+from __future__ import print_function
 '''
     SASSIE  Copyright (C) 2011 Joseph E. Curtis
     This program comes with ABSOLUTELY NO WARRANTY; 
@@ -32,3 +33,13 @@ setup(  name        = "OVERLAP",
         ext_modules = [ooverlap]
         )
 
+
+### post compilation file move
+
+try:
+    lib_file = os.path.join('build', 'lib*', 'ooverlap.*')
+    os.system('mv ' + lib_file + ' .')
+except:
+    print('\nINSTALLATION FAILED\n')
+    print('INSTALLATION FAILED\n')
+    print('INSTALLATION FAILED\n')

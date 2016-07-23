@@ -5,7 +5,7 @@ $Id: gui_mimic_ten_mer.py 3040 2016-03-01 20:05:14Z schowell $
 
 import sys
 
-import sassie.simulate.monte_carlo.monte_carlo as monte_carlo
+import sassie.simulate.torsion_angle_monte_carlo.monte_carlo as monte_carlo
 import sassie.interface.input_filter as input_filter
 import multiprocessing
 
@@ -15,11 +15,10 @@ svariables = {}
 #### user input ####
 #### user input ####
 
-
 runname = 'run_0'
 dcdfile = 'run_0.dcd'
-pdbfile = 'ten_mer.pdb'
-psffile = 'ten_mer.psf'
+pdbfile = '../../../developer_files_for_testing/torsion_angle_monte_carlo/ten_mer.pdb'
+psffile = '../../../developer_files_for_testing/torsion_angle_monte_carlo/ten_mer.psf'
 psf_flag = True # sh: making this false to prevent crash
 #psf_flag = False # sh: making this false to prevent crash
 

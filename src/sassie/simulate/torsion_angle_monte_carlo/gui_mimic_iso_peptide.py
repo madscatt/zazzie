@@ -5,7 +5,7 @@ $Id: gui_mimic_iso_peptide.py 3097 2016-04-22 19:43:53Z hailiang $
 
 import sys
 
-import sassie.simulate.monte_carlo.monte_carlo as monte_carlo
+import sassie.simulate.torsion_angle_monte_carlo.monte_carlo as monte_carlo
 import sassie.interface.input_filter as input_filter
 import multiprocessing
 
@@ -18,8 +18,8 @@ svariables = {}
 
 runname = 'run_0'
 dcdfile = 'run_0.dcd'
-pdbfile = 'new_ub.pdb'
-psffile = 'new_ub.psf'
+pdbfile = '../../../developer_files_for_testing/torsion_angle_monte_carlo/new_ub.pdb'
+psffile = '../../../developer_files_for_testing/torsion_angle_monte_carlo/new_ub.psf'
 psf_flag = True # sh: making this false to prevent crash
 
 max_steps = '100'

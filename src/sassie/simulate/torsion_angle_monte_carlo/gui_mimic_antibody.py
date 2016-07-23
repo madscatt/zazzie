@@ -5,7 +5,7 @@ $Id: gui_mimic_antibody.py 3040 2016-03-01 20:05:14Z schowell $
 
 import sys
 
-# import sassie.simulate.monte_carlo.monte_carlo as monte_carlo
+# import sassie.simulate.torsion_angle_monte_carlo.monte_carlo as monte_carlo
 import monte_carlo
 import sassie.interface.input_filter as input_filter
 import multiprocessing
@@ -18,8 +18,8 @@ svariables = {}
 
 runname = 'run_0'
 dcdfile = 'run_0.dcd'
-pdbfile = 'asa2.pdb'
-psffile = 'asa2.psf'
+pdbfile = '../../../developer_files_for_testing/torsion_angle_monte_carlo/asa2.pdb'
+psffile = '../../../developer_files_for_testing/torsion_angle_monte_carlo/asa2.psf'
 psf_flag = True # sh: required for tamc
 
 max_steps = '5000'
