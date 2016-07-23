@@ -47,6 +47,7 @@ all_packages = ['sassie', 'sassie.util',
     'sassie.interface', 'sassie.interface.chi_square_filter', 
     'sassie.analyze', 'sassie.analyze.chi_square_filter',
     'sassie.calculate', 'sassie.calculate.sascalc',
+    'sassie.interface.sascalc',
     'sassie.calculate.sascalc.sascalc_library',
     'sassie.simulate', 
     'sassie.simulate.torsion_angle_monte_carlo',
@@ -56,8 +57,11 @@ all_packages = ['sassie', 'sassie.util',
     'sassie.simulate.torsion_angle_monte_carlo.monte_carlo_utilities.single_stranded_nucleic_backbone_torsion',
     'sassie.simulate.torsion_angle_monte_carlo.monte_carlo_utilities.isopeptide_bond_torsion',
     'sassie.simulate.torsion_angle_monte_carlo.monte_carlo_utilities.double_stranded_nucleic',
+    'sassie.interface.torsion_angle_monte_carlo',
     'sassie.simulate.energy', 
-    'sassie.simulate.constraints'
+    'sassie.simulate.constraints',
+    'sassie.simulate.prody',
+    'sassie.interface.prody'
     ]
 
 ### end user edit ###

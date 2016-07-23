@@ -2,18 +2,17 @@ import sys
 
 import sassie.simulate.prody.prody_anm as prody_anm
 import sassie.interface.input_filter as input_filter
-import sassie.interface.prody_filter as prody_filter
+import sassie.interface.prody.prody_filter as prody_filter
 import multiprocessing
 
 svariables = {}
-
 
 # BEGIN USER EDIT
 # BEGIN USER EDIT
 # BEGIN USER EDIT
 
 runname = 'run_0'
-pdbfile = 'hivr.pdb'
+pdbfile = '../../../developer_files_for_testing/prody/hivr.pdb'
 number_modes = '5'  # number of normal modes to compute
 number_conformations_samp = '50'  # number of conformations to generate by random sampling of modes
 number_steps_traverse = '10'  # number of steps to tranverse each mode in both diretcions
