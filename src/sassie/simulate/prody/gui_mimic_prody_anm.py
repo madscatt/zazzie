@@ -12,7 +12,7 @@ svariables = {}
 # BEGIN USER EDIT
 
 runname = 'run_0'
-pdbfile = '../../../developer_files_for_testing/prody/hivr.pdb'
+pdbfile = 'hivr.pdb'
 number_modes = '5'  # number of normal modes to compute
 number_conformations_samp = '50'  # number of conformations to generate by random sampling of modes
 number_steps_traverse = '10'  # number of steps to tranverse each mode in both diretcions

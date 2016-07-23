@@ -61,7 +61,11 @@ all_packages = ['sassie', 'sassie.util',
     'sassie.simulate.energy', 
     'sassie.simulate.constraints',
     'sassie.simulate.prody',
-    'sassie.interface.prody'
+    'sassie.interface.prody',
+    'sassie.build.pdbrx',
+    'sassie.build.pdbrx.pdbrx',
+    'sassie.build.pdbscan',
+    'sassie.build.pdbscan.pdbscan'
     ]
 
 ### end user edit ###

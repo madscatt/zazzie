@@ -21,9 +21,9 @@ import logging
 import sassie.util.sasconfig as sasconfig
 import sassie.util.module_utilities as module_utilities
 
-import sassie.build.pdbscan as pdbscan
-import sassie.build.pdbscan.report as report
-import sassie.build.pdbrx as pdbrx
+import sassie.build.pdbscan.pdbscan as pdbscan
+import sassie.build.pdbscan.pdbscan.report as report
+import sassie.build.pdbrx.pdbrx as pdbrx
 
 import os
 

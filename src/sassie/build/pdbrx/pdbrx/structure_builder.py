@@ -21,8 +21,8 @@
 '''
 
 import structure_builder_pyrosetta as build_pyrosetta
-import sassie.build.pdbscan as pdbscan
-import sassie.build.pdbscan.pdbscan_utils as utils
+import sassie.build.pdbscan.pdbscan as pdbscan
+import sassie.build.pdbscan.pdbscan.pdbscan_utils as utils
 
 import sasmol.sasmol as sasmol
 

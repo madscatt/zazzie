@@ -25,9 +25,9 @@ import subprocess
 import sassie.util.sasconfig as sasconfig
 import sassie.util.module_utilities as module_utilities
 
-import sassie.build.pdbscan as pdbscan
-import sassie.build.pdbscan.report as report
-import sassie.build.pdbscan.pdbscan_utils as pdbscan_utils
+import sassie.build.pdbscan.pdbscan as pdbscan
+import sassie.build.pdbscan.pdbscan.report as report
+import sassie.build.pdbscan.pdbscan.pdbscan_utils as pdbscan_utils
 
 if sasconfig.__level__ == "DEBUG": DEBUG = True
 	

@@ -3,7 +3,8 @@ import logging
 
 sys.path.append('./')
 
-import sassie.build.pdb_scan as pdb_scan
+#import sassie.build.pdbscan.pdb_scan as pdb_scan
+import pdb_scan as pdb_scan
 
 import sassie.interface.input_filter as input_filter
 import multiprocessing

@@ -25,8 +25,8 @@ import json
 import yaml
 import logging
 import pickle
-import sassie.build.pdbscan as pdbscan
-import sassie.build.pdbscan.report as report
+import sassie.build.pdbscan.pdbscan as pdbscan
+import sassie.build.pdbscan.pdbscan.report as report
 import segment_choice
 import biomt_choice
 import altloc_choice

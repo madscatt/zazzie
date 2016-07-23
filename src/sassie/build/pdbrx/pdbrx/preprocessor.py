@@ -32,8 +32,8 @@ from textwrap import TextWrapper
 
 import cmdline_segname_editor as cmd_segname_edit
 import cmdline_transform_editor
-import sassie.build.pdbscan.data_struct as data_struct
-import sassie.build.pdbscan.pdbscan_utils as utils
+import sassie.build.pdbscan.pdbscan.data_struct as data_struct
+import sassie.build.pdbscan.pdbscan.pdbscan_utils as utils
 
 class PreProcessor():
 
@@ -642,7 +642,7 @@ class PreProcessor():
 
             print "Current biological unit transforms: "
 
-            import sassie.build.pdbscan.report as report
+            import sassie.build.pdbscan.pdbscan.report as report
             for line in report.create_biomt_summary(mol.segname_info.biomt):
 
                 print(line)

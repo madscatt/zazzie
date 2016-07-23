@@ -3,7 +3,7 @@ import logging
 
 sys.path.append('./')
 
-import sassie.build.pdb_rx as pdb_rx
+import sassie.build.pdbrx.pdb_rx as pdb_rx
 import sassie.util.sasconfig as sasconfig
 
 import sassie.interface.input_filter as input_filter
