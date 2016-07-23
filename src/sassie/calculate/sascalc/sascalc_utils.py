@@ -12,7 +12,7 @@ import sasmol.sasmol as sasmol
 
 import sassie.util.basis_to_python as basis_to_python
 
-sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'periodictable-1.3.0'))
+#sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'periodictable-1.3.0'))
 
 import periodictable as pt
 import periodictable.xsf as xxx
