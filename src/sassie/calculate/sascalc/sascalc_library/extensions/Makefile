@@ -40,10 +40,10 @@ CUDA_HEADERS=$(CUDA_SOURCES:.cu=.h)
 CUDA_OBJECTS=$(addsuffix .o,$(addprefix $(DIRLIB),$(CUDA_OBJS)))
 
 # dependencies
-all: $(LIB) $(CUDA_LIB) 
+all: mklibdir $(LIB) $(CUDA_LIB) 
 
 .PHONY: cpu
-cpu: $(LIB)
+cpu: mklibdir $(LIB)
 $(LIB): $(OBJECTS)
 	ar rv $@ $^
 
@@ -51,12 +51,17 @@ $(OBJECTS): $(DIRLIB)%.o: $(DIRSRC)%.cpp $(DIRSRC)%.h
 	$(CC) -c $< -o $@ $(CCFLAGS) $(INCDIR)
 
 .PHONY: gpu
-gpu: $(CUDA_LIB)
+gpu: mklibdir $(CUDA_LIB)
 $(CUDA_LIB): $(CUDA_OBJECTS)
 	ar rv $@ $^
 
 $(CUDA_OBJECTS): $(DIRLIB)%.o: $(DIRSRC)%.cu $(DIRSRC)%.h
 	$(NVCC) -c $< -o $@ $(NVCCFLAGS)
+
+.PHONY: mklibdir
+mklibdir: $(DIRLIB)
+$(DIRLIB):
+	mkdir -p $(DIRLIB)
 
 .PHONY: clean
 clean:
