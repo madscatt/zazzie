@@ -8,7 +8,7 @@ import matplotlib as mpl
 from GV import *
 import cPickle as pickle
 import datetime
-from multiprocessing import Pool
+from multiprocessing import Pool, cpu_count
 
 
 print(datetime.datetime.now())
@@ -60,7 +60,7 @@ def process_frame(frame):
             I_tmp += lib.sQ(cast_coor,cast_q,num,num)
         I[i] = I_tmp/len(gv)
     return I
-pool = Pool(processes=75)              # process per core
+pool = Pool(processes=cpu_count())              # process per core
 I_mp=pool.map(process_frame, frames)
 
 def getOutputDir():

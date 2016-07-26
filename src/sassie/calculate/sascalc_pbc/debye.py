@@ -3,7 +3,7 @@ import numpy as np
 import sasmol.sasmol as sasmol
 import cPickle as pickle
 import numexpr as ne
-from multiprocessing import Pool
+from multiprocessing import Pool, cpu_count
 import datetime
 
 
@@ -48,7 +48,7 @@ frames = np.arange(startFrame, endFrame, 1)
 # Do calculation
 startTime = datetime.datetime.now()
 print(startTime)
-pool = Pool(processes=70)              # process per core
+pool = Pool(processes=cpu_count())              # process per core
 I_mp = pool.map(process_frame, frames)
 endTime = datetime.datetime.now()
 print(endTime)
