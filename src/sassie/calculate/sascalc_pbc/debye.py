@@ -24,8 +24,9 @@ def process_frame(frame):
         I[i] = np.sum(neSinc(Q * pw))
     return I
 # Define parameters
-pdb_NAME = 'Data/simulations/LJ_sphere_monomer_2095bar/final.pdb'
-dcd_NAME = 'Data/simulations/LJ_sphere_monomer_2095bar/run_1.dcd'
+folderName = '/home/data/sascalc_pbc/ellipsoids_simulation/simulations/'
+pdb_NAME = 'LJ_sphere_monomer_2095bar/final.pdb'
+dcd_NAME = 'LJ_sphere_monomer_2095bar/run_1.dcd'
 
 startFrame = 1
 endFrame = -1  # -1 = use all

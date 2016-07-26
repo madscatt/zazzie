@@ -25,7 +25,7 @@ def process_frame(frame):
     return I
 
 # Define parameters
-folder = 'Data/simulations/'
+folder = '/home/data/sascalc_pbc/ellipsoids_simulation/simulations/'
 
 """
 #First Big run. Did July 22.
