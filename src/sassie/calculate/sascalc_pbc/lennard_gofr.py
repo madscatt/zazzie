@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import sasmol.sasmol as sasmol
 import sys
-import lib.dna_overlap as dna_overlap
+import compiledUtils.dna_overlap as dna_overlap
 #import calculate
 
 
