@@ -959,7 +959,7 @@ class Info():
         missing_resids = self.missing_resids
 
         if chosen_subdiv in seqs:
-            seq = dict(seqs[subdiv])
+            seq = dict(seqs[chosen_subdiv])
         else:
             seq = {}
 
