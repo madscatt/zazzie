@@ -32,6 +32,7 @@ class StructureBuilderPyRosetta():
         # Gap descriptions as list of lists:
         # [[pre_anchor, post_anchor, pre_flank, gap, post_flank], ...]
         self.gap_descriptions = gap_descriptions
+        self.gap_descriptions.sort(key=lambda x:x[0],reverse=True)
 
         self.Loops = rosetta.Loops()
 
@@ -398,8 +399,6 @@ class StructureBuilderPyRosetta():
             count += 1
 
         self.scaffold_pose.pdb_info().obsolete(False)
-
-        end_res = self.get_last_residue_id_chain(self.scaffold_pose, chain)
 
         if len(frag_range) == 1:
             loop = rosetta.Loop(1 ,original_term, (1 + original_term)/2)
