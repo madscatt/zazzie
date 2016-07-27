@@ -187,6 +187,11 @@ class StructureBuilderPyRosetta():
                 flex_length_nter = 1
                 flex_length_cter = 1
 
+            elif loop_length > 12:
+                flex_len = int((loop_length/2) - 4)
+                flex_length_nter = flex_len
+                flex_length_cter = flex_len
+
             else:
                 flex_length_nter = 2
                 flex_length_cter = 2
