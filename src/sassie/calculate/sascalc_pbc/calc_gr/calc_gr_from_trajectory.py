@@ -49,7 +49,8 @@ def update_gr(xcoor, ycoor, zcoor, box_length, nbins, natoms2, deltag):
     return tgr
 
 
-def main(pdb_file_name, dcd_file_name, xst_file_name, stride, sigma):
+def main(pdb_file_name, dcd_file_name, xst_file_name, stride, sigma,
+         show=False):
 
     m1 = sasmol.SasMol(0)
     m1.read_pdb(pdb_file_name)
@@ -136,20 +137,21 @@ def main(pdb_file_name, dcd_file_name, xst_file_name, stride, sigma):
 
     line, = ax1.plot(r, fgr, color='red', lw=3)
 
-    plt.savefig('test' + str(stride) + '.png')
-    plt.show()
+    plt.savefig('test_500to1000_by' + str(stride) + '.png')
+    if show:
+        plt.show()
+    else:
+        plt.close('all')
 
-    outfile = open('test' + str(stride) + '.dat', 'w')
+    with open('test' + str(stride) + '.dat', 'w') as outfile:
+        for i in range(len(r)):
+            outfile.write('%f\t%f\n' % (r[i], fgr[i]))
 
-    for i in range(len(r)):
-        outfile.write('%f\t%f\n' % (r[i], fgr[i]))
-
-    outfile.close()
 
 if __name__ == '__main__':
 
     sigma = 3.405
-    
+
     pdb_file_name = 'final.pdb'
     dcd_file_name = 'run_0.dcd'
     xst_file_name = 'box_length.txt'
