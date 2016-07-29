@@ -43,9 +43,9 @@ def read_gr(filename):
 
 if __name__ == '__main__':
 
-    filename = 'gr_argon.dat'
+    filename = 'argon_85K_gr.dat'
 
-    r, gr = numpy.loadtxt(filename, unpack=True, usecols=[0, 2])
+    r, gr = numpy.genfromtxt(filename, unpack=True)
     q, sq = integrate_gr(r, gr)
 
     # Save output
@@ -55,5 +55,8 @@ if __name__ == '__main__':
     plt.style.use('ggplot')
     plt.xlabel('Q')
     plt.ylabel('s(Q)')
-    plt.plot(q, sq)
+    plt.plot(q, sq,label='Integrated',lw=3)
+    q_file, sq_file = numpy.genfromtxt('argon_85K_sq.dat',unpack=True)
+    plt.plot(q_file,sq_file,label='argon_85K_sq.dat')
+    plt.legend()
     plt.show()
