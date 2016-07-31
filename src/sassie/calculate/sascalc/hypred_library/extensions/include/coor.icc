@@ -1,0 +1,67 @@
+// Hailiang Zhang
+
+#ifndef COOR_ICC
+#error the "coor.icc" file can only be included from the corresponding header
+#endif
+
+// get the distance between two coordinates
+double
+Coor::
+distance(const Coor & coor) const
+{
+	return sqrt(pow((_x-coor._x),2.0)+pow((_y-coor._y),2.0)+pow((_z-coor._z),2.0));
+}
+
+// get the sum of two coordinates
+Coor
+Coor::
+operator+(const Coor & coor) const
+{
+	Coor coor_result;
+	coor_result._x=this->_x+coor._x;
+	coor_result._y=this->_y+coor._y;
+	coor_result._z=this->_z+coor._z;
+	return coor_result;
+}
+
+// get the x coordinate
+double
+Coor::
+x() const
+{
+	return _x;
+}
+
+// get the y coordinate
+double
+Coor::
+y() const
+{
+	return _y;
+}
+
+// get the z coordinate
+double
+Coor::
+z() const
+{
+	return _z;
+}
+
+// default constructor
+Coor::
+Coor():
+	_x(0.0),
+	_y(0.0),
+	_z(0.0)
+{
+}
+
+// constructor
+Coor::
+Coor(const double x, const double y, const double z):
+	_x(x),
+	_y(y),
+	_z(z)
+{
+}
