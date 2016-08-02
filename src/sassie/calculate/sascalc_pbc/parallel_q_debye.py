@@ -1,3 +1,6 @@
+'''
+Basically the same as debye.py except parallaizes over Q rather than frames. Useful for large pdbs with one frame
+'''
 from __future__ import division
 import numpy as np
 import sasmol.sasmol as sasmol
