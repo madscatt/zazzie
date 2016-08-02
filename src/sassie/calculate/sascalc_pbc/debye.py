@@ -1,3 +1,8 @@
+'''
+Takes a pdb and dcd in the pdb_NAME and dcd_NAME variables. 
+parallalizes over frames via the process_frame function that acutally does the work.
+parallel over the frames of a given dcd. Only takes one dcd/pdb input pair.
+'''
 from __future__ import division
 import numpy as np
 import sasmol.sasmol as sasmol
@@ -8,17 +13,27 @@ import datetime
 
 
 def pairwise_numpy(X):
+    '''
+    Can be done faster with scipy cdist.
+    '''
     return np.sqrt(((X[:, None, :] - X) ** 2).sum(-1))
 
 
 def neSinc(x):
+    '''
+    sinc function that is faster than nummpy sinc.
+    Not exactly equal but within np.isclose
+    '''
     a = ne.evaluate("sin(x)/x")
     a[np.isnan(a)] = 1
     return a
 
 
 def process_frame(frame):
-    I = np.zeros(len(Q_list))
+    '''
+    debye formula over Q range
+    '''
+    I = np.empty(len(Q_list))
     pw = pairwise_numpy(coor[frame])
     for i, Q in enumerate(Q_list):
         I[i] = np.sum(neSinc(Q * pw))
@@ -31,7 +46,7 @@ dcd_NAME = 'LJ_sphere_monomer_2095bar/run_1.dcd'
 startFrame = 1
 endFrame = -1  # -1 = use all
 NUM_Q = 250
-START_Q = -1
+START_Q = -1 # in units of 10^(START_Q)
 END_Q = 1.6
 
 # Load pdb + dcd
