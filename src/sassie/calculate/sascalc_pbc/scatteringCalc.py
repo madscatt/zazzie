@@ -1,3 +1,10 @@
+'''
+Full exponential calculator.
+This one takes only one pdb/dcd pair. Has the same inputs as debye.py
+output is I[frame][Q] as a .npy file, which can be loaded with np.load
+Also outputs Q_list.npy
+O(num GV * N^2)
+'''
 from __future__ import division
 import matplotlib.pyplot as plt
 import numpy as np
@@ -21,7 +28,7 @@ dcd_NAME = '/home/data/sascalc_pbc/pdbs/run_1.dcd'
 startFrame =995 
 endFrame   =  -1 #-1 = use all
 NUM_Q      = 100
-START_Q    = -1
+START_Q    = -1 #units in logscale. startq = 10^(START_Q)
 END_Q      = 1.6
 NUM_GV       = 27
 sigma=3.4
@@ -51,6 +58,10 @@ def cast_matrix(matrix, ffi):
         ap[i] = ptr + i*matrix.shape[1]
     return ap
 def process_frame(frame):
+    '''
+    process_frame by using the C code from cLoops.py
+    Doesn't break memory. Could be much more optimized by passing more thing to C code that remain the same over Q's
+    '''
     I = np.zeros(len(Q_list))
     for i,Q in enumerate(Q_list):
         I_tmp = 0
@@ -64,6 +75,7 @@ def process_frame(frame):
 def process_frame_new(frame):
     """
     modified to be purely numpy/numexpr
+    Can overallocate memory but slightly nicer than passing things to the C code.
     """
     I = np.zeros(len(Q_list))
     disp = np.zeros((len(coor[frame]),len(coor[frame]),3))
