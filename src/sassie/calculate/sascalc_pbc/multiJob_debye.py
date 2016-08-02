@@ -1,3 +1,6 @@
+'''
+same as debye.py but modified to loop over multiple input pdbs/dcds.
+'''
 from __future__ import division
 import numpy as np
 import sasmol.sasmol as sasmol
