@@ -7,3 +7,6 @@ cd fortran
 python setup_dna_overlap.py build
 cd ../
 cp fortran/build/*/dna_overlap.so .
+cd ../calc_gr/
+python setup_gr.py build
+cp build/*/gr.so .

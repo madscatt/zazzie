@@ -1,7 +1,5 @@
 '''
-Takes a pdb and dcd in the pdb_NAME and dcd_NAME variables. 
-parallalizes over frames via the process_frame function that acutally does the work.
-parallel over the frames of a given dcd. Only takes one dcd/pdb input pair.
+Basically the same as debye.py except parallaizes over Q rather than frames. Useful for large pdbs with one frame
 '''
 from __future__ import division
 import numpy as np
@@ -13,66 +11,53 @@ import datetime
 
 
 def pairwise_numpy(X):
-    '''
-    Can be done faster with scipy cdist.
-    '''
     return np.sqrt(((X[:, None, :] - X) ** 2).sum(-1))
 
 
 def neSinc(x):
-    '''
-    sinc function that is faster than nummpy sinc.
-    Not exactly equal but within np.isclose
-    '''
     a = ne.evaluate("sin(x)/x")
     a[np.isnan(a)] = 1
     return a
 
 
 def process_frame(frame):
-    '''
-    debye formula over Q range
-    '''
-    I = np.empty(len(Q_list))
+    I = np.zeros(len(Q_list))
     pw = pairwise_numpy(coor[frame])
     for i, Q in enumerate(Q_list):
         I[i] = np.sum(neSinc(Q * pw))
     return I
-# Define parameters
-folderName = '/home/data/sascalc_pbc/ellipsoids_simulation/simulations/'
-pdb_NAME = 'LJ_sphere_monomer_2095bar/final.pdb'
-dcd_NAME = 'LJ_sphere_monomer_2095bar/run_1.dcd'
 
-startFrame = 1
-endFrame = -1  # -1 = use all
-NUM_Q = 250
-START_Q = -1 # in units of 10^(START_Q)
+def process_Q(Q):
+    return np.sum(neSinc(Q*pw))
+# Define parameters
+overAllStart = datetime.datetime.now()
+
+folder = '/home/data/sascalc_pbc/'
+pdb_NAME = folder + 'pdbs/run_0.pdb' 
+dcd_NAME = folder + 'pdbs/run_1.dcd'
+
+NUM_Q = 100
+START_Q = -1
 END_Q = 1.6
 
-# Load pdb + dcd
 mol = sasmol.SasMol(0)
 mol.read_pdb(pdb_NAME)
 mol.read_dcd(dcd_NAME)
 coor = mol.coor()
+pw = pairwise_numpy(coor[0])
 Q_list = np.logspace(START_Q, END_Q, NUM_Q)
-if endFrame == -1:
-    endFrame = len(coor) - 1
-frames = np.arange(startFrame, endFrame, 1)
-# frames = np.arange(600,604,1) # for debugging
-
 
 # Do calculation
 startTime = datetime.datetime.now()
 print(startTime)
 pool = Pool(processes=cpu_count())              # process per core
-I_mp = pool.map(process_frame, frames)
+I_mp = pool.map(process_Q, Q_list)
 endTime = datetime.datetime.now()
 print(endTime)
 minutes = (endTime - startTime).seconds / 60
 print(minutes)
 
 # Ouput Results
-
 
 def getOutputDir():
     '''
@@ -92,8 +77,6 @@ f.write('\n\nSTART_Q,\t' + str(START_Q))
 f.write('\nEND_Q,\t' + str(END_Q))
 f.write('\nNUM_Q,\t' + str(NUM_Q))
 
-f.write('\n\nstartFrame,\t' + str(startFrame))
-f.write('\nendFrame,\t' + str(endFrame))
 f.write('\n\npdb_NAME,\t' + str(pdb_NAME))
 f.write('\ndcd_NAME,\t' + str(dcd_NAME))
 
@@ -101,7 +84,14 @@ f.write('\n\nstartTime,\t' + str(startTime))
 f.write('\nendTime,\t' + str(endTime))
 f.write('\nminutes,\t' + str(minutes))
 f.close()
-pickle.dump(I_mp, open(outdir + "multiFrame-" + str(frames[0]) + '-' + str(frames[-1]) + '_' + str(START_Q) +
-                       '-' + str(END_Q) + '_' + str(NUM_Q), "wb"))
 np.save(outdir + 'outPutI-Q' + str(NUM_Q), I_mp)
 np.save(outdir + 'Q_list', Q_list)
+import time
+f = open("Outputs/RunEnding-" + time.strftime("%Y-%m-%d_%H-%M"), 'w')
+f.write("Outdirs:\n")
+end = datetime.datetime.now()
+f.write('\nStart:\t{}'.format(overAllStart))
+f.write('\nEnd:\t{}'.format(end))
+minutes = (end - overAllStart).seconds / 60
+f.write("\nminutes:\t{}".format(minutes))
+f.close()

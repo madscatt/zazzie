@@ -11,7 +11,7 @@ import sasmol.sasmol as sasmol
 sys.path.append('./')
 import gr as fortran_gr
 
-def get_box_length_list(xst_file_name, stride):
+def get_box_length_list(xst_file_name, stride, sigma=1):
 
     boxlength_list = []
 
@@ -64,7 +64,7 @@ def main(pdb_file_name, dcd_file_name, xst_file_name, stride, sigma,
     print '> found ', number_of_frames, ' frames in dcd file'
 
     if(xst_file_name != False):
-        box_length_list = get_box_length_list(xst_file_name, stride)
+        box_length_list = get_box_length_list(xst_file_name, stride, sigma)
 
     #box_length_list = [box_length]
 
