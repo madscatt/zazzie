@@ -1,10 +1,9 @@
 from __future__ import division
 import numpy as np
-import matplotlib.pyplot as plt
-import sasmol.sasmol as sasmol
 import sys
+import os
+import sasmol.sasmol as sasmol
 import compiledUtils.dna_overlap as dna_overlap
-#import calculate
 
 
 def deduceBoxSize(xCoor, yCoor, zCoor):
@@ -45,7 +44,7 @@ class gofr_calc:
     coors = 0
     npart = 0
 
-    def __init__(self, mol, nhis=600):
+    def __init__(self, mol, box_length, nhis=600):
         self.ngr = 0
         self.g = np.zeros(nhis)
         self.nhis = nhis
@@ -77,11 +76,11 @@ class gofr_calc:
                 #dx = xCoor[part1] - xCoor[part2]
                 #dy = yCoor[part1] - yCoor[part2]
                 #dz = zCoor[part1] - zCoor[part2]
-                
+
                 #dx = dx - self.length*int(dx/self.length)
                 #dy = dy - self.length*int(dy/self.length)
                 #dz = dz - self.length*int(dz/self.length)
-                
+
                 #dr = np.sqrt(dx**2+dy**2+dz**2)
                 dr = dist[part1,part2]
                 if(dr<self.length/2): # can extend this to use the corners
@@ -89,20 +88,39 @@ class gofr_calc:
                     self.g[ig] += 2
         '''
 
-    def g_of_r(self):
+    def g_of_r(self, sigma=3.405):
         for i in range(self.nhis):
             r = self.delg * (i + .5)
             vb = ((i + 1)**3 - i**3) * self.delg**3
             rho = self.npart / self.length**3
             nid = (4 / 3) * np.pi * vb * rho
             self.g[i] = self.g[i] / (self.npart * nid * self.ngr)
-        x = np.linspace(0, self.length / 2, len(self.g))
+        x = np.linspace(0, self.length / 2, len(self.g)) * sigma
         return (x, self.g)
+
+
 if __name__ == '__main__':
-    pdbfile = "data/run_0.pdb"
-    dcdfile = "data/run_1.dcd"
+
+    path = '/home/schowell/ellipsoids_simulation/simulations/LJ_sphere_monomer'
+    pdb_file = os.path.join(path, 'run_0.pdb')
+    dcd_file = os.path.join(path, 'run_1.dcd')
+    box_length_file = os.path.join(path, 'box_length.txt')
+
     mol = sasmol.SasMol(0)
-    mol.read_pdb(pdbfile)
-    mol.read_dcd(dcdfile)
-    gc = gofr_calc(mol)
-    gc.g_hist(500)
+    mol.read_pdb(pdb_file)
+    mol.read_dcd(dcd_file)
+    box_length = np.loadtxt(box_length_file)[:, 1]
+
+    gc = gofr_calc(mol, box_length, nhis=200)
+    gc.g_hist(200)
+
+    r, g_of_r = gc.g_of_r()
+
+    if True:
+        import matplotlib.pyplot as plt
+        plt.figure()
+        plt.plot(r, g_of_r)
+        plt.savefig('g_of_r.png', dpi=400)
+
+    print('\m/ >.< \m/')
+l
