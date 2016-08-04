@@ -1,13 +1,7 @@
-'''
-Takes a pdb and dcd in the pdb_NAME and dcd_NAME variables.
-parallalizes over frames via the process_frame function that acutally does the work.
-parallel over the frames of a given dcd. Only takes one dcd/pdb input pair.
-'''
 from __future__ import division
 from scipy import spatial
 import numpy as np
 import numexpr as ne
-import sasmol.sasmol as sasmol
 
 
 def pairwise_numpy(X):
@@ -36,14 +30,32 @@ def ne_sinc(x):
     return a
 
 
-def process_frame(frame):
+def simple_debye_as_sum(q, coor):
     '''
     debye formula over Q range
     '''
+    I = np.empty((len(q), 2))
+
+    pw = pairwise_scipy(coor)
+
+    for i, Q in enumerate(q):
+        I[i, :] = [np.sum(ne_sinc(Q * pw)), Q]
+
+    n_atoms = len(coor)
+    I[:, 1] /= n_atoms
+
+    return I
+
+
+def simple_debye(q, coor):
+    '''
+    debye formula over Q range using np matrix math
+    '''
     I = np.empty(len(q))
 
-    # pw = pairwise_numpy(coor[frame])
-    pw = pairwise_scipy(coor[frame])
+    pw = pairwise_scipy(coor)
+    qpw = 0
+    sinc_qr = ne_sinc(qr)
 
     for i, Q in enumerate(q):
         I[i] = np.sum(ne_sinc(Q * pw))
@@ -51,19 +63,22 @@ def process_frame(frame):
     return I
 
 
-def glatter_kratky(q, coor, frame):
+
+def glatter_kratky(q, coor):
     '''
     debye formula taken from Glatter & Kratky 1982
     '''
     n_q = len(q)
 
-    pr = calc_pr(coor[frame], n_q)
-    np.savetxt('pr_{}.dat'.format(frame), pr)
+    pr = calc_pr(coor, n_q)
+    # np.savetxt('pr.dat', pr)
 
     I = np.empty(pr.shape)
     I[:, 0] = q
 
-    debye_integral(pr, I)
+    debye_integral_as_sum_wo_r(pr, I)
+    n_atoms = len(coor)
+    I[:, 1] /= n_atoms
 
     return I
 
@@ -91,7 +106,7 @@ def debye_integral(pr, I):
     I[:, 1] = 4 * np.pi * pr[:, 1].dot(sinc_qr)
 
 
-def debye_integral_as_sum(pr, I):
+def debye_integral_as_sum_wo_r(pr, I):
     '''
     Calculate the integral from the Debye formula
     as a summation (~14x slower than numpy method)
@@ -111,14 +126,49 @@ def debye_integral_as_sum(pr, I):
 
     '''
     I[:, 1] = 0
+    dr = pr[1:, 0] - pr[:-1, 0]
+    assert np.allclose(dr/dr[0], np.ones(len(dr)))
+    dr = dr[0]
     for j in range(len(I)):
         for i in range(len(pr)):
             qr = pr[i, 0] * I[j, 0]
             sinc_qr = ne_sinc(qr)
             I[j, 1] += pr[i, 1] * sinc_qr
 
-    I[:, 1] *= 4 * np.pi
+    I[:, 1] *= 4 * np.pi * dr
 
+def debye_integral_as_sum_w_r(pr, I):
+    '''
+    Calculate the integral from the Debye formula
+    as a summation (~14x slower than numpy method)
+
+    >>> pr = np.empty((4, 2))
+    >>> I = np.empty((5, 2))
+    >>> pr[:, 0] = pr[:, 1] = np.arange(1, 5)
+    >>> pr[:, 1] *=np.pi/4
+    >>> I[:, 0] = np.arange(5)
+    >>> debye_integral_as_sum(pr, I)
+    >>> print(I)
+    [[  0.          98.69604401]
+     [  1.          11.20284903]
+     [  2.           4.25595936]
+     [  3.          -0.8644126 ]
+     [  4.          -1.46050525]]
+
+    '''
+    I[:, 1] = 0
+    dr = pr[1:, 0] - pr[:-1, 0]
+    assert np.allclose(dr/dr[0], np.ones(len(dr)))
+    dr = dr[0]
+    for j in range(len(I)):
+        for i in range(len(pr)):
+            q = I[j, 0]
+            r = pr[i, 0]
+            sinc_qr = ne_sinc(q*r)
+            r2 = r ** 2
+            I[j, 1] += pr[i, 1] * sinc_qr * r2
+
+    I[:, 1] *= 4 * np.pi * dr
 
 def calc_pr(coor, n_q=100):
 
@@ -128,21 +178,6 @@ def calc_pr(coor, n_q=100):
     pr = np.concatenate((r.reshape(n_q,1), p.reshape(n_q, 1)), axis=1)
 
     return pr
-
-
-# Ouput Results
-def getOutputDir():
-    '''
-    Returns a path to a time stamped directory under the Outputs folder as a string
-    '''
-    import os
-    from time import strftime
-    directory = "Outputs/" + strftime("%Y-%m-%d_%H-%M")
-    if not os.path.exists(directory):
-        os.makedirs(directory)
-    return directory + "/"
-
-
 
 
 if __name__ == "__main__":
