@@ -1,4 +1,4 @@
-import sassie.sasmol.sasmol as sasmol
+import sasmol.sasmol as sasmol
 import os, sys, string, glob, numpy
 
 #       FIX_PDB
