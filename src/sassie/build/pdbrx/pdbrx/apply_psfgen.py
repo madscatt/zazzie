@@ -1,6 +1,3 @@
-import sasmol.sasmol as sasmol
-import os, sys, string, glob, numpy
-
 #       FIX_PDB
 #
 #       05/10/2013      --      initial coding                  :       jc
@@ -35,10 +32,10 @@ import os, sys, string, glob, numpy
 
 import sasmol.sasmol as sasmol
 from sassie.util import sasconfig
-import sassie.build.pdbscan.pdbscan_utils as utils
+import sassie.build.pdbscan.pdbscan.pdbscan_utils as utils
 
 import logging
-import os
+import os, sys, string, glob, numpy
 import subprocess
 
 
