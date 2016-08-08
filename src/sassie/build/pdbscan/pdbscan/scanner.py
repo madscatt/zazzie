@@ -1313,8 +1313,6 @@ class SasMolScan(sasmol.SasMol):
                 sections.append(sections[-1] + 1)
             last_seen = r
 
-        print str(sections)
-
         # subsections = matched sections with subdivs (chains/segnames)
         sub_secs = zip(subdivs, sections)
 
