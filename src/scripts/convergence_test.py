@@ -44,6 +44,7 @@ import matplotlib.gridspec as gridspec
 
 logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.INFO)
 
+
 class AlignInputs(object):
 
     def __init__(self, goal_pdb, move, ref_pdb, out_fname, **kwargs):
@@ -57,10 +58,14 @@ class AlignInputs(object):
         self.seg_chain = kwargs.get('seg_chain', 'GAG')
         self.min_resid = kwargs.get('min_resid', 20)
         self.max_resid = kwargs.get('max_resid', 30)
-        default_filter = ('(({}[i] == "{}") and (name[i] == "{}") and '
-                          '(resid[i] >= {}) and (resid[i] <= {}))'.format(
-                              self.seg_or_chain, self.seg_chain,
-                              self.basis_atoms, self.min_resid, self.max_resid))
+        default_filter = (
+            '(({}[i] == "{}") and (name[i] == "{}") and '
+            '(resid[i] >= {}) and (resid[i] <= {}))'.format(
+                self.seg_or_chain,
+                self.seg_chain,
+                self.basis_atoms,
+                self.min_resid,
+                self.max_resid))
         self.goal_filter = kwargs.get('goal_filter', default_filter)
         self.move_filter = kwargs.get('move_filter', default_filter)
         logging.debug('goal_pdb: {}'.format(self.goal_pdb))
@@ -70,6 +75,7 @@ class AlignInputs(object):
         logging.debug('path: {}'.format(self.path))
         logging.debug('goal_filter: {}'.format(self.goal_filter))
         logging.debug('move_filter: {}'.format(self.move_filter))
+
 
 def align(inputs):
     '''
@@ -121,7 +127,7 @@ def align(inputs):
 
     # check input
     assert os.path.exists(aa_move_fname), ('ERROR: no such file - %s' %
-                                          aa_move_fname)
+                                           aa_move_fname)
     assert os.path.exists(aa_move_pdb), ('ERROR: no such file - %s' %
                                          aa_move_pdb)
     assert os.path.exists(aa_goal_pdb), ('ERROR: no such file - %s' %
@@ -217,11 +223,12 @@ def align(inputs):
 
     logging.info('Alingment of {} complete. \m/ >.< \m/'.format(aa_move_fname))
 
+
 def calc_sas_convergence_all(sas_folders, output_prefix=None,
                              granularity=int(1e3), show=False, sas_ext='iq'):
 
     assert len(sas_folders) == 1, ("ERROR: mode for examining multiple "
-                                   "folders requires additional debugging")
+                                   "folders not currently tested")
 
     if not output_prefix:
         output_prefix = 'sas_convergence'
@@ -237,7 +244,7 @@ def calc_sas_convergence_all(sas_folders, output_prefix=None,
                     list_new_grids, list_occupied_grids, granularity)
 
     total_spec = n_spec.sum()
-    new_grids = numpy.zeros((total_spec, len(sas_folders)+1))
+    new_grids = numpy.zeros((total_spec, len(sas_folders) + 1))
     new_grids[:, 0] = numpy.arange(total_spec)
     occupied_grids = numpy.copy(new_grids)
     for i in xrange(len(sas_folders)):
@@ -247,7 +254,7 @@ def calc_sas_convergence_all(sas_folders, output_prefix=None,
 
     # create output text files
     fname_occupied_grids = output_prefix + '_occupied_grids.npy'
-    fname_new_grids = output_prefix +'_new_grids.npy'
+    fname_new_grids = output_prefix + '_new_grids.npy'
     numpy.savetxt(fname_occupied_grids, occupied_grids)
     numpy.savetxt(fname_new_grids, new_grids)
     print 'output text files: \n%s \n%s' % (fname_occupied_grids,
@@ -257,11 +264,15 @@ def calc_sas_convergence_all(sas_folders, output_prefix=None,
                      output_prefix, show, spatial=False)
 
 
-def calc_sas_convergence_by_run(sas_folders, output_prefix=None,
-                                granularity=int(1e3), show=False, sas_ext='iq'):
+def calc_sas_convergence_by_run(
+        sas_folders,
+        output_prefix=None,
+        granularity=int(1e3),
+        show=False,
+        sas_ext='iq'):
 
     assert len(sas_folders) == 1, ("ERROR: mode for examining multiple "
-                                   "folders requires additional debugging")
+                                   "folders not currently tested")
 
     if not output_prefix:
         output_prefix = 'sas_convergence'
@@ -277,17 +288,17 @@ def calc_sas_convergence_by_run(sas_folders, output_prefix=None,
                     list_new_grids, list_occupied_grids, granularity)
 
     total_spec = n_spec.sum()
-    new_grids = numpy.zeros((total_spec, len(sas_folders)+1), dtype=int)
+    new_grids = numpy.zeros((total_spec, len(sas_folders) + 1), dtype=int)
     new_grids[:, 0] = numpy.arange(total_spec)
     occupied_grids = numpy.copy(new_grids)
     for i in xrange(len(sas_folders)):
-        rows = list_new_grids[i][:, 0] -1
-        new_grids[rows, i+1] = list_new_grids[i][:, 1]
-        occupied_grids[rows, i+1] = list_occupied_grids[i][:, 1]
+        rows = list_new_grids[i][:, 0] - 1
+        new_grids[rows, i + 1] = list_new_grids[i][:, 1]
+        occupied_grids[rows, i + 1] = list_occupied_grids[i][:, 1]
 
     # create output text files
     fname_occupied_grids = output_prefix + '_occupied_grids_by_run.npy'
-    fname_new_grids = output_prefix +'_new_grids_by_run.npy'
+    fname_new_grids = output_prefix + '_new_grids_by_run.npy'
     numpy.savetxt(fname_occupied_grids, occupied_grids)
     numpy.savetxt(fname_new_grids, new_grids)
     print 'output text files: \n%s \n%s' % (fname_occupied_grids,
@@ -300,8 +311,8 @@ def calc_sas_convergence_by_run(sas_folders, output_prefix=None,
 def calc_spatial_convergence_all(pdb_fname, dcd_fnames, output_prefix=None,
                                  show=False, **kwargs):
 
-    assert len(sas_folders) == 1, ("ERROR: mode for examining multiple "
-                                   "folders requires additional debugging")
+    assert len(dcd_fnames) == 1, ("ERROR: mode for examining multiple "
+                                  "dcd files not currently tested")
 
     if not output_prefix:
         output_prefix = pdb_fname[:-4]
@@ -314,8 +325,8 @@ def calc_spatial_convergence_all(pdb_fname, dcd_fnames, output_prefix=None,
                          list_occupied_voxels, **kwargs)
 
     n_structures = sum([len(new_voxels) for new_voxels in list_new_voxels])
-    new_voxels = numpy.zeros((n_structures, 2))
-    occupied_voxels = numpy.zeros((n_structures, 2))
+    new_voxels = numpy.empty((n_structures, 2))
+    occupied_voxels = numpy.empty((n_structures, 2))
     new_voxels[:, 0] = numpy.arange(n_structures)
     occupied_voxels[:, 0] = numpy.arange(n_structures)
     for i in xrange(len(dcd_fnames)):
@@ -325,12 +336,11 @@ def calc_spatial_convergence_all(pdb_fname, dcd_fnames, output_prefix=None,
 
     # create output text files
     fname_occupied_voxels = output_prefix + '_occupied_voxels.npy'
-    fname_new_voxels = output_prefix +'_new_voxels.npy'
+    fname_new_voxels = output_prefix + '_new_voxels.npy'
     numpy.savetxt(fname_occupied_voxels, occupied_voxels)
     numpy.savetxt(fname_new_voxels, new_voxels)
     print 'output text files: \n%s \n%s' % (fname_occupied_voxels,
                                             fname_new_voxels)
-
 
     plot_convergence(new_voxels, dcd_fnames, occupied_voxels,
                      output_prefix, show)
@@ -340,7 +350,7 @@ def calc_spatial_convergence_by_run(pdb_fname, dcd_fnames, output_prefix=None,
                                     show=False, **kwargs):
 
     assert len(sas_folders) == 1, ("ERROR: mode for examining multiple "
-                                   "folders requires additional debugging")
+                                   "folders not currently tested")
 
     if not output_prefix:
         output_prefix = pdb_fname[:4]
@@ -353,18 +363,18 @@ def calc_spatial_convergence_by_run(pdb_fname, dcd_fnames, output_prefix=None,
                          list_occupied_voxels, **kwargs)
 
     n_structures = sum([len(new_voxels) for new_voxels in list_new_voxels])
-    new_voxels = numpy.zeros((n_structures, len(dcd_fnames)+1))
-    occupied_voxels = numpy.zeros((n_structures, len(dcd_fnames)+1))
+    new_voxels = numpy.empty((n_structures, len(dcd_fnames) + 1))
+    occupied_voxels = numpy.empty((n_structures, len(dcd_fnames) + 1))
     new_voxels[:, 0] = numpy.arange(n_structures)
     occupied_voxels[:, 0] = numpy.arange(n_structures)
     for i in xrange(len(dcd_fnames)):
-        rows = list_new_voxels[i][:, 0] -1
-        new_voxels[rows, i+1] = list_new_voxels[i][:, 1]
-        occupied_voxels[rows, i+1] = list_occupied_voxels[i][:, 1]
+        rows = list_new_voxels[i][:, 0] - 1
+        new_voxels[rows, i + 1] = list_new_voxels[i][:, 1]
+        occupied_voxels[rows, i + 1] = list_occupied_voxels[i][:, 1]
 
     # create output text files
     fname_occupied_voxels = output_prefix + '_occupied_voxels_by_run.npy'
-    fname_new_voxels = output_prefix +'_new_voxels_by_run.npy'
+    fname_new_voxels = output_prefix + '_new_voxels_by_run.npy'
     numpy.savetxt(fname_occupied_voxels, occupied_voxels)
     numpy.savetxt(fname_new_voxels, new_voxels)
     print 'output text files: \n%s \n%s' % (fname_occupied_voxels,
@@ -384,12 +394,20 @@ def count_new_spatial_voxels(coors, voxel_set, delta):
     return number_new_voxels
 
 
-def count_sas_grids(sas_folders, iq_all, n_q, n_spec, list_new_grids,
-                    list_occupied_grids, granularity=int(1e3), iq_low=0, iq_high=2):
+def count_sas_grids(
+        sas_folders,
+        iq_all,
+        n_q,
+        n_spec,
+        list_new_grids,
+        list_occupied_grids,
+        granularity=int(1e3),
+        iq_low=0,
+        iq_high=2):
 
     den = float(iq_high - iq_low)
-    # grid = numpy.zeros((n_q, granularity+1))
-    delta_i = 1.0/granularity # using I(0) = 1 as the default
+
+    delta_i = 1.0 / granularity  # using I(0) = 1 as the default
     number_of_occupied_grids = 0
     cwd = os.getcwd()
 
@@ -398,7 +416,7 @@ def count_sas_grids(sas_folders, iq_all, n_q, n_spec, list_new_grids,
         logging.info('processing spec files from: {}\n'.format(this_folder))
 
         output_prefix = os.path.join(cwd, this_folder, '{}_of_{}'.format(
-            i_folder+1, len(sas_folders)) )
+            i_folder + 1, len(sas_folders)))
         output_new_grids = output_prefix + '_new_grids.npy'
         output_occupied_grids = output_prefix + '_occupied_grids.npy'
 
@@ -417,13 +435,15 @@ def count_sas_grids(sas_folders, iq_all, n_q, n_spec, list_new_grids,
                          'to:\n%s \n%s' % (output_new_grids,
                                            output_occupied_grids))
 
-            this_folder_new_grids = numpy.zeros((n_spec[i_folder], 2), dtype=int)
+            this_folder_new_grids = numpy.zeros(
+                (n_spec[i_folder], 2), dtype=int)
             this_folder_new_grids[:, 0] = numpy.arange(n_spec[i_folder]) + 1
             this_folder_occupied_grids = numpy.copy(this_folder_new_grids)
             occupied_grids = {}
 
             # convert I(Q) to bin number
-            binned_iqs = numpy.array((iq_all[i_folder] - 1.0)/delta_i, dtype=int)
+            binned_iqs = numpy.array(
+                (iq_all[i_folder] - 1.0) / delta_i, dtype=int)
 
             for i_spec in xrange(n_spec[i_folder]):
                 number_of_new_grids = 0
@@ -434,7 +454,8 @@ def count_sas_grids(sas_folders, iq_all, n_q, n_spec, list_new_grids,
                         number_of_new_grids += 1
                         occupied_grids[q] = grids_this_q
                 number_of_occupied_grids += number_of_new_grids
-                this_folder_occupied_grids[i_spec, 1] = number_of_occupied_grids
+                this_folder_occupied_grids[
+                    i_spec, 1] = number_of_occupied_grids
                 this_folder_new_grids[i_spec, 1] = number_of_new_grids
 
             # print "temporarily not saving output"
@@ -453,7 +474,7 @@ def old_count_sas_grids(sas_folders, iq_low, iq_high, iq_all, n_q, n_spec,
 
     iq_low = numpy.array(iq_low).min(axis=0)
     iq_high = numpy.array(iq_high).max(axis=0)
-    grid = numpy.zeros((n_q, n_grids+1))
+    grid = numpy.zeros((n_q, n_grids + 1))
     number_of_occupied_grids = 0
     i_spec = 0
 
@@ -463,7 +484,7 @@ def old_count_sas_grids(sas_folders, iq_low, iq_high, iq_all, n_q, n_spec,
     for (i_folder, this_folder) in enumerate(sas_folders):
         print 'processing spec files from: %s\n' % this_folder
         output_prefix = os.path.join(cwd, this_folder, '%d_of_%d' %
-                                     (i_folder+1, len(sas_folders)) )
+                                     (i_folder + 1, len(sas_folders)))
         output_new_grids = output_prefix + '_new_grids.npy'
         output_occupied_grids = output_prefix + '_occupied_grids.npy'
 
@@ -471,16 +492,16 @@ def old_count_sas_grids(sas_folders, iq_low, iq_high, iq_all, n_q, n_spec,
             # try loading output from previous run
             this_folder_new_grids = numpy.load(output_new_grids)
             this_folder_occupied_grids = numpy.load(output_occupied_grids)
-            print ('Successfully loaded new voxels and occupied voxels '
-                   'for %s from:\n%s \n%s' % (this_folder,
-                                              output_new_grids,
-                                              output_occupied_grids))
+            print('Successfully loaded new voxels and occupied voxels '
+                  'for %s from:\n%s \n%s' % (this_folder,
+                                             output_new_grids,
+                                             output_occupied_grids))
         except:
             # calculate and create output
-            print ('Calculating convergence. Did not find output files from '
-                   'previous calculation. Storing the output to:\n%s \n%s' % (
-                       output_new_grids,
-                       output_occupied_grids))
+            print('Calculating convergence. Did not find output files from '
+                  'previous calculation. Storing the output to:\n%s \n%s' % (
+                      output_new_grids,
+                      output_occupied_grids))
 
             this_folder_new_grids = numpy.zeros((n_spec[i_folder], 2),
                                                 dtype=int)
@@ -522,7 +543,7 @@ def count_spatial_voxels(pdb_fname, dcd_fnames, list_new_voxels,
                          **kwargs):
 
     # initialize molecule and mask
-    mol=sasmol.SasMol(0)
+    mol = sasmol.SasMol(0)
     mol.read_pdb(pdb_fname)
     n_dcds = len(dcd_fnames)
     cap_filter = '(name[i]=="CA" or name[i]=="P")'
@@ -536,10 +557,9 @@ def count_spatial_voxels(pdb_fname, dcd_fnames, list_new_voxels,
     number_occupied_voxels = 0
 
     tic = time.time()
-    # i_frame = 0
     for (i_dcd, dcd_fname) in enumerate(dcd_fnames):
         print 'processing dcd: %s\n' % dcd_fname
-        dcd_output_prefix = '%s_%d_of_%d' % (dcd_fname[:-4], i_dcd+1,
+        dcd_output_prefix = '%s_%d_of_%d' % (dcd_fname[:-4], i_dcd + 1,
                                              n_dcds)
         output_new_voxels = '%s%s_new_voxels.npy' % (
             dcd_output_prefix, filter_label)
@@ -550,16 +570,16 @@ def count_spatial_voxels(pdb_fname, dcd_fnames, list_new_voxels,
             # try loading output from previous run
             this_dcd_new_voxels = numpy.load(output_new_voxels)
             this_dcd_occupied_voxels = numpy.load(output_occupied_voxels)
-            print ('Successfully loaded new voxels and occupied voxels '
-                   'for %s from:\n%s \n%s' % (dcd_fname,
-                                              output_new_voxels,
-                                              output_occupied_voxels))
+            print('Successfully loaded new voxels and occupied voxels '
+                  'for %s from:\n%s \n%s' % (dcd_fname,
+                                             output_new_voxels,
+                                             output_occupied_voxels))
         except:
             # calculate and create output
-            print ('Calculating convergence. Did not find output files from '
-                   'previous calculation. Storing the output to:\n%s \n%s' % (
-                       output_new_voxels,
-                       output_occupied_voxels))
+            print('Calculating convergence. Did not find output files from '
+                  'previous calculation. Storing the output to:\n%s \n%s' % (
+                      output_new_voxels,
+                      output_occupied_voxels))
 
             if align_dcd:
                 inputs = AlignInputs(pdb_fname, dcd_fname, pdb_fname,
@@ -568,20 +588,19 @@ def count_spatial_voxels(pdb_fname, dcd_fnames, list_new_voxels,
 
             dcd_file = mol.open_dcd_read(dcd_fname)
             number_of_frames = dcd_file[2]
-            this_dcd_new_voxels = numpy.zeros((number_of_frames, 2),dtype=int)
-            this_dcd_new_voxels[:, 0] = numpy.arange(n_spec[i_folder]) + 1
+            this_dcd_new_voxels = numpy.empty((number_of_frames, 2), dtype=int)
+            this_dcd_new_voxels[:, 0] = numpy.arange(number_of_frames) + 1
             this_dcd_occupied_voxels = numpy.copy(this_dcd_new_voxels)
 
             for nf in xrange(number_of_frames):
                 mol.read_dcd_step(dcd_file, nf)
                 error, coor = mol.get_coor_using_mask(0, mask)
                 assert not error, error
-                number_new_voxels = count_new_spatial_voxels(coor[0], voxel_set,
-                                                             voxel_size)
+                number_new_voxels = count_new_spatial_voxels(
+                    coor[0], voxel_set, voxel_size)
                 number_occupied_voxels += number_new_voxels
                 this_dcd_occupied_voxels[nf, 1] = number_occupied_voxels
                 this_dcd_new_voxels[nf, 1] = number_new_voxels
-                # i_frame += 1
 
             numpy.save(output_new_voxels, this_dcd_new_voxels)
             numpy.save(output_occupied_voxels, this_dcd_occupied_voxels)
@@ -594,24 +613,24 @@ def count_spatial_voxels(pdb_fname, dcd_fnames, list_new_voxels,
 
 
 def get_spatial_voxel_number(coor, delta):
-    idx = int(coor[0]/delta)
-    idy = int(coor[1]/delta)
-    idz = int(coor[2]/delta)
+    idx = int(coor[0] / delta)
+    idy = int(coor[1] / delta)
+    idz = int(coor[2] / delta)
     return (idx, idy, idz)
 
 
 def load_iq(sas_folders, sas_ext, iq_all):
     n_folders = len(sas_folders)
 
-    n_q = numpy.zeros(n_folders, dtype=int)
-    n_spec = numpy.zeros(n_folders, dtype=int)
+    n_q = numpy.empty(n_folders, dtype=int)
+    n_spec = numpy.empty(n_folders, dtype=int)
 
     cwd = os.getcwd()
 
     for (i_folder, this_folder) in enumerate(sas_folders):
         logging.info('loading spec files from: {}'.format(this_folder))
         output_prefix = os.path.join(cwd, this_folder, '{}_of_{}'.format(
-            i_folder+1, n_folders))
+            i_folder + 1, n_folders))
         output_iq = output_prefix + '_iq.h5'
 
         sas_search_path = os.path.join(cwd, this_folder, '*.' + sas_ext)
@@ -629,25 +648,27 @@ def load_iq(sas_folders, sas_ext, iq_all):
                 q_vals = store['q']
                 n_q[i_folder] = len(q_vals)
                 these_iqs = numpy.array(these_iqs_df)
-                logging.info('Successfully loaded iq_array for {} from:\n{}'.format(
-                    this_folder, output_iq))
+                logging.info(
+                    'Successfully loaded iq_array for {} from:\n{}'.format(
+                        this_folder, output_iq))
             except:
-                logging.info('Loading in iq data from {}. Output stored to:\n{}'.format(
-                    this_folder, output_iq))
+                logging.info(
+                    'Loading in iq data from {}. Output stored to:\n{}'.format(
+                        this_folder, output_iq))
 
                 file_list.sort()
                 ref_iq = numpy.loadtxt(file_list[0])
                 q_vals = pandas.Series(ref_iq[:, 0])
                 n_q[i_folder] = len(q_vals)
-                these_iqs = numpy.zeros((n_spec[i_folder], n_q[i_folder]))
+                these_iqs = numpy.empty((n_spec[i_folder], n_q[i_folder]))
 
                 for (j, this_file) in enumerate(file_list):
                     this_iq = numpy.loadtxt(this_file)
-                    if not numpy.all( 0.0 == (this_iq[:,0] - q_vals) ):
-                        logging.error('Q values do not match for iq file: {0}'.format(
-                            iq_file))
+                    if not numpy.all(0.0 == (this_iq[:, 0] - q_vals)):
+                        logging.error(
+                            'Q values do not match for iq file: {0}'.format(iq_file))
 
-                    these_iqs[j] = this_iq[:, 1] / this_iq[0,1] # I(0) = 1
+                    these_iqs[j] = this_iq[:, 1] / this_iq[0, 1]  # I(0) = 1
 
                 these_iqs_df = pandas.DataFrame(these_iqs, columns=q_vals)
                 store['iq'] = these_iqs_df
@@ -670,7 +691,7 @@ def plot_convergence(new_voxels, dcd_fnames, occupied_voxels,
                      output_prefix, show=False, spatial=True):
     fig = plt.figure(figsize=(6, 10))
     gs = gridspec.GridSpec(2, 1, left=0.1, right=0.9, wspace=0, hspace=0)
-    ax=[]
+    ax = []
     ax.append(plt.subplot(gs[0]))
     ax.append(plt.subplot(gs[1]))
     n_plots = new_voxels.shape[1] - 1
@@ -681,24 +702,29 @@ def plot_convergence(new_voxels, dcd_fnames, occupied_voxels,
             label = ''
         if i > 0:
             # rows = (new_voxels[:, i+1] > 0)
-            ax[0].plot(new_voxels[1:, 0], new_voxels[1:, i+1],
+            ax[0].plot(new_voxels[1:, 0], new_voxels[1:, i + 1],
                        label=label)
         else:
             # rows = (new_voxels[:, i+1] > 0)[1:] # skip the initial frame
-            ax[0].plot(new_voxels[1:, 0], new_voxels[1:, i+1],
+            ax[0].plot(new_voxels[1:, 0], new_voxels[1:, i + 1],
                        label=label)
     ax[0].xaxis.set_ticklabels([])
-    if n_plots > 1 :
+    if n_plots > 1:
         lg = ax[0].legend(bbox_to_anchor=(1, 1), loc=2)
         # lg.draw_frame(False)
 
     for i in xrange(n_plots):
         if i > 0:
-            rows = (occupied_voxels[:, i+1] > 0) # only plot non-zero values
-            ax[1].plot(occupied_voxels[rows, 0], occupied_voxels[rows, i+1])
+            rows = (occupied_voxels[:, i + 1] > 0)  # only plot non-zero values
+            ax[1].plot(occupied_voxels[rows, 0], occupied_voxels[rows, i + 1])
         else:
-            rows = (occupied_voxels[:, i+1] > 0)[1:] # skip the initial frame
-            ax[1].plot(occupied_voxels[rows, 0], occupied_voxels[rows, i+1])
+            rows = (
+                occupied_voxels[
+                    :,
+                    i +
+                    1] > 0)[
+                1:]  # skip the initial frame
+            ax[1].plot(occupied_voxels[rows, 0], occupied_voxels[rows, i + 1])
     ax[1].set_xlabel('Structures')
     ylim = ax[1].get_ylim()
     ax[1].set_ylim((ylim[0], ylim[1] * 1.1))
@@ -715,17 +741,17 @@ def plot_convergence(new_voxels, dcd_fnames, occupied_voxels,
     plt.savefig(plot_name + '.eps', dpi=400, bbox_inches='tight')
     plt.savefig(plot_name + '.png', dpi=400, bbox_inches='tight')
     print 'Saving figure to: \nevince %s.eps &\neog %s.png &' % (plot_name,
-                                                              plot_name)
+                                                                 plot_name)
     if show:
         plt.show()
     else:
         plt.close('all')
 
-if __name__=='__main__':
+if __name__ == '__main__':
     import sys
 
-    mol=sasmol.SasMol(0)
-    if len(sys.argv)<3:
+    mol = sasmol.SasMol(0)
+    if len(sys.argv) < 3:
         mol.read_pdb('min_dsDNA60.pdb')
         # mol.read_dcd('run3_100k_ngb/monte_carlo/min_dsDNA60.dcd')
         dcd_full_name = 'run3_100k_ngb/monte_carlo/min_dsDNA60_sparse.dcd'
@@ -749,30 +775,34 @@ if __name__=='__main__':
     fout.write("#frame_number, number_of_occupied_voxels\n")
 
     for nf in xrange(number_of_frames):
-        mol.read_dcd_step(dcd_file, nf+1)
+        mol.read_dcd_step(dcd_file, nf + 1)
         error, coors = mol.get_coor_using_mask(0, mask)
         assert not error, error
-        number_new_voxels = count_new_spatial_voxels(coors[0], voxel_set, delta)
+        number_new_voxels = count_new_spatial_voxels(
+            coors[0], voxel_set, delta)
         number_occupied_voxels += number_new_voxels
         list_number_new_voxels.append(number_new_voxels)
         list_number_occupied_voxels.append(number_occupied_voxels)
-        fout.write("%d %d\n"%(nf, number_occupied_voxels))
+        fout.write("%d %d\n" % (nf, number_occupied_voxels))
     fout.close()
     toc = time.time() - tic
     print "\ntime used: ", toc
 
     fig = plt.figure(figsize=(6, 6))
     gs = gridspec.GridSpec(2, 1, left=0.2, right=0.95, wspace=0, hspace=0)
-    ax=[]
+    ax = []
     ax.append(plt.subplot(gs[0]))
     ax.append(plt.subplot(gs[1]))
     ax[0].plot(range(len(list_number_new_voxels)), list_number_new_voxels)
     ax[0].set_xlabel('Structure')
     ax[0].set_ylabel('number of new voxels')
-    ax[0].set_yscale('log') #lim([0, max(list_number_new_voxels)*1.05])
+    ax[0].set_yscale('log')  # lim([0, max(list_number_new_voxels)*1.05])
     ax[0].xaxis.set_ticklabels([])
 
-    ax[1].plot(range(len(list_number_occupied_voxels)), list_number_occupied_voxels)
+    ax[1].plot(
+        range(
+            len(list_number_occupied_voxels)),
+        list_number_occupied_voxels)
     ax[1].set_xlabel('Structure')
     ax[1].set_ylabel('number of occupied voxels')
     ylim = ax[1].get_ylim()
