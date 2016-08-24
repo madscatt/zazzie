@@ -264,12 +264,8 @@ def calc_sas_convergence_all(sas_folders, output_prefix=None,
                      output_prefix, show, spatial=False)
 
 
-def calc_sas_convergence_by_run(
-        sas_folders,
-        output_prefix=None,
-        granularity=int(1e3),
-        show=False,
-        sas_ext='iq'):
+def calc_sas_convergence_by_run(sas_folders, output_prefix=None,
+                                granularity=int(1e3), show=False, sas_ext='iq'):
 
     assert len(sas_folders) == 1, ("ERROR: mode for examining multiple "
                                    "folders not currently tested")
@@ -394,16 +390,9 @@ def count_new_spatial_voxels(coors, voxel_set, delta):
     return number_new_voxels
 
 
-def count_sas_grids(
-        sas_folders,
-        iq_all,
-        n_q,
-        n_spec,
-        list_new_grids,
-        list_occupied_grids,
-        granularity=int(1e3),
-        iq_low=0,
-        iq_high=2):
+def count_sas_grids(sas_folders, iq_all, n_q, n_spec, list_new_grids,
+                    list_occupied_grids, granularity=int(1e3), iq_low=0,
+                    iq_high=2):
 
     den = float(iq_high - iq_low)
 
