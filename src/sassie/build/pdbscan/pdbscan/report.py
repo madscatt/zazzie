@@ -150,8 +150,6 @@ def generate_simulation_prep_report(mol):
     rep.append('parameterized structures. PDB Scan suggests the following ')
     rep.append('mapping of residues from the input chains to segments.\n')
 
-    #widths = [6, 7, 15, 19]
-    #just = ['l', 'l', 'l','l']
     widths = [6, 7, 4, 13, 16]
     just = ['l', 'l', 'l','l','l']
     contents = []
@@ -171,7 +169,6 @@ def generate_simulation_prep_report(mol):
             index_range = str(atom_info['original_index'][0]) + '-' + str(atom_info['original_index'][1])
             seg_moltype = atom_info['moltype'][:3]
 
-            #tmp_contents.append([chain, segname, resid_range, index_range])
             tmp_contents.append([chain, segname, seg_moltype, resid_range, index_range])
 
         contents += sorted(tmp_contents, key = lambda x: x[3])
@@ -179,8 +176,6 @@ def generate_simulation_prep_report(mol):
     for line in contents:
         segname_list.append(line[1])
 
-
-    #header = ['Chain','Segname','Resids','Indices']
     header = ['Chain','Segname','Type','Resids','Indices']
 
     rep += pdt.create_pandoc_table(header, contents, widths, just)
@@ -195,7 +190,6 @@ def generate_simulation_prep_report(mol):
     just = ['c','c','c','c','c']
     contents = []
 
-    #for segname, checks in sim_ready_checks.iteritems():
     for segname in segname_list:
 
         checks = sim_ready_checks[segname]
