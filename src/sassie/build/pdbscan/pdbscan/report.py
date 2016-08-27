@@ -337,7 +337,12 @@ def create_header_summary(header):
     # primary citation information
     cite_data = ref_info.citation
 
-    table_header = ['Class', pdb_recs['HEADER'][0]['class']]
+    if pdb_recs['HEADER']:
+        class_txt = pdb_recs['HEADER'][0]['class']
+    else:
+        class_txt = 'Unknown'
+
+    table_header = ['Class', class_txt]
 
     # contents will contain line of the table
     contents = []
