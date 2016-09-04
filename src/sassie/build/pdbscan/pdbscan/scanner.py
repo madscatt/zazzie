@@ -2325,6 +2325,11 @@ class SasMolScan(sasmol.SasMol):
                                         sim_ready[segname]['chain'] and
                                         sim_ready[segname]['single_conformer'])
 
+            # We should warn people if start residue is not 1
+            first_resid = self.segname_info.sequence[segname][0][0]
+
+            sim_ready[segname]['start'] = (first_resid == 1)
+
         return
 
     def check_protein_residue_dihed_atoms(self, ndxs):
