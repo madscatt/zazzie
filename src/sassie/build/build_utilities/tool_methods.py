@@ -177,10 +177,13 @@ class build_utilities():
                     dum.append(eval(value))
                 mvars.constraint_resets = dum
 
+            if(mvars.translation_rotation_flag):
+
+                mvars.translation_array = numpy.array(mvars.translation_array, numpy.float)
+
 
         if(mvars.fasta_utilities_flag):
             pass
-
 
 
     def pdb_and_fasta(self):
@@ -219,15 +222,28 @@ class build_utilities():
             elif(mvars.renumber_resids_flag):
                 mvars.molecule.renumber(resid=mvars.first_resid)
 
-            mvars.molecule.write_pdb(mvars.renumber_output_filename, frame, 'w')
+            mvars.molecule.write_pdb(os.path.join(self.runpath, mvars.renumber_output_filename), frame, 'w')
 
         elif(mvars.pdb_constraints_flag):
             for i in xrange(mvars.number_of_constraint_files):
-                mvars.molecule.make_constraint_pdb(mvars.constraint_filenames[i], mvars.constraint_options[i], field=mvars.constraint_fields[i], reset=mvars.constraint_resets[i])
+                mvars.molecule.make_constraint_pdb(os.path.join(self.runpath, mvars.constraint_filenames[i]), mvars.constraint_options[i], field=mvars.constraint_fields[i], reset=mvars.constraint_resets[i])
+
+        elif(mvars.translation_rotation_flag):
+
+            if(mvars.pre_center_flag):
+                mvars.molecule.center(frame)
+
+            mvars.molecule.translate(frame, mvars.translation_array)            
+
+            ### ROTATION CODE GOES HERE
 
 
+    
+            mvars.molecule.write_pdb(os.path.join(self.runpath, mvars.translation_rotation_output_filename), frame, 'w')
+
+        
         return
-
+    
 
     def epilogue(self):
         """

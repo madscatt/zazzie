@@ -29,7 +29,7 @@ renumber_resids_flag = True
 first_index = '7'
 first_resid = '9'
 
-pdb_constraints_flag = True
+pdb_constraints_flag = False
 number_of_constraint_files = '1'
 constraint_options = 'protein'
 constraint_options = 'nucleic'
@@ -46,7 +46,7 @@ constraint_fields = 'beta, beta'
 constraint_resets = 'True, True'
 constraint_filenames = 'constrain_heavy.pdb, constrain_backbone.pdb'
 
-translation_rotation_flag = False
+translation_rotation_flag = True
 translation_rotation_output_filename = 'trans_rot.pdb'
 pre_center_flag = False
 translation_array = '0.0, 0.0, 0.0'
