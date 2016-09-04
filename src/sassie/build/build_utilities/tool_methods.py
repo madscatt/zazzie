@@ -98,25 +98,57 @@ class build_utilities():
         self.log.debug('in unpack_variables')
 
         mvars.runname = variables['runname'][0]
-        mvars.pdbfile = variables['pdbfile'][0]
         
-        #mvars.seed = variables['seed'][0]
-        mvars.seed = [0]
+        mvars.pdb_utilities_flag = variables['pdb_utilities_flag'][0]
+         
+        if(mvars.pdb_utilities_flag):
+            mvars.pdbfile = variables['pdbfile'][0]
+       
+        mvars.renumber_flag = variables['renumber_flag'][0]
+        
+        if(mvars.renumber_flag): 
+            mvars.renumber_output_filename = variables['renumber_output_filename'][0]
+            mvars.renumber_indices_flag = variables['renumber_indices_flag'][0]
+    
+            if(mvars.renumber_indices_flag):
+                mvars.first_index = variables['first_index'][0]
 
-        return
+            mvars.renumber_resids_flag = variables['renumber_resids_flag'][0]
+            
+            if(mvars.renumber_resids_flag):
+                mvars.first_resid = variables['first_resid'][0]
+       
+        mvars.pdb_constraints_flag = variables['pdb_constraints_flag'][0]
+       
+        if(mvars.pdb_constraints_flag):
+            mvars.number_of_constraint_files = variables['number_of_constraint_files'][0]
+            mvars.constraint_options = variables['constraint_options'][0]
+            mvars.constraint_filenames = variables['constraint_filenames'][0]
+            mvars.constraint_fields = variables['constraint_fields'][0]
+            mvars.constraint_resets = variables['constraint_resets'][0]
+             
+        mvars.translation_rotation_flag = variables['translation_rotation_flag'][0]
+        
+        if(mvars.translation_rotation_flag):
+            mvars.translation_rotation_output_filename = variables['translation_rotation_output_filename'][0]
+            mvars.pre_center_flag = variables['pre_center_flag'][0] 
+            mvars.translation_array = variables['translation_array'][0] 
+            mvars.rotation_axes = variables['rotation_axes'][0] 
+            mvars.rotation_order = variables['rotation_order'][0] 
+            mvars.rotation_array = variables['rotation_array'][0] 
+       
+        
+        mvars.fasta_utilities_flag = variables['fasta_utilities_flag'][0]
+        
+        if(mvars.fasta_utilities_flag):
+            mvars.fasta_input_option = variables['fasta_input_option'][0]
 
-    def setup_groups(self):
-        """
-        method to create composite group molecules and collect group variables
-        based on rotation sampling types
-        """
+            if(mvars.fasta_input_option == 'sequence'):
+                mvars.fasta_input_sequence = variables['fasta_input_sequence'][0] 
+            elif(mvars.fasta_input_option == 'file'):
+                mvars.fasta_input_file = variables['fasta_input_file'][0] 
 
-        log = self.log
-        mvars = self.mvars
-        full_molecule = self.full_molecule
-        pgui = self.run_utils.print_gui
-
-        log.debug('in setup_groups')
+        mvars.seed = variables['seed'][0]
 
         return
 
@@ -128,6 +160,27 @@ class build_utilities():
         log = self.log
         log.debug('in initialization')
         mvars = self.mvars
+
+        if(mvars.pdb_utilities_flag):
+            mvars.molecule = sasmol.SasMol(0)
+            mvars.molecule.read_pdb(mvars.pdbfile)
+
+            if(mvars.pdb_constraints_flag):
+
+                mvars.constraint_options = [x.strip() for x in mvars.constraint_options.split(',')]
+                mvars.constraint_fields = [x.strip() for x in mvars.constraint_fields.split(',')]
+                mvars.constraint_filenames = [x.strip() for x in mvars.constraint_filenames.split(',')]
+                mvars.constraint_resets = [x.strip() for x in mvars.constraint_resets.split(',')]
+                
+                dum = [] 
+                for value in mvars.constraint_resets:
+                    dum.append(eval(value))
+                mvars.constraint_resets = dum
+
+
+        if(mvars.fasta_utilities_flag):
+            pass
+
 
 
     def pdb_and_fasta(self):
@@ -157,6 +210,21 @@ class build_utilities():
 
         """ main loop """
 
+        if(mvars.renumber_flag):
+            if(mvars.renumber_indices_flag):
+                if(mvars.renumber_resids_flag):
+                    mvars.molecule.renumber(index=mvars.first_index, resid=mvars.first_resid)
+                else:
+                    mvars.molecule.renumber(index=mvars.first_index)
+            elif(mvars.renumber_resids_flag):
+                mvars.molecule.renumber(resid=mvars.first_resid)
+
+            mvars.molecule.write_pdb(mvars.renumber_output_filename, frame, 'w')
+
+        elif(mvars.pdb_constraints_flag):
+            for i in xrange(mvars.number_of_constraint_files):
+                mvars.molecule.make_constraint_pdb(mvars.constraint_filenames[i], mvars.constraint_options[i], field=mvars.constraint_fields[i], reset=mvars.constraint_resets[i])
+
 
         return
 
@@ -177,6 +245,6 @@ class build_utilities():
         pgui("\n\n") 
         pgui("%s \n" % ('=' * 60)) 
         
-        time.sleep(2) 
+        #time.sleep(2) 
 
         return

@@ -1,13 +1,7 @@
-import sys,os
-import sassie.util.sasconfig as sasconfig
 import sasmol.sasmol as sasmol
-import sasmol.sasmath as sasmath
-import sassie.simulate.energy.readpsf as readpsf
-import sassie.simulate.energy.readparam as readparam
-import sassie.simulate.torsion_angle_monte_carlo.group_psf as group_psf
 import sassie.simulate.torsion_angle_monte_carlo.monte_carlo_utilities.tamc_utilities.setup_torsion_parameters as setup_torsion_parameters
-import numpy
-
+import sassie.util.basis_to_python as basis_to_python
+import re
 
 def define_main_pivots(direction):
     '''
@@ -90,12 +84,17 @@ def build_basis_strings(residue_main_pivots,residue_main_pivots_outside,residue_
     cter = isopeptide_basis_string.split('or')[0] ## @NOTE to ZHL: assume contract
     lys = isopeptide_basis_string.split('or')[1] ## @NOTE to ZHL: assume contract
 
-    cter_list = cter.split()
-    cter_resid = int(cter_list[cter_list.index('resid')+1])
-    cter_segname = cter_list[cter_list.index('segname')+1]
-    lys_list = lys.split()
-    lys_resid = int(lys_list[lys_list.index('resid')+1])
-    lys_segname = lys_list[lys_list.index('segname')+1]
+    r_resid = re.compile(r'resid\[i\]\s*==\s*("|\'{0,1})([\w\'"]+)\1')
+    r_segname = re.compile(r'segname\[i\]\s*==\s*("|\'{0,1})([\w\'"]+)\1')
+
+    basis_python = basis_to_python.parse_basis(cter)
+    cter_resid = int(r_resid.search(basis_python).groups()[1])
+    cter_segname  = r_segname.search(basis_python).groups()[1]
+
+    basis_python = basis_to_python.parse_basis(lys)
+    lys_resid = int(r_resid.search(basis_python).groups()[1])
+    lys_segname  = r_segname.search(basis_python).groups()[1]
+
     #print cter_resid,cter_segname
     #print lys_resid,lys_segname
 
@@ -196,7 +195,6 @@ def assign_main_pivots(group_flexible_molecule, pvars):
     for basis in residue_basis_strings:
         error, this_mask, this_indices = setup_torsion_parameters.get_subset_mask_and_indices_string_order(group_flexible_molecule,basis)
         main_pivots_indices.append(this_indices)
-        #main_pivots_indices.append(numpy.nonzero(this_mask)[0]+1) ## @NOTE to ZHL: temporary fix for a bug
         main_pivots_masks.append(this_mask)
         #print 'this_indices ['+str(i)+'] = ', this_indices
         i += 1
