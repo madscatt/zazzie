@@ -323,7 +323,7 @@ class ScaffoldBuilder():
 
                 else:
 
-                    print "No segnames selected"
+                    print("No segnames selected")
 
             altlocs = self.mol.segname_info.altloc
             alt_segnames = []
@@ -335,9 +335,9 @@ class ScaffoldBuilder():
                     alt_segnames.append(segname)
 
             if len(alt_segnames) > 0:
-                print "Multiple conformations were found for residues in the following segments:"
-                print str(alt_segnames)
-                print "Are you happy using the first conformation (altloc) for all residues? (answer [y]es/[n]o)"
+                print("Multiple conformations were found for residues in the following segments:")
+                print(str(alt_segnames))
+                print("Are you happy using the first conformation (altloc) for all residues? (answer [y]es/[n]o)")
 
                 choice = ''
 
