@@ -30,8 +30,8 @@ import logging
 import collections
 from textwrap import TextWrapper
 
-import cmdline_segname_editor as cmd_segname_edit
-import cmdline_transform_editor
+from . import cmdline_segname_editor as cmd_segname_edit
+from . import cmdline_transform_editor
 import sassie.build.pdbscan.pdbscan.data_struct as data_struct
 import sassie.build.pdbscan.pdbscan.pdbscan_utils as utils
 
@@ -567,7 +567,7 @@ class PreProcessor():
 
         accepted_segmentation = False
 
-        print "Do you wish to edit the system segmentation? (answer [y]es/[n]o)"
+        print("Do you wish to edit the system segmentation? (answer [y]es/[n]o)")
 
         while not accepted_segmentation:
 
@@ -593,21 +593,21 @@ class PreProcessor():
 
         while not accepted_sequences:
 
-            print "Current sequences (lowercase indicates residues not in coordinates): "
+            print("Current sequences (lowercase indicates residues not in coordinates): ")
 
             for segname in seq_segnames:
                 seq = mol.segname_info.sequence_to_fasta(segname, missing_lower=True)
-                print segname + ':'
-                print seq
+                print(segname + ':')
+                print(seq)
 
-            print "Do you want to edit any sequences? (answer [y]es/[n]o)"
+            print("Do you want to edit any sequences? (answer [y]es/[n]o)")
             choice = raw_input().lower()
 
             if choice in ['y','yes']:
 
                 if len(seq_segnames) > 1:
 
-                    print "Which segment do you wish to provide a sequence for?"
+                    print("Which segment do you wish to provide a sequence for?")
                     segname = raw_input().strip()
 
                 else:
@@ -624,15 +624,15 @@ class PreProcessor():
 
                         if not success:
 
-                            print "FASTA did not match existing sequence description"
+                            print("FASTA did not match existing sequence description")
 
                     else:
 
-                        print "Invalid FASTA sequence"
+                        print("Invalid FASTA sequence")
 
                 else:
 
-                    print "Invalid segname selected"
+                    print("Invalid segname selected")
 
             elif choice in ['n','no']:
 
@@ -640,19 +640,19 @@ class PreProcessor():
 
         if mol.segname_info.biomt:
 
-            print "Current biological unit transforms: "
+            print("Current biological unit transforms: ")
 
             import sassie.build.pdbscan.pdbscan.report as report
             for line in report.create_biomt_summary(mol.segname_info.biomt):
 
                 print(line)
         else:
-            print "There are no existing biological unit transforms"
+            print("There are no existing biological unit transforms")
 
         choice_made = False
 
         while not choice_made:
-            print "Do you want to add a new biological unit transform? (answer [y]es/[n]o)"
+            print("Do you want to add a new biological unit transform? (answer [y]es/[n]o)")
             choice = raw_input().lower()
 
             if choice in ['y','yes']:
@@ -662,7 +662,7 @@ class PreProcessor():
 
                 if mol.segname_info.biomt:
 
-                    print "Updated biological unit transforms: "
+                    print("Updated biological unit transforms: ")
 
                     for line in report.create_biomt_summary(mol.segname_info.biomt):
 
