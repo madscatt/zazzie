@@ -913,11 +913,15 @@ class Info():
         Check if the sequence of the selected subdiv(ision) is complete - i.e. 
         all residues have both resid and resname.
 
-        @type subdiv  :  string
-        @param subdiv :  Subdivision (chain or segname) label for first residue
-        @rtype        :  boolean
-        @return       :  Do all residues in selected subdiv(ision) sequence 
-                         have both resid and resname?
+        @type subdiv   :  string
+        @param subdiv  :  Subdivision (chain or segname) label for first
+                          residue
+        @type model_no :  integer
+        @param model_no:  Number of the model from which the sequence should
+                          be derived
+        @rtype         :  boolean
+        @return        :  Do all residues in selected subdiv(ision) sequence
+                          have both resid and resname?
         """
 
         complete = True
