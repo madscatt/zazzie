@@ -20,7 +20,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import structure_builder_pyrosetta as build_pyrosetta
+from . import structure_builder_pyrosetta as build_pyrosetta
 import sassie.build.pdbscan.pdbscan as pdbscan
 import sassie.build.pdbscan.pdbscan.pdbscan_utils as utils
 

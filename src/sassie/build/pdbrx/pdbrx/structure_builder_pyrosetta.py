@@ -10,7 +10,7 @@ from rosetta.protocols.grafting import CCDEndsGraftMover
 from rosetta.protocols.loops.loop_closure.ccd import CCDLoopClosureMover
 from rosetta.protocols.loops.loop_mover.refine import LoopMover_Refine_CCD
 
-import salign
+from . import salign
 
 import os
 import logging
@@ -188,7 +188,7 @@ class StructureBuilderPyRosetta():
                 flex_length_cter = 1
 
             elif loop_length > 12:
-                flex_len = int((loop_length/2) - 4)
+                flex_len = (loop_length//2) - 4
                 flex_length_nter = flex_len
                 flex_length_cter = flex_len
 
@@ -223,7 +223,7 @@ class StructureBuilderPyRosetta():
             loop_begin = self.scaffold_pose.pdb_info().pdb2pose(chain, anchors[0]) + 1
             loop_end = self.scaffold_pose.pdb_info().pdb2pose(chain,anchors[1]) - 1
 
-            loop = rosetta.Loop(loop_begin,loop_end,(loop_begin + loop_end)/2)
+            loop = rosetta.Loop(loop_begin,loop_end,(loop_begin + loop_end)//2)
 
         return loop
 
@@ -315,9 +315,9 @@ class StructureBuilderPyRosetta():
         end_res = self.get_last_residue_id_chain(self.scaffold_pose, chain)
 
         if len(frag_range) == 1:
-            loop = rosetta.Loop(original_end ,end_res-1, (original_end + end_res)/2)
+            loop = rosetta.Loop(original_end ,end_res-1, (original_end + end_res)//2)
         else:
-            loop = rosetta.Loop(original_end-1 ,end_res-1, (original_end + end_res)/2)
+            loop = rosetta.Loop(original_end-1 ,end_res-1, (original_end + end_res)//2)
 
         return loop
 
@@ -406,9 +406,9 @@ class StructureBuilderPyRosetta():
         self.scaffold_pose.pdb_info().obsolete(False)
 
         if len(frag_range) == 1:
-            loop = rosetta.Loop(1 ,original_term, (1 + original_term)/2)
+            loop = rosetta.Loop(1 ,original_term, (1 + original_term)//2)
         else:
-            loop = rosetta.Loop(1 ,original_term + 1, (1 + original_term + 1)/2)
+            loop = rosetta.Loop(1 ,original_term + 1, (1 + original_term + 1)//2)
 
         logger.info("Loops generated")
 
