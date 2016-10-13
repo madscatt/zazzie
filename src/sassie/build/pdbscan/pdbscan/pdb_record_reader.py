@@ -25,6 +25,7 @@ import string
 
 '''
 
+
 def split(str):
     """
     Wraps string.split so it can be used as a function in the parser
@@ -49,86 +50,86 @@ def split(str):
 
 rec_schemas = {
 
-# Commented out schemas are for coordinate record types which are handled by
-# the standard sasmol PDB reader
+    # Commented out schemas are for coordinate record types which are handled by
+    # the standard sasmol PDB reader
 
-#    'ATOM': (
-#        ('record', 0, 6, None),       # 0,  record type name
-#        ('index', 6, 11, int),        # 1,  atom serial/index no
-#        ('atomname', 12, 16, None),   # 2,  atom name
-#        ('alt', 16, None, None),      # 3,  altLoc
-#        ('resname', 17, 20, None),    # 4,  residue name
-#        ('chain', 21, None, None),    # 5,  chain ID
-#        ('resid', 22, 26, int),       # 6,  residue sequence number
-#        ('insert', 26, None, None),   # 7,  insertion code
-#        ('x', 30, 38, float),         # 8,  x
-#        ('y', 38, 46, float),         # 9,  y
-#        ('z', 46, 54, float),         # 10, z
-#        ('occ', 54, 60, float),       # 11, occupancy
-#        ('b', 60, 66, float),         # 12, temperature factor
-#        ('segid', 72, 76, None),      # 13, segment ID
-#        ('element', 76, 78, None),    # 14, element
-#        ('charge', 78, 80, None),     # 15, charge
-#    ),
-#
-#    'HETATM': (
-#        ('record', 0, 6, None),       # 0,  record type name
-#        ('index', 6, 11, int),        # 1,  atom serial/index no
-#        ('atomname', 12, 16, None),   # 2,  atom name
-#        ('alt', 16, None, None),      # 3,  altLoc
-#        ('resname', 17, 20, None),    # 4,  residue name
-#        ('chain', 21, None, None),    # 5,  chain ID
-#        ('resid', 22, 26, int),       # 6,  residue sequence number
-#        ('insert', 26, None, None),   # 7,  insertion code
-#        ('x', 30, 38, float),         # 8,  x
-#        ('y', 38, 46, float),         # 9,  y
-#        ('z', 46, 54, float),         # 10, z
-#        ('occ', 54, 60, float),       # 11, occupancy
-#        ('b', 60, 66, float),         # 12, temperature factor
-#        ('segid', 72, 76, None),      # 13, segment ID
-#        ('element', 76, 78, None),    # 14, element
-#        ('charge', 78, 80, None),     # 15, charge
-#    ),
-#
-#    'TER': (
-#        ('record', 0, 6, None),  # 0,  record type name
-#        ('text', 6, 80, str),    # 1,  text
-#    ),
-#
-#    'END': (
-#        ('record', 0, 6, None),  # 0,  record type name
-#        ('text', 6, 80, str),    # 1,  text
-#    ),
-#
-#    'ENDMDL': (
-#        ('record', 0, 6, None),  # 0,  record type name
-#        ('text', 6, 80, str),    # 1,  text
-#    ),
+    #    'ATOM': (
+    #        ('record', 0, 6, None),       # 0,  record type name
+    #        ('index', 6, 11, int),        # 1,  atom serial/index no
+    #        ('atomname', 12, 16, None),   # 2,  atom name
+    #        ('alt', 16, None, None),      # 3,  altLoc
+    #        ('resname', 17, 20, None),    # 4,  residue name
+    #        ('chain', 21, None, None),    # 5,  chain ID
+    #        ('resid', 22, 26, int),       # 6,  residue sequence number
+    #        ('insert', 26, None, None),   # 7,  insertion code
+    #        ('x', 30, 38, float),         # 8,  x
+    #        ('y', 38, 46, float),         # 9,  y
+    #        ('z', 46, 54, float),         # 10, z
+    #        ('occ', 54, 60, float),       # 11, occupancy
+    #        ('b', 60, 66, float),         # 12, temperature factor
+    #        ('segid', 72, 76, None),      # 13, segment ID
+    #        ('element', 76, 78, None),    # 14, element
+    #        ('charge', 78, 80, None),     # 15, charge
+    #    ),
+    #
+    #    'HETATM': (
+    #        ('record', 0, 6, None),       # 0,  record type name
+    #        ('index', 6, 11, int),        # 1,  atom serial/index no
+    #        ('atomname', 12, 16, None),   # 2,  atom name
+    #        ('alt', 16, None, None),      # 3,  altLoc
+    #        ('resname', 17, 20, None),    # 4,  residue name
+    #        ('chain', 21, None, None),    # 5,  chain ID
+    #        ('resid', 22, 26, int),       # 6,  residue sequence number
+    #        ('insert', 26, None, None),   # 7,  insertion code
+    #        ('x', 30, 38, float),         # 8,  x
+    #        ('y', 38, 46, float),         # 9,  y
+    #        ('z', 46, 54, float),         # 10, z
+    #        ('occ', 54, 60, float),       # 11, occupancy
+    #        ('b', 60, 66, float),         # 12, temperature factor
+    #        ('segid', 72, 76, None),      # 13, segment ID
+    #        ('element', 76, 78, None),    # 14, element
+    #        ('charge', 78, 80, None),     # 15, charge
+    #    ),
+    #
+    #    'TER': (
+    #        ('record', 0, 6, None),  # 0,  record type name
+    #        ('text', 6, 80, str),    # 1,  text
+    #    ),
+    #
+    #    'END': (
+    #        ('record', 0, 6, None),  # 0,  record type name
+    #        ('text', 6, 80, str),    # 1,  text
+    #    ),
+    #
+    #    'ENDMDL': (
+    #        ('record', 0, 6, None),  # 0,  record type name
+    #        ('text', 6, 80, str),    # 1,  text
+    #    ),
 
     'MASTER': (
         ('record', 0, 6, None),  # 0,  record type name
         ('text', 6, 80, str),    # 1,  text
     ),
 
-#    'ANISOU': (
-#        ('record', 0, 6, None),       # 0,  record type name
-#        ('index', 6, 11, int),        # 1,  atom serial/index no
-#        ('atomname', 12, 16, None),   # 2,  atom name
-#        ('alt', 16, None, None),      # 3,  altLoc
-#        ('resname', 17, 20, None),    # 4,  residue name
-#        ('chain', 21, None, None),    # 5,  chain ID
-#        ('resid', 22, 26, int),       # 6,  residue sequence number
-#        ('insert', 26, None, None),   # 7,  insertion code
-#        ('u11', 28, 35, int),         # 8,  U(1,1)
-#        ('u22', 35, 42, int),         # 9,  U(2,2)
-#        ('u33', 42, 49, int),         # 10, U(3,3)
-#        ('u12', 50, 56, int),         # 8,  U(1,2)
-#        ('u13', 56, 63, int),         # 9,  U(1,3)
-#        ('u23', 64, 70, int),         # 10, U(2,3)
-#        ('element', 76, 78, None),   # 11, element
-#        ('charge', 78, 80, None),     # 12, charge
-#
-#    ),
+    #    'ANISOU': (
+    #        ('record', 0, 6, None),       # 0,  record type name
+    #        ('index', 6, 11, int),        # 1,  atom serial/index no
+    #        ('atomname', 12, 16, None),   # 2,  atom name
+    #        ('alt', 16, None, None),      # 3,  altLoc
+    #        ('resname', 17, 20, None),    # 4,  residue name
+    #        ('chain', 21, None, None),    # 5,  chain ID
+    #        ('resid', 22, 26, int),       # 6,  residue sequence number
+    #        ('insert', 26, None, None),   # 7,  insertion code
+    #        ('u11', 28, 35, int),         # 8,  U(1,1)
+    #        ('u22', 35, 42, int),         # 9,  U(2,2)
+    #        ('u33', 42, 49, int),         # 10, U(3,3)
+    #        ('u12', 50, 56, int),         # 8,  U(1,2)
+    #        ('u13', 56, 63, int),         # 9,  U(1,3)
+    #        ('u23', 64, 70, int),         # 10, U(2,3)
+    #        ('element', 76, 78, None),   # 11, element
+    #        ('charge', 78, 80, None),     # 12, charge
+    #
+    #    ),
 
     'SITE': (
         ('record', 0, 6, None),  # 0,  record type name
@@ -458,10 +459,10 @@ rec_schemas = {
         ('angle', 53, 59, None),      # 11,  angle measurement
     ),
 
-#    'CONECT': (
-#        ('record', 0, 6, None),     # 0,  record type name
-#        ('resnames', 6, 31, None),  # 1,  list of atom indices
-#    ),
+    #    'CONECT': (
+    #        ('record', 0, 6, None),     # 0,  record type name
+    #        ('resnames', 6, 31, None),  # 1,  list of atom indices
+    #    ),
 
     'NONSTD': (
         ('record', 0, 6, None),  # 0,  record type name
