@@ -781,8 +781,6 @@ class Info():
         @param residues:  list of (resid, resname) pairs
         """
 
-        #residues = zip(resids, resnames).reverse()
-
         for residue in reversed(residues):
             self.prepend_residue_to_sequence(subdiv, residue[0], residue[1])
 
