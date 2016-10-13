@@ -28,6 +28,7 @@ from operator import itemgetter
 
 from . import pdbscan_utils as utils
 
+
 class Disulphide():
     """
     Class to hold information about disulphide bond from a PDB. Provides
@@ -231,7 +232,8 @@ class Info():
             else:
                 n_missing = 0
                 for sub in model_missing:
-                    self.logger.info('Missing hydrogens in ' + model_missing[sub])
+                    self.logger.info(
+                        'Missing hydrogens in ' + model_missing[sub])
                     n_missing += sum([x['n']
                                       for resid, x in model_missing[sub].items()])
 
@@ -510,7 +512,7 @@ class Info():
 
         return
 
-    def get_first_coor_resid(self, segname, model_no = 1):
+    def get_first_coor_resid(self, segname, model_no=1):
 
         guess = 0
 
@@ -530,7 +532,6 @@ class Info():
                     guess = seq[ndx][0]
 
         return seq[ndx]
-
 
     def add_missing_resids(self, subdiv, resids, resnames, model_no=1):
         """
@@ -764,7 +765,7 @@ class Info():
         if subdiv not in sequence:
             sequence[subdiv] = [residue]
         else:
-            sequence[subdiv].insert(0,residue)
+            sequence[subdiv].insert(0, residue)
 
         return
 
@@ -787,7 +788,7 @@ class Info():
 
         return
 
-    def initialize_missing_resids_subdiv(self, subdiv, model_no = 1):
+    def initialize_missing_resids_subdiv(self, subdiv, model_no=1):
 
         missing_resids = self.missing_resids
 
@@ -865,7 +866,7 @@ class Info():
 
         return
 
-    def sequence_to_fasta(self, subdiv, model_no = 1, missing_lower=False, for_matching = False):
+    def sequence_to_fasta(self, subdiv, model_no=1, missing_lower=False, for_matching=False):
         """
         Create a FASTA format sequence string form the sequence helf for the 
         selected subdiv(ision).
@@ -935,7 +936,7 @@ class Info():
 
         return complete
 
-    def seqs_for_completion(self, subdiv, model_no = 1):
+    def seqs_for_completion(self, subdiv, model_no=1):
         """
         Return the sequence elements needed to model gaps - the sequence to
         fill in and the two residues flanking this at either end
@@ -982,9 +983,9 @@ class Info():
             start = gap[0]
             if start - 1 in seq:
 
-                pre_anchor = start -1
+                pre_anchor = start - 1
 
-                for i in range(-2,0):
+                for i in range(-2, 0):
                     resid = start + i
                     if start + i in seq:
                         pre_flank += utils.conv_aa3to1(seq[resid])
@@ -996,7 +997,7 @@ class Info():
 
                 post_anchor = end + 1
 
-                for i in range(1,3):
+                for i in range(1, 3):
                     resid = end + i
                     if end + i in seq:
                         post_flank += utils.conv_aa3to1(seq[resid])
@@ -1009,7 +1010,8 @@ class Info():
             for resid in gap:
                 gap_seq += utils.conv_aa3to1(seq[resid])
 
-            out_fragments.append([pre_anchor, post_anchor,pre_flank,gap_seq,post_flank])
+            out_fragments.append(
+                [pre_anchor, post_anchor, pre_flank, gap_seq, post_flank])
 
         return out_fragments
 
