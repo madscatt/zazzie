@@ -35,6 +35,10 @@ from . import cmdline_transform_editor
 import sassie.build.pdbscan.pdbscan.data_struct as data_struct
 import sassie.build.pdbscan.pdbscan.pdbscan_utils as utils
 
+# make Python 2.x input behave as in Python 3
+try: input = raw_input
+except NameError: pass
+
 class PreProcessor():
 
     def __init__(self, *args, **kwargs):
@@ -281,7 +285,7 @@ class PreProcessor():
                 input = -1
 
                 while input not in options:
-                    input = raw_input('')
+                    input = input('')
                     try:
                         input = int(input)
                     except ValueError:
@@ -571,7 +575,7 @@ class PreProcessor():
 
         while not accepted_segmentation:
 
-            choice = raw_input().lower()
+            choice = input().lower()
 
             if choice in ['y','yes']:
 
@@ -601,14 +605,14 @@ class PreProcessor():
                 print(seq)
 
             print("Do you want to edit any sequences? (answer [y]es/[n]o)")
-            choice = raw_input().lower()
+            choice = input().lower()
 
             if choice in ['y','yes']:
 
                 if len(seq_segnames) > 1:
 
                     print("Which segment do you wish to provide a sequence for?")
-                    segname = raw_input().strip()
+                    segname = input().strip()
 
                 else:
                     segname = seq_segnames[0]
@@ -653,7 +657,7 @@ class PreProcessor():
 
         while not choice_made:
             print("Do you want to add a new biological unit transform? (answer [y]es/[n]o)")
-            choice = raw_input().lower()
+            choice = input().lower()
 
             if choice in ['y','yes']:
 
