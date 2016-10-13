@@ -26,12 +26,17 @@ import string
 '''
 
 
-def split(str):
+def split(input_str):
     """
     Wraps string.split so it can be used as a function in the parser
+
+    @type  input_str:  string
+    @param input_str:  String to be split
+    @rtype:            List
+    @return:           List of strings split at whitespace from input
     """
 
-    return string.split(str)
+    return string.split(input_str)
 
 # Schemas for interprating different PDB records and creating dictionary
 # Schema format:
