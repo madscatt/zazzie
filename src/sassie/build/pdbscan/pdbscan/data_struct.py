@@ -21,11 +21,12 @@ headers
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
+import logging
+
 from itertools import groupby
 from operator import itemgetter
 
 from . import pdbscan_utils as utils
-
 
 class Disulphide():
     """
@@ -102,6 +103,8 @@ class Info():
         Initialize object to hold information from scanning PDB subdivisions
         (chains or segments/segnames).
         """
+
+        self.logger = logging.getLogger(__name__)
 
         self.n_models = 1
         self.subdivs = []
@@ -228,8 +231,7 @@ class Info():
             else:
                 n_missing = 0
                 for sub in model_missing:
-                    # TODO: Make this a logging event
-                    print model_missing[sub]
+                    self.logger.info('Missing hydrogens in ' + model_missing[sub])
                     n_missing += sum([x['n']
                                       for resid, x in model_missing[sub].items()])
 

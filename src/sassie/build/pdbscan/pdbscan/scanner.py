@@ -1114,10 +1114,10 @@ class SasMolScan(sasmol.SasMol):
             chains = self.chain()
 
             if ' ' in chains:
-                print "Empty chain IDs are a real pain!"
+                print("Empty chain IDs are a real pain!")
             else:
                 dup_resids = self.get_duplicate_resids('chain')
-                print dup_resids
+                print(dup_resids)
 
                 # Check for numbering gaps & Check missing residues
 
