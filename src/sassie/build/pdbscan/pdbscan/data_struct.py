@@ -197,12 +197,12 @@ class Info():
 
             if subdiv:
 
-                missing = sum([len(x['atoms']) for x in model_missing[subdiv]])
+                n_missing = sum([len(x['atoms']) for x in model_missing[subdiv]])
             else:
                 missing = []
                 for sub in model_missing:
                     missing += [len(x['atoms']) for x in model_missing[sub]]
-                missing = sum(missing)
+                n_missing = sum(missing)
 
         else:
             n_missing = 0
