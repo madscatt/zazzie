@@ -396,7 +396,7 @@ class StructureBuilderPyRosetta():
 
         for ii in range(loop_length, 0 , -1):
 
-            print "add residue " + str(ii)
+            logger.info("add residue " + str(ii))
 
             self.scaffold_pose.prepend_polymer_residue_before_seqpos(frag_pose.residue(ii),1,False)
             pdb_res = start_anchor - count
