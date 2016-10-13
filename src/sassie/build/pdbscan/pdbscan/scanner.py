@@ -2326,7 +2326,11 @@ class SasMolScan(sasmol.SasMol):
                                         sim_ready[segname]['single_conformer'])
 
             # We should warn people if start residue is not 1
-            first_resid = self.segname_info.sequence[segname][0][0]
+            if segname in self.segname_info.sequence:
+                first_resid = self.segname_info.sequence[segname][0][0]
+            else:
+                # TODO: This is a default - can something less problematic
+                first_resid = 0
 
             sim_ready[segname]['start'] = (first_resid == 1)
 
