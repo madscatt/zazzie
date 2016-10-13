@@ -876,8 +876,8 @@ class Info():
         @type missing_lower   :  boolean
         @keyword missing_lower:  Should missing residues be presented in
                                  lowercase?
-        @type coord_only   :     boolean
-        @keyword coord_only:     Only the coordinate residues to be output
+        @type for_matching    :  boolean
+        @keyword for_matching :  Only the coordinate residues to be output
                                  (i.e. filter out missing residues - replace
                                  gaps with single '.')
         @rtype        :  string
