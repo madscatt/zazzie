@@ -165,11 +165,11 @@ class PdbHeader:
 
     def process_header_text(self, header_txt):
         """
-        Parse list of header libes lines and place by record type in 
+        Parse list of header lines lines and place by record type in
         self.pdb_recs dictionary
 
-        @type  sasmol:  sasmol.SasMol
-        @param sasmol:  SasMol containing data read in from a PDB
+        @type  header_txt:  list
+        @param header_txt:  List of stings containing PDB records
         """
 
         self.set_blank_values()
@@ -582,12 +582,10 @@ class PdbHeader:
         for chain, grpd in itertools.groupby(
                 seqres_recs, key=lambda x: x['chain']):
 
-            #self.chain_info.sequence[chain] = []
             chain_seq = []
 
             for entry in grpd:
 
-                #self.chain_info.sequence[chain] += entry['resnames']
                 chain_seq += entry['resnames']
 
             self.chain_info.add_subdiv_sequence(chain, chain_seq)
