@@ -616,16 +616,16 @@ class Info():
 
     def add_altlocs(self, subdiv, resid, loc_ids):
         """
-        Add alternative location information to the dictionary holding the
+        Add several alternative locations to the dictionary holding the
         information for the entire model:
         altloc[subdiv][resid] = [loc_id1, ....]
 
-        @type subdiv :  string
-        @param subdiv:  Subdivision (chain/segname) label
-        @type resid  :  integer
-        @param resid :  Residue number
-        @type loc_id :  string
-        @param loc_id:  Alternative location label
+        @type subdiv  :  string
+        @param subdiv :  Subdivision (chain/segname) label
+        @type resid   :  integer
+        @param resid  :  Residue number
+        @type loc_ids :  list
+        @param loc_ids:  Alternative location labels
         """
 
         for loc in sorted(loc_ids):
