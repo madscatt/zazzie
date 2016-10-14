@@ -10,9 +10,10 @@ import json
 import sys
 from StringIO import StringIO
 
+
 class SegnameEditor():
 
-    def __init__(self, segnames, resid_descriptions, max_row = 10):
+    def __init__(self, segnames, resid_descriptions, max_row=10):
 
         self.segnames = segnames
         self.resid_descriptions = resid_descriptions
@@ -23,7 +24,12 @@ class SegnameEditor():
 
         self.screen = None
 
-        self.max_row = max_row
+        self.curses_start()
+
+        if max_row + 8 >= curses.LINES:
+            self.max_row = 5
+        else:
+            self.max_row = max_row
 
         self.row_num = len( self.display_lines )
 
@@ -31,7 +37,6 @@ class SegnameEditor():
         self.position = 1
         self.page = 1
 
-        self.curses_start()
         self.screen_setup()
         curses.wrapper( self.curses_loop )
         self.curses_stop()
@@ -59,9 +64,6 @@ class SegnameEditor():
         curses.curs_set( 0 )
 
         max_row = self.max_row
-
-        if max_row + 8 >= curses.LINES:
-            max_row = 5
 
         column_heads = '{0:7s} {1:>6s} {2:7s} {3:5s} {4:8s}'.format('Segname', 'Resid', 'Resname', 'Chain', 'Moltype')
 
@@ -115,7 +117,7 @@ class SegnameEditor():
                 if ( i + ( max_row * ( page - 1 ) ) == position + ( max_row * ( page - 1 ) ) ):
                     self.box.addstr( i - ( max_row * ( page - 1 ) ), 2, display_lines[ i - 1 ], self.highlightText )
                 else:
-                    self.box.addstr( i - ( max_row * ( page - 1 ) ), 2, display_lines[ i - 1 ], self.normalText )
+                    self.box.addstr(i - (max_row * (page - 1)), 2, display_lines[i - 1], self.normalText )
                 if i == row_num:
                     break
 
