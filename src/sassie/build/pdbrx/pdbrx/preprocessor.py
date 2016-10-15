@@ -36,8 +36,11 @@ import sassie.build.pdbscan.pdbscan.data_struct as data_struct
 import sassie.build.pdbscan.pdbscan.pdbscan_utils as utils
 
 # make Python 2.x input behave as in Python 3
-try: input = raw_input
-except NameError: pass
+try:
+    input = raw_input
+except NameError:
+    pass
+
 
 class PreProcessor():
 
@@ -84,16 +87,18 @@ class PreProcessor():
 
         if self.ui == 'terminal':
 
-            ui_output = cmd_segname_edit.SegnameEditor(mol.segnames(),resid_descriptions, max_row = 20).get_segment_starts()
+            ui_output = cmd_segname_edit.SegnameEditor(
+                mol.segnames(), resid_descriptions, max_row=20).get_segment_starts()
 
         else:
 
-            #TODO: something for a real GUI
+            # TODO: something for a real GUI
             ui_output = []
             pass
 
         if ui_output:
-            segname_starts = json.loads(ui_output, object_hook=self.convert_segname_start)
+            segname_starts = json.loads(
+                ui_output, object_hook=self.convert_segname_start)
         else:
             segname_starts = {}
 
@@ -115,10 +120,9 @@ class PreProcessor():
         self.mol.segname_info = data_struct.Info(scan_type='segname')
 
         # Get updated sequence/missing residue etc. information
-        self.mol.segment_scan(initialize = False)
+        self.mol.segment_scan(initialize=False)
 
         return
-
 
     def update_segments(self, segname_starts):
         '''
@@ -151,7 +155,6 @@ class PreProcessor():
 
         return
 
-
     def parse_fasta_file(self, filename):
         """
         Parse FASTA files. Adapted from:
@@ -166,7 +169,8 @@ class PreProcessor():
                   sequences as strings (single letter amino acid codes used).
         """
 
-        # We are going to store ordered sequence names and the sequences themselves
+        # We are going to store ordered sequence names and the sequences
+        # themselves
         order = []
         sequences = {}
 
@@ -186,7 +190,7 @@ class PreProcessor():
 
         return order, sequences
 
-    def list_fasta_sequences(self,sequences, ordered_names):
+    def list_fasta_sequences(self, sequences, ordered_names):
 
         options = enumerate(ordered_names)
 
@@ -205,11 +209,11 @@ class PreProcessor():
 
         return rep, options
 
-    def get_segment_moltype(self,segname):
+    def get_segment_moltype(self, segname):
 
         mol = self.mol
 
-        mapping = set(zip(mol.segname(),mol.moltype()))
+        mapping = set(zip(mol.segname(), mol.moltype()))
         moltypes = [x[1] for x in mapping if x[0] == segname]
 
         moltype = '/'.join(moltypes)
@@ -232,7 +236,8 @@ class PreProcessor():
 
         if self.ui == 'terminal':
 
-            prompt = 'Enter filename containing FASTA sequence for segment {0:s}: '.format(segname)
+            prompt = 'Enter filename containing FASTA sequence for segment {0:s}: '.format(
+                segname)
 
             fasta_file = utils.get_command_line_filepath(prompt)
 
@@ -244,7 +249,8 @@ class PreProcessor():
 
                 print('Choose sequence to use: \n')
 
-                rep, options = self.list_fasta_sequences(sequences, ordered_names)
+                rep, options = self.list_fasta_sequences(
+                    sequences, ordered_names)
 
                 for line in rep:
                     print(line)
@@ -273,7 +279,6 @@ class PreProcessor():
 
         return fasta_sequence
 
-
     def reformat_fasta(self, fasta):
         '''
         Reformat input FASTA string to a single line and upper case characters
@@ -285,8 +290,7 @@ class PreProcessor():
 
         edited_fasta = fasta.upper()
 
-        return edited_fasta.replace('\n','')
-
+        return edited_fasta.replace('\n', '')
 
     def validate_fasta(self, fasta, moltype):
         '''
@@ -314,7 +318,6 @@ class PreProcessor():
 
         return valid
 
-
     def match_fasta_model(self, segname, new_fasta):
         '''
         Check FASTA sequence from user to ensure it makes sense with the known
@@ -337,12 +340,12 @@ class PreProcessor():
         # terminal residues from header
         # Note: at present at least the same length of terminal residues must
         # be provided
-        current_fasta = segname_info.sequence_to_fasta(segname, for_matching = True)
+        current_fasta = segname_info.sequence_to_fasta(
+            segname, for_matching=True)
 
         match = re.search(current_fasta, new_fasta)
 
         return match
-
 
     def complete_sequence_fasta(self, segname, new_fasta):
         '''
@@ -367,7 +370,8 @@ class PreProcessor():
         # Sequence as a list of (resid, resname) tuples
         seq = segname_info.sequence[segname]
 
-        first_coor_resid, first_coor_resname = segname_info.get_first_coor_resid(segname, model_no = model_no)
+        first_coor_resid, first_coor_resname = segname_info.get_first_coor_resid(
+            segname, model_no=model_no)
 
         if segname not in segname_info.missing_resids[model_no]:
 
@@ -401,7 +405,8 @@ class PreProcessor():
                     resid = first_resid + position
                     resname = utils.conv_aa1to3(new_fasta[position])
 
-                    segname_info.prepend_residue_to_sequence(segname, resid, resname)
+                    segname_info.prepend_residue_to_sequence(
+                        segname, resid, resname)
                     missing_resids[resid] = resname
 
                     position += 1
@@ -409,7 +414,6 @@ class PreProcessor():
                     # Skip resid = 0
                     if position == 0:
                         position += 1
-
 
             else:
 
@@ -430,7 +434,7 @@ class PreProcessor():
 
                     new_resname = utils.conv_aa1to3(new_fasta[position])
 
-                    seq[ndx] = (resid,new_resname)
+                    seq[ndx] = (resid, new_resname)
 
                     missing_resids[resid] = new_resname
 
@@ -440,21 +444,21 @@ class PreProcessor():
 
             if position < len(new_fasta):
 
-                for i in range(position,len(new_fasta)):
+                for i in range(position, len(new_fasta)):
 
                     resid = first_resid + i
 
                     resname = utils.conv_aa1to3(new_fasta[i])
 
-                    segname_info.add_residue_to_sequence(segname, resid, resname)
-                    segname_info.add_missing_resid(segname, resid, resname, model_no=model_no)
+                    segname_info.add_residue_to_sequence(
+                        segname, resid, resname)
+                    segname_info.add_missing_resid(
+                        segname, resid, resname, model_no=model_no)
                     missing_resids[resid] = resname
-
 
             inserted = True
 
         return inserted
-
 
     def get_biological_unit_transform(self):
         '''
@@ -487,7 +491,6 @@ class PreProcessor():
 
         return
 
-
     def check_biological_unit(self, biomt_unit):
         '''
         Check biological unit transform from user is valid
@@ -497,7 +500,8 @@ class PreProcessor():
 
         valid = True
 
-        recs = set(['subdivs', 'auth_bio_unit', 'soft_bio_unit', 'rot', 'trans'])
+        recs = set(['subdivs', 'auth_bio_unit',
+                    'soft_bio_unit', 'rot', 'trans'])
 
         if recs == set(biomt_unit.keys()):
             pass
@@ -534,10 +538,11 @@ class PreProcessor():
         chains = self.mol.chain()
         moltypes = self.mol.moltype()
 
-        data = np.array(zip(segnames, indices, resids, resnames, chains, moltypes))
+        data = np.array(zip(segnames, indices, resids,
+                            resnames, chains, moltypes))
 
-        mask = np.where(data[:-1,2] != data[1:,2])[0]
-        mask = np.append(mask,[len(data) -1])
+        mask = np.where(data[:-1, 2] != data[1:, 2])[0]
+        mask = np.append(mask, [len(data) - 1])
 
         residue_descriptions = data[mask]
 
@@ -549,13 +554,14 @@ class PreProcessor():
 
         accepted_segmentation = False
 
-        print("Do you wish to edit the system segmentation? (answer [y]es/[n]o)")
+        print(
+            "Do you wish to edit the system segmentation? (answer [y]es/[n]o)")
 
         while not accepted_segmentation:
 
             choice = input().lower()
 
-            if choice in ['y','yes']:
+            if choice in ['y', 'yes']:
 
                 segname_starts = self.get_user_segmentation()
 
@@ -565,7 +571,7 @@ class PreProcessor():
 
                 accepted_segmentation = True
 
-            elif choice in ['n','no']:
+            elif choice in ['n', 'no']:
 
                 accepted_segmentation = True
 
@@ -578,14 +584,15 @@ class PreProcessor():
             print("Current sequences (lowercase indicates residues not in coordinates): ")
 
             for segname in seq_segnames:
-                seq = mol.segname_info.sequence_to_fasta(segname, missing_lower=True)
+                seq = mol.segname_info.sequence_to_fasta(
+                    segname, missing_lower=True)
                 print(segname + ':')
                 print(seq)
 
             print("Do you want to edit any sequences? (answer [y]es/[n]o)")
             choice = input().lower()
 
-            if choice in ['y','yes']:
+            if choice in ['y', 'yes']:
 
                 if len(seq_segnames) > 1:
 
@@ -598,15 +605,18 @@ class PreProcessor():
                 if segname in seq_segnames:
 
                     moltype = self.get_segment_moltype(segname)
-                    fasta_sequence = self.get_user_fasta_sequence(segname, moltype)
+                    fasta_sequence = self.get_user_fasta_sequence(
+                        segname, moltype)
 
                     if fasta_sequence:
 
-                        success = self.complete_sequence_fasta(segname, fasta_sequence)
+                        success = self.complete_sequence_fasta(
+                            segname, fasta_sequence)
 
                         if not success:
 
-                            print("FASTA did not match existing sequence description")
+                            print(
+                                "FASTA did not match existing sequence description")
 
                     else:
 
@@ -616,7 +626,7 @@ class PreProcessor():
 
                     print("Invalid segname selected")
 
-            elif choice in ['n','no']:
+            elif choice in ['n', 'no']:
 
                 accepted_sequences = True
 
@@ -634,10 +644,11 @@ class PreProcessor():
         choice_made = False
 
         while not choice_made:
-            print("Do you want to add a new biological unit transform? (answer [y]es/[n]o)")
+            print(
+                "Do you want to add a new biological unit transform? (answer [y]es/[n]o)")
             choice = input().lower()
 
-            if choice in ['y','yes']:
+            if choice in ['y', 'yes']:
 
                 self.get_biological_unit_transform()
                 choice_made = True
@@ -650,7 +661,7 @@ class PreProcessor():
 
                         print(line)
 
-            elif choice in ['n','no']:
+            elif choice in ['n', 'no']:
                 choice_made = True
 
         return
