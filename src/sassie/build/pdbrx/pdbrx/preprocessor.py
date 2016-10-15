@@ -220,7 +220,12 @@ class PreProcessor():
         '''
         Get FASTA sequence from user to complete a segment with missing residues
 
-        @return:
+        @type segname : string
+        @param segname: Segment name selected to have sequence altered
+        @type moltype : string
+        @param moltype: Type of polymer being edited (protein/dna/rna)
+        @rtype :  string
+        @return:  FASTA sequence from user
         '''
 
         valid_fasta = False
@@ -255,7 +260,6 @@ class PreProcessor():
 
                 chosen = ordered_names[input]
 
-
             fasta_sequence = self.reformat_fasta(sequences[chosen])
 
             valid_fasta = self.validate_fasta(fasta_sequence, moltype)
@@ -271,6 +275,13 @@ class PreProcessor():
 
 
     def reformat_fasta(self, fasta):
+        '''
+        Reformat input FASTA string to a single line and upper case characters
+        @type fasta :  string
+        @param fasta:  FASTA sequence (possibly multiple lines)
+        @rtype :       string
+        @return:       Single line, all caps FASTA sequence
+        '''
 
         edited_fasta = fasta.upper()
 
@@ -279,8 +290,13 @@ class PreProcessor():
 
     def validate_fasta(self, fasta, moltype):
         '''
-        Check fasta sequence is valid
+        Check fasta sequence is valid (i.e. contains only letters corresponding
+        to monomer units appropriate to the moltype).
 
+        @type fasta :  string
+        @param fasta:  FASTA sequence to be validated
+        @type moltype : string
+        @param moltype: Type of polymer being edited (protein/dna/rna)
         @return:
         '''
 
