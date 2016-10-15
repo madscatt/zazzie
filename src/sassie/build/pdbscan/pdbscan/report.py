@@ -429,7 +429,8 @@ def create_polymer_table(mol, model_no=1):
 
             tot = len(seq)
 
-            if model_no in header.chain_info.missing_resids and chain in header.chain_info.missing_resids[model_no]:
+            if ((model_no in header.chain_info.missing_resids) and
+                (chain in header.chain_info.missing_resids[model_no])):
 
                 # if chain in
                 # header.chain_info.missing_resids[model_no].keys():
@@ -507,7 +508,13 @@ def create_polymer_table(mol, model_no=1):
         widths = [10, 10, 10, 10]
         just = ['l', 'l', 'l', 'l']
 
-    table = pdt.create_pandoc_table(tab_header, contents, widths, just)
+    if contents:
+
+        table = pdt.create_pandoc_table(tab_header, contents, widths, just)
+
+    else:
+
+        table = []
 
     return table
 

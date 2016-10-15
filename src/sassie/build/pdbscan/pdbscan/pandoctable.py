@@ -40,8 +40,8 @@ def create_pandoc_table(header, contents, widths, just):
     @type  just:      list
     @param just:      List of justification choices [(l)eft, (r)ight, (c)entre]
                       for each column (one element per column)
-    @rtype:           string
-    @return:          Entire table with lines separated by '\\n' character
+    @rtype:           list
+    @return:          Entire table with lines separated by '\n' character
     """
 
     table = []
