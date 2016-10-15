@@ -6,8 +6,11 @@ os_type = platform.system()
 
 os.environ["CC"] = "h5cc"
 
+###alias h5c++='/usr/bin/h5c++
+### https://github.com/ContinuumIO/anaconda-issues/issues/953
+
 ### USER EDIT
-cpp_buildingBlock_dir=os.path.join('..','cpp_and_cuda_buildBlock')
+cpp_buildingBlock_dir=os.path.join('extensions')
 
 ### END USER EDIT
 
@@ -29,6 +32,8 @@ if os.path.isfile(os.path.join(cpp_buildingBlock_dir,'lib','libsascalc.a')):
 else:
     cpp_lib = False
 
+cpp_lib = True
+
 if not cpp_lib:
     print ("Cpp lib needs to be pre-built")
     exit(0)
@@ -43,9 +48,7 @@ macros = []
 if cpp_lib:
     include_dir_names.append(os.path.join(cpp_buildingBlock_dir,'include'))
     include_dir_names.append('/usr/local/include')
-    #include_dir_names.append('/home/hailiang/work/tools/hdf5/include')
     library_dir_names.append(os.path.join(cpp_buildingBlock_dir,'lib'))
-    #library_dir_names.append(os.path.join('/home/hailiang/work/tools/hdf5/lib'))
     library_dir_names.append(os.path.join('/usr/local/lib'))
     library_names.append(cpp_library_name)
     library_names.append("hdf5_cpp")

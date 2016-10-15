@@ -4,7 +4,7 @@ DIRLIB=lib/
 DIRTESTS=test/
 
 CC=g++
-CCFLAGS=-std=c++11 -c -fPIC -w -g -I$(DIRINC) -I/usr/local/include
+CCFLAGS=-std=c++11 -c -fPIC -w -g -I$(DIRINC) -I/usr/local/include -L/usr/local/lib
 #CCFLAGS=-std=c++11 -c -fPIC -w -g -I$(DIRINC) -I/home/hailiang/work/tools/hdf5/include
 LDFLAGS=-std=c++11 -g -w -I$(DIRINC)
 #CCFLAGS=-c -fPIC -w -g -I$(DIRINC) -stdlib=libstdc++ -stdlib=libc++ -std=c++11

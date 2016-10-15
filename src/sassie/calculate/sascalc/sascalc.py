@@ -22,8 +22,7 @@ import sasmol.sasmol as sasmol
 import sassie.util.sasconfig as sasconfig
 import sassie.util.module_utilities as module_utilities
 import sassie.util.basis_to_python as basis_to_python
-#import sassie.calculate.sascalc_utils as sascalc_utils
-import sascalc_utils as sascalc_utils
+import sassie.calculate.sascalc.sascalc_utils as sascalc_utils
 import sassie.calculate.sascalc.sascalc_library.sascalc_lib as sascalc_lib
 
 '''

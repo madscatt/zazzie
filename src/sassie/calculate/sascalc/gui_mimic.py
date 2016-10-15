@@ -4,8 +4,7 @@ Driver method to run the SasCalc module
 
 import sys
 
-#import sassie.calculate.sascalc as sascalc
-import sascalc
+import sassie.calculate.sascalc.sascalc as sascalc
 import sassie.interface.input_filter as input_filter
 import sassie.interface.sascalc_filter as sascalc_filter
 import multiprocessing
