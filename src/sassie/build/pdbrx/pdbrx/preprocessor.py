@@ -58,38 +58,6 @@ class PreProcessor():
 
         return
 
-
-    # def check_segments(self):
-    #     '''
-    #     Run simulation preparedness check and return dictionary detailing any
-    #     segments with mixed moltypes.
-    #
-    #     @rtype :  dictionary
-    #     @return:  Keys are segnames, values are lists of moltypes
-    #     '''
-    #
-    #     mol = self.mol
-    #
-    #     moltypes = mol.moltype()
-    #     segnames = mol.segname()
-    #
-    #     seg_types = utils.uniquify_list(zip(segnames, moltypes))
-    #
-    #     cnt = collections.Counter()
-    #
-    #     for segname, moltype in seg_types:
-    #         cnt[segname] += 1
-    #
-    #     multi_types = {}
-    #
-    #     for segname in cnt:
-    #         if cnt[segname] > 1:
-    #             multi_types[segname] = [mtype for seg, mtype in seg_types if seg == segname]
-    #
-    #     mol.check_segname_simulation_preparedness()
-    #
-    #     return multi_types
-
     def convert_segname_start(self, data):
         """
         Convert JSON segname_start dictionary to have integer keys and ascii
@@ -112,13 +80,7 @@ class PreProcessor():
 
         mol = self.mol
 
-        segname_starts = {}
-
         resid_descriptions = self.create_residue_descriptions_segname_edit()
-
-        # input_dict = {'segnames':mol.segnames(), 'resid_descriptions':resid_descriptions.tolist(), 'max_row': 20}
-        # with open('segname_input.txt','w') as outfile:
-        #     json.dump(input_dict, outfile)
 
         if self.ui == 'terminal':
 
