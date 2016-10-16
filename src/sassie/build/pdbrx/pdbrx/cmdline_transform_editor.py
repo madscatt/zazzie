@@ -7,8 +7,10 @@ import yaml
 from copy import deepcopy
 
 # make Python 2.x input behave as in Python 3
-try: input = raw_input
-except NameError: pass
+try:
+    input = raw_input
+except NameError:
+    pass
 
 def check_array_input(input_txt, dimensions):
 
