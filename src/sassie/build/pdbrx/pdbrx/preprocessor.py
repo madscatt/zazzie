@@ -2,9 +2,7 @@
 """
 Preprocessor to finalize system description after PDB Scan, this is the first
 step in PDB Rx
-"""
 
-'''
     SASSIE: Copyright (C) 2011 Joseph E. Curtis, Ph.D.
 
     This program is free software: you can redistribute it and/or modify
@@ -19,21 +17,24 @@ step in PDB Rx
 
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-'''
 
-import json
-import yaml
-import re
-import os
-import numpy as np
+"""
+
+from __future__ import print_function
+
 import logging
-import collections
+import re
+import json
 from textwrap import TextWrapper
+
+import yaml
+import numpy as np
+import sassie.build.pdbscan.pdbscan.data_struct as data_struct
+import sassie.build.pdbscan.pdbscan.pdbscan_utils as utils
 
 from . import cmdline_segname_editor as cmd_segname_edit
 from . import cmdline_transform_editor
-import sassie.build.pdbscan.pdbscan.data_struct as data_struct
-import sassie.build.pdbscan.pdbscan.pdbscan_utils as utils
+
 
 # make Python 2.x input behave as in Python 3
 try:
@@ -43,8 +44,19 @@ except NameError:
 
 
 class PreProcessor():
+    '''
+    Preprocessor checks and edits an input SasMol ready for model building
+    '''
 
     def __init__(self, *args, **kwargs):
+        '''
+        Setup logging and atrributes for preprocessing
+
+        @type mol   :  SasMol
+        @keyword mol:  Molecule data
+        @type ui_type    :  str
+        @keyword ui_type :  Choice of UI type
+        '''
 
         if 'mol' in kwargs:
             self.mol = kwargs['mol']
@@ -53,9 +65,9 @@ class PreProcessor():
             self.mol = None
 
         if 'ui' in kwargs:
-            self.ui = kwargs['ui']
+            self.ui_type = kwargs['ui']
         else:
-            self.ui = 'terminal'
+            self.ui_type = 'terminal'
 
         self.logger = logging.getLogger(__name__)
 
@@ -85,7 +97,7 @@ class PreProcessor():
 
         resid_descriptions = self.create_residue_descriptions_segname_edit()
 
-        if self.ui == 'terminal':
+        if self.ui_type == 'terminal':
 
             ui_output = cmd_segname_edit.SegnameEditor(
                 mol.segnames(), resid_descriptions, max_row=20).get_segment_starts()
@@ -94,7 +106,6 @@ class PreProcessor():
 
             # TODO: something for a real GUI
             ui_output = []
-            pass
 
         if ui_output:
             segname_starts = json.loads(
@@ -174,8 +185,8 @@ class PreProcessor():
         order = []
         sequences = {}
 
-        with open(filename) as f:
-            for line in f:
+        with open(filename) as fasta_file:
+            for line in fasta_file:
                 # Title line for sequences in FASTA files start with >
                 if line.startswith('>'):
                     name = line[1:].rstrip('\n')
@@ -191,14 +202,27 @@ class PreProcessor():
         return order, sequences
 
     def list_fasta_sequences(self, sequences, ordered_names):
+        '''
+        Create text to present input FASTA sequences as options for user
+        selection and list of numbered options.
+
+        @type sequences : dict
+        @param sequences: FASTA sequences, keys = sequence name
+        @type ordered_names : list
+        @param ordered_names: Names of FASTA sequences ordered as they were
+                              should be presented as options
+        @rtype : list, list
+        @return: List of strings containing FASTA sequence formatted for output
+                 List of tuples of option number and sequence name
+        '''
 
         options = enumerate(ordered_names)
 
         rep = []
 
-        for no, name in options:
+        for num, name in options:
 
-            rep.append('(' + str(no) + ') ' + name)
+            rep.append('(' + str(num) + ') ' + name)
 
             wrapper = TextWrapper(width=50)
 
@@ -210,6 +234,14 @@ class PreProcessor():
         return rep, options
 
     def get_segment_moltype(self, segname):
+        '''
+        Get the Moltype of the chosen segment
+
+        @type segname :  str
+        @param segname:  Name of segment for which moltype is required
+        @rtype : str
+        @return: Moltype of segmanent
+        '''
 
         mol = self.mol
 
@@ -234,7 +266,7 @@ class PreProcessor():
 
         valid_fasta = False
 
-        if self.ui == 'terminal':
+        if self.ui_type == 'terminal':
 
             prompt = 'Enter filename containing FASTA sequence for segment {0:s}: '.format(
                 segname)
@@ -255,16 +287,16 @@ class PreProcessor():
                 for line in rep:
                     print(line)
 
-                input = -1
+                user_input = -1
 
                 while input not in options:
-                    input = input('')
+                    user_input = input('')
                     try:
-                        input = int(input)
+                        user_input = int(user_input)
                     except ValueError:
-                        input = -1
+                        user_input = -1
 
-                chosen = ordered_names[input]
+                chosen = ordered_names[user_input]
 
             fasta_sequence = self.reformat_fasta(sequences[chosen])
 
@@ -469,7 +501,7 @@ class PreProcessor():
 
         segnames_json = json.dumps(self.mol.segnames())
 
-        if self.ui == 'terminal':
+        if self.ui_type == 'terminal':
 
             ui_output = cmdline_transform_editor.user_biomt(segnames_json)
 
@@ -668,7 +700,7 @@ class PreProcessor():
 
     def user_edit_options(self):
 
-        if self.ui == 'terminal':
+        if self.ui_type == 'terminal':
 
             self.terminal_edit_options()
 
