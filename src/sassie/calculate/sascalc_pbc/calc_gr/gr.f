@@ -1,6 +1,6 @@
 
         subroutine update_gr(x,y,z,boxl,nbins,deltag,natoms,tgr)
-        double precision boxl
+        double precision boxl,rcutsq
         double precision x(natoms),y(natoms),z(natoms)
         integer natoms,i,j,nbins,ig
         double precision tgr(nbins)
@@ -19,11 +19,11 @@ cf2py	intent(hide) rxij,ryij,rzij,rijsq,rcutsq
                         rxij=x(j)-x(i)
                         ryij=y(j)-y(i)
                         rzij=z(j)-z(i)
-         
+
                         rxij=rxij-boxl*(ANINT(rxij/boxl))
                         ryij=ryij-boxl*(ANINT(ryij/boxl))
                         rzij=rzij-boxl*(ANINT(rzij/boxl))
-                         
+
                         rijsq=rxij*rxij+ryij*ryij+rzij*rzij
 
                         if (rijsq .lt. rcutsq) then
@@ -35,4 +35,3 @@ cf2py	intent(hide) rxij,ryij,rzij,rijsq,rcutsq
   200   continue
 
         end
-  
