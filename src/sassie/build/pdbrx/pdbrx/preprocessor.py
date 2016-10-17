@@ -43,7 +43,7 @@ except NameError:
     pass
 
 
-class PreProcessor():
+class PreProcessor(object):
     '''
     Preprocessor checks and edits an input SasMol ready for model building
     '''
