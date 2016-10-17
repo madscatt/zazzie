@@ -75,7 +75,7 @@ class ScaffoldBuilder():
 
         return
 
-    def check_segment_status(self):
+    def check_segment_status(self, segnames_to_check):
         """
         Determine if the segments listed in self.selected_segnames
         are passed as ready for CHARMM parameterization
@@ -88,13 +88,13 @@ class ScaffoldBuilder():
 
         accepted_segnames = []
 
-        for segname in self.selected_segnames:
+        for segname in segnames_to_check:
 
             checks = sim_ready_checks[segname]
             if checks['charmm']:
                 accepted_segnames.append(segname)
 
-        return accepted_segnames == self.selected_segnames
+        return accepted_segnames == segnames_to_check
 
     def process_non_ff(self):
         """
@@ -315,17 +315,18 @@ class ScaffoldBuilder():
 
             if len(segname_list) > 1:
 
-                self.selected_segnames = segment_choice.select_segnames(
+                selected_segnames = segment_choice.select_segnames(
                     segname_list, prep_report)
 
             else:
 
-                self.selected_segnames = [segname_list[0]]
+                selected_segnames = [segname_list[0]]
 
-            if self.selected_segnames:
+            if selected_segnames:
 
                 if not self.check_segment_status():
 
+                    # TODO: This is just a stub - needs filling out
                     self.process_non_ff()
 
                     if self.check_segment_status():
@@ -336,6 +337,8 @@ class ScaffoldBuilder():
             else:
 
                 print("No segnames selected")
+
+            self.selected_segnames = selected_segnames
 
         return
 
