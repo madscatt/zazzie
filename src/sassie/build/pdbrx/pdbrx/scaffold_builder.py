@@ -2,9 +2,7 @@
 """
 Build the scaffold PDB to be used as the basis of the final parameterized
 model. Also need to store data about regions to be completed.
-"""
 
-'''
     SASSIE: Copyright (C) 2011 Joseph E. Curtis, Ph.D.
 
     This program is free software: you can redistribute it and/or modify
@@ -19,12 +17,9 @@ model. Also need to store data about regions to be completed.
 
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-'''
+"""
 
-import json
-import yaml
 import logging
-import pickle
 import sassie.build.pdbscan.pdbscan as pdbscan
 import sassie.build.pdbscan.pdbscan.report as report
 import segment_choice
@@ -32,6 +27,7 @@ import biomt_choice
 import altloc_choice
 import sasmol.sasmol as sasmol
 import numpy as np
+
 
 class ScaffoldBuilder():
 
@@ -59,7 +55,8 @@ class ScaffoldBuilder():
             self.prep_report = report.generate_simulation_prep_report(self.mol)
 
             if self.mol.segname_info.biomt:
-                self.biomt_report = report.create_biomt_summary(self.mol.segname_info.biomt)
+                self.biomt_report = report.create_biomt_summary(
+                    self.mol.segname_info.biomt)
 
         else:
             # TODO: Make a better decision on what to do here
@@ -91,7 +88,7 @@ class ScaffoldBuilder():
             if checks['charmm']:
                 accepted_segnames.append(segname)
 
-        return accepted_segnames ==  self.selected_segnames
+        return accepted_segnames == self.selected_segnames
 
     def process_non_ff(self):
         """
@@ -109,7 +106,8 @@ class ScaffoldBuilder():
 
         """
 
-        selected_segnames = ['"{0:s}"'.format(x) for x in self.selected_segnames]
+        selected_segnames = ['"{0:s}"'.format(
+            x) for x in self.selected_segnames]
         selected_altlocs = self.selected_altlocs
 
         natoms = self.mol.natoms()
@@ -123,10 +121,12 @@ class ScaffoldBuilder():
 
             for resid, loc in resids.iteritems():
 
-                sel_txt = 'segname[i] == "{0:s}" and resid[i] == {1:d} and loc[i] == "{2:s}"'.format(segname, resid, loc)
+                sel_txt = 'segname[i] == "{0:s}" and resid[i] == {1:d} and loc[i] == "{2:s}"'.format(
+                    segname, resid, loc)
                 err, tmp_mask = self.mol.get_subset_mask(sel_txt)
 
-                alt_loc_mask = np.logical_or(alt_loc_mask,tmp_mask).astype(int)
+                alt_loc_mask = np.logical_or(
+                    alt_loc_mask, tmp_mask).astype(int)
 
         sel_txt = 'segname[i] in [{0:s}]'.format(','.join(selected_segnames))
         err, segname_mask = self.mol.get_subset_mask(sel_txt)
@@ -141,7 +141,7 @@ class ScaffoldBuilder():
         self.selected_mol = pdbscan.SasMolScan()
 
         frame = self.mol.model_no - 1
-        self.mol.copy_molecule_using_mask(self.selected_mol,mask, frame)
+        self.mol.copy_molecule_using_mask(self.selected_mol, mask, frame)
 
         self.selected_mol.segname_info = self.mol.segname_info
 
@@ -175,7 +175,8 @@ class ScaffoldBuilder():
 
             biomt = biomts[biomt_no]
 
-            segs_to_transform = list(set(biomt['subdivs']).intersection(selected_segnames))
+            segs_to_transform = list(
+                set(biomt['subdivs']).intersection(selected_segnames))
 
             if segs_to_transform:
 
@@ -192,11 +193,12 @@ class ScaffoldBuilder():
                     u = biomt['rot'][i]
                     m = biomt['trans'][i]
 
-                    if not ( (u == np.identity(3)).all() and (m == np.array([0.0,0.0,0.0])).all() ):
+                    if not ((u == np.identity(3)).all() and (m == np.array([0.0, 0.0, 0.0])).all()):
 
                         new_mols.append(sasmol.SasMol(0))
 
-                        selected_mol.copy_molecule_using_mask(new_mols[-1],mask, frame)
+                        selected_mol.copy_molecule_using_mask(
+                            new_mols[-1], mask, frame)
 
                         new_mols[-1].apply_biomt(frame, sel_txt, u, m)
 
@@ -234,9 +236,11 @@ class ScaffoldBuilder():
 
             for segname in model_segnames:
 
-                new_segname = mol.next_segname_generator(existing = existing_segnames)
+                new_segname = mol.next_segname_generator(
+                    existing=existing_segnames)
 
-                tmp_segnames = [new_segname if x == segname else x for x in tmp_segnames]
+                tmp_segnames = [new_segname if x ==
+                                segname else x for x in tmp_segnames]
 
                 existing_segnames.append(new_segname)
 
@@ -304,7 +308,8 @@ class ScaffoldBuilder():
 
                 if len(segname_list) > 1:
 
-                    self.selected_segnames = segment_choice.select_segnames(segname_list, prep_report)
+                    self.selected_segnames = segment_choice.select_segnames(
+                        segname_list, prep_report)
 
                 else:
 
@@ -335,17 +340,19 @@ class ScaffoldBuilder():
                     alt_segnames.append(segname)
 
             if len(alt_segnames) > 0:
-                print("Multiple conformations were found for residues in the following segments:")
+                print(
+                    "Multiple conformations were found for residues in the following segments:")
                 print(str(alt_segnames))
-                print("Are you happy using the first conformation (altloc) for all residues? (answer [y]es/[n]o)")
+                print(
+                    "Are you happy using the first conformation (altloc) for all residues? (answer [y]es/[n]o)")
 
                 choice = ''
 
-                while choice.lower() not in ['y','n','yes','no']:
+                while choice.lower() not in ['y', 'n', 'yes', 'no']:
 
                     choice = raw_input().lower()
 
-                if choice.lower() in ['n','no']:
+                if choice.lower() in ['n', 'no']:
 
                     for segname in self.selected_segnames:
 
@@ -359,12 +366,15 @@ class ScaffoldBuilder():
 
                                 chosable_locs = [x for x in locs if x != ' ']
 
-                                chosen_altloc = altloc_choice.select_altloc(segname, resid, chosable_locs)
+                                chosen_altloc = altloc_choice.select_altloc(
+                                    segname, resid, chosable_locs)
 
                                 if chosen_altloc:
-                                    self.selected_altlocs[segname][resid] = chosen_altloc[0]
+                                    self.selected_altlocs[segname][
+                                        resid] = chosen_altloc[0]
                                 else:
-                                    self.selected_altlocs[segname][resid] = list(locs).remove(' ')[0]
+                                    self.selected_altlocs[segname][
+                                        resid] = list(locs).remove(' ')[0]
 
                 else:
 
@@ -382,8 +392,8 @@ class ScaffoldBuilder():
                                 chosable_locs = [x for x in locs if x != ' ']
                                 chosen_loc = chosable_locs[0]
 
-                                self.selected_altlocs[segname][resid] = chosen_loc
-
+                                self.selected_altlocs[segname][
+                                    resid] = chosen_loc
 
             if self.mol.segname_info.biomt:
 
@@ -391,7 +401,8 @@ class ScaffoldBuilder():
 
                 if len(biomt_list) > 1:
 
-                    sel_biomt = biomt_choice.select_biomt(biomt_list, biomol_report)
+                    sel_biomt = biomt_choice.select_biomt(
+                        biomt_list, biomol_report)
                     self.selected_biomt = [int(x) for x in sel_biomt]
 
                 else:
@@ -407,7 +418,8 @@ class ScaffoldBuilder():
 
             models = self.apply_biomt_to_model()
 
-            self.segname_map = self.update_models_segname_original_index(models)
+            self.segname_map = self.update_models_segname_original_index(
+                models)
 
             self.merge_models(models)
 
@@ -415,7 +427,7 @@ class ScaffoldBuilder():
 
             self.scaffold_model = self.selected_mol
 
-        self.scaffold_model.write_pdb('combined_test.pdb',0,'w')
+        self.scaffold_model.write_pdb('combined_test.pdb', 0, 'w')
         #
         # with open('combined_segname_info.pkl', 'w') as out_file:
         #     pickle.dump(self.scaffold_model, out_file, -1)
