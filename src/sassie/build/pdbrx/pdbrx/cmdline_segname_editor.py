@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
-Command line editor of segment divides in SasMOl objects
+Command line editor of segment divides in SasMol objects
 
     SASSIE: Copyright (C) 2011 Joseph E. Curtis, Ph.D.
 
