@@ -19,17 +19,23 @@ model. Also need to store data about regions to be completed.
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
+from __future__ import division  # You don't need this in Python3
+
 import logging
 import sassie.build.pdbscan.pdbscan as pdbscan
 import sassie.build.pdbscan.pdbscan.report as report
-import segment_choice
-import biomt_choice
-import altloc_choice
+from . import segment_choice
+from . import biomt_choice
+from . import altloc_choice
 import sasmol.sasmol as sasmol
 import numpy as np
 
 
 class ScaffoldBuilder():
+    '''
+    Build structure to form scaffold for building. Scaffold contains only
+    regions selected by user and apply appropriate BIOMTs.
+    '''
 
     def __init__(self, *args, **kwargs):
 
@@ -106,8 +112,7 @@ class ScaffoldBuilder():
 
         """
 
-        selected_segnames = ['"{0:s}"'.format(
-            x) for x in self.selected_segnames]
+        selected_segnames = ['"{0:s}"'.format(x) for x in self.selected_segnames]
         selected_altlocs = self.selected_altlocs
 
         natoms = self.mol.natoms()
@@ -294,6 +299,12 @@ class ScaffoldBuilder():
         return
 
     def user_system_selection(self):
+        '''
+        Get user to select the regions of the protein to be included in the
+        final model. Also select which AltLoc to use if multiple available.
+
+        @return:
+        '''
 
         mol = self.mol
         segname_list = mol.segnames()
@@ -340,11 +351,12 @@ class ScaffoldBuilder():
                     alt_segnames.append(segname)
 
             if len(alt_segnames) > 0:
-                print(
-                    "Multiple conformations were found for residues in the following segments:")
+
+                print("Multiple conformations were found for residues "
+                      "in the following segments:")
                 print(str(alt_segnames))
-                print(
-                    "Are you happy using the first conformation (altloc) for all residues? (answer [y]es/[n]o)")
+                print("Are you happy using the first conformation (altloc)"
+                      " for all residues? (answer [y]es/[n]o)")
 
                 choice = ''
 
@@ -428,8 +440,5 @@ class ScaffoldBuilder():
             self.scaffold_model = self.selected_mol
 
         self.scaffold_model.write_pdb('combined_test.pdb', 0, 'w')
-        #
-        # with open('combined_segname_info.pkl', 'w') as out_file:
-        #     pickle.dump(self.scaffold_model, out_file, -1)
 
         return
