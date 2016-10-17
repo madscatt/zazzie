@@ -298,6 +298,65 @@ class ScaffoldBuilder():
 
         return
 
+    def terminal_segment_selection(self):
+        '''
+        Get user to select segments from the terminal
+
+        @return:
+        '''
+
+        mol = self.mol
+        segname_list = mol.segnames()
+        prep_report = self.prep_report
+
+        choice_made = False
+
+        while not choice_made:
+
+            if len(segname_list) > 1:
+
+                self.selected_segnames = segment_choice.select_segnames(
+                    segname_list, prep_report)
+
+            else:
+
+                self.selected_segnames = [segname_list[0]]
+
+            if self.selected_segnames:
+
+                if not self.check_segment_status():
+
+                    self.process_non_ff()
+
+                    if self.check_segment_status():
+                        choice_made = True
+                else:
+                    choice_made = True
+
+            else:
+
+                print("No segnames selected")
+
+        return
+
+    def get_segnames_altlocs_selected(self):
+        '''
+        Return list of segnames fro segments containing altlocs from those
+        selected for final model.
+
+        @return:
+        '''
+
+        altlocs = self.mol.segname_info.altloc
+        alt_segnames = []
+
+        for segname in self.selected_segnames:
+
+            if segname in altlocs and len(altlocs[segname]) > 0:
+                alt_segnames.append(segname)
+
+        return alt_segnames
+
     def user_system_selection(self):
         '''
         Get user to select the regions of the protein to be included in the
@@ -307,48 +366,14 @@ class ScaffoldBuilder():
         '''
 
         mol = self.mol
-        segname_list = mol.segnames()
-        prep_report = self.prep_report
+        altlocs = self.mol.segname_info.altloc
         biomol_report = self.biomt_report
 
         if self.ui == 'terminal':
 
-            choice_made = False
+            self.terminal_segment_selection()
 
-            while not choice_made:
-
-                if len(segname_list) > 1:
-
-                    self.selected_segnames = segment_choice.select_segnames(
-                        segname_list, prep_report)
-
-                else:
-
-                    self.selected_segnames = [segname_list[0]]
-
-                if self.selected_segnames:
-
-                    if not self.check_segment_status():
-
-                        self.process_non_ff()
-
-                        if self.check_segment_status():
-                            choice_made = True
-                    else:
-                        choice_made = True
-
-                else:
-
-                    print("No segnames selected")
-
-            altlocs = self.mol.segname_info.altloc
-            alt_segnames = []
-
-            for segname in self.selected_segnames:
-
-                if segname in altlocs and len(altlocs[segname]) > 0:
-
-                    alt_segnames.append(segname)
+            alt_segnames = self.get_segnames_altlocs_selected()
 
             if len(alt_segnames) > 0:
 
