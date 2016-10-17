@@ -21,6 +21,8 @@ headers
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
+import logging
+
 from itertools import groupby
 from operator import itemgetter
 
@@ -102,6 +104,8 @@ class Info():
         Initialize object to hold information from scanning PDB subdivisions
         (chains or segments/segnames).
         """
+
+        self.logger = logging.getLogger(__name__)
 
         self.n_models = 1
         self.subdivs = []
@@ -193,12 +197,12 @@ class Info():
 
             if subdiv:
 
-                missing = sum([len(x['atoms']) for x in model_missing[subdiv]])
+                n_missing = sum([len(x['atoms']) for x in model_missing[subdiv]])
             else:
                 missing = []
                 for sub in model_missing:
                     missing += [len(x['atoms']) for x in model_missing[sub]]
-                missing = sum(missing)
+                n_missing = sum(missing)
 
         else:
             n_missing = 0
@@ -228,8 +232,8 @@ class Info():
             else:
                 n_missing = 0
                 for sub in model_missing:
-                    # TODO: Make this a logging event
-                    print model_missing[sub]
+                    self.logger.info(
+                        'Missing hydrogens in ' + model_missing[sub])
                     n_missing += sum([x['n']
                                       for resid, x in model_missing[sub].items()])
 
@@ -508,7 +512,7 @@ class Info():
 
         return
 
-    def get_first_coor_resid(self, segname, model_no = 1):
+    def get_first_coor_resid(self, segname, model_no=1):
 
         guess = 0
 
@@ -528,7 +532,6 @@ class Info():
                     guess = seq[ndx][0]
 
         return seq[ndx]
-
 
     def add_missing_resids(self, subdiv, resids, resnames, model_no=1):
         """
@@ -613,16 +616,16 @@ class Info():
 
     def add_altlocs(self, subdiv, resid, loc_ids):
         """
-        Add alternative location information to the dictionary holding the
+        Add several alternative locations to the dictionary holding the
         information for the entire model:
         altloc[subdiv][resid] = [loc_id1, ....]
 
-        @type subdiv :  string
-        @param subdiv:  Subdivision (chain/segname) label
-        @type resid  :  integer
-        @param resid :  Residue number
-        @type loc_id :  string
-        @param loc_id:  Alternative location label
+        @type subdiv  :  string
+        @param subdiv :  Subdivision (chain/segname) label
+        @type resid   :  integer
+        @param resid  :  Residue number
+        @type loc_ids :  list
+        @param loc_ids:  Alternative location labels
         """
 
         for loc in sorted(loc_ids):
@@ -762,7 +765,7 @@ class Info():
         if subdiv not in sequence:
             sequence[subdiv] = [residue]
         else:
-            sequence[subdiv].insert(0,residue)
+            sequence[subdiv].insert(0, residue)
 
         return
 
@@ -778,14 +781,12 @@ class Info():
         @param residues:  list of (resid, resname) pairs
         """
 
-        #residues = zip(resids, resnames).reverse()
-
         for residue in reversed(residues):
             self.prepend_residue_to_sequence(subdiv, residue[0], residue[1])
 
         return
 
-    def initialize_missing_resids_subdiv(self, subdiv, model_no = 1):
+    def initialize_missing_resids_subdiv(self, subdiv, model_no=1):
 
         missing_resids = self.missing_resids
 
@@ -863,7 +864,7 @@ class Info():
 
         return
 
-    def sequence_to_fasta(self, subdiv, model_no = 1, missing_lower=False, for_matching = False):
+    def sequence_to_fasta(self, subdiv, model_no=1, missing_lower=False, for_matching=False):
         """
         Create a FASTA format sequence string form the sequence helf for the 
         selected subdiv(ision).
@@ -873,8 +874,8 @@ class Info():
         @type missing_lower   :  boolean
         @keyword missing_lower:  Should missing residues be presented in
                                  lowercase?
-        @type coord_only   :     boolean
-        @keyword coord_only:     Only the coordinate residues to be output
+        @type for_matching    :  boolean
+        @keyword for_matching :  Only the coordinate residues to be output
                                  (i.e. filter out missing residues - replace
                                  gaps with single '.')
         @rtype        :  string
@@ -912,11 +913,15 @@ class Info():
         Check if the sequence of the selected subdiv(ision) is complete - i.e. 
         all residues have both resid and resname.
 
-        @type subdiv  :  string
-        @param subdiv :  Subdivision (chain or segname) label for first residue
-        @rtype        :  boolean
-        @return       :  Do all residues in selected subdiv(ision) sequence 
-                         have both resid and resname?
+        @type subdiv   :  string
+        @param subdiv  :  Subdivision (chain or segname) label for first
+                          residue
+        @type model_no :  integer
+        @param model_no:  Number of the model from which the sequence should
+                          be derived
+        @rtype         :  boolean
+        @return        :  Do all residues in selected subdiv(ision) sequence
+                          have both resid and resname?
         """
 
         complete = True
@@ -933,7 +938,7 @@ class Info():
 
         return complete
 
-    def seqs_for_completion(self, subdiv, model_no = 1):
+    def seqs_for_completion(self, subdiv, model_no=1):
         """
         Return the sequence elements needed to model gaps - the sequence to
         fill in and the two residues flanking this at either end
@@ -980,9 +985,9 @@ class Info():
             start = gap[0]
             if start - 1 in seq:
 
-                pre_anchor = start -1
+                pre_anchor = start - 1
 
-                for i in range(-2,0):
+                for i in range(-2, 0):
                     resid = start + i
                     if start + i in seq:
                         pre_flank += utils.conv_aa3to1(seq[resid])
@@ -994,7 +999,7 @@ class Info():
 
                 post_anchor = end + 1
 
-                for i in range(1,3):
+                for i in range(1, 3):
                     resid = end + i
                     if end + i in seq:
                         post_flank += utils.conv_aa3to1(seq[resid])
@@ -1007,7 +1012,8 @@ class Info():
             for resid in gap:
                 gap_seq += utils.conv_aa3to1(seq[resid])
 
-            out_fragments.append([pre_anchor, post_anchor,pre_flank,gap_seq,post_flank])
+            out_fragments.append(
+                [pre_anchor, post_anchor, pre_flank, gap_seq, post_flank])
 
         return out_fragments
 

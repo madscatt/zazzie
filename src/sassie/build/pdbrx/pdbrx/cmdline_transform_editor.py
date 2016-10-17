@@ -6,6 +6,10 @@ import json
 import yaml
 from copy import deepcopy
 
+# make Python 2.x input behave as in Python 3
+try: input = raw_input
+except NameError: pass
+
 def check_array_input(input_txt, dimensions):
 
     flag = True
@@ -21,15 +25,15 @@ def check_array_input(input_txt, dimensions):
 
     return flag, matrix
 
-def check_rotation(input_txt):
+def check_rotation(input_rot):
 
-    flag, matrix = check_array_input(input_txt,(3,3))
+    flag, matrix = check_array_input(input_rot,(3,3))
 
     return flag, matrix
 
-def check_translation(input_txt):
+def check_translation(input_trans):
 
-    flag, matrix = check_array_input(input_txt,(3,))
+    flag, matrix = check_array_input(input_trans,(3,))
 
     return flag, matrix
 
@@ -40,8 +44,8 @@ def get_user_transform():
     trans = None
 
     print "Enter rotation matrix (3 x 3, using Python list notation i.e.: [[1,0,0],[0,1,0],[0,0,1]]):"
-    rot_txt = input()
-    check_rot, rot = check_rotation(rot_txt)
+    rot_user = eval(input())
+    check_rot, rot = check_rotation(rot_user)
 
     if not check_rot:
         flag = False
@@ -50,8 +54,8 @@ def get_user_transform():
     else:
 
         print "Enter translation vector (3 x 1, using Python list notation i.e.: [1,0,0]):"
-        trans_txt = input()
-        check_trans, trans = check_translation(trans_txt)
+        trans_user = eval(input())
+        check_trans, trans = check_translation(trans_user)
 
         if not check_trans:
             flag = False
@@ -108,7 +112,7 @@ def edit_transform(biomt_rec):
         while rec_no == 0:
 
             print "\nSelect record to edit"
-            txt = raw_input()
+            txt = input()
             try:
                 rec_no = int(txt)
                 if rec_no <= 0 or rec_no >= no_entries:
@@ -166,7 +170,7 @@ def select_segnames(segnames):
     while not selected:
 
         try:
-            selected = input()
+            selected = eval(input())
             if not set(selected).issubset(set(segnames)):
                 print 'All values in list must be available segments'
                 selected = ''
