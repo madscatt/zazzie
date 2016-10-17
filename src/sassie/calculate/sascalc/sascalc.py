@@ -23,9 +23,7 @@ import sassie.util.sasconfig as sasconfig
 import sassie.util.module_utilities as module_utilities
 import sassie.util.basis_to_python as basis_to_python
 import sassie.calculate.sascalc.sascalc_utils as sascalc_utils
-
-#sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)),'sascalc_library'))
-import sassie.calculate.sascalc.sascalc_library.sascalc_lib as sascalc_lib ## @NOTE to ZHL: haven't put sascalc_lib in core_library yet.
+import sassie.calculate.sascalc.sascalc_library.sascalc_lib as sascalc_lib
 
 '''
     SASCALC is the module that contains the functions that are used to calculate the neutron or x-ray scattering profile, as well as additional useful output such as p(r) and Vc, based on the user given structure.
@@ -179,6 +177,7 @@ class sascalc():
         scvars.mol = mol
         scvars.coor= mol.coor()
         scvars.number_of_frames = mol.number_of_frames()
+        scvars.number_of_atoms = mol.natoms()
         if 'frames_per_batch' in vars(mvars):
             scvars.frames_per_batch = mvars.frames_per_batch
         else:
@@ -206,59 +205,75 @@ class sascalc():
 
     def run(self):
         '''
-        method to perform SasCalc calculation
+        method to perform sascalc calculation
         '''
 
         log = self.log
         mvars = self.mvars
         scvars = self.scvars
+        mol = scvars.mol
         pgui = self.run_utils.print_gui
 
         frame = 0
         frames_per_batch = scvars.frames_per_batch
 
-        log.debug('in SasCalc')
+        log.debug('in sascalc')
 
         pgui("\n"+"="*60+" \n")
         pgui("DATA FROM RUN: %s \n\n" %(time.asctime( time.gmtime( time.time() ) ) ))
-        #pgui('>>> starting SasCalc\n')
+        pgui('>>> starting sascalc\n')
 
+
+        print "initializing sascalc object..."
         ''' create the sascalc object '''
-        sascalc_object = sascalc_lib.SasCalc()
 
-        ''' initialize the sascalc_object '''
-        sascalc_object.initialize(scvars)
+        sascalc_object = sascalc_lib.SasCalc(mol, mvars, scvars)
 
+        sascalc_coor = numpy.transpose(mol.coor(),axes=(0,2,1))
+
+        print "computing first batch..."
+        ''' compute and get the results '''
+        results = sascalc_object.calculate(sascalc_coor, 2)
+        ''' save output '''
+        results.save('first batch')
+
+        print "computing second batch..."
+        ''' compute and get the results '''
+        results = sascalc_object.calculate(sascalc_coor[2:], 1)
+        ''' save output '''
+        results.save('second batch')
+
+
+        """
+        ''' compute and get the results '''
+        print "running sascalc "
+        results = sascalc_object.calculate(sascalc_coor, 1)
+        ''' save output '''
+        print "saving result"
+        results.save('batch')
+        """
+
+
+        """
         for frame in xrange(scvars.number_of_frames):
-            ''' coordinate batch loading '''
-            if frame%frames_per_batch== 0:
-                sascalc_object.batch_load()
+
             ''' compute and get the results '''
-            results = sascalc_object.calculate(frame%frames_per_batch)
+            results = sascalc_object.calculate(mol.coor()[frame], 1)
+
             ''' save output and report progress '''
-            sascalc_utils.save_sascalc_outputs(mvars, scvars, results, frame, app)
-            #sascalc_utils.write_sascalc_log(mvars, scvars, results, frame, app)
+            results.save('frame_%d'%frame)
+
+            ''' update fraction done '''
             fraction_done = (frame+1)/float(scvars.number_of_frames)
             time.sleep(0.01)
-            #print('STATUS\t'+str(fraction_done))
             pgui('STATUS\t'+str(fraction_done))
+        """
+
         
         pgui('\nProcessed %d DCD frame(s)\n'%scvars.number_of_frames)
 
-        if mvars.xon in ['neutron','neutron_and_xray']:
-            for idx_contrast in xrange(mvars.number_contrast_points):
-                output_dir = os.path.join(mvars.runname,app,'neutron_D2Op_%d'%mvars.D2O_percentage_array[idx_contrast])
-                pgui('\nData stored in directory: %s\n'%output_dir)
-        if mvars.xon in ['xray','neutron_and_xray']:
-            for i, idx_contrast in enumerate(range(mvars.xray_number_contrast_points)): ## @NOTE to developers: the output folder name is currently in-consistent with neutron and xray
-                output_dir = os.path.join(mvars.runname,app,'xray')
-                pgui('\nData stored in directory: %s\n'%output_dir)
-
-        ''' box converge '''
-        sascalc_object.box_converge()
-        
         ''' clean up '''
-        sascalc_object.clean()
+        #sascalc_object.clean()
 
         return
 
@@ -267,10 +282,14 @@ class sascalc():
         method to print out simulation results and to move results
         to appropriate places.
         '''
+        scvars = self.scvars
 
         log = self.log
         log.debug('in epilogue')
         pgui = self.run_utils.print_gui
+
+        print 'generating the final h5 file...'
+        #sascalc_utils.reoganize_h5(scvars.output_folder)
 
         self.run_utils.clean_up(log)
 

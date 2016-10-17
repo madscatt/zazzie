@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
-'''
+"""
 header_reader
 
 This module will read and parse PDB header records
 
-'''
+"""
 
 '''
     SASSIE: Copyright (C) 2011 Joseph E. Curtis, Ph.D.
@@ -165,11 +165,11 @@ class PdbHeader:
 
     def process_header_text(self, header_txt):
         """
-        Parse list of header libes lines and place by record type in 
+        Parse list of header lines lines and place by record type in
         self.pdb_recs dictionary
 
-        @type  sasmol:  sasmol.SasMol
-        @param sasmol:  SasMol containing data read in from a PDB
+        @type  header_txt:  list
+        @param header_txt:  List of stings containing PDB records
         """
 
         self.set_blank_values()
@@ -219,7 +219,6 @@ class PdbHeader:
             with open(pdbfile, 'r') as f:
 
                 for line in f:
-
                     self.process_header_line(line)
                     line_no += 1
 
@@ -362,7 +361,7 @@ class PdbHeader:
         {model_no:{chain: [{resid:resname}, ..]}}
         """
 
-        #missing_resids = self.chain_info.missing_resids
+        # missing_resids = self.chain_info.missing_resids
         chain_info = self.chain_info
 
         remarks465 = [x for x in self.pdb_recs['REMARK'] if x['num'] == 465]
@@ -379,10 +378,9 @@ class PdbHeader:
 
             for chain, residues in itertools.groupby(
                     grpd, key=lambda y: y['chain']):
-
                 residues = list(residues)
-                resids = [x['resid'] for x in residues]
-                resnames = [x['resname'] for x in residues]
+                resids = [z['resid'] for z in residues]
+                resnames = [z['resname'] for z in residues]
 
                 chain_info.add_missing_resids(chain, resids, resnames, model)
 
@@ -420,10 +418,10 @@ class PdbHeader:
         # Schema is for parsing the text section extracted from the original
         # REMARK record not the original PDB record
         missing_schema = (
-            ('model', 0, 3, None),       # 0,  model
-            ('resname', 4, 7, None),     # 1,  residue name
-            ('chain', 8, None, None),    # 2,  chain ID
-            ('resid', 9, 16, int),       # 3,  residue number
+            ('model', 0, 3, None),  # 0,  model
+            ('resname', 4, 7, None),  # 1,  residue name
+            ('chain', 8, None, None),  # 2,  chain ID
+            ('resid', 9, 16, int),  # 3,  residue number
             ('insert', 16, None, None),  # 4,  insertion code
         )
 
@@ -487,7 +485,7 @@ class PdbHeader:
         # from the parsed REMARK lines
 
         for model, grpd in itertools.groupby(
-                missing_rec, key=lambda x: x['model']):
+                missing_rec, key=lambda z: z['model']):
 
             missing_atoms[model] = {}
 
@@ -497,7 +495,6 @@ class PdbHeader:
                 missing_atoms[model][chain] = {}
 
                 for res in resids:
-
                     missing_atoms[model][chain][res['resid']] = {
                         'resname': res['resname'],
                         'atoms': res['atoms']
@@ -530,12 +527,12 @@ class PdbHeader:
         # Schema is for parsing the text section extracted from the original REMARK
         # record not the original PDB record
         missing_schema = (
-            ('model', 0, 3, None),       # 0,  model
-            ('resname', 4, 7, None),     # 1,  residue name
-            ('chain', 8, None, None),    # 2,  chain ID
-            ('resid', 9, 16, int),       # 3,  residue number
-            ('insert', 16, 16, None),    # 4,  insertion code
-            ('atoms', 17, 80, None),     # 5,  atom names
+            ('model', 0, 3, None),  # 0,  model
+            ('resname', 4, 7, None),  # 1,  residue name
+            ('chain', 8, None, None),  # 2,  chain ID
+            ('resid', 9, 16, int),  # 3,  residue number
+            ('insert', 16, 16, None),  # 4,  insertion code
+            ('atoms', 17, 80, None),  # 5,  atom names
         )
 
         missing_rec = []
@@ -582,12 +579,9 @@ class PdbHeader:
         for chain, grpd in itertools.groupby(
                 seqres_recs, key=lambda x: x['chain']):
 
-            #self.chain_info.sequence[chain] = []
             chain_seq = []
 
             for entry in grpd:
-
-                #self.chain_info.sequence[chain] += entry['resnames']
                 chain_seq += entry['resnames']
 
             self.chain_info.add_subdiv_sequence(chain, chain_seq)
@@ -693,7 +687,6 @@ class PdbHeader:
             if remark['text'].startswith('BIOMOLECULE:'):
 
                 for biomol_no in remark['text'][13:].split(','):
-
                     biomol_300.append(int(biomol_no))
 
         return biomol_300
@@ -761,7 +754,7 @@ class PdbHeader:
 
                     # If we have not yet read any rows from a BIOMT matrix line
                     # initialize r(otation) and t(ranslation) arrays
-                    if last_seen_row == None:
+                    if last_seen_row is None:
                         r = np.identity(3)
                         t = np.zeros(3)
 
@@ -771,7 +764,7 @@ class PdbHeader:
 
                     # If we have finished reading a transformation add it to
                     # the chain_info object
-                    if last_seen_row == None:
+                    if last_seen_row is None:
                         chain_info.add_biomt(bm_no, r, t)
 
         return
@@ -803,7 +796,7 @@ class PdbHeader:
         ndx = int(cols[0][-1]) - 1
 
         # Should be first row or the one after the last read row
-        if (last_seen == None and ndx == 0) or (last_seen == ndx - 1):
+        if (last_seen is None and ndx == 0) or (last_seen == ndx - 1):
 
             rot[ndx] = np.array([float(cols[2]),
                                  float(cols[3]),
@@ -888,7 +881,6 @@ class PdbHeader:
         if ssbond_recs:
 
             for rec in ssbond_recs:
-
                 bond = data_struct.Disulphide(rec['chain1'], rec['resid1'],
                                               rec['chain2'], rec['resid2'],
                                               'chain')
@@ -988,7 +980,6 @@ class PdbHeader:
                 compnds[mol_no]['name'] += content.strip(';')
 
                 if content[-1] == ';':
-
                     open_name = False
 
             elif open_fragment:
@@ -996,7 +987,6 @@ class PdbHeader:
                 compnds[mol_no]['fragment'] += content.strip(';')
 
                 if content[-1] == ';':
-
                     open_fragment = False
 
         self.reference_info.compnd = compnds
@@ -1060,14 +1050,12 @@ class PdbHeader:
         for het in pdb_recs['HET']:
 
             if het['resname'] not in hets:
-
                 self.logger.info(
                     'HETATM ' +
                     het['resname'] +
                     ' not given description in header')
 
             if het['resname'] not in formuls:
-
                 self.logger.info(
                     'HETATM ' +
                     het['resname'] +
@@ -1075,7 +1063,7 @@ class PdbHeader:
 
             chain = het['chain']
 
-            if not chain in heterogens:
+            if chain not in heterogens:
                 heterogens[chain] = {het['resid']: het['resname']}
             else:
                 heterogens[chain][het['resid']] = het['resname']

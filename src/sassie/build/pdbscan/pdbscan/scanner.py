@@ -42,9 +42,10 @@ from . import pdbscan_utils as utils
 from . import header_reader
 from . import reconcile
 
+
 class SasMolScan(sasmol.SasMol):
 
-    def __init__(self, top_file=None, top_path=None, model_no = 1):
+    def __init__(self, top_file=None, top_path=None, model_no=1):
         """
         Initialise the sasmol_scan object. If a topology is provided this is
         used instead of the default CHARMM 27 as provided by NAMD/VMD. Creates
@@ -63,7 +64,7 @@ class SasMolScan(sasmol.SasMol):
             top_file = "top_all27_prot_na.inp"
             self.top_file = os.path.join(top_path, top_file)
         elif not top_path:
-                top_path = '.'
+            top_path = '.'
 
         self.topology = sasmol.saspdbrx.Topology()
         self.topology.read_charmm_topology(
@@ -650,11 +651,12 @@ class SasMolScan(sasmol.SasMol):
 
                     for old_ndx in linked:
 
-                        new_ndx = self.sasmol_index_from_original_index(old_ndx)
+                        new_ndx = self.sasmol_index_from_original_index(
+                            old_ndx)
 
                         if new_ndx:
 
-                            if moltypes[new_ndx] in ['protein', 'rna','dna','nucleic']:
+                            if moltypes[new_ndx] in ['protein', 'rna', 'dna', 'nucleic']:
 
                                 # Set residue_flag for the HET residue containing base
                                 # atom
@@ -664,11 +666,12 @@ class SasMolScan(sasmol.SasMol):
 
                                 break
 
-                elif base_moltype in ['protein', 'rna','dna','nucleic']:
+                elif base_moltype in ['protein', 'rna', 'dna', 'nucleic']:
 
                     for old_ndx in linked:
 
-                        new_ndx = self.sasmol_index_from_original_index(old_ndx)
+                        new_ndx = self.sasmol_index_from_original_index(
+                            old_ndx)
 
                         if new_ndx:
 
@@ -687,7 +690,7 @@ class SasMolScan(sasmol.SasMol):
 
                             elif (new_moltype == base_moltype
                                   ) and (
-                                    base_moltype in ['protein', 'rna','dna', 'nucleic']):
+                                    base_moltype in ['protein', 'rna', 'dna', 'nucleic']):
 
                                 # Check for number gaps
                                 if (new_subdiv == base_subdiv):
@@ -1114,10 +1117,10 @@ class SasMolScan(sasmol.SasMol):
             chains = self.chain()
 
             if ' ' in chains:
-                print "Empty chain IDs are a real pain!"
+                print("Empty chain IDs are a real pain!")
             else:
                 dup_resids = self.get_duplicate_resids('chain')
-                print dup_resids
+                print(dup_resids)
 
                 # Check for numbering gaps & Check missing residues
 
@@ -2080,7 +2083,7 @@ class SasMolScan(sasmol.SasMol):
 
         # Get indices for the start of every contiguous segname-chain run
         seg_chain_starts = seg_chain_ends + 1
-        seg_chain_starts = np.append([0],seg_chain_starts)
+        seg_chain_starts = np.append([0], seg_chain_starts)
 
         # Add final index for completeness
         seg_chain_ends = np.append(seg_chain_ends, [natoms - 1])
@@ -2088,10 +2091,10 @@ class SasMolScan(sasmol.SasMol):
         # Need the start and end of chains to know when to copy terminal regions
         # Same logic applied as for segname-chain combination
         chain_map = np.array(zip(segnames, moltypes))
-        chain_ends = np.where(chain_map[:-1,1] != chain_map[1:,1])[0]
+        chain_ends = np.where(chain_map[:-1, 1] != chain_map[1:, 1])[0]
 
         chain_starts = chain_ends + 1
-        chain_starts = np.append([0],chain_starts)
+        chain_starts = np.append([0], chain_starts)
 
         chain_ends = np.append(chain_ends, [natoms - 1])
 
@@ -2102,7 +2105,7 @@ class SasMolScan(sasmol.SasMol):
             start_ndx = seg_chain_starts[i]
             end_ndx = seg_chain_ends[i]
 
-            if moltypes[start_ndx] in ['nucleic','protein']:
+            if moltypes[start_ndx] in ['nucleic', 'protein']:
 
                 segname = segnames[start_ndx]
                 chain = chains[start_ndx]
@@ -2119,7 +2122,8 @@ class SasMolScan(sasmol.SasMol):
 
                         if resid < start_resid:
 
-                            segname_info.add_missing_resid(segname, resid, resname, model_no=model_no)
+                            segname_info.add_missing_resid(
+                                segname, resid, resname, model_no=model_no)
 
                 if end_ndx in chain_ends:
 
@@ -2129,7 +2133,8 @@ class SasMolScan(sasmol.SasMol):
 
                         if resid > end_resid:
 
-                            segname_info.add_missing_resid(segname, resid, resname, model_no=model_no)
+                            segname_info.add_missing_resid(
+                                segname, resid, resname, model_no=model_no)
 
                 # Copy in information on gaps in the coordinate sequence
 
@@ -2142,7 +2147,8 @@ class SasMolScan(sasmol.SasMol):
 
                         if (resid not in segname_info.sequence[segname]) or (segname_info.sequence[segname][resid] == ''):
 
-                            segname_info.add_missing_resid(segname, resid, chain_missing_res[resid], model_no=model_no)
+                            segname_info.add_missing_resid(segname, resid, chain_missing_res[
+                                                           resid], model_no=model_no)
 
         # Complete segment sequences with resnames from missing residues
         seg_missing = segname_info.missing_resids[model_no]
@@ -2156,23 +2162,23 @@ class SasMolScan(sasmol.SasMol):
 
             for resid, resname in seg_missing[segname].iteritems():
 
-                if (resid,'') in seq:
+                if (resid, '') in seq:
 
-                    ndx = seq.index((resid,''))
-                    seq[ndx] = (resid,resname)
+                    ndx = seq.index((resid, ''))
+                    seq[ndx] = (resid, resname)
 
                 elif resid < resid_list[0]:
 
-                    pre_seq.append((resid,resname))
+                    pre_seq.append((resid, resname))
 
                 elif resid > resid_list[-1]:
 
-                    segname_info.add_residue_to_sequence(segname, resid, resname)
+                    segname_info.add_residue_to_sequence(
+                        segname, resid, resname)
 
             segname_info.prepend_residues_to_sequence(segname, pre_seq)
 
         return
-
 
     def advanced_het_recognition(self):
         # This will one day scan coordinates and CONECT records to see if
@@ -2226,7 +2232,6 @@ class SasMolScan(sasmol.SasMol):
 
         return
 
-
     def check_residues_charmm_ready(self):
         """
         Check that the residues in each segment are all CHARMM compatible.
@@ -2251,7 +2256,6 @@ class SasMolScan(sasmol.SasMol):
                 seg_charmm_valid[segment] = False
 
         return seg_charmm_valid
-
 
     def check_residues_md_ready(self):
         """
@@ -2280,7 +2284,6 @@ class SasMolScan(sasmol.SasMol):
                 seg_md_valid[segment] = False
 
         return seg_md_valid
-
 
     def check_segname_simulation_preparedness(self):
         """
@@ -2326,7 +2329,11 @@ class SasMolScan(sasmol.SasMol):
                                         sim_ready[segname]['single_conformer'])
 
             # We should warn people if start residue is not 1
-            first_resid = self.segname_info.sequence[segname][0][0]
+            if segname in self.segname_info.sequence:
+                first_resid = self.segname_info.sequence[segname][0][0]
+            else:
+                # TODO: This is a default - can something less problematic
+                first_resid = 0
 
             sim_ready[segname]['start'] = (first_resid == 1)
 
@@ -2371,7 +2378,7 @@ class SasMolScan(sasmol.SasMol):
 
         names = self.name()
 
-        needed = set(["O3'","P","O5'","C5'","C4'","C3'"])
+        needed = set(["O3'", "P", "O5'", "C5'", "C4'", "C3'"])
 
         found = set([])
 
@@ -2382,7 +2389,7 @@ class SasMolScan(sasmol.SasMol):
 
         if not correct:
 
-            needed = set(["O3*","P","O5*","C5*","C4*","C3*"])
+            needed = set(["O3*", "P", "O5*", "C5*", "C4*", "C3*"])
             correct = needed.issubset(found)
 
         return correct
@@ -2411,7 +2418,7 @@ class SasMolScan(sasmol.SasMol):
         moltype = moltypes[ndxs[0]]
 
         if moltype not in ['protein', 'rna', 'dna', 'nucleic']:
-            #return bound, gaps
+            # return bound, gaps
             return False
         elif moltype == 'protein':
             check_atoms = self.check_protein_residue_dihed_atoms
@@ -2517,22 +2524,25 @@ class SasMolScan(sasmol.SasMol):
 
         tmp_map = zip(chains, segnames, resids, original_indices, moltypes)
 
-        for chain, chain_atom_info in groupby(tmp_map,lambda x: x[0]):
+        for chain, chain_atom_info in groupby(tmp_map, lambda x: x[0]):
 
-            if chain not in  chain_segment_map:
+            if chain not in chain_segment_map:
                 chain_segment_map[chain] = {}
 
             chain_atom_info = list(chain_atom_info)
-            seg_list = set(map(lambda x:x[1], chain_atom_info))
+            seg_list = set(map(lambda x: x[1], chain_atom_info))
 
             for segname in seg_list:
 
                 chain_segment_map[chain][segname] = {}
 
-                atom_list = [(x[2],x[3],x[4]) for x in chain_atom_info if x[1] == segname]
+                atom_list = [(x[2], x[3], x[4])
+                             for x in chain_atom_info if x[1] == segname]
 
-                chain_segment_map[chain][segname]['resid'] = (atom_list[0][0],atom_list[-1][0])
-                chain_segment_map[chain][segname]['original_index'] = (atom_list[0][1],atom_list[-1][1])
+                chain_segment_map[chain][segname]['resid'] = (
+                    atom_list[0][0], atom_list[-1][0])
+                chain_segment_map[chain][segname]['original_index'] = (
+                    atom_list[0][1], atom_list[-1][1])
                 chain_segment_map[chain][segname]['moltype'] = atom_list[0][2]
 
         return chain_segment_map
@@ -2778,7 +2788,7 @@ class SasMolScan(sasmol.SasMol):
 
         return ordered_molecule_dictionary
 
-    def segment_scan(self, initialize = True):
+    def segment_scan(self, initialize=True):
         """
         Perform a scan to determine the contents of the files using 
         organization by segname, rather than chain. In many cases segnames 
@@ -2877,7 +2887,6 @@ class SasMolScan(sasmol.SasMol):
 
 # Structure preparation methods - more for PDB Rx than Scan
 
-
     def offset_original_index(self, offset):
 
         original_indices = self.original_index()
@@ -2887,4 +2896,3 @@ class SasMolScan(sasmol.SasMol):
             index += offset
 
         return
-

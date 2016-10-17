@@ -19,7 +19,8 @@
 from __future__ import print_function
 
 import os
-import glob,readline
+import glob
+import readline
 import itertools
 from operator import itemgetter
 import subprocess
@@ -103,6 +104,7 @@ def conv_aa3to1(aa3):
 
     return aa1
 
+
 def conv_aa1to3(aa1):
 
     map = {v: k for k, v in residue_dictionary.iteritems()}
@@ -113,6 +115,7 @@ def conv_aa1to3(aa1):
         aa3 = 'UNK'
 
     return aa3
+
 
 def uniquify_list(lst):
     """
@@ -221,6 +224,7 @@ def is_sequential_numbers(numbers):
 
     return numbers == range(numbers[0], numbers[-1] + 1)
 
+
 def convert_mkd_html(mkd_filepath):
     """
     Run Pandoc to convert input markdown file to HTML
@@ -231,7 +235,7 @@ def convert_mkd_html(mkd_filepath):
     @return:            :  Path to the HTML format output file
     """
 
-    pandoc_exe = os.path.join(sasconfig.__bin_path__,'pandoc')
+    pandoc_exe = os.path.join(sasconfig.__bin_path__, 'pandoc')
 
     html_base = os.path.splitext(mkd_filepath)[0]
     html_filepath = html_base + '.html'
@@ -240,6 +244,7 @@ def convert_mkd_html(mkd_filepath):
     subprocess.check_call(options)
 
     return html_filepath
+
 
 def cmdline_path_complete(text, state):
     """
@@ -253,7 +258,8 @@ def cmdline_path_complete(text, state):
     @rtype      :  string
     @return     :  Completed path
     """
-    return (glob.glob(text+'*')+[None])[state]
+    return (glob.glob(text + '*') + [None])[state]
+
 
 def get_command_line_filepath(prompt):
     """
