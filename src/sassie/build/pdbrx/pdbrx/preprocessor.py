@@ -95,7 +95,7 @@ class PreProcessor():
 
         mol = self.mol
 
-        resid_descriptions = self.create_residue_descriptions_segname_edit()
+        resid_descriptions = self.create_residue_descriptions()
 
         if self.ui_type == 'terminal':
 
@@ -545,6 +545,15 @@ class PreProcessor():
         return valid
 
     def biomt_json2data(self, json_biomt_rec):
+        '''
+        Convert JSON format BIOMT records into numpy arrays for use in
+        coordinate transforms
+
+        @type json_biomt_rec :  str
+        @param json_biomt_rec:  BIOMT records in JSON format
+        @rtype :
+        @return:
+        '''
 
         biomt_rec = yaml.safe_load(json_biomt_rec)
         valid = self.check_biological_unit(biomt_rec)
@@ -561,7 +570,15 @@ class PreProcessor():
 
         return biomt_rec
 
-    def create_residue_descriptions_segname_edit(self):
+    def create_residue_descriptions(self):
+        '''
+        Filter information from self.mol to provide residue descriptions for
+        used in displaying structure contents for segment editing.
+
+        @rtype : list
+        @return: List of tuples describing segname, first atomic index,
+                 resid, resname, chain and moltype for each residue
+        '''
 
         segnames = self.mol.segname()
         indices = self.mol.index()
@@ -581,6 +598,12 @@ class PreProcessor():
         return residue_descriptions
 
     def terminal_edit_options(self):
+        '''
+        Present user with options to edit segmentation, sequence and BIOMT from
+        the commandline.
+
+        @return:
+        '''
 
         mol = self.mol
 
@@ -699,6 +722,11 @@ class PreProcessor():
         return
 
     def user_edit_options(self):
+        '''
+        Get user input from terminal or other source. ONLY TERMINAL CURRENTLY
+
+        @return:
+        '''
 
         if self.ui_type == 'terminal':
 
