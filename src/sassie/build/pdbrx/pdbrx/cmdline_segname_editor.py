@@ -1,23 +1,63 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
+"""
+Command line editor of segment divides in SasMOl objects
+
+    SASSIE: Copyright (C) 2011 Joseph E. Curtis, Ph.D.
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+"""
+
 from __future__ import division  # You don't need this in Python3
 
 import curses
 import curses.wrapper
 
 from math import *
-import numpy as np
 import json
 import sys
 from StringIO import StringIO
+import numpy as np
+
 
 
 class SegnameEditor():
+    '''
+    Curses interface to allow users to split, join and rename segments in
+    SasMol objects
+    '''
 
     def __init__(self, segnames, resid_descriptions, max_row=10):
+        '''
+        Setup the curses environment and display to show residue infromation and
+        editing instructions to the user
+
+        @type segnames :  list
+        @param segnames:  List of segment names input
+        @type resid_descriptions : list
+        @param resid_descriptions: List of tuples describing segname,
+                                   first atomic index, resid, resname, chain
+                                   and moltype for each residue.
+        @type max_row :  int
+        @param max_row:  Maximum number of rows to be displayed in terminal
+        '''
 
         self.segnames = segnames
         self.resid_descriptions = resid_descriptions
 
+        # Get initial locations of segment name changes in description list
         self.starting_breaks = np.where(
             self.resid_descriptions[:-1, 0] != self.resid_descriptions[1:, 0])[0]
 
@@ -34,7 +74,11 @@ class SegnameEditor():
 
         self.row_num = len(self.display_lines)
 
+        # Residue descriptions shown in a scrollable window
+        # Pages define list of simultaneously viewable lines
         self.pages = int(ceil(self.row_num / self.max_row))
+
+        # Initial viewing and selection location
         self.position = 1
         self.page = 1
 
@@ -45,6 +89,11 @@ class SegnameEditor():
         return
 
     def curses_start(self):
+        '''
+        Initial setup of curses environment.
+
+        @return:
+        '''
 
         self.screen = curses.initscr()
         curses.noecho()
@@ -56,6 +105,12 @@ class SegnameEditor():
         return
 
     def screen_setup(self):
+        '''
+        Define the viewable areas in curses and the constant content (such as
+        user instructions).
+
+        @return:
+        '''
 
         curses.init_pair(1, curses.COLOR_BLACK, curses.COLOR_WHITE)
         self.highlightText = curses.color_pair(1)
@@ -82,6 +137,7 @@ class SegnameEditor():
                 max_row + 12, 5, "a: Accept current segmentation")
 
         else:
+
             self.screen.addstr(max_row + 6, 5, "Scroll using Up/Down arrows")
             self.screen.addstr(
                 max_row + 7, 5, "Commands: (s)plit, (j)oin, (r)ename")
@@ -92,6 +148,11 @@ class SegnameEditor():
         self.box.box()
 
     def curses_stop(self):
+        '''
+        Stop curses environment and tidy up.
+
+        @return:
+        '''
 
         self.screen.clear()
 
@@ -103,6 +164,11 @@ class SegnameEditor():
         return
 
     def redraw(self):
+        '''
+        Redraw screen after change in state.
+
+        @return:
+        '''
 
         max_row = self.max_row
         page = self.page
@@ -119,12 +185,16 @@ class SegnameEditor():
                 self.box.addstr(1, 1, "There aren't strings",
                                 self.highlightText)
             else:
-                if (i + (max_row * (page - 1)) == position + (max_row * (page - 1))):
+                if (i + (max_row * (page - 1)) ==
+                        position + (max_row * (page - 1))):
+
                     self.box.addstr(i - (max_row * (page - 1)),
                                     2, display_lines[i - 1], self.highlightText)
                 else:
+
                     self.box.addstr(i - (max_row * (page - 1)),
                                     2, display_lines[i - 1], self.normalText)
+
                 if i == row_num:
                     break
 
@@ -136,6 +206,12 @@ class SegnameEditor():
         return
 
     def curses_loop(self, stdscr):
+        '''
+        Main loop to obtain and interpret user input
+
+        @param stdscr:
+        @return:
+        '''
 
         max_row = self.max_row
         pages = self.pages
@@ -242,6 +318,15 @@ class SegnameEditor():
         return
 
     def valid_segname(self, segname):
+        '''
+        Check that the input segment name is valid to use for a new segment,
+        i.e is 4 characters long or less and not an existing segment name.
+
+        @type segname :  str
+        @param segname:  Proposed segment name
+        @rtype :  bool
+        @return:  Is the input segname valid
+        '''
 
         valid = False
 
@@ -251,6 +336,11 @@ class SegnameEditor():
         return valid
 
     def create_display_lines(self):
+        '''
+        Format residue information for display
+
+        @return:
+        '''
 
         input_data = self.resid_descriptions
 
@@ -264,6 +354,16 @@ class SegnameEditor():
         return menu_input
 
     def split_segnames(self, ndx, new_segname):
+        '''
+        Split an existing segment and name the newly created segment.
+
+        @type ndx :  int
+        @param ndx:  Index of the residue selected for segment break (in list
+                     of residue descritions)
+        @type new_segname :  str
+        @param new_segname:  Name to be applied to the newly created segment
+        @return:
+        '''
 
         resid_desc = self.resid_descriptions
 
@@ -296,6 +396,16 @@ class SegnameEditor():
         return
 
     def rename_segment(self, ndx, new_segname):
+        '''
+        Change the name of selected segment (the one including the selected
+        residue).
+
+        @type ndx :  int
+        @param ndx:  Index of the user selected residue
+        @type new_segname :  str
+        @param new_segname:  New name for segment
+        @return:
+        '''
 
         target_segname = self.resid_descriptions[ndx][0]
 
@@ -383,6 +493,11 @@ class SegnameEditor():
         return error
 
     def get_segment_starts(self):
+        '''
+        Get indicies where the resid descriptions change segment name.
+
+        @return:
+        '''
 
         resid_desc = self.resid_descriptions
 
@@ -412,6 +527,19 @@ class SegnameEditor():
 
 
 def get_input_variables_json(input_json):
+    '''
+    Parse input JSON to produce list segnames, residue descritions and
+    expected maximum number of screen rows.
+
+    @type input_json :
+    @param input_json:
+    @rtype :  list, list, int
+    @return:  List of segment names.
+              List of tuples describing segname,
+              first atomic index, resid, resname, chain
+              and moltype for each residue.
+              Maximum number of screen lines
+    '''
 
     json_stingio = StringIO(input_json)
     json_variables = json.load(json_stingio)
@@ -420,12 +548,12 @@ def get_input_variables_json(input_json):
 
     resid_descriptions = json_variables['resid_descriptions']
 
-    dt = np.dtype('a10, int,int,a10,a10,a10')
+    dtypes = np.dtype('a10, int, int, a10, a10, a10')
 
-    for ind, l in enumerate(resid_descriptions):
-        resid_descriptions[ind] = tuple(l)
+    for index, info in enumerate(resid_descriptions):
+        resid_descriptions[index] = tuple(info)
 
-    resid_descriptions = np.array(resid_descriptions, dt)
+    resid_descriptions = np.array(resid_descriptions, dtypes)
 
     if 'max_row' in json_variables:
         max_row = json_variables['max_row']
@@ -436,6 +564,13 @@ def get_input_variables_json(input_json):
 
 
 def main():
+    '''
+    Read JSON definition of segments, residues annd screen size from argv.
+    Run segmentation editing and provide updated segmentation information as
+    output JSON.
+
+    @return:
+    '''
 
     input_json = StringIO(sys.argv[1])
     segnames, resid_descriptions, max_row = get_input_variables_json(
