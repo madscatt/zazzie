@@ -45,7 +45,7 @@ from numpy.distutils.core import Extension, setup
 
 all_packages = ['sassie', 'sassie.util','sassie.build', 
     'sassie.interface', 'sassie.interface.align', 
-    'sassie.calculate', 'sassie.tools.align',
+    'sassie.tools', 'sassie.tools.align',
     'sassie.interface', 'sassie.interface.chi_square_filter', 
     'sassie.analyze', 'sassie.analyze.chi_square_filter',
     'sassie.calculate', 'sassie.calculate.sascalc',
