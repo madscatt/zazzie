@@ -1,34 +1,26 @@
-#       FIX_PDB
-#
-#       05/10/2013      --      initial coding                  :       jc
-#
-# LC      1         2         3         4         5         6         7
-# LC4567890123456789012345678901234567890123456789012345678901234567890123456789
-#                                                                      *      **
-'''
-        FIX_PDB is a script to read in a PDB file that has an official header
-	and it itemizes chains, patches (disulfide and amino-terminus), writes
-	a psfgen input script, runs psfgen on the file to create a cleaned-up
-	pdb file and associated psf file.  Hydrogens and some missing atoms are
-	added as well.  Atom names are changed to comply with CHARMM naming
-	conventions.
+# -*- coding: utf-8 -*-
+"""
+Create a input script to psfgen and execute in order to create a CHARMM
+formatted PSF/PDB pair from an input SasMolScan object.
 
-	This program will process all files in a specified directory sequentially.
+Based in part on the FIX_PDB script coded by Joseph E. Curtis - 05/10/2013
 
-	Input values are listed at the bottom of this file.
+    SASSIE: Copyright (C) 2011 Joseph E. Curtis, Ph.D.
 
-	TODO:
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
 
-	Methods to peform similar analyses with files without standard PDB headers
-	are needed.  For example, if CHAINS are not listed in a header the program
-	does nothing.
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
 
-	Also, a systematic analysis to identify and replace missing residues and
-	atoms not covered in this script needs to be incorporated.  Do not assume
-	that the MISSING residue section is correct ... need to validate.
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-
-'''
+"""
 
 import logging
 import os
@@ -221,6 +213,12 @@ class PsfgenDriver():
         return
 
     def add_disulphides_script(self):
+        '''
+        Create lines in the psfgen script to add patches for disulphide bonds
+        identified in the input SasMol.
+
+        @return:
+        '''
 
         out_lines = self.script_lines
 
@@ -241,6 +239,13 @@ class PsfgenDriver():
         return
 
     def add_standard_aliases_to_script(self):
+        '''
+        Many residues and atoms have differences in naming between the PDB
+        standard and those in CHARMM. Aliases are used to convert these for
+        standard residues. Add lines to do this to the psfgen input script.
+
+        @return:
+        '''
 
         out_lines = self.script_lines
 
@@ -257,6 +262,13 @@ class PsfgenDriver():
         return
 
     def add_nucleic_aliases_to_script(self):
+        '''
+        Many DNA/RNA residues and atoms have differences in naming between the
+        PDB standard and those in CHARMM. Aliases are used to convert these for
+        standard residues. Add lines to do this to the psfgen input script.
+
+        @return:
+        '''
 
         out_lines = self.script_lines
 
@@ -293,6 +305,17 @@ class PsfgenDriver():
         out_lines.append('')
 
     def add_nterm_patch(self, nterm_resname, flag):
+        '''
+        CHARMM uses patches to provide changes to n-terminal residues. Create
+        appropriate lines for the selected terminal residues in the psfgen
+        input script.
+
+        @type nterm_resname :  str
+        @param nterm_resname:  Residue name for terminus under consideration
+        @type flag :  bool
+        @param flag:  Should GLY and PRO be handled as special cases
+        @return:
+        '''
 
         out_lines = self.script_lines
 
@@ -323,12 +346,29 @@ class PsfgenDriver():
         return
 
     def apply_dna_patch(self, segname, resid, resname):
+        '''
+        CHARMM treats DNA as modified RNA. Need to tell it to apply the correct
+        patches for residues in segments of DNA.
+
+        @type segname :  str
+        @param segname:  Name of segment residue in question belongs to
+        @type resid :  int
+        @param resid:  Residue number for relevant residue
+        @type resname :  str
+        @param resname:  Name of the residue under consideration
+        @return:
+        '''
 
         out_lines = self.script_lines
 
         if resname in ['NUSA', 'NUSG', 'DA', 'DG', 'ADE', 'GUA']:
+
+            # Purine bases
             out_lines.append('patch DEO2 {0:s}:{1:d}'.format(segname, resid))
+
         else:
+
+            # Pyramidine bases
             out_lines.append('patch DEO1 {0:s}:{1:d}'.format(segname, resid))
 
         return
