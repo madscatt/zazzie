@@ -2,10 +2,11 @@
 ### 2.0 Refactoring Progress
 
 
+
 | Module              | Initial Code | Initial Test Code | Refactor Code | Update Test Code | Code Review | Docs | Sassie-web Alpha | Sassie-web Beta | Sassie-web |
 |---------------------|--------------|-------------------|---------------|------------------|-------------|------|------------------|-----------------|------------|
 | Contrast Calculator |              |
-| Align               |     x        | 
+| Align               |:     x      :| 
 | Data Interpolation  |              |  
 | Extract Utilities   |              |    
 | Merge Utilities     |              |       
@@ -22,7 +23,7 @@
 | SasDock             |     x        |      
 | SasCalc             |              |  
 | SLD MOL             |              |   
-| EM to SAS	      	   |              |        
+| EM to SAS           |              |        
 | Chi-Square Filter   |              |      
 | Density Plot        |              |  
 | Capriqorn           |              |      
