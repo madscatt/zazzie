@@ -407,7 +407,7 @@ class ScaffoldBuilder():
         self.selected_segnames = selected_segnames
 
         # Select first AltLoc where necessary
-        self._defaut_altloc(self)
+        self._defaut_altloc()
 
         # Apply all BIOMT records suggested by PDB author
         if biomt:
