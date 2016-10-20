@@ -360,6 +360,65 @@ class ScaffoldBuilder():
 
         return alt_segnames
 
+    def _defaut_altloc(self):
+        '''
+        Chose the first altloc for all residues in which one is present
+
+        @return:
+        '''
+
+        altlocs = self.mol.segname_info.altloc
+
+        for segname in self.selected_segnames:
+
+            self.selected_altlocs[segname] = {}
+
+            if segname in altlocs:
+
+                seg_altlocs = altlocs[segname]
+
+                for resid, locs in seg_altlocs.iteritems():
+                    # Select first non-blank loc label
+                    chosable_locs = [x for x in locs if x != ' ']
+                    chosen_loc = chosable_locs[0]
+
+                    self.selected_altlocs[segname][resid] = chosen_loc
+
+    def create_default_scaffold(self):
+        '''
+        Create a scaffold without user input. Choose all segments which
+        contain only standard CHARMM residues, apply author suggested BIOMT
+        and the first AltLoc available.
+
+        @return:
+        '''
+
+        sim_ready_checks = self.mol.sim_ready
+        biomt = self.mol.segname_info.biomt
+
+        selected_segnames = []
+
+        for segname in sim_ready_checks.keys():
+
+            if sim_ready_checks[segname]['charmm']:
+                selected_segnames.append(segname)
+
+        self.selected_segnames = selected_segnames
+
+        self._defaut_altloc(self)
+
+        if biomt:
+
+            auth_biomt = []
+
+            for biomt_ndx, info in biomt.iteritems():
+                if info['auth_bio_unit']:
+                    auth_biomt.append(biomt_ndx)
+
+            self.selected_biomt = auth_biomt
+
+        return
+
     def user_system_selection(self):
         '''
         Get user to select the regions of the protein to be included in the
@@ -418,22 +477,7 @@ class ScaffoldBuilder():
 
                 else:
 
-                    for segname in self.selected_segnames:
-
-                        self.selected_altlocs[segname] = {}
-
-                        if segname in altlocs:
-
-                            seg_altlocs = altlocs[segname]
-
-                            for resid, locs in seg_altlocs.iteritems():
-
-                                # Select first non-blank loc label
-                                chosable_locs = [x for x in locs if x != ' ']
-                                chosen_loc = chosable_locs[0]
-
-                                self.selected_altlocs[segname][
-                                    resid] = chosen_loc
+                    self._defaut_altloc()
 
             if self.mol.segname_info.biomt:
 
