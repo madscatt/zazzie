@@ -396,6 +396,7 @@ class ScaffoldBuilder():
         sim_ready_checks = self.mol.sim_ready
         biomt = self.mol.segname_info.biomt
 
+        # Select all valid segments
         selected_segnames = []
 
         for segname in sim_ready_checks.keys():
@@ -405,8 +406,10 @@ class ScaffoldBuilder():
 
         self.selected_segnames = selected_segnames
 
+        # Select first AltLoc where necessary
         self._defaut_altloc(self)
 
+        # Apply all BIOMT records suggested by PDB author
         if biomt:
 
             auth_biomt = []
