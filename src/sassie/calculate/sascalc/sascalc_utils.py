@@ -6,13 +6,14 @@
 import sys, os, locale, glob
 import random
 import numpy as np
+#import h5py
 
 import sasmol.sasmol as sasmol
 # import sasproperties
 
 import sassie.util.basis_to_python as basis_to_python
 
-#sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'periodictable-1.3.0'))
+sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'periodictable-1.3.0'))
 
 import periodictable as pt
 import periodictable.xsf as xxx
@@ -586,3 +587,63 @@ def save_sascalc_outputs(mvars, scvars, results, frame, app):
                 fout.close()
             log_filename = os.path.join(output_dir, mvars.runname+'_'+str(frame+1).zfill(5))+'.log'
             write_sascalc_log_file(log_filename, idx_contrast, mvars, scvars, results, frame, app, 0)
+
+
+def ite(f, v=[]):
+    for item in f.items():
+        if  isinstance(f[item[0]], h5py.Dataset):
+            v.append(f[item[0]].parent.name)
+        else:
+            ite(f[item[0]], v)
+    return v
+
+def reoganize_h5(output_folder):
+    fin = os.path.join(output_folder, "results_raw.h5")
+    fin = os.path.join(output_folder, "results.h5")
+    v = ite(fin)
+    #import pprint
+    #pprint.pprint(v)
+    data = {}
+    Nq = f['/Q'].shape[0]
+    Q = f['/Q'].value
+    s=set([])
+    sframe=set([])
+    ll = []
+    for i in v:
+        #print i
+        #if i=='/': print f['/Q'].value
+        #else: print f[i+'/data'].value
+        d=i.split('/')
+        if len(d)==6:
+            ll.append(d)
+            print d
+            s.add(d[2]+', '+d[4])
+            sframe.add(d[3])
+
+    fo = h5py.File(fout,'w')
+    for i in s:
+        ii = i.split(', ')
+        grp = fo.create_group(i)
+        for frame in sframe:
+            grp.create_group(frame)
+            dset = fo.create_dataset('/'+i+'/'+frame+'/data', (Nq,6), dtype='float64')
+            dset[:,0] = Q
+            for l in ll:
+                if l[2] == ii[0] and l[4]== ii[1]:
+                    if l[5] == 'normalized':
+                        dset[:,1]=f['/'.join(l)+'/data'].value
+                    if l[5] == 'error':
+                        dset[:,2]=f['/'.join(l)+'/data'].value
+                    elif l[5] == 'complete':
+                        dset[:,3]=f['/'.join(l)+'/data'].value
+                    elif l[5] == 'vacuum':
+                        dset[:,4]=f['/'.join(l)+'/data'].value
+                    elif l[5] == 'solvent':
+                        dset[:,5]=f['/'.join(l)+'/data'].value
+            dset.attrs['col 1'] = 'Q'
+            dset.attrs['col 2'] = 'Iq normalized'
+            dset.attrs['col 3'] = 'Iq error'
+            dset.attrs['col 4'] = 'Iq complete'
+            dset.attrs['col 5'] = 'Iq vacuum'
+            dset.attrs['col 6'] = 'Iq solvent'
+    fo.close()

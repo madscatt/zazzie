@@ -1,7 +1,2 @@
-# customized for developer
-# use with caution
-rm -f *.sassie_json *.sassie_log
-find ./ -name "*.pyc" -exec rm -f {} \;
-find ./ -name "._*" -exec rm -f {} \;
-find ./ -name "*~" -exec rm -f {} \;
+rm -rf *.pyc sascalc_2016*
 rm -rf run_0

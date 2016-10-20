@@ -1,5 +1,0 @@
-// Hailiang Zhang
-
-#ifndef ATOM_ICC
-#error Atom.icc can only be included from Atom.h
-#endif
