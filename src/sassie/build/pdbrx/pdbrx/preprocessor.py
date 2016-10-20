@@ -2,9 +2,7 @@
 """
 Preprocessor to finalize system description after PDB Scan, this is the first
 step in PDB Rx
-"""
 
-'''
     SASSIE: Copyright (C) 2011 Joseph E. Curtis, Ph.D.
 
     This program is free software: you can redistribute it and/or modify
@@ -19,29 +17,46 @@ step in PDB Rx
 
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-'''
 
-import json
-import yaml
-import re
-import os
-import numpy as np
+"""
+
+from __future__ import print_function
+
 import logging
-import collections
+import re
+import json
 from textwrap import TextWrapper
 
-from . import cmdline_segname_editor as cmd_segname_edit
-from . import cmdline_transform_editor
+import yaml
+import numpy as np
 import sassie.build.pdbscan.pdbscan.data_struct as data_struct
 import sassie.build.pdbscan.pdbscan.pdbscan_utils as utils
 
-# make Python 2.x input behave as in Python 3
-try: input = raw_input
-except NameError: pass
+from . import cmdline_segname_editor as cmd_segname_edit
+from . import cmdline_transform_editor
 
-class PreProcessor():
+
+# make Python 2.x input behave as in Python 3
+try:
+    input = raw_input
+except NameError:
+    pass
+
+
+class PreProcessor(object):
+    '''
+    Preprocessor checks and edits an input SasMol ready for model building
+    '''
 
     def __init__(self, *args, **kwargs):
+        '''
+        Setup logging and atrributes for preprocessing
+
+        @type mol   :  SasMol
+        @keyword mol:  Molecule data
+        @type ui_type    :  str
+        @keyword ui_type :  Choice of UI type
+        '''
 
         if 'mol' in kwargs:
             self.mol = kwargs['mol']
@@ -50,45 +65,13 @@ class PreProcessor():
             self.mol = None
 
         if 'ui' in kwargs:
-            self.ui = kwargs['ui']
+            self.ui_type = kwargs['ui']
         else:
-            self.ui = 'terminal'
+            self.ui_type = 'terminal'
 
         self.logger = logging.getLogger(__name__)
 
         return
-
-
-    # def check_segments(self):
-    #     '''
-    #     Run simulation preparedness check and return dictionary detailing any
-    #     segments with mixed moltypes.
-    #
-    #     @rtype :  dictionary
-    #     @return:  Keys are segnames, values are lists of moltypes
-    #     '''
-    #
-    #     mol = self.mol
-    #
-    #     moltypes = mol.moltype()
-    #     segnames = mol.segname()
-    #
-    #     seg_types = utils.uniquify_list(zip(segnames, moltypes))
-    #
-    #     cnt = collections.Counter()
-    #
-    #     for segname, moltype in seg_types:
-    #         cnt[segname] += 1
-    #
-    #     multi_types = {}
-    #
-    #     for segname in cnt:
-    #         if cnt[segname] > 1:
-    #             multi_types[segname] = [mtype for seg, mtype in seg_types if seg == segname]
-    #
-    #     mol.check_segname_simulation_preparedness()
-    #
-    #     return multi_types
 
     def convert_segname_start(self, data):
         """
@@ -112,26 +95,21 @@ class PreProcessor():
 
         mol = self.mol
 
-        segname_starts = {}
+        resid_descriptions = self.create_residue_descriptions()
 
-        resid_descriptions = self.create_residue_descriptions_segname_edit()
+        if self.ui_type == 'terminal':
 
-        # input_dict = {'segnames':mol.segnames(), 'resid_descriptions':resid_descriptions.tolist(), 'max_row': 20}
-        # with open('segname_input.txt','w') as outfile:
-        #     json.dump(input_dict, outfile)
-
-        if self.ui == 'terminal':
-
-            ui_output = cmd_segname_edit.SegnameEditor(mol.segnames(),resid_descriptions, max_row = 20).get_segment_starts()
+            ui_output = cmd_segname_edit.SegnameEditor(
+                mol.segnames(), resid_descriptions, max_row=20).get_segment_starts()
 
         else:
 
-            #TODO: something for a real GUI
+            # TODO: something for a real GUI
             ui_output = []
-            pass
 
         if ui_output:
-            segname_starts = json.loads(ui_output, object_hook=self.convert_segname_start)
+            segname_starts = json.loads(
+                ui_output, object_hook=self.convert_segname_start)
         else:
             segname_starts = {}
 
@@ -153,10 +131,9 @@ class PreProcessor():
         self.mol.segname_info = data_struct.Info(scan_type='segname')
 
         # Get updated sequence/missing residue etc. information
-        self.mol.segment_scan(initialize = False)
+        self.mol.segment_scan(initialize=False)
 
         return
-
 
     def update_segments(self, segname_starts):
         '''
@@ -189,7 +166,6 @@ class PreProcessor():
 
         return
 
-
     def parse_fasta_file(self, filename):
         """
         Parse FASTA files. Adapted from:
@@ -204,12 +180,13 @@ class PreProcessor():
                   sequences as strings (single letter amino acid codes used).
         """
 
-        # We are going to store ordered sequence names and the sequences themselves
+        # We are going to store ordered sequence names and the sequences
+        # themselves
         order = []
         sequences = {}
 
-        with open(filename) as f:
-            for line in f:
+        with open(filename) as fasta_file:
+            for line in fasta_file:
                 # Title line for sequences in FASTA files start with >
                 if line.startswith('>'):
                     name = line[1:].rstrip('\n')
@@ -224,15 +201,28 @@ class PreProcessor():
 
         return order, sequences
 
-    def list_fasta_sequences(self,sequences, ordered_names):
+    def list_fasta_sequences(self, sequences, ordered_names):
+        '''
+        Create text to present input FASTA sequences as options for user
+        selection and list of numbered options.
+
+        @type sequences : dict
+        @param sequences: FASTA sequences, keys = sequence name
+        @type ordered_names : list
+        @param ordered_names: Names of FASTA sequences ordered as they were
+                              should be presented as options
+        @rtype : list, list
+        @return: List of strings containing FASTA sequence formatted for output
+                 List of tuples of option number and sequence name
+        '''
 
         options = enumerate(ordered_names)
 
         rep = []
 
-        for no, name in options:
+        for num, name in options:
 
-            rep.append('(' + str(no) + ') ' + name)
+            rep.append('(' + str(num) + ') ' + name)
 
             wrapper = TextWrapper(width=50)
 
@@ -243,11 +233,19 @@ class PreProcessor():
 
         return rep, options
 
-    def get_segment_moltype(self,segname):
+    def get_segment_moltype(self, segname):
+        '''
+        Get the Moltype of the chosen segment
+
+        @type segname :  str
+        @param segname:  Name of segment for which moltype is required
+        @rtype : str
+        @return: Moltype of segmanent
+        '''
 
         mol = self.mol
 
-        mapping = set(zip(mol.segname(),mol.moltype()))
+        mapping = set(zip(mol.segname(), mol.moltype()))
         moltypes = [x[1] for x in mapping if x[0] == segname]
 
         moltype = '/'.join(moltypes)
@@ -258,14 +256,20 @@ class PreProcessor():
         '''
         Get FASTA sequence from user to complete a segment with missing residues
 
-        @return:
+        @type segname : string
+        @param segname: Segment name selected to have sequence altered
+        @type moltype : string
+        @param moltype: Type of polymer being edited (protein/dna/rna)
+        @rtype :  string
+        @return:  FASTA sequence from user
         '''
 
         valid_fasta = False
 
-        if self.ui == 'terminal':
+        if self.ui_type == 'terminal':
 
-            prompt = 'Enter filename containing FASTA sequence for segment {0:s}: '.format(segname)
+            prompt = 'Enter filename containing FASTA sequence for segment {0:s}: '.format(
+                segname)
 
             fasta_file = utils.get_command_line_filepath(prompt)
 
@@ -277,22 +281,22 @@ class PreProcessor():
 
                 print('Choose sequence to use: \n')
 
-                rep, options = self.list_fasta_sequences(sequences, ordered_names)
+                rep, options = self.list_fasta_sequences(
+                    sequences, ordered_names)
 
                 for line in rep:
                     print(line)
 
-                input = -1
+                user_input = -1
 
                 while input not in options:
-                    input = input('')
+                    user_input = input('')
                     try:
-                        input = int(input)
+                        user_input = int(user_input)
                     except ValueError:
-                        input = -1
+                        user_input = -1
 
-                chosen = ordered_names[input]
-
+                chosen = ordered_names[user_input]
 
             fasta_sequence = self.reformat_fasta(sequences[chosen])
 
@@ -307,18 +311,28 @@ class PreProcessor():
 
         return fasta_sequence
 
-
     def reformat_fasta(self, fasta):
+        '''
+        Reformat input FASTA string to a single line and upper case characters
+        @type fasta :  string
+        @param fasta:  FASTA sequence (possibly multiple lines)
+        @rtype :       string
+        @return:       Single line, all caps FASTA sequence
+        '''
 
         edited_fasta = fasta.upper()
 
-        return edited_fasta.replace('\n','')
-
+        return edited_fasta.replace('\n', '')
 
     def validate_fasta(self, fasta, moltype):
         '''
-        Check fasta sequence is valid
+        Check fasta sequence is valid (i.e. contains only letters corresponding
+        to monomer units appropriate to the moltype).
 
+        @type fasta :  string
+        @param fasta:  FASTA sequence to be validated
+        @type moltype : string
+        @param moltype: Type of polymer being edited (protein/dna/rna)
         @return:
         '''
 
@@ -335,7 +349,6 @@ class PreProcessor():
             valid = True
 
         return valid
-
 
     def match_fasta_model(self, segname, new_fasta):
         '''
@@ -359,12 +372,12 @@ class PreProcessor():
         # terminal residues from header
         # Note: at present at least the same length of terminal residues must
         # be provided
-        current_fasta = segname_info.sequence_to_fasta(segname, for_matching = True)
+        current_fasta = segname_info.sequence_to_fasta(
+            segname, for_matching=True)
 
         match = re.search(current_fasta, new_fasta)
 
         return match
-
 
     def complete_sequence_fasta(self, segname, new_fasta):
         '''
@@ -389,7 +402,8 @@ class PreProcessor():
         # Sequence as a list of (resid, resname) tuples
         seq = segname_info.sequence[segname]
 
-        first_coor_resid, first_coor_resname = segname_info.get_first_coor_resid(segname, model_no = model_no)
+        first_coor_resid, first_coor_resname = segname_info.get_first_coor_resid(
+            segname, model_no=model_no)
 
         if segname not in segname_info.missing_resids[model_no]:
 
@@ -423,7 +437,8 @@ class PreProcessor():
                     resid = first_resid + position
                     resname = utils.conv_aa1to3(new_fasta[position])
 
-                    segname_info.prepend_residue_to_sequence(segname, resid, resname)
+                    segname_info.prepend_residue_to_sequence(
+                        segname, resid, resname)
                     missing_resids[resid] = resname
 
                     position += 1
@@ -431,7 +446,6 @@ class PreProcessor():
                     # Skip resid = 0
                     if position == 0:
                         position += 1
-
 
             else:
 
@@ -452,7 +466,7 @@ class PreProcessor():
 
                     new_resname = utils.conv_aa1to3(new_fasta[position])
 
-                    seq[ndx] = (resid,new_resname)
+                    seq[ndx] = (resid, new_resname)
 
                     missing_resids[resid] = new_resname
 
@@ -462,21 +476,21 @@ class PreProcessor():
 
             if position < len(new_fasta):
 
-                for i in range(position,len(new_fasta)):
+                for i in range(position, len(new_fasta)):
 
                     resid = first_resid + i
 
                     resname = utils.conv_aa1to3(new_fasta[i])
 
-                    segname_info.add_residue_to_sequence(segname, resid, resname)
-                    segname_info.add_missing_resid(segname, resid, resname, model_no=model_no)
+                    segname_info.add_residue_to_sequence(
+                        segname, resid, resname)
+                    segname_info.add_missing_resid(
+                        segname, resid, resname, model_no=model_no)
                     missing_resids[resid] = resname
-
 
             inserted = True
 
         return inserted
-
 
     def get_biological_unit_transform(self):
         '''
@@ -487,7 +501,7 @@ class PreProcessor():
 
         segnames_json = json.dumps(self.mol.segnames())
 
-        if self.ui == 'terminal':
+        if self.ui_type == 'terminal':
 
             ui_output = cmdline_transform_editor.user_biomt(segnames_json)
 
@@ -509,7 +523,6 @@ class PreProcessor():
 
         return
 
-
     def check_biological_unit(self, biomt_unit):
         '''
         Check biological unit transform from user is valid
@@ -519,7 +532,8 @@ class PreProcessor():
 
         valid = True
 
-        recs = set(['subdivs', 'auth_bio_unit', 'soft_bio_unit', 'rot', 'trans'])
+        recs = set(['subdivs', 'auth_bio_unit',
+                    'soft_bio_unit', 'rot', 'trans'])
 
         if recs == set(biomt_unit.keys()):
             pass
@@ -531,6 +545,15 @@ class PreProcessor():
         return valid
 
     def biomt_json2data(self, json_biomt_rec):
+        '''
+        Convert JSON format BIOMT records into numpy arrays for use in
+        coordinate transforms
+
+        @type json_biomt_rec :  str
+        @param json_biomt_rec:  BIOMT records in JSON format
+        @rtype :
+        @return:
+        '''
 
         biomt_rec = yaml.safe_load(json_biomt_rec)
         valid = self.check_biological_unit(biomt_rec)
@@ -547,7 +570,15 @@ class PreProcessor():
 
         return biomt_rec
 
-    def create_residue_descriptions_segname_edit(self):
+    def create_residue_descriptions(self):
+        '''
+        Filter information from self.mol to provide residue descriptions for
+        used in displaying structure contents for segment editing.
+
+        @rtype : list
+        @return: List of tuples describing segname, first atomic index,
+                 resid, resname, chain and moltype for each residue
+        '''
 
         segnames = self.mol.segname()
         indices = self.mol.index()
@@ -556,28 +587,36 @@ class PreProcessor():
         chains = self.mol.chain()
         moltypes = self.mol.moltype()
 
-        data = np.array(zip(segnames, indices, resids, resnames, chains, moltypes))
+        data = np.array(zip(segnames, indices, resids,
+                            resnames, chains, moltypes))
 
-        mask = np.where(data[:-1,2] != data[1:,2])[0]
-        mask = np.append(mask,[len(data) -1])
+        mask = np.where(data[:-1, 2] != data[1:, 2])[0]
+        mask = np.append(mask, [len(data) - 1])
 
         residue_descriptions = data[mask]
 
         return residue_descriptions
 
     def terminal_edit_options(self):
+        '''
+        Present user with options to edit segmentation, sequence and BIOMT from
+        the commandline.
+
+        @return:
+        '''
 
         mol = self.mol
 
         accepted_segmentation = False
 
-        print("Do you wish to edit the system segmentation? (answer [y]es/[n]o)")
+        print(
+            "Do you wish to edit the system segmentation? (answer [y]es/[n]o)")
 
         while not accepted_segmentation:
 
             choice = input().lower()
 
-            if choice in ['y','yes']:
+            if choice in ['y', 'yes']:
 
                 segname_starts = self.get_user_segmentation()
 
@@ -587,7 +626,7 @@ class PreProcessor():
 
                 accepted_segmentation = True
 
-            elif choice in ['n','no']:
+            elif choice in ['n', 'no']:
 
                 accepted_segmentation = True
 
@@ -600,14 +639,15 @@ class PreProcessor():
             print("Current sequences (lowercase indicates residues not in coordinates): ")
 
             for segname in seq_segnames:
-                seq = mol.segname_info.sequence_to_fasta(segname, missing_lower=True)
+                seq = mol.segname_info.sequence_to_fasta(
+                    segname, missing_lower=True)
                 print(segname + ':')
                 print(seq)
 
             print("Do you want to edit any sequences? (answer [y]es/[n]o)")
             choice = input().lower()
 
-            if choice in ['y','yes']:
+            if choice in ['y', 'yes']:
 
                 if len(seq_segnames) > 1:
 
@@ -620,15 +660,18 @@ class PreProcessor():
                 if segname in seq_segnames:
 
                     moltype = self.get_segment_moltype(segname)
-                    fasta_sequence = self.get_user_fasta_sequence(segname, moltype)
+                    fasta_sequence = self.get_user_fasta_sequence(
+                        segname, moltype)
 
                     if fasta_sequence:
 
-                        success = self.complete_sequence_fasta(segname, fasta_sequence)
+                        success = self.complete_sequence_fasta(
+                            segname, fasta_sequence)
 
                         if not success:
 
-                            print("FASTA did not match existing sequence description")
+                            print(
+                                "FASTA did not match existing sequence description")
 
                     else:
 
@@ -638,7 +681,7 @@ class PreProcessor():
 
                     print("Invalid segname selected")
 
-            elif choice in ['n','no']:
+            elif choice in ['n', 'no']:
 
                 accepted_sequences = True
 
@@ -656,10 +699,11 @@ class PreProcessor():
         choice_made = False
 
         while not choice_made:
-            print("Do you want to add a new biological unit transform? (answer [y]es/[n]o)")
+            print(
+                "Do you want to add a new biological unit transform? (answer [y]es/[n]o)")
             choice = input().lower()
 
-            if choice in ['y','yes']:
+            if choice in ['y', 'yes']:
 
                 self.get_biological_unit_transform()
                 choice_made = True
@@ -672,14 +716,19 @@ class PreProcessor():
 
                         print(line)
 
-            elif choice in ['n','no']:
+            elif choice in ['n', 'no']:
                 choice_made = True
 
         return
 
     def user_edit_options(self):
+        '''
+        Get user input from terminal or other source. ONLY TERMINAL CURRENTLY
 
-        if self.ui == 'terminal':
+        @return:
+        '''
+
+        if self.ui_type == 'terminal':
 
             self.terminal_edit_options()
 

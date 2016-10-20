@@ -105,26 +105,34 @@ class PDBRx():
 
             preprocessor.user_edit_options()
 
+        pgui('Build scaffold structure')
         scaffold_builder = pdbrx.scaffold_builder.ScaffoldBuilder(mol=mol)
 
-        scaffold_builder.user_system_selection()
+        if mvars.use_defaults:
+
+            scaffold_builder.create_default_scaffold()
+
+        else:
+
+            scaffold_builder.user_system_selection()
 
         if not os.path.isdir('./tmp_struct'):
             os.mkdir('./tmp_struct')
 
+        pgui('Start structure completion')
         structure_builder = pdbrx.structure_builder.StructureBuilder(scaffold_builder.scaffold_model, './tmp_struct')
 
         completed_mol = structure_builder.complete_structure()
 
-        completed_mol.write_pdb('wonder.pdb',0,'w')
+        # completed_mol.write_pdb('wonder.pdb',0,'w')
 
         out_prefix = os.path.splitext(os.path.basename(mvars.pdbfile))[0] + '_charmm'
 
-        #top_file_path = os.path.join(sasconfig.__bin_path__,'toppar','top_all27_prot_na.inp')
+        # top_file_path = os.path.join(sasconfig.__bin_path__,'toppar','top_all27_prot_na.inp')
 
         segname_info = scaffold_builder.scaffold_model.segname_info
 
-        #psfgen = pdbrx.apply_psfgen.PsfgenDriver(completed_mol, segname_info, top_file_path, self.runpath, out_prefix)
+        # psfgen = pdbrx.apply_psfgen.PsfgenDriver(completed_mol, segname_info, top_file_path, self.runpath, out_prefix)
         psfgen = pdbrx.apply_psfgen.PsfgenDriver(completed_mol, segname_info, mvars.topfile, self.runpath, out_prefix)
 
         psfgen.run_psfgen()
