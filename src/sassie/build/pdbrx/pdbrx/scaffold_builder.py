@@ -324,12 +324,12 @@ class ScaffoldBuilder():
 
             if selected_segnames:
 
-                if not self.check_segment_status():
+                if not self.check_segment_status(selected_segnames):
 
                     # TODO: This is just a stub - needs filling out
                     self.process_non_ff()
 
-                    if self.check_segment_status():
+                    if self.check_segment_status(selected_segnames):
                         choice_made = True
                 else:
                     choice_made = True
@@ -384,6 +384,35 @@ class ScaffoldBuilder():
 
                     self.selected_altlocs[segname][resid] = chosen_loc
 
+    def create_scaffold_model(self):
+        '''
+        Create the scaffold model - extract the selected regions and apply
+        BIOMT transforms. Application of the BIOMT transforms creates
+        moved duplicates of the selected segments - these are initially
+        created as separate models and then merged.
+
+        @return:
+        '''
+
+        self.select_specified_regions()
+
+        if self.selected_biomt:
+
+            models = self.apply_biomt_to_model()
+
+            self.segname_map = self.update_models_segname_original_index(
+                models)
+
+            self.merge_models(models)
+
+        else:
+
+            self.scaffold_model = self.selected_mol
+
+        # self.scaffold_model.write_pdb('combined_test.pdb', 0, 'w')
+
+        return
+
     def create_default_scaffold(self):
         '''
         Create a scaffold without user input. Choose all segments which
@@ -419,6 +448,8 @@ class ScaffoldBuilder():
                     auth_biomt.append(biomt_ndx)
 
             self.selected_biomt = auth_biomt
+
+        self.create_scaffold_model()
 
         return
 
@@ -499,21 +530,6 @@ class ScaffoldBuilder():
         else:
             pass
 
-        self.select_specified_regions()
-
-        if self.selected_biomt:
-
-            models = self.apply_biomt_to_model()
-
-            self.segname_map = self.update_models_segname_original_index(
-                models)
-
-            self.merge_models(models)
-
-        else:
-
-            self.scaffold_model = self.selected_mol
-
-        self.scaffold_model.write_pdb('combined_test.pdb', 0, 'w')
+        self.create_scaffold_model()
 
         return
