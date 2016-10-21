@@ -1053,12 +1053,12 @@ class SasMolScan(sasmol.SasMol):
                     "min_dist"] < bond_length < bond_anchors["max_dist"]
 
             else:
-                if not pre_ndx:
+                if not pre_ndx.any():
                     logger.warning(
                         'Checked resid {0:d} in {1:s} for {2:s} bond but found no {3:s} atom'.format(
                             resid1, subdiv, moltype, bond_anchors['pre']))
 
-                if not post_ndx:
+                if not post_ndx.any():
                     logger.warning(
                         'Checked resid {0:d} in {1:s} for {2:s} bond but found no {3:s} atom'.format(
                             resid2, subdiv, moltype, bond_anchors['post']))
