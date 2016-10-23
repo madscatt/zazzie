@@ -749,7 +749,7 @@ def create_sequence_table(seq, start_resid):
     fasta_table = create_fasta_table(padded_fasta, widths, row_start)
 
     seq_line = '`' + \
-        ('|123456789' * ((seq_length / 10) + 1))[:seq_length] + '`'
+        ('123456789|' * ((seq_length / 10) + 1))[:seq_length] + '`'
     header = ['', seq_line]
     rep += pdt.create_pandoc_table(header, fasta_table, widths, ['r', 'l'])
 
