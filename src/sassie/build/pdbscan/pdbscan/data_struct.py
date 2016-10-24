@@ -977,43 +977,58 @@ class Info():
 
         out_fragments = []
 
+        if chosen_subdiv in self.number_gaps:
+
+            num_gap_starts = self.number_gaps[chosen_subdiv].keys()
+
+        else:
+
+            num_gap_starts = []
+
         for gap in seq_gaps:
 
             pre_flank = ''
             post_flank = ''
 
             start = gap[0]
-            if start - 1 in seq:
+            anchor = start - 1
 
-                pre_anchor = start - 1
+            # print gap
+            # print num_gap_starts
 
-                for i in range(-2, 0):
-                    resid = start + i
-                    if start + i in seq:
-                        pre_flank += utils.conv_aa3to1(seq[resid])
-            else:
-                pre_anchor = 0
+            if anchor not in num_gap_starts:
 
-            end = gap[-1]
-            if end + 1 in seq:
+                if start - 1 in seq:
 
-                post_anchor = end + 1
+                    pre_anchor = start - 1
 
-                for i in range(1, 3):
-                    resid = end + i
-                    if end + i in seq:
-                        post_flank += utils.conv_aa3to1(seq[resid])
+                    for i in range(-2, 0):
+                        resid = start + i
+                        if start + i in seq:
+                            pre_flank += utils.conv_aa3to1(seq[resid])
+                else:
+                    pre_anchor = 0
 
-            else:
-                post_anchor = 0
+                end = gap[-1]
+                if end + 1 in seq:
 
-            gap_seq = ''
+                    post_anchor = end + 1
 
-            for resid in gap:
-                gap_seq += utils.conv_aa3to1(seq[resid])
+                    for i in range(1, 3):
+                        resid = end + i
+                        if end + i in seq:
+                            post_flank += utils.conv_aa3to1(seq[resid])
 
-            out_fragments.append(
-                [pre_anchor, post_anchor, pre_flank, gap_seq, post_flank])
+                else:
+                    post_anchor = 0
+
+                gap_seq = ''
+
+                for resid in gap:
+                    gap_seq += utils.conv_aa3to1(seq[resid])
+
+                out_fragments.append(
+                    [pre_anchor, post_anchor, pre_flank, gap_seq, post_flank])
 
         return out_fragments
 
