@@ -2112,7 +2112,7 @@ class SasMolScan(sasmol.SasMol):
 
                 chain_missing_res = chain_info.missing_resids[model_no][chain]
 
-                if chain in chain_info.number_gaps[chain]:
+                if chain in chain_info.number_gaps:
                     chain_num_gaps = chain_info.number_gaps[chain]
                 else:
                     chain_num_gaps = []
