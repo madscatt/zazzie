@@ -2111,9 +2111,13 @@ class SasMolScan(sasmol.SasMol):
                 chain = chains[start_ndx]
 
                 chain_missing_res = chain_info.missing_resids[model_no][chain]
-                chain_num_gaps = chain_info.number_gaps[chain]
 
-                # If we are at a chain terminus then chain_info may contain
+                if chain in chain_info.number_gaps[chain]:
+                    chain_num_gaps = chain_info.number_gaps[chain]
+                else:
+                    chain_num_gaps = []
+
+                    # If we are at a chain terminus then chain_info may contain
                 # information of preceding/following residues - copy this in
                 if start_ndx in chain_starts:
 
