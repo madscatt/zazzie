@@ -150,6 +150,9 @@ class ScaffoldBuilder():
 
         self.selected_mol.segname_info = self.mol.segname_info
 
+        # TODO: Renumber residues in selected segments where needed
+        # TODO: Update segname_info in line with changes & tidy un needed bits
+
         return
 
     def apply_biomt_to_model(self):
