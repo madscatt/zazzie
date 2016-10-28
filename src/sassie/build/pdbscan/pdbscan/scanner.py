@@ -32,7 +32,6 @@ import copy
 
 from itertools import groupby
 import itertools
-from operator import itemgetter
 
 import sasmol.sasmol as sasmol
 from sassie.util import sasconfig
@@ -1816,7 +1815,7 @@ class SasMolScan(sasmol.SasMol):
         simulation. Missing hydrogens are only counted as naming is so variable
         in possible inputs.
 
-        Two substitutions are made to correct for CHARMM naming odities:
+        Two substitutions are made to correct for CHARMM naming oddities:
            1. name CD1 -> CD in ILE residues
            2. resname HIS -> HSE - standard choice for histidine protonation
 
@@ -1883,8 +1882,11 @@ class SasMolScan(sasmol.SasMol):
         # If residue not found in topology then it is not available in CHARMM
         try:
             ff_atoms = set([x[0] for x in t.topology_info[resname]['ATOM']])
+
         except KeyError:
+
             charmm = False
+
             return heavy_missing, heavy_excess, n_hyd_missing, n_hyd_excess, hyd_naming_correct, charmm, altlocs
 
         # Get list of heavy and hydrogen atoms from CHARMM forcefield
@@ -2020,7 +2022,7 @@ class SasMolScan(sasmol.SasMol):
                                                     subdiv_type=subdiv_type)
 
                 # If the resid is in the CHARMM forcefield topology record
-                # if atoms are missing and named correctly
+                # check if any atoms are missing or named incorrectly
                 if charmm:
 
                     if heavy_missing:
@@ -2262,7 +2264,10 @@ class SasMolScan(sasmol.SasMol):
         seg_charmm = zip(segnames, charmm_ready)
 
         for segment, charmm in groupby(seg_charmm, lambda x: x[0]):
-            if sum([x[1] for x in charmm]):
+
+            charmm_checks = list(charmm)
+
+            if sum([x[1] for x in charmm_checks]) == len(charmm_checks):
                 seg_charmm_valid[segment] = True
             else:
                 seg_charmm_valid[segment] = False
