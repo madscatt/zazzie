@@ -132,7 +132,7 @@ class Info():
         self.missing_atoms = {}
 
         # Excess atom dictionary of the form:
-        # exess_atoms = {model_no:{subdiv: {resid:
+        # excess_atoms = {model_no:{subdiv: {resid:
         #                                          {'atoms':[atm1, atm2, ...],
         #                                           'resname': resname}
         #                 }}}
@@ -1032,6 +1032,74 @@ class Info():
 
         return out_fragments
 
+    def purge_subdiv(self, subdiv):
+
+        if subdiv in self.subdivs:
+
+            self.subdivs.remove(subdiv)
+
+        elif subdiv in self.subdiv_map:
+
+            del self.subdiv_map[subdiv]
+
+        if subdiv in self.sequence:
+            del self.sequence[subdiv]
+
+        for model_no in self.missing_resids.keys():
+
+            if subdiv in self.missing_resids[model_no]:
+
+                del self.missing_resids[model_no][subdiv]
+
+        if subdiv in self.number_gaps:
+
+            del self.number_gaps[subdiv]
+
+        for model_no in self.missing_atoms:
+
+            if subdiv in self.missing_atoms[model_no]:
+
+                del self.missing_atoms[model_no][subdiv]
+
+        for model_no in self.excess_atoms:
+
+            if subdiv in self.excess_atoms[model_no]:
+
+                del self.excess_atoms[model_no][subdiv]
+
+        for model_no in self.n_missing_hydrogens:
+
+            if subdiv in self.n_missing_hydrogens[model_no]:
+
+                del self.n_missing_hydrogens[model_no][subdiv]
+
+        for model_no in self.n_excess_hydrogens:
+
+            if subdiv in self.n_excess_hydrogens[model_no]:
+
+                del self.n_excess_hydrogens[model_no][subdiv]
+
+        if subdiv in self.heterogens:
+
+            del self.heterogens[subdiv]
+
+        if subdiv in self.altloc:
+            del self.altloc[subdiv]
+
+        for ndx in range(len(self.disulphides) - 1, -1, -1):
+
+            if subdiv in self.disulphides[ndx].subdivs():
+
+                del self.disulphides[ndx]
+
+        for biomol_no in self.biomt.keys():
+
+            if subdiv in self.biomt[biomol_no]['subdivs']:
+
+                self.biomt[biomol_no]['subdivs'].remove(subdiv)
+
+        return
+
 # Here be Monsters
 
     def missing_resids_to_gaps(self, model_no=1):
@@ -1069,3 +1137,4 @@ class Info():
         self.missing_resids = missing
 
         return
+
