@@ -2,9 +2,7 @@
 """
 Common data structures to hold information extracted from PDB coordinates and
 headers
-"""
 
-'''
     SASSIE: Copyright (C) 2011 Joseph E. Curtis, Ph.D.
 
     This program is free software: you can redistribute it and/or modify
@@ -19,7 +17,7 @@ headers
 
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-'''
+"""
 
 import logging
 
@@ -72,7 +70,7 @@ class Disulphide():
         """
         Return list of subdivisions involved in the bond
         """
-        return list(set([self.bound[0]['subdiv'], self.bound[1]['subdiv']]))
+        return list({self.bound[0]['subdiv'], self.bound[1]['subdiv']})
 
     def intra_subdiv(self):
         """
@@ -514,8 +512,6 @@ class Info():
 
     def get_first_coor_resid(self, segname, model_no=1):
 
-        guess = 0
-
         missing_resids = self.missing_resids[model_no]
 
         if segname in self.sequence:
@@ -736,11 +732,13 @@ class Info():
 
         known = False
 
-        try:
-            if (self.number_gaps[subdiv][resid1] == resid2):
-                known = True
-        except:
-            pass
+        if subdiv in self.number_gaps:
+
+            if resid1 in self.number_gaps[subdiv]:
+
+                if self.number_gaps[subdiv][resid1] == resid2:
+
+                    known = True
 
         return known
 
@@ -858,8 +856,11 @@ class Info():
         sequence = self.sequence
 
         if list(resids):
+
             sequence[subdiv] = zip(resids, resnames)
+
         else:
+
             sequence[subdiv] = [(None, x) for x in resnames]
 
         return
@@ -992,9 +993,6 @@ class Info():
 
             start = gap[0]
             anchor = start - 1
-
-            # print gap
-            # print num_gap_starts
 
             if anchor not in num_gap_starts:
 
