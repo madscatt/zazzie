@@ -1031,6 +1031,12 @@ class Info():
         return out_fragments
 
     def purge_subdiv(self, subdiv):
+        """
+        Remove all references to specified subdiv
+
+        @type  subdiv:    string
+        @param subdiv:    Subdiv(ision) to remove
+        """
 
         if subdiv in self.subdivs:
 
