@@ -88,6 +88,7 @@ class SasMolScan(sasmol.SasMol):
 
         self.anchors = self._build_anchor_dict()
 
+
         return
 
     def _build_anchor_dict(self):
@@ -2858,6 +2859,18 @@ class SasMolScan(sasmol.SasMol):
         self.get_segment_sequence_info()
 
         return
+
+    def any_charmm_ready_segments(self):
+
+        ready = False
+
+        for segname in self.segnames():
+
+            if self.sim_ready[segname]['charmm']:
+                ready = True
+                break
+
+        return ready
 
     def run_scan(self):
         """

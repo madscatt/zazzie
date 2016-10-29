@@ -26,6 +26,7 @@ import sassie.build.pdbscan.pdbscan.report as report
 import sassie.build.pdbrx.pdbrx as pdbrx
 
 import os
+import sys
 
 if sasconfig.__level__ == "DEBUG": DEBUG = True
 	
@@ -92,6 +93,14 @@ class PDBRx():
 
         pgui('Initiating scan')
         mol.run_scan()
+
+        if mvars.use_defaults and not mol.any_charmm_ready_segments():
+
+            pgui('-' * 50)
+            pgui('Run terminated: No processable segments found.')
+            pgui('-' * 50)
+            sys.exit(0)
+
         mol.copy_biomt_segments()
 
         if not mvars.use_defaults:
