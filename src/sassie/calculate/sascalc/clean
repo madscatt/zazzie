@@ -1,0 +1,2 @@
+rm -rf *.pyc sascalc_2016*
+rm -rf run_0
