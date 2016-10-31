@@ -1849,15 +1849,25 @@ class SasMolScan(sasmol.SasMol):
             resid, subdiv, subdiv_type=subdiv_type)
 
         if resname in utils.nucleic_res_charmm_dict:
+
             resname = utils.nucleic_res_charmm_dict[resname]
+
             for i in range(len(coor_atoms)):
+
                 if coor_atoms[i][-1] == '*':
+
                     coor_atoms[i] = coor_atoms[i][:-1] + "'"
+
                 elif coor_atoms[i] == 'OP1':
+
                     coor_atoms[i] = 'O1P'
+
                 elif coor_atoms[i] == 'OP2':
+
                     coor_atoms[i] = 'O2P'
+
                 elif resname == 'THY' and coor_atoms[i] == 'C7':
+
                     coor_atoms[i] = 'C5M'
 
         heavy_missing = []
@@ -1870,10 +1880,10 @@ class SasMolScan(sasmol.SasMol):
 
         # Standard HIS in CHARMM is HSE (epsilon protonated)
         if resname == 'HIS':
-            charmm = False
             resname = 'HSE'
-        else:
-            charmm = True
+
+        # Initially assume residue will be available
+        charmm = True
 
         hyd_naming_correct = False
 
