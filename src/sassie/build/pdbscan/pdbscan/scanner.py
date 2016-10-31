@@ -2130,7 +2130,7 @@ class SasMolScan(sasmol.SasMol):
                 else:
                     chain_num_gaps = {}
 
-                    # If we are at a chain terminus then chain_info may contain
+                # If we are at a chain terminus then chain_info may contain
                 # information of preceding/following residues - copy this in
                 if start_ndx in chain_starts:
 
@@ -2178,14 +2178,17 @@ class SasMolScan(sasmol.SasMol):
         # Complete segment sequences with resnames from missing residues
         seg_missing = segname_info.missing_resids[model_no]
 
-        for segname in seg_missing.keys():
+        for segname in sorted(seg_missing.keys()):
 
             seq = segname_info.sequence[segname]
             resid_list = [x[0] for x in seq]
 
             pre_seq = []
 
-            for resid, resname in seg_missing[segname].iteritems():
+
+            for resid in sorted(seg_missing[segname].keys()):
+
+                resname = seg_missing[segname][resid]
 
                 if (resid, '') in seq:
 
