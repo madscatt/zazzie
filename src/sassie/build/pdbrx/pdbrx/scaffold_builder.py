@@ -29,7 +29,7 @@ from . import biomt_choice
 from . import altloc_choice
 import sasmol.sasmol as sasmol
 import numpy as np
-
+import sys
 
 class ScaffoldBuilder():
     '''
@@ -151,7 +151,27 @@ class ScaffoldBuilder():
         self.selected_mol.segname_info = self.mol.segname_info
 
         # TODO: Renumber residues in selected segments where needed
-        # TODO: Update segname_info in line with changes & tidy un needed bits
+        # TODO: Update segname_info in line with changes & tidy redundant bits
+
+        self.fix_residue_numbering()
+
+        return
+
+    def fix_residue_numbering(self):
+
+        mol = self.selected_mol
+        segname_info = self.selected_mol.segname_info
+        selected_segnames = self.selected_segnames
+
+        for segname in segname_info.subdivs:
+
+            if segname in selected_segnames:
+
+                segname_info.subdiv_renumber_from_one(segname)
+
+            else:
+
+                segname_info.purge_subdiv(segname)
 
         return
 
