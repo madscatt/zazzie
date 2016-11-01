@@ -1030,6 +1030,109 @@ class Info():
 
         return out_fragments
 
+    def subdiv_renumber_from_one(self, subdiv):
+
+        new_sequence = []
+
+        old_to_new_resid = {}
+
+        for ndx, resid_info in enumerate(self.sequence[subdiv]):
+
+            new_resid = ndx + 1
+            old_resid = resid_info[0]
+
+            new_sequence.append((new_resid, old_resid))
+
+            old_to_new_resid[old_resid] = new_resid
+
+        self.sequence[subdiv] = new_sequence
+
+        self.update_after_renumber(subdiv, old_to_new_resid)
+
+        return
+
+    def update_after_renumber(self, subdiv, resid_mapping):
+
+        self.number_gaps[subdiv] = []
+
+        for model_no in self.missing_resids.keys():
+
+            if subdiv in self.missing_resids[model_no]:
+
+                new_missing = {}
+
+                for old_resid, resname in self.missing_resids[model_no][subdiv].iteritems():
+
+                    new_missing[resid_mapping[old_resid]] = resname
+
+                self.missing_resids[model_no][subdiv] = new_missing
+
+        for model_no in self.missing_atoms:
+
+            if subdiv in self.missing_atoms[model_no]:
+
+                new_missing = {}
+
+                for old_resid, res_info in self.missing_atoms[model_no][subdiv].iteritems():
+
+                    new_missing[resid_mapping[old_resid]] = res_info
+
+                self.missing_atoms[model_no][subdiv] = new_missing
+
+        for model_no in self.excess_atoms:
+
+            if subdiv in self.excess_atoms[model_no]:
+
+                new_excess = {}
+
+                for old_resid, res_info in self.excess_atoms[model_no][subdiv].iteritems():
+
+                    new_excess[resid_mapping[old_resid]] = res_info
+
+                self.excess_atoms[model_no][subdiv] = new_excess
+
+        for model_no in self.n_missing_hydrogens:
+
+            if subdiv in self.n_missing_hydrogens[model_no]:
+
+                new_missing = {}
+
+                for old_resid, res_info in self.n_missing_hydrogens[model_no][subdiv].iteritems():
+
+                    new_missing[resid_mapping[old_resid]] = res_info
+
+                self.n_missing_hydrogens[model_no][subdiv] = new_missing
+
+        for model_no in self.n_excess_hydrogens:
+
+            if subdiv in self.n_excess_hydrogens[model_no]:
+
+                new_excess = {}
+
+                for old_resid, res_info in self.n_excess_hydrogens[model_no][subdiv].iteritems():
+
+                    new_excess[resid_mapping[old_resid]] = res_info
+
+                self.n_excess_hydrogens[model_no][subdiv] = new_excess
+
+        for ndx in range(len(self.disulphides)):
+
+            if subdiv in self.disulphides[ndx].subdivs():
+
+                if self.disulphides[ndx].bound[0]['subdiv'] == subdiv:
+
+                    old_resid = self.disulphides[ndx].bound[0]['resid']
+
+                    self.disulphides[ndx].bound[0]['resid'] = resid_mapping[old_resid]
+
+                if self.disulphides[ndx].bound[1]['subdiv'] == subdiv:
+
+                    old_resid = self.disulphides[ndx].bound[1]['resid']
+
+                    self.disulphides[ndx].bound[1]['resid'] = resid_mapping[old_resid]
+
+        return
+
     def purge_subdiv(self, subdiv):
         """
         Remove all references to specified subdiv
