@@ -2,9 +2,7 @@
 """
 Common data structures to hold information extracted from PDB coordinates and
 headers
-"""
 
-'''
     SASSIE: Copyright (C) 2011 Joseph E. Curtis, Ph.D.
 
     This program is free software: you can redistribute it and/or modify
@@ -19,7 +17,7 @@ headers
 
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-'''
+"""
 
 import logging
 
@@ -72,7 +70,7 @@ class Disulphide():
         """
         Return list of subdivisions involved in the bond
         """
-        return list(set([self.bound[0]['subdiv'], self.bound[1]['subdiv']]))
+        return list({self.bound[0]['subdiv'], self.bound[1]['subdiv']})
 
     def intra_subdiv(self):
         """
@@ -132,7 +130,7 @@ class Info():
         self.missing_atoms = {}
 
         # Excess atom dictionary of the form:
-        # exess_atoms = {model_no:{subdiv: {resid:
+        # excess_atoms = {model_no:{subdiv: {resid:
         #                                          {'atoms':[atm1, atm2, ...],
         #                                           'resname': resname}
         #                 }}}
@@ -514,8 +512,6 @@ class Info():
 
     def get_first_coor_resid(self, segname, model_no=1):
 
-        guess = 0
-
         missing_resids = self.missing_resids[model_no]
 
         if segname in self.sequence:
@@ -736,11 +732,13 @@ class Info():
 
         known = False
 
-        try:
-            if (self.number_gaps[subdiv][resid1] == resid2):
-                known = True
-        except:
-            pass
+        if subdiv in self.number_gaps:
+
+            if resid1 in self.number_gaps[subdiv]:
+
+                if self.number_gaps[subdiv][resid1] == resid2:
+
+                    known = True
 
         return known
 
@@ -858,8 +856,11 @@ class Info():
         sequence = self.sequence
 
         if list(resids):
+
             sequence[subdiv] = zip(resids, resnames)
+
         else:
+
             sequence[subdiv] = [(None, x) for x in resnames]
 
         return
@@ -977,45 +978,234 @@ class Info():
 
         out_fragments = []
 
+        if chosen_subdiv in self.number_gaps:
+
+            num_gap_starts = self.number_gaps[chosen_subdiv].keys()
+
+        else:
+
+            num_gap_starts = []
+
         for gap in seq_gaps:
 
             pre_flank = ''
             post_flank = ''
 
             start = gap[0]
-            if start - 1 in seq:
+            anchor = start - 1
 
-                pre_anchor = start - 1
+            if anchor not in num_gap_starts:
 
-                for i in range(-2, 0):
-                    resid = start + i
-                    if start + i in seq:
-                        pre_flank += utils.conv_aa3to1(seq[resid])
-            else:
-                pre_anchor = 0
+                if start - 1 in seq:
 
-            end = gap[-1]
-            if end + 1 in seq:
+                    pre_anchor = start - 1
 
-                post_anchor = end + 1
+                    for i in range(-2, 0):
+                        resid = start + i
+                        if start + i in seq:
+                            pre_flank += utils.conv_aa3to1(seq[resid])
+                else:
+                    pre_anchor = 0
 
-                for i in range(1, 3):
-                    resid = end + i
-                    if end + i in seq:
-                        post_flank += utils.conv_aa3to1(seq[resid])
+                end = gap[-1]
+                if end + 1 in seq:
 
-            else:
-                post_anchor = 0
+                    post_anchor = end + 1
 
-            gap_seq = ''
+                    for i in range(1, 3):
+                        resid = end + i
+                        if end + i in seq:
+                            post_flank += utils.conv_aa3to1(seq[resid])
 
-            for resid in gap:
-                gap_seq += utils.conv_aa3to1(seq[resid])
+                else:
+                    post_anchor = 0
 
-            out_fragments.append(
-                [pre_anchor, post_anchor, pre_flank, gap_seq, post_flank])
+                gap_seq = ''
+
+                for resid in gap:
+                    gap_seq += utils.conv_aa3to1(seq[resid])
+
+                out_fragments.append(
+                    [pre_anchor, post_anchor, pre_flank, gap_seq, post_flank])
 
         return out_fragments
+
+    def subdiv_renumber_from_one(self, subdiv):
+
+        new_sequence = []
+
+        old_to_new_resid = {}
+
+        for ndx, resid_info in enumerate(self.sequence[subdiv]):
+
+            new_resid = ndx + 1
+            old_resid = resid_info[0]
+
+            new_sequence.append((new_resid, old_resid))
+
+            old_to_new_resid[old_resid] = new_resid
+
+        self.sequence[subdiv] = new_sequence
+
+        self.update_after_renumber(subdiv, old_to_new_resid)
+
+        return
+
+    def update_after_renumber(self, subdiv, resid_mapping):
+
+        self.number_gaps[subdiv] = []
+
+        for model_no in self.missing_resids.keys():
+
+            if subdiv in self.missing_resids[model_no]:
+
+                new_missing = {}
+
+                for old_resid, resname in self.missing_resids[model_no][subdiv].iteritems():
+
+                    new_missing[resid_mapping[old_resid]] = resname
+
+                self.missing_resids[model_no][subdiv] = new_missing
+
+        for model_no in self.missing_atoms:
+
+            if subdiv in self.missing_atoms[model_no]:
+
+                new_missing = {}
+
+                for old_resid, res_info in self.missing_atoms[model_no][subdiv].iteritems():
+
+                    new_missing[resid_mapping[old_resid]] = res_info
+
+                self.missing_atoms[model_no][subdiv] = new_missing
+
+        for model_no in self.excess_atoms:
+
+            if subdiv in self.excess_atoms[model_no]:
+
+                new_excess = {}
+
+                for old_resid, res_info in self.excess_atoms[model_no][subdiv].iteritems():
+
+                    new_excess[resid_mapping[old_resid]] = res_info
+
+                self.excess_atoms[model_no][subdiv] = new_excess
+
+        for model_no in self.n_missing_hydrogens:
+
+            if subdiv in self.n_missing_hydrogens[model_no]:
+
+                new_missing = {}
+
+                for old_resid, res_info in self.n_missing_hydrogens[model_no][subdiv].iteritems():
+
+                    new_missing[resid_mapping[old_resid]] = res_info
+
+                self.n_missing_hydrogens[model_no][subdiv] = new_missing
+
+        for model_no in self.n_excess_hydrogens:
+
+            if subdiv in self.n_excess_hydrogens[model_no]:
+
+                new_excess = {}
+
+                for old_resid, res_info in self.n_excess_hydrogens[model_no][subdiv].iteritems():
+
+                    new_excess[resid_mapping[old_resid]] = res_info
+
+                self.n_excess_hydrogens[model_no][subdiv] = new_excess
+
+        for ndx in range(len(self.disulphides)):
+
+            if subdiv in self.disulphides[ndx].subdivs():
+
+                if self.disulphides[ndx].bound[0]['subdiv'] == subdiv:
+
+                    old_resid = self.disulphides[ndx].bound[0]['resid']
+
+                    self.disulphides[ndx].bound[0]['resid'] = resid_mapping[old_resid]
+
+                if self.disulphides[ndx].bound[1]['subdiv'] == subdiv:
+
+                    old_resid = self.disulphides[ndx].bound[1]['resid']
+
+                    self.disulphides[ndx].bound[1]['resid'] = resid_mapping[old_resid]
+
+        return
+
+    def purge_subdiv(self, subdiv):
+        """
+        Remove all references to specified subdiv
+
+        @type  subdiv:    string
+        @param subdiv:    Subdiv(ision) to remove
+        """
+
+        if subdiv in self.subdivs:
+
+            self.subdivs.remove(subdiv)
+
+        elif subdiv in self.subdiv_map:
+
+            del self.subdiv_map[subdiv]
+
+        if subdiv in self.sequence:
+            del self.sequence[subdiv]
+
+        for model_no in self.missing_resids.keys():
+
+            if subdiv in self.missing_resids[model_no]:
+
+                del self.missing_resids[model_no][subdiv]
+
+        if subdiv in self.number_gaps:
+
+            del self.number_gaps[subdiv]
+
+        for model_no in self.missing_atoms:
+
+            if subdiv in self.missing_atoms[model_no]:
+
+                del self.missing_atoms[model_no][subdiv]
+
+        for model_no in self.excess_atoms:
+
+            if subdiv in self.excess_atoms[model_no]:
+
+                del self.excess_atoms[model_no][subdiv]
+
+        for model_no in self.n_missing_hydrogens:
+
+            if subdiv in self.n_missing_hydrogens[model_no]:
+
+                del self.n_missing_hydrogens[model_no][subdiv]
+
+        for model_no in self.n_excess_hydrogens:
+
+            if subdiv in self.n_excess_hydrogens[model_no]:
+
+                del self.n_excess_hydrogens[model_no][subdiv]
+
+        if subdiv in self.heterogens:
+
+            del self.heterogens[subdiv]
+
+        if subdiv in self.altloc:
+            del self.altloc[subdiv]
+
+        for ndx in range(len(self.disulphides) - 1, -1, -1):
+
+            if subdiv in self.disulphides[ndx].subdivs():
+
+                del self.disulphides[ndx]
+
+        for biomol_no in self.biomt.keys():
+
+            if subdiv in self.biomt[biomol_no]['subdivs']:
+
+                self.biomt[biomol_no]['subdivs'].remove(subdiv)
+
+        return
 
 # Here be Monsters
 
@@ -1054,3 +1244,4 @@ class Info():
         self.missing_resids = missing
 
         return
+
