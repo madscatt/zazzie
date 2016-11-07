@@ -224,12 +224,14 @@ def generate_simulation_prep_report(mol):
 
         if len(start_warnings) == 1:
 
-            warn_txt = ('WARNING: Segment {:s} does not start with resid 1, '
-                        'check sequence is correct\n'.format(','.join(start_warnings)))
+            warn_txt = ('WARNING: Segment {:s} does not start '
+                        'with resid 1, check sequence is '
+                        'correct\n'.format(','.join(start_warnings)))
         else:
 
-            warn_txt = ('WARNING: Segments {:s} do not start with resid 1, check '
-                        'sequence is correct\n'.format(','.join(start_warnings)))
+            warn_txt = ('WARNING: Segments {:s} do not start with resid 1,'
+                        ' check sequence is '
+                        'correct\n'.format(','.join(start_warnings)))
 
         rep.append(warn_txt)
 
