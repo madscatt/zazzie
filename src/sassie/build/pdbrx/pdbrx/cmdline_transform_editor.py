@@ -35,6 +35,7 @@ try:
 except NameError:
     pass
 
+
 def check_array_input(input_txt, dimensions):
     '''
     Check that input text can be converted into an array.
@@ -61,6 +62,7 @@ def check_array_input(input_txt, dimensions):
 
     return flag, matrix
 
+
 def check_rotation(input_rot):
     '''
     Check that input rotation matrix is valid (i.e. text can be converted to
@@ -73,9 +75,10 @@ def check_rotation(input_rot):
               Text converted to array
     '''
 
-    flag, matrix = check_array_input(input_rot,(3,3))
+    flag, matrix = check_array_input(input_rot, (3, 3))
 
     return flag, matrix
+
 
 def check_translation(input_trans):
     '''
@@ -89,9 +92,10 @@ def check_translation(input_trans):
               Text converted to array
     '''
 
-    flag, matrix = check_array_input(input_trans,(3,))
+    flag, matrix = check_array_input(input_trans, (3,))
 
     return flag, matrix
+
 
 def get_user_transform():
     '''
@@ -124,11 +128,12 @@ def get_user_transform():
             flag = False
             print("Error: Translation must be a 3 x 1 array of numeric values")
 
-    if ((rot == np.identity(3)).all()) and ((trans == np.array([0.0,0.0,0.0])).all()):
+    if ((rot == np.identity(3)).all()) and ((trans == np.array([0.0, 0.0, 0.0])).all()):
         print("A second identity transform will not be added")
         flag = False
 
     return flag, rot, trans
+
 
 def init_biomt(subdivs):
     '''
@@ -141,18 +146,19 @@ def init_biomt(subdivs):
     @return:  Description of blank BIOMT
     '''
 
-    biomt_rec =  {
-                    'subdivs': subdivs,
-                    'auth_bio_unit': '',
-                    'soft_bio_unit': '',
-                    'rot': [],
-                    'trans': []
-                 }
+    biomt_rec = {
+        'subdivs': subdivs,
+        'auth_bio_unit': '',
+        'soft_bio_unit': '',
+        'rot': [],
+        'trans': []
+    }
 
     biomt_rec['rot'].append(np.identity(3))
-    biomt_rec['trans'].append(np.array([0.0,0.0,0.0]))
+    biomt_rec['trans'].append(np.array([0.0, 0.0, 0.0]))
 
     return biomt_rec
+
 
 def add_transform(biomt_rec):
     '''
@@ -166,7 +172,7 @@ def add_transform(biomt_rec):
     input_txt = ''
     valid_transform = False
 
-    while not valid_transform and not input_txt in ['x','X']:
+    while not valid_transform and not input_txt in ['x', 'X']:
 
         valid_transform, rot, trans = get_user_transform()
 
@@ -179,6 +185,7 @@ def add_transform(biomt_rec):
             input_txt = sys.stdin.read(1)
 
     return
+
 
 def edit_transform(biomt_rec):
     '''
@@ -212,7 +219,7 @@ def edit_transform(biomt_rec):
         input_txt = ''
         valid_transform = False
 
-        while not valid_transform and not input_txt in ['x','X']:
+        while not valid_transform and not input_txt in ['x', 'X']:
 
             valid_transform, rot, trans = get_user_transform()
 
@@ -230,6 +237,7 @@ def edit_transform(biomt_rec):
 
     return
 
+
 def print_biomt(biomt_rec):
     '''
     Print the existing data in a BIOMT record
@@ -243,8 +251,7 @@ def print_biomt(biomt_rec):
 
     print('0. Identity (cannot be edited)')
 
-    for i in range(1,no_transforms):
-
+    for i in range(1, no_transforms):
         print('#' + str(i))
         print('Rotation:')
         print(biomt_rec.rot[i])
@@ -252,6 +259,7 @@ def print_biomt(biomt_rec):
         print(biomt_rec.trans[i])
 
     return
+
 
 def select_segnames(segnames):
     '''
@@ -283,6 +291,7 @@ def select_segnames(segnames):
 
     return list(selected)
 
+
 def prepare_biomt_json(biomt_rec):
     '''
     Convert BIOMT information into JSOn for output
@@ -302,6 +311,7 @@ def prepare_biomt_json(biomt_rec):
         trans[i] = trans[i].tolist()
 
     return json_rec
+
 
 def user_biomt(segnames_json):
     '''
@@ -323,16 +333,16 @@ def user_biomt(segnames_json):
 
     input_txt = ''
 
-    while input_txt not in ['q','Q']:
+    while input_txt not in ['q', 'Q']:
 
         print('Press "E" to edit an existing transform, '
               '"A" to add a new transform or '
               '"Q" to accept current BIOMT and quit')
         input_txt = sys.stdin.read(1)
 
-        if input_txt in ['e','E']:
+        if input_txt in ['e', 'E']:
             edit_transform(biomt_rec)
-        elif input_txt in ['a','A']:
+        elif input_txt in ['a', 'A']:
             add_transform(biomt_rec)
 
     return json.dumps(prepare_biomt_json(biomt_rec))
