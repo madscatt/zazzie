@@ -1403,15 +1403,15 @@ class SasMolScan(sasmol.SasMol):
             moltype = moltypes[ndx]
 
             if segname not in segtype:
+
                 segtype[segname] = moltype
+                new_segnames.append(segname)
 
-            if segtype[segname] != moltype:
-
-                if segname == last_segname and moltype == last_moltype:
+            elif segname == last_segname and moltype == last_moltype:
 
                     new_segnames.append(new_segnames[-1])
 
-                else:
+            else:
 
                     added_segnames.append(
                         self.name_split_segment(
@@ -1420,8 +1420,6 @@ class SasMolScan(sasmol.SasMol):
                             new_segnames))
 
                     new_segnames.append(added_segnames[-1])
-            else:
-                new_segnames.append(segname)
 
             last_segname = segname
             last_moltype = moltype
@@ -2138,7 +2136,7 @@ class SasMolScan(sasmol.SasMol):
 
                     for resid, resname in chain_missing_res.iteritems():
 
-                        if resid < start_resid:
+                        if resid < start_resid and resname != '':
 
                             segname_info.add_missing_resid(
                                 segname, resid, resname, model_no=model_no)
@@ -2149,7 +2147,7 @@ class SasMolScan(sasmol.SasMol):
 
                     for resid, resname in chain_missing_res.iteritems():
 
-                        if resid > end_resid:
+                        if resid > end_resid and resname != '':
 
                             segname_info.add_missing_resid(
                                 segname, resid, resname, model_no=model_no)
@@ -2163,8 +2161,9 @@ class SasMolScan(sasmol.SasMol):
 
                     if resid in chain_missing_res.keys():
 
-                        if ((resid not in segname_info.sequence[segname]) or
-                                (segname_info.sequence[segname][resid] == '')):
+                        # if ((resid not in segname_info.sequence[segname]) or
+                        #         (segname_info.sequence[segname][resid] == '')):
+                        if (resid not in segname_info.sequence[segname]):
 
                             segname_info.add_missing_resid(segname,
                                                            resid,
