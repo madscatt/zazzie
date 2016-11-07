@@ -30,6 +30,7 @@ from . import altloc_choice
 import sasmol.sasmol as sasmol
 import numpy as np
 
+
 class ScaffoldBuilder():
     '''
     Build structure to form scaffold for building. Scaffold contains only
@@ -104,6 +105,36 @@ class ScaffoldBuilder():
 
         return
 
+    def create_excess_mask(self, model_no=1):
+        """
+        Create a SasMol style mask to select all excess atoms
+
+        @type model_no :  int
+        @param model_no:  Model number
+        @rtype : numpy.array
+        @return: Integer mask for all atoms (1 = excess, 0 = not)
+        """
+
+        excess = self.selected_mol.segname_info.excess_atoms[model_no]
+        mol = self.mol
+
+        mask = np.zeroes(mol.natoms())
+
+        for segname, res_info in excess.iteritems():
+
+            for resid, excess_info in res_info.iteritems():
+
+                for name in excess_info['atoms']:
+                    sel_txt = ('segname[i] == "{0:s}" and resid[i] == {1:d}'
+                               ' and name[i] == "{2:s}"'.format(
+                        segname, resid, name))
+
+                    err, tmp_mask = mol.get_subset_mask(sel_txt)
+
+                    mask = np.logical_or(tmp_mask, mask)
+
+        return mask.astype(int)
+
     def select_specified_regions(self):
         """
         Create self.selected_mol as a sasmol.SasMol object containing only the
@@ -124,7 +155,6 @@ class ScaffoldBuilder():
         for segname, resids in selected_altlocs.iteritems():
 
             for resid, loc in resids.iteritems():
-
                 sel_txt = 'segname[i] == "{0:s}" and resid[i] == {1:d} and loc[i] == "{2:s}"'.format(
                     segname, resid, loc)
                 err, tmp_mask = self.mol.get_subset_mask(sel_txt)
@@ -155,7 +185,6 @@ class ScaffoldBuilder():
         for segname in self.selected_mol.segname_info.subdivs:
 
             if segname not in selected_segnames:
-
                 self.selected_mol.segname_info.purge_subdiv(segname)
 
         return
@@ -171,8 +200,7 @@ class ScaffoldBuilder():
         selected_segnames = self.selected_segnames
 
         for segname in selected_segnames:
-
-                segname_info.subdiv_renumber_from_one(segname)
+            segname_info.subdiv_renumber_from_one(segname)
 
         return
 
@@ -223,7 +251,6 @@ class ScaffoldBuilder():
                     m = biomt['trans'][i]
 
                     if not ((u == np.identity(3)).all() and (m == np.array([0.0, 0.0, 0.0])).all()):
-
                         new_mols.append(sasmol.SasMol(0))
 
                         selected_mol.copy_molecule_using_mask(
@@ -264,12 +291,11 @@ class ScaffoldBuilder():
             tmp_segnames = model.segname()
 
             for segname in model_segnames:
-
                 new_segname = mol.next_segname_generator(
                     existing=existing_segnames)
 
                 tmp_segnames = [new_segname if x ==
-                                segname else x for x in tmp_segnames]
+                                               segname else x for x in tmp_segnames]
 
                 existing_segnames.append(new_segname)
 
@@ -300,8 +326,10 @@ class ScaffoldBuilder():
 
             for model in models:
 
-                if combined_model == None:
+                if combined_model is None:
+                    
                     combined_model = model
+
                 else:
 
                     tmp_model = sasmol.SasMol(0)
@@ -506,7 +534,6 @@ class ScaffoldBuilder():
                 choice = ''
 
                 while choice.lower() not in ['y', 'n', 'yes', 'no']:
-
                     choice = raw_input().lower()
 
                 if choice.lower() in ['n', 'no']:
