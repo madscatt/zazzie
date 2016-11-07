@@ -149,9 +149,6 @@ class ScaffoldBuilder():
 
         self.selected_mol.segname_info = self.mol.segname_info
 
-        # TODO: Renumber residues in selected segments where needed
-        # TODO: Update segname_info in line with changes & tidy redundant bits
-
         self.fix_residue_numbering()
 
         # Purge non-selected segments from segname_info
