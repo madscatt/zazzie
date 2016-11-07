@@ -69,6 +69,11 @@ class PreProcessor(object):
         else:
             self.ui_type = 'terminal'
 
+        if 'default_subs' in kwargs:
+            self.default_subs = kwargs['default_subs']
+        else:
+            self.default_subs = False
+
         self.logger = logging.getLogger(__name__)
 
         return
@@ -684,6 +689,8 @@ class PreProcessor(object):
             elif choice in ['n', 'no']:
 
                 accepted_sequences = True
+
+        # TODO: Apply standard HET name substitutions
 
         if mol.segname_info.biomt:
 
