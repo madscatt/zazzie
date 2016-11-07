@@ -25,22 +25,21 @@ from __future__ import division  # You don't need this in Python3
 import curses
 import curses.wrapper
 
-from math import *
+from math import ceil
 import json
 import sys
 from StringIO import StringIO
 import numpy as np
 
 
-
 class SegnameEditor():
-    '''
+    """
     Curses interface to allow users to split, join and rename segments in
     SasMol objects
-    '''
+    """
 
     def __init__(self, segnames, resid_descriptions, max_row=10):
-        '''
+        """
         Setup the curses environment and display to show residue infromation and
         editing instructions to the user
 
@@ -52,7 +51,7 @@ class SegnameEditor():
                                    and moltype for each residue.
         @type max_row :  int
         @param max_row:  Maximum number of rows to be displayed in terminal
-        '''
+        """
 
         self.segnames = segnames
         self.resid_descriptions = resid_descriptions
@@ -89,11 +88,11 @@ class SegnameEditor():
         return
 
     def curses_start(self):
-        '''
+        """
         Initial setup of curses environment.
 
         @return:
-        '''
+        """
 
         self.screen = curses.initscr()
         curses.noecho()
@@ -105,12 +104,12 @@ class SegnameEditor():
         return
 
     def screen_setup(self):
-        '''
+        """
         Define the viewable areas in curses and the constant content (such as
         user instructions).
 
         @return:
-        '''
+        """
 
         curses.init_pair(1, curses.COLOR_BLACK, curses.COLOR_WHITE)
         self.highlightText = curses.color_pair(1)
@@ -148,11 +147,11 @@ class SegnameEditor():
         self.box.box()
 
     def curses_stop(self):
-        '''
+        """
         Stop curses environment and tidy up.
 
         @return:
-        '''
+        """
 
         self.screen.clear()
 
@@ -164,11 +163,11 @@ class SegnameEditor():
         return
 
     def redraw(self):
-        '''
+        """
         Redraw screen after change in state.
 
         @return:
-        '''
+        """
 
         max_row = self.max_row
         page = self.page
@@ -180,20 +179,25 @@ class SegnameEditor():
         self.screen.border(0)
         self.box.border(0)
 
-        for i in range(1 + (max_row * (page - 1)), max_row + 1 + (max_row * (page - 1))):
+        for i in range(1 + (max_row * (page - 1)),
+                       max_row + 1 + (max_row * (page - 1))):
+
             if row_num == 0:
+
                 self.box.addstr(1, 1, "There aren't strings",
                                 self.highlightText)
             else:
-                if (i + (max_row * (page - 1)) ==
-                        position + (max_row * (page - 1))):
 
-                    self.box.addstr(i - (max_row * (page - 1)),
-                                    2, display_lines[i - 1], self.highlightText)
+                paged_lines = max_row * (page - 1)
+
+                if i + paged_lines == position + paged_lines:
+
+                    self.box.addstr(i - paged_lines, 2,
+                                    display_lines[i - 1], self.highlightText)
                 else:
 
-                    self.box.addstr(i - (max_row * (page - 1)),
-                                    2, display_lines[i - 1], self.normalText)
+                    self.box.addstr(i - paged_lines, 2,
+                                    display_lines[i - 1], self.normalText)
 
                 if i == row_num:
                     break
@@ -206,12 +210,12 @@ class SegnameEditor():
         return
 
     def curses_loop(self, stdscr):
-        '''
+        """
         Main loop to obtain and interpret user input
 
         @param stdscr:
         @return:
-        '''
+        """
 
         max_row = self.max_row
         pages = self.pages
@@ -274,7 +278,6 @@ class SegnameEditor():
                 self.screen.refresh()
 
                 if self.valid_segname(new_segname):
-
                     self.split_segnames(ndx, new_segname)
                     self.display_lines = self.create_display_lines()
                     self.box.refresh()
@@ -307,7 +310,6 @@ class SegnameEditor():
                 self.screen.refresh()
 
                 if self.valid_segname(new_segname):
-
                     self.rename_segment(ndx, new_segname)
                     self.display_lines = self.create_display_lines()
                     self.box.refresh()
@@ -318,7 +320,7 @@ class SegnameEditor():
         return
 
     def valid_segname(self, segname):
-        '''
+        """
         Check that the input segment name is valid to use for a new segment,
         i.e is 4 characters long or less and not an existing segment name.
 
@@ -326,7 +328,7 @@ class SegnameEditor():
         @param segname:  Proposed segment name
         @rtype :  bool
         @return:  Is the input segname valid
-        '''
+        """
 
         valid = False
 
@@ -336,25 +338,24 @@ class SegnameEditor():
         return valid
 
     def create_display_lines(self):
-        '''
+        """
         Format residue information for display
 
         @return:
-        '''
+        """
 
         input_data = self.resid_descriptions
 
         menu_input = []
 
         for row in input_data:
-
             menu_input.append('{0:7s} {1:>6} {2:7s} {3:5s} {4:8s}'.format(
                 row[0], row[2], row[3], row[4], row[5]))
 
         return menu_input
 
     def split_segnames(self, ndx, new_segname):
-        '''
+        """
         Split an existing segment and name the newly created segment.
 
         @type ndx :  int
@@ -363,7 +364,7 @@ class SegnameEditor():
         @type new_segname :  str
         @param new_segname:  Name to be applied to the newly created segment
         @return:
-        '''
+        """
 
         resid_desc = self.resid_descriptions
 
@@ -396,7 +397,7 @@ class SegnameEditor():
         return
 
     def rename_segment(self, ndx, new_segname):
-        '''
+        """
         Change the name of selected segment (the one including the selected
         residue).
 
@@ -405,7 +406,7 @@ class SegnameEditor():
         @type new_segname :  str
         @param new_segname:  New name for segment
         @return:
-        '''
+        """
 
         target_segname = self.resid_descriptions[ndx][0]
 
@@ -427,9 +428,6 @@ class SegnameEditor():
         """
         Join segment containing ndx-th residue to the previous segment.
 
-        @type masked_data : np.array
-        @param masked_data: Array of lines containing: segnames, indices, resids,
-                            resnames, chains, moltypes
         @type ndx:          integer
         @param ndx:         Index of the residue that starts segment to join
                             previous segment
@@ -493,11 +491,11 @@ class SegnameEditor():
         return error
 
     def get_segment_starts(self):
-        '''
+        """
         Get indicies where the resid descriptions change segment name.
 
         @return:
-        '''
+        """
 
         resid_desc = self.resid_descriptions
 
@@ -527,7 +525,7 @@ class SegnameEditor():
 
 
 def get_input_variables_json(input_json):
-    '''
+    """
     Parse input JSON to produce list segnames, residue descritions and
     expected maximum number of screen rows.
 
@@ -539,7 +537,7 @@ def get_input_variables_json(input_json):
               first atomic index, resid, resname, chain
               and moltype for each residue.
               Maximum number of screen lines
-    '''
+    """
 
     json_stingio = StringIO(input_json)
     json_variables = json.load(json_stingio)
@@ -564,13 +562,13 @@ def get_input_variables_json(input_json):
 
 
 def main():
-    '''
+    """
     Read JSON definition of segments, residues annd screen size from argv.
     Run segmentation editing and provide updated segmentation information as
     output JSON.
 
     @return:
-    '''
+    """
 
     input_json = StringIO(sys.argv[1])
     segnames, resid_descriptions, max_row = get_input_variables_json(
@@ -582,6 +580,7 @@ def main():
     print json.dumps({'segname_starts': edited_segments})
 
     return
+
 
 if __name__ == "__main__":
     # execute only if run as a script
