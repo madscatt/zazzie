@@ -870,6 +870,8 @@ class Info():
         Create a FASTA format sequence string form the sequence helf for the 
         selected subdiv(ision).
 
+        @type model_no :  int
+        @param model_no:  Model number
         @type subdiv  :  string
         @param subdiv :  Subdivision (chain or segname) label for first residue
         @type missing_lower   :  boolean

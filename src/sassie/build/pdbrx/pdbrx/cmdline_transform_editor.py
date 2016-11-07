@@ -85,8 +85,8 @@ def check_translation(input_trans):
     Check that input translation vector is valid (i.e. text can be converted to
     a 3*1 array)
 
-    @type input_rot :  str
-    @param input_rot:  Text format translation vector
+    @type input_trans :  str
+    @param input_trans:  Text format translation vector
     @rtype :  bool, np.array
     @return:  Input validity flag
               Text converted to array
