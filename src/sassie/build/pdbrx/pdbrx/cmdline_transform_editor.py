@@ -172,7 +172,7 @@ def add_transform(biomt_rec):
     input_txt = ''
     valid_transform = False
 
-    while not valid_transform and not input_txt in ['x', 'X']:
+    while not valid_transform and input_txt not in ['x', 'X']:
 
         valid_transform, rot, trans = get_user_transform()
 
@@ -219,7 +219,7 @@ def edit_transform(biomt_rec):
         input_txt = ''
         valid_transform = False
 
-        while not valid_transform and not input_txt in ['x', 'X']:
+        while not valid_transform and input_txt not in ['x', 'X']:
 
             valid_transform, rot, trans = get_user_transform()
 
