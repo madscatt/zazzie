@@ -21,7 +21,7 @@ structure.
 
 """
 
-import picker
+from . import picker
 
 
 def select_biomt(available_biomt, biomt_description):
@@ -42,9 +42,9 @@ def select_biomt(available_biomt, biomt_description):
     title_txt = 'Pick BIOMTs to apply to model'
 
     chosen_biomt = picker.Picker(
-        title = title_txt,
-        options = biomt_list,
-        info = biomt_description
+        title=title_txt,
+        options=biomt_list,
+        info=biomt_description
         ).getSelected()
 
     return chosen_biomt
