@@ -327,7 +327,7 @@ class ScaffoldBuilder():
             for model in models:
 
                 if combined_model is None:
-                    
+
                     combined_model = model
 
                 else:
