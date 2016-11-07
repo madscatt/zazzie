@@ -22,8 +22,9 @@ Get user to choose segments to be included in model from curses interface
 
 import picker
 
+
 def select_segnames(segname_list, system_description):
-    '''
+    """
     Give user a choice of segments to include in the final model
 
     @type segname_list :  list
@@ -31,14 +32,14 @@ def select_segnames(segname_list, system_description):
     @type  system_description:  list
     @param system_description:  Text lines describing the segments contents
     @return:
-    '''
+    """
 
     title_txt = 'Segments to include in model'
 
     chosen_segnames = picker.Picker(
-        title = title_txt,
-        options = segname_list,
-        info = system_description
-        ).getSelected()
+        title=title_txt,
+        options=segname_list,
+        info=system_description
+    ).get_selected()
 
     return chosen_segnames

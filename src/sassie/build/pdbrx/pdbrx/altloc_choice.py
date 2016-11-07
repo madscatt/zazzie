@@ -32,6 +32,6 @@ def select_altloc(segname, resid, altloc_list):
         options=altloc_list,
         info=info,
         mutually_exclusive=True
-    ).getSelected()
+    ).get_selected()
 
     return chosen_altloc

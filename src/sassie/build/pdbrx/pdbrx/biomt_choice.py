@@ -45,6 +45,6 @@ def select_biomt(available_biomt, biomt_description):
         title=title_txt,
         options=biomt_list,
         info=biomt_description
-        ).getSelected()
+        ).get_selected()
 
     return chosen_biomt
