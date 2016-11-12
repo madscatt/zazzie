@@ -690,8 +690,6 @@ class PreProcessor(object):
 
                 accepted_sequences = True
 
-        # TODO: Apply standard HET name substitutions
-
         if mol.segname_info.biomt:
 
             print("Current biological unit transforms: ")
