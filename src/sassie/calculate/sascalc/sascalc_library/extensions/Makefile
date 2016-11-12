@@ -17,6 +17,7 @@ ifeq ($(_ARCH), Darwin)
 endif
 ifeq ($(_ARCH), Linux)
     INCDIR+=-I/share/apps/local/cuda/include
+    INCDIR+=-I/share/apps/local/include
     CC=/share/apps/local/bin/g++
     CC=g++
     NVCC=/share/apps/local/cuda/bin/nvcc

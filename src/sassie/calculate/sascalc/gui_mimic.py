@@ -4,10 +4,10 @@ Driver method to run the SasCalc module
 
 import sys
 
-#import sassie.calculate.sascalc as sascalc
-import sascalc
+import sassie.calculate.sascalc.sascalc as sascalc
+#import sascalc
 import sassie.interface.input_filter as input_filter
-import sassie.interface.sascalc_filter as sascalc_filter
+#import sassie.interface.sascalc_filter as sascalc_filter
 import multiprocessing
 
 svariables = {}
@@ -118,7 +118,7 @@ if len(error) > 0:
     print 'error = ', error
     sys.exit()
 else:
-    error=sascalc_filter.check_sascalc(variables)
+    #error=sascalc_filter.check_sascalc(variables)
     if(len(error) != 0):
         print 'error = ',error
         sys.exit()

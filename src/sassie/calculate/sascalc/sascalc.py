@@ -24,8 +24,9 @@ import sassie.util.module_utilities as module_utilities
 import sassie.util.basis_to_python as basis_to_python
 #import sassie.calculate.sascalc_utils as sascalc_utils
 import sascalc_utils as sascalc_utils
-sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)),'..','cpp_extension'))
-import SasCalc
+#sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)),'..','cpp_extension'))
+#sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)),'sascalc_library'))
+import sassie.calculate.sascalc.sascalc_library.SasCalc as SasCalc
 
 '''
     SASCALC is the module that contains the functions that are used to calculate the neutron or x-ray scattering profile, as well as additional useful output such as p(r) and Vc, based on the user given structure.

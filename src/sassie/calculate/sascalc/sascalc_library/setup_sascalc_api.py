@@ -7,8 +7,8 @@ os_type = platform.system()
 os.environ["CC"] = "h5cc"
 
 ### USER EDIT
-cpp_buildingBlock_dir=os.path.join('..','cpp_and_cuda_buildBlock')
-cuda_buildingBlock_dir=os.path.join('..','cpp_and_cuda_buildBlock')
+cpp_buildingBlock_dir=os.path.join('.','extensions')
+cuda_buildingBlock_dir=os.path.join('.','extensions')
 
 ### END USER EDIT
 
@@ -63,11 +63,11 @@ macros = []
 
 if cpp_lib:
     include_dir_names.append(os.path.join(cpp_buildingBlock_dir,'include'))
-    include_dir_names.append('/usr/local/include')
-    #include_dir_names.append('/home/hailiang/work/tools/hdf5/include')
+    #include_dir_names.append('/usr/local/include')
+    ##include_dir_names.append('/home/hailiang/work/tools/hdf5/include')
     library_dir_names.append(os.path.join(cpp_buildingBlock_dir,'lib'))
-    #library_dir_names.append(os.path.join('/home/hailiang/work/tools/hdf5/lib'))
-    library_dir_names.append(os.path.join('/usr/local/lib'))
+    ##library_dir_names.append(os.path.join('/home/hailiang/work/tools/hdf5/lib'))
+    #library_dir_names.append(os.path.join('/usr/local/lib'))
     library_names.append(cpp_library_name)
     library_names.append("hdf5_cpp")
     library_names.append("hdf5")
@@ -76,7 +76,7 @@ if cuda_driver:
     include_dir_names.append(os.path.join(cuda_dir,'include'))
     library_dir_names.append(os.path.join(cuda_dir,'lib64'))
     #library_dir_names.append(os.path.join(cuda_dir,'lib'))
-    library_names.append('cuda')
+    #library_names.append('cuda')
     library_names.append('cudart')
     macros.append(('CUDA_DRIVER','1'))
 if cuda_lib:
