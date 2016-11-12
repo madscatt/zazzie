@@ -7,162 +7,359 @@
 #include <math.h>
 #include <cstdlib>
 #include <iostream>
+#include <string.h>
+
+
+
+/*
+//////////////////////////////////////////////////////////
+/// constructor 
+/// currently not implemented due to overhead of B array preparation
+//////////////////////////////////////////////////////////
+sascalc::GV::
+GV(const SasMol & mol, const ScVars & scvar)
+{
+}
+*/
 
 //////////////////////////////////////////////////////////
 /// constructor 
+/// patched to take the python-preprocess B array as the input
+/// assume that the B-array memory layout follows what has been prepared in sascalc_util.py
 //////////////////////////////////////////////////////////
 sascalc::GV::
-GV(const int Natoms, const int Nframes, const int Nq, const int Nr, const TYPE dr, const TYPE *const coordinates, const TYPE *const q):
-SasCalc(Natoms,Nframes,Nq,Nr,dr,coordinates,q)
+GV(const int Natoms, const ScVars & scvar, const double *const B_neutron_array, const double *const B_xray_array):
+SasCalc(Natoms, scvar, B_neutron_array, B_xray_array),
+_gv_method(scvar._gv_method),
+_gv_parameter(scvar._gv_parameter)
 {
-    _Ngv = 0;
-    _gv = NULL;
-    _Iq_real = (TYPE*)calloc(_Nq,sizeof(TYPE));
-    _Iq_imag = (TYPE*)calloc(_Nq,sizeof(TYPE));
 }
 
 //////////////////////////////////////////////////////////
-/// batch load
+/// Set the golden vectors
+//////////////////////////////////////////////////////////
+double *
+sascalc::GV::
+_getGV(int Ngv) const
+{
+    // assign Ngv
+    Ngv = Ngv;
+
+    // setup GV
+    if (Ngv%2==0)
+    {
+        std::cout<<"The number of golden vectors should be an odd integer, and so it will be reset to be: "<<Ngv+1<<std::endl;
+        ++Ngv;
+    }
+    double *gv = new double[3*Ngv];
+    
+    const double phi_inv = 2.0/(1+sqrt(5.)); // golden ratio
+    double cos_theta, sin_theta, phi;
+    double qx,qy,qz;
+    int igv;
+    const int rank = Ngv/2;
+    for (int i=-rank; i<=rank; i++)
+    {   
+        sin_theta = cos(asin(2.0*i/Ngv));
+        cos_theta = 2.0*i/Ngv;
+        phi = 2*M_PI*i*phi_inv;
+        igv = i + rank;
+        gv[igv] = sin_theta*cos(phi);
+        gv[Ngv+igv] = sin_theta*sin(phi);
+        gv[2*Ngv+igv] = cos_theta;
+    }
+
+    // return
+    return gv;
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// get Ngv_start based on the tolerance value
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+int
+sascalc::GV::
+_tolerance_to_ngv(const double tolerance) const
+{
+    if (tolerance>=0.05) return 11;
+    if (tolerance<0.05 && tolerance>=0.04) return 13;
+    if (tolerance<0.04 && tolerance>=0.03) return 15;
+    if (tolerance<0.03 && tolerance>=0.02) return 19;
+    if (tolerance<0.02 && tolerance>=0.01) return 31;
+    if (tolerance<0.01) return 35;
+}
+
+//////////////////////////////////////////////////////////
+/// Golden vector internal calculator
+//  for single item and single frame using fixed method
 //////////////////////////////////////////////////////////
 void
 sascalc::GV::
-batch_load(const int offset, const int extend)
+_calculate_singleFrame_fixed(const int *const flag_skip, const int Nitems, const double *const coor, double *const Iq, const int Ngv)
 {
-    _coordinates += offset*_Natoms*3;
+    // locals
+    int iatom,iq,igv;
+    double x, y, z, b;
+    double qx,qy,qz;
+    double q_dot_r;
+    double sine, cose;
+    double *Ireal = new double[Nitems];
+    double *Iimag = new double[Nitems];
+    double qmag;
+    int item;
+
+    double *gv = _getGV(Ngv);
+
+    // summation
+    for (iq=0; iq<_Nq; ++iq)
+    {
+        for (item=0; item<Nitems; ++item) if (!flag_skip[item]) Iq[item*_Nq + iq] = 0.0;
+        qmag = _q[iq];
+        //std::cout<<"Q: "<<qmag<<std::endl;
+        for (igv=0; igv<Ngv; ++igv)
+        {
+            qx = qmag * gv[igv];
+            qy = qmag * gv[Ngv+igv];
+            qz = qmag * gv[2*Ngv+igv];
+            for (item=0; item<Nitems; ++item)
+            {
+                Ireal[item] = 0.0;
+                Iimag[item] = 0.0;
+            }
+            for (iatom=0; iatom<_Natoms; ++iatom)
+            {
+                // get coordinate
+                x = coor[iatom];
+                y = coor[_Natoms + iatom];
+                z = coor[_Natoms*2 + iatom];
+
+                item = 0;
+                // neutron
+                for (auto &B_neutron : _B_neutron_vector)
+                {
+                    if (!flag_skip[item]) 
+                    {
+                        auto B_descriptor = B_neutron.first;
+                        auto B = B_neutron.second;
+                        b = B[iatom];
+                        q_dot_r = qx*x+qy*y+qz*z;
+                        sine = sin(q_dot_r);
+                        cose = cos(q_dot_r);
+                        Ireal[item] += b*cose;
+                        Iimag[item] += b*sine;
+                    }
+                    //if (item==0 && iq==1 && igv==1 && iatom==1) std::cout<<"("<<qx<<" "<<qy<<" "<<qz<<"), ("<<x<<" "<<y<<" "<<z<<") "<<b<<std::endl;
+                    ++item;
+                }
+                // xray
+                for (auto &B_xray : _B_xray_vector)
+                {
+                    if (!flag_skip[item]) 
+                    {
+                        auto B_descriptor = B_xray.first;
+                        auto B = B_xray.second;
+                        b = B[_Natoms*iq+iatom];
+                        q_dot_r = qx*x+qy*y+qz*z;
+                        sine = sin(q_dot_r);
+                        cose = cos(q_dot_r);
+                        Ireal[item] += b*cose;
+                        Iimag[item] += b*sine;
+                    }
+                    ++item;
+                }
+            }
+            for (item=0; item<Nitems; ++item)  if (!flag_skip[item]) Iq[item*_Nq + iq] += Ireal[item]*Ireal[item] + Iimag[item]*Iimag[item];
+        }
+        for (item=0; item<Nitems; ++item)  if (!flag_skip[item]) Iq[item*_Nq + iq] /= Ngv;
+        //for (item=0; item<Nitems; ++item)  if (item==1) printf("%8.3f %16.8f, ",qmag,Iq[item*_Nq + iq]); std::cout<<std::endl;
+    }
+
+    // clean up
+    delete [] gv;
+    delete [] Ireal;
+    delete [] Iimag;
+}
+
+//////////////////////////////////////////////////////////
+/// Golden vector internal calculator
+//  for single item and single frame using converged method
+//////////////////////////////////////////////////////////
+void
+sascalc::GV::
+_calculate_singleFrame_converge(const double *const coor, double *const Iq, const double tolerance)
+{
+    const int Nitems = _B_neutron_vector.size()+_B_xray_vector.size();
+
+    const int Ngv_start = _tolerance_to_ngv(tolerance);
+
+    double * Iq_run_ave = new double[Nitems*_Nq];
+    double * Iq_run_ave_previous = new double[Nitems*_Nq];
+
+    int i, item;
+    int *flag_skip = new int[Nitems];
+    int *Ngvs = new int[Nitems];
+    double *err = new double[Nitems];
+    for (item=0; item<Nitems; ++item)
+    {
+        Ngvs[item] = Ngv_start;
+        flag_skip[item] = false;
+    }
+    int offset;
+    for (int count=1, Ngv=Ngv_start; count<=100; ++count, Ngv+=2)
+    {
+        _calculate_singleFrame_fixed(flag_skip, Nitems, coor, Iq, Ngv);
+        for (item=0; item<Nitems; ++item)
+        {
+            if (flag_skip[item]) continue;
+            offset = item*_Nq;
+            if (count==1) for (i=0; i<_Nq; ++i) Iq_run_ave[offset + i] = Iq[offset + i];
+            else
+            {
+                err[item] = 0.0;
+                for (i=0; i<_Nq; ++i)
+                {
+                    Iq_run_ave_previous[offset+i]=Iq_run_ave[offset+i];
+                    Iq_run_ave[offset+i] = (Iq_run_ave[offset+i]*(count-1)+Iq[offset+i])/count;
+                    err[item] += fabs(Iq_run_ave[offset+i]-Iq_run_ave_previous[offset+i])/Iq_run_ave_previous[offset+i];
+                }
+                err[item] /= _Nq;
+                if (err[item]<=tolerance) flag_skip[item] = true;
+            }
+            Ngvs[item] += 2;
+        }
+    }
+    for (item=0; item<Nitems; ++item) Ngvs[item] -= 2;
+
+    // clean up
+    delete [] Iq_run_ave;
+    delete [] Iq_run_ave_previous;
+    delete [] flag_skip;
+    delete [] Ngvs;
+    delete [] err;
+}
+
+int replace(std::string& str, const std::string& from, const std::string& to) {
+    size_t start_pos = str.find(from);
+    if(start_pos == std::string::npos)
+        return false;
+    str.replace(start_pos, from.length(), to);
+    return true;
 }
 
 //////////////////////////////////////////////////////////
 /// Golden vector calculator
 //////////////////////////////////////////////////////////
-void
+sascalc::ScResults *
 sascalc::GV::
-updateGV(const int Ngv)
+calculate(const double *const coor, const int Nframes)
 {
-    // assign Ngv
-    _Ngv = Ngv;
+    // initialize a SasResults object
+    sascalc::ScResults * pResults = new sascalc::ScResults(Nframes, _Nq, _Qmax);
 
-    // free exisiting GV
-    if (_gv) free(_gv);
+    const int Nitems = _B_neutron_vector.size()+_B_xray_vector.size();
+    double * Iq = new double[Nframes * Nitems * _Nq];
+    int item, count;
+    int *flag_skip = new int[Nitems];
+    for (item=0; item<Nitems; ++item) flag_skip[item] = false;
 
-    // setup GV
-    if (_Ngv%2==0)
+    // loop over frames
+    int offset = 0;
+    static int frame_tot = 0;
+    for (int frame=0; frame<Nframes; ++frame)
     {
-        std::cout<<"The number of golden vectors should be an odd integer, and so it will be reset to be: "<<_Ngv+1<<std::endl;
-        ++_Ngv;
-    }
-    _gv = (TYPE*)malloc(3*_Ngv*sizeof(TYPE));
-    
-    const TYPE phi_inv = 2.0/(1+sqrt(5.)); // golden ratio
-    TYPE cos_theta, sin_theta, phi;
-    TYPE qx,qy,qz;
-    int igv;
-    const int rank = _Ngv/2;
-    for (int i=-rank; i<=rank; i++)
-    {   
-        sin_theta = cos(asin(2.0*i/_Ngv));
-        cos_theta = 2.0*i/_Ngv;
-        phi = 2*M_PI*i*phi_inv;
-        igv = i + rank;
-        _gv[igv] = sin_theta*cos(phi);
-        _gv[_Ngv+igv] = sin_theta*sin(phi);
-        _gv[2*_Ngv+igv] = cos_theta;
-    }   
-}
+        offset = frame*Nitems*_Nq;
+        if (_gv_method==std::string("fixed")) _calculate_singleFrame_fixed(flag_skip, Nitems, coor + frame*_Natoms*3, Iq+offset, int(_gv_parameter));
+        else if (_gv_method==std::string("converge")) _calculate_singleFrame_converge(coor + frame*_Natoms*3, Iq+offset, _gv_parameter);
 
-
-//////////////////////////////////////////////////////////
-/// SasGolden vector calculator
-//////////////////////////////////////////////////////////
-void
-sascalc::GV::
-calculate(const TYPE *const B, const int frame, const int xray)
-{
-    const TYPE * coor = &_coordinates[frame*_Natoms*3];
-
-    // locals
-    int iatom,iq,igv;
-    TYPE x, y, z, b;
-    TYPE qx,qy,qz;
-    TYPE q_dot_r;
-    TYPE sine, cose;
-    TYPE Ireal = 0.0;
-    TYPE Iimag = 0.0;
-    TYPE qmag;
-
-    // summation
-    for (iq=0; iq<_Nq; ++iq)
-    {
-        _Iq[iq] = 0.0;
-        _Iq_real[iq] = 0.0;
-        _Iq_imag[iq] = 0.0;
-        qmag = _q[iq];
-        //std::cout<<"Q: "<<qmag<<std::endl;
-        for (igv=0; igv<_Ngv; ++igv)
+        // save results
+        item = 0;
+        std::stringstream ss;
+        ss<<"frame-"<<frame_tot++<<" ";
+        count = 0;
+        for (auto &B_neutron : _B_neutron_vector)
         {
-            qx = qmag * _gv[igv];
-            qy = qmag * _gv[_Ngv+igv];
-            qz = qmag * _gv[2*_Ngv+igv];
-            Ireal = 0.0;
-            Iimag = 0.0;
-            for (iatom=0; iatom<_Natoms; ++iatom)
+            std::string B_descriptor = std::string("neutron ") + ss.str() + B_neutron.first;
+            pResults->push_result(std::make_pair(std::string(B_descriptor), Iq + offset + item*_Nq));
+
+            int flag_complete = false;
+            char *Bs = strdup(B_descriptor.c_str());
+            char * pch;
+            pch = strtok (Bs, " ");
+            int count1 = 0;
+            while (pch != NULL)
             {
-                x = coor[iatom];
-                y = coor[_Natoms + iatom];
-                z = coor[_Natoms*2 + iatom];
-                if (xray) b = B[_Natoms*iq+iatom];
-                else b = B[iatom];
-                q_dot_r = qx*x+qy*y+qz*z;
-                //sincos_TYPE(q_dot_r, &sine, &cose);
-                sine = sin(q_dot_r);
-                cose = cos(q_dot_r);
-                Ireal += b*cose;
-                Iimag += b*sine;
-                //if (iq==1 && igv==1) printf("%8.3f %8.3f %8.3f  %8.3f  %8.3f %8.3f %8.3f\n",x,y,z,b,qx,qy,qz);
+                if (count1==3 && std::string(pch)==std::string("complete")) flag_complete=true;
+                ++count1;
+                pch = strtok (NULL, " ");
             }
-            _Iq[iq] += Ireal*Ireal + Iimag*Iimag;
-            _Iq_real[iq] += Ireal*Ireal;
-            _Iq_imag[iq] += Iimag*Iimag;
+            if (flag_complete)
+            {
+                const double I0 = _neutron_I0[count];
+                const double * Iq_data = Iq + offset + item*_Nq;
+                const double I0data = *(Iq_data);
+                double * Inorm  = new double[_Nq];
+                double * Ierr  = new double[_Nq];
+                for (int k=0; k<_Nq; ++k){
+                    Inorm[k] = Iq_data[k]*(I0/I0data);
+                    Ierr[k] = Inorm[k]*0.1;
+                }
+                std::string tmp = B_neutron.first;
+                replace(tmp, "complete", "normalized");
+                B_descriptor = std::string("neutron ") + ss.str() + tmp;
+                pResults->push_result(std::make_pair(std::string(B_descriptor), Inorm));
+                replace(tmp, "normalized", "error");
+                B_descriptor = std::string("neutron ") + ss.str() + tmp;
+                pResults->push_result(std::make_pair(std::string(B_descriptor), Ierr));
+            }
+
+            ++item;
+            ++count;
         }
-        _Iq[iq] /= _Ngv;
-        //_Iq[iq] = (_Iq_real[iq]+_Iq_imag[iq])/_Ngv;
-        _Iq_real[iq] = pow(_Iq_real[iq]/_Ngv, 0.5);
-        _Iq_imag[iq] = pow(_Iq_imag[iq]/_Ngv, 0.5);
-    }
-    //printf("%16.8f %16.8f %16.8f\n",_Iq[0],_Iq_real[0],_Iq_imag[0]);
-}
-
-//////////////////////////////////////////////////////////
-/// SasGolden vector calculator
-//////////////////////////////////////////////////////////
-void
-sascalc::GV::
-calculate_pr(const int frame) const
-{
-    const TYPE * coor = &_coordinates[frame*_Natoms*3];
-
-    for (int i=0; i<_Nr; ++i) _Pr[i] = 0.0;
-
-    // get p(r)
-    // this slows things quite a bit, because p(r) needs looping over atom pairs, which is not requires by GV
-    int iatom, jatom, idx;
-    TYPE r;
-    TYPE xi,yi,zi,xj,yj,zj;
-    for (iatom=0; iatom<_Natoms; ++iatom)
-    {
-        xi = coor[iatom];
-        yi = coor[_Natoms + iatom];
-        zi = coor[_Natoms*2 + iatom];
-        for (jatom=0; jatom<_Natoms; ++jatom)
+        count = 0;
+        for (auto &B_xray : _B_xray_vector)
         {
-            xj = coor[jatom];
-            yj = coor[_Natoms + jatom];
-            zj = coor[_Natoms*2 + jatom];
-            r = sqrt(pow((xi-xj),2.0)+pow((yi-yj),2.0)+pow((zi-zj),2.0));
-            idx = int(r/_dr);
-            if (idx>=_Nr) continue;
-            else _Pr[idx] += 1.;
+            std::string B_descriptor = std::string("x-ray ") + ss.str() + B_xray.first;
+            pResults->push_result(std::make_pair(std::string(B_descriptor), Iq + offset + item*_Nq));
+
+            int flag_complete = false;
+            char *Bs = strdup(B_descriptor.c_str());
+            char * pch;
+            pch = strtok (Bs, " ");
+            int count1 = 0;
+            while (pch != NULL)
+            {
+                if (count1==3 && std::string(pch)==std::string("complete")) flag_complete=true;
+                ++count1;
+                pch = strtok (NULL, " ");
+            }
+            if (flag_complete)
+            {
+                const double I0 = _xray_I0[count];
+                const double * Iq_data = Iq + offset + item*_Nq;
+                const double I0data = *(Iq_data);
+                double * Inorm  = new double[_Nq];
+                double * Ierr  = new double[_Nq];
+                for (int k=0; k<_Nq; ++k){
+                    Inorm[k] = Iq_data[k]*(I0/I0data);
+                    Ierr[k] = Inorm[k]*0.1;
+                }
+                std::string tmp = B_xray.first;
+                replace(tmp, "complete", "normalized");
+                B_descriptor = std::string("x-ray ") + ss.str() + tmp;
+                pResults->push_result(std::make_pair(std::string(B_descriptor), Inorm));
+                replace(tmp, "normalized", "error");
+                B_descriptor = std::string("x-ray ") + ss.str() + tmp;
+                pResults->push_result(std::make_pair(std::string(B_descriptor), Ierr));
+            }
+
+            ++item;
+            ++count;
         }
     }
+
+    delete [] flag_skip;
+
+    // return
+    return pResults;
 }
 
 //////////////////////////////////////////////////////////

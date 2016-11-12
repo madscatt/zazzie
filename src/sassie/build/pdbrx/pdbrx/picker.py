@@ -1,4 +1,6 @@
 #!/usr/bin/python
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 '''
 Curses Picker
 
@@ -20,6 +22,22 @@ opts = Picker(
 
 returns a simple list
 cancel returns False
+
+    SASSIE: Copyright (C) 2011 Joseph E. Curtis, Ph.D.
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 '''
 
 import curses
@@ -59,6 +77,10 @@ class Picker:
     info_offset = 0
 
     def curses_start(self):
+        '''
+        Setup curses environment
+        @return:
+        '''
 
         self.stdscr = curses.initscr()
         curses.noecho()
@@ -93,6 +115,10 @@ class Picker:
             )
 
     def curses_stop(self):
+        '''
+        Clean up curses environemnt after exit
+        @return:
+        '''
 
         curses.nocbreak()
         self.stdscr.keypad(0)
@@ -101,6 +127,12 @@ class Picker:
         curses.endwin()
 
     def getSelected(self):
+        '''
+        Return input after user makes choice
+
+        @return:
+        '''
+
         if self.aborted == True:
             return( False )
 
@@ -109,6 +141,11 @@ class Picker:
         return( ret )
 
     def redraw_info(self):
+        '''
+        Redraw information section after user has moved viewing window.
+
+        @return:
+        '''
 
         info_offset = self.info_offset
 
@@ -124,6 +161,11 @@ class Picker:
         return
 
     def redraw(self):
+        '''
+        Redraw screen after update.
+
+        @return:
+        '''
 
         self.win_pick.clear()
         self.win_pick.border(
@@ -132,6 +174,7 @@ class Picker:
             self.border[4], self.border[5],
             self.border[6], self.border[7]
         )
+
         self.win_pick.addstr(
             self.window_height + 4, 5, " " + self.footer + " "
         )
@@ -176,6 +219,11 @@ class Picker:
 
 
     def check_info_cursor(self):
+        '''
+        Ensure cursor is within the list of options.
+
+        @return:
+        '''
 
         if self.info_cursor < 0:
 
@@ -191,12 +239,23 @@ class Picker:
         self.info_cursor = 0
 
     def check_cursor_up(self):
+        '''
+        Update cursor position after user scrolls up
+
+        @return:
+        '''
+
         if self.cursor < 0:
             self.cursor = 0
             if self.offset > 0:
                 self.offset = self.offset - 1
 
     def check_cursor_down(self):
+        '''
+        Update cursor position after user scrolls down
+        @return:
+        '''
+
         if self.cursor >= self.length:
             self.cursor = self.cursor - 1
 
@@ -208,6 +267,12 @@ class Picker:
                 self.offset = self.offset - 1
 
     def select_mutually_exclusive(self):
+        '''
+        Select option if those in list are mutually exclusive - i.e. selection
+        of one item inverts the selection of the others.
+
+        @return:
+        '''
 
         old_value = self.all_options[self.selected]["selected"]
         new_value = not old_value
@@ -219,6 +284,12 @@ class Picker:
                 self.all_options[i]["selected"] = old_value
 
     def curses_loop(self, stdscr):
+        '''
+        Main loop
+
+        @param stdscr:
+        @return:
+        '''
         while 1:
             self.redraw()
             c = stdscr.getch()
@@ -280,6 +351,9 @@ class Picker:
         info = [],
         mutually_exclusive = False
     ):
+
+        ''' Setup screen for display'''
+
         self.title = title
         self.arrow = arrow
         self.footer = footer

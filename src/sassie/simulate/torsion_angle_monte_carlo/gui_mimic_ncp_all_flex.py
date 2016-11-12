@@ -113,7 +113,7 @@ rotation_type_array = [
     'protein_backbone_torsion',
     'protein_backbone_torsion',
 ]
-delta_theta_array = '10.0, 10.0, 180.0, 180.0, 180.0, 180.0, 180.0, 180.0, 180.0, 180.0'
+delta_theta_array = '10.0, 10.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0'
 
 n_flex_regions = len(basis_string_array)
 number_of_flexible_regions = str(n_flex_regions)

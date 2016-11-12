@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
-"""
-
-"""
-
 '''
+Facilitate the building of missing regions in protein and DNA elements of
+structures
+
     SASSIE: Copyright (C) 2011 Joseph E. Curtis, Ph.D.
 
     This program is free software: you can redistribute it and/or modify
@@ -20,16 +19,15 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import structure_builder_pyrosetta as build_pyrosetta
-import sassie.build.pdbscan.pdbscan as pdbscan
+import logging
+import os
+import copy
+import numpy as np
+
+from . import structure_builder_pyrosetta as build_pyrosetta
 import sassie.build.pdbscan.pdbscan.pdbscan_utils as utils
 
 import sasmol.sasmol as sasmol
-
-import logging
-import os
-import numpy as np
-import copy
 
 class StructureBuilder():
     '''

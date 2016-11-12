@@ -47,11 +47,12 @@ def generate_reports(mol):
 
     short_report.append('# PDB Scan report for ' + mol.pdbname + '\n')
 
-    reconciliation_report =  generate_reconciliation_report(mol)
+    reconciliation_report = generate_reconciliation_report(mol)
 
     if reconciliation_report:
 
-        short_report.append('##Warning header information does not match coordinates\n')
+        short_report.append(
+            '##Warning header information does not match coordinates\n')
         short_report += generate_reconciliation_report(mol)
 
     short_report += generate_summary_report(mol, model_no=1)
@@ -108,6 +109,7 @@ def generate_reconciliation_report(mol):
 
     return reconcile_errors
 
+
 def boolean_to_yn(bool):
     """
     Create a report detailing any discrepancies between the header and
@@ -125,6 +127,7 @@ def boolean_to_yn(bool):
         text = 'N'
 
     return text
+
 
 def generate_simulation_prep_report(mol):
     """
@@ -150,10 +153,8 @@ def generate_simulation_prep_report(mol):
     rep.append('parameterized structures. PDB Scan suggests the following ')
     rep.append('mapping of residues from the input chains to segments.\n')
 
-    #widths = [6, 7, 15, 19]
-    #just = ['l', 'l', 'l','l']
     widths = [6, 7, 4, 13, 16]
-    just = ['l', 'l', 'l','l','l']
+    just = ['l', 'l', 'l', 'l', 'l']
     contents = []
 
     chain_list = sorted(chain_segment_map.keys())
@@ -167,21 +168,21 @@ def generate_simulation_prep_report(mol):
 
         for segname, atom_info in segment_info.iteritems():
 
-            resid_range = str(atom_info['resid'][0]) + '-' + str(atom_info['resid'][1])
-            index_range = str(atom_info['original_index'][0]) + '-' + str(atom_info['original_index'][1])
+            resid_range = str(atom_info['resid'][0]) + \
+                '-' + str(atom_info['resid'][1])
+            index_range = str(atom_info['original_index'][
+                              0]) + '-' + str(atom_info['original_index'][1])
             seg_moltype = atom_info['moltype'][:3]
 
-            #tmp_contents.append([chain, segname, resid_range, index_range])
-            tmp_contents.append([chain, segname, seg_moltype, resid_range, index_range])
+            tmp_contents.append(
+                [chain, segname, seg_moltype, resid_range, index_range])
 
-        contents += sorted(tmp_contents, key = lambda x: x[3])
+        contents += sorted(tmp_contents, key=lambda x: x[3])
 
     for line in contents:
         segname_list.append(line[1])
 
-
-    #header = ['Chain','Segname','Resids','Indices']
-    header = ['Chain','Segname','Type','Resids','Indices']
+    header = ['Chain', 'Segname', 'Type', 'Resids', 'Indices']
 
     rep += pdt.create_pandoc_table(header, contents, widths, just)
 
@@ -190,26 +191,37 @@ def generate_simulation_prep_report(mol):
     rep.append('Each proposed segment has been checked to see if it is ready for ')
     rep.append('simulation through MD (in CHARMM) or SASSIE dihedral MC.\n')
 
-    widths = [7,11,6,6,6]
+    widths = [7, 11, 6, 6, 6]
     header = ['Segname', 'Single Conformer', 'CHARMM', 'MC', 'MD']
-    just = ['c','c','c','c','c']
+    just = ['c', 'c', 'c', 'c', 'c']
     contents = []
 
-    #for segname, checks in sim_ready_checks.iteritems():
+    start_warnings = []
+
     for segname in segname_list:
 
         checks = sim_ready_checks[segname]
 
         conf = boolean_to_yn(checks['single_conformer'])
         charmm = boolean_to_yn(checks['charmm'])
-        mc =  boolean_to_yn(checks['chain'])
+        mc = boolean_to_yn(checks['chain'])
         md = boolean_to_yn(checks['md'])
 
         line = [segname, conf, charmm, mc, md]
 
         contents.append(line)
 
+        if not checks['start']:
+            start_warnings.append(segname)
+
     rep += pdt.create_pandoc_table(header, contents, widths, just)
+
+    if start_warnings:
+        rep.append('\n')
+        warn_txt = ('WARNING: Segments {:s} do not start with resid 1, check '
+                    'sequence is correct\n'.format(','.join(start_warnings)))
+
+        rep.append(warn_txt)
 
     return rep
 
@@ -337,7 +349,12 @@ def create_header_summary(header):
     # primary citation information
     cite_data = ref_info.citation
 
-    table_header = ['Class', pdb_recs['HEADER'][0]['class']]
+    if pdb_recs['HEADER']:
+        class_txt = pdb_recs['HEADER'][0]['class']
+    else:
+        class_txt = 'Unknown'
+
+    table_header = ['Class', class_txt]
 
     # contents will contain line of the table
     contents = []
@@ -368,7 +385,6 @@ def create_header_summary(header):
 
         else:
             space_group = 'N/A'
-
 
         if metrics:
 
@@ -413,9 +429,11 @@ def create_polymer_table(mol, model_no=1):
 
             tot = len(seq)
 
-            if model_no in header.chain_info.missing_resids and chain in header.chain_info.missing_resids[model_no]:
+            if ((model_no in header.chain_info.missing_resids) and
+                (chain in header.chain_info.missing_resids[model_no])):
 
-            #if chain in header.chain_info.missing_resids[model_no].keys():
+                # if chain in
+                # header.chain_info.missing_resids[model_no].keys():
 
                 miss = len(header.chain_info.missing_resids[model_no][chain])
                 observed[chain] = 1.0 - float(miss) / tot
@@ -439,7 +457,7 @@ def create_polymer_table(mol, model_no=1):
 
                 observed_pc = '{0:.0f}'.format(observed[ch_id] * 100)
 
-                if mol_info['type'] in ['rna','dna']:
+                if mol_info['type'] in ['rna', 'dna']:
                     mol_type = mol_info['type'].upper()
                 else:
                     mol_type = mol_info['type'].title()
@@ -490,7 +508,13 @@ def create_polymer_table(mol, model_no=1):
         widths = [10, 10, 10, 10]
         just = ['l', 'l', 'l', 'l']
 
-    table = pdt.create_pandoc_table(tab_header, contents, widths, just)
+    if contents:
+
+        table = pdt.create_pandoc_table(tab_header, contents, widths, just)
+
+    else:
+
+        table = []
 
     return table
 
@@ -545,7 +569,7 @@ def create_biomt_summary(biomols):
     if len(biomols) == 1:
         for n, entry in biomols.items():
             if (entry['auth_bio_unit'] == 'MONOMERIC' or
-                entry['soft_bio_unit'] == 'MONOMERIC'):
+                    entry['soft_bio_unit'] == 'MONOMERIC'):
                 need = False
 
     if need:
@@ -697,7 +721,8 @@ def create_chain_report(mol, model_no=1):
                 chain, chain_info.disulphides)
 
             sel_text = 'chain[i] == "{0:s}"'.format(chain)
-            chain_report += report_pdb_statistics(mol, selection=sel_text, extra={})
+            chain_report += report_pdb_statistics(mol,
+                                                  selection=sel_text, extra={})
 
     return chain_report
 
@@ -724,7 +749,7 @@ def create_sequence_table(seq, start_resid):
     fasta_table = create_fasta_table(padded_fasta, widths, row_start)
 
     seq_line = '`' + \
-        ('|123456789' * ((seq_length / 10) + 1))[:seq_length] + '`'
+        ('123456789|' * ((seq_length / 10) + 1))[:seq_length] + '`'
     header = ['', seq_line]
     rep += pdt.create_pandoc_table(header, fasta_table, widths, ['r', 'l'])
 
