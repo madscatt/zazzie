@@ -139,7 +139,7 @@ class Picker:
         ret_s = filter(lambda x: x["selected"], self.all_options)
         ret = map(lambda x: x["label"], ret_s)
         
-        return (ret)
+        return ret
 
     def redraw_info(self):
         """
@@ -295,6 +295,7 @@ class Picker:
         @param stdscr:
         @return:
         """
+        
         while 1:
             self.redraw()
             c = stdscr.getch()
