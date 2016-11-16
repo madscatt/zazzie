@@ -75,7 +75,7 @@ class ScaffoldBuilder():
             self.ui = 'terminal'
 
         if 'default_subs' in kwargs:
-            self.default_subs = kwargs['ui']
+            self.default_subs = kwargs['default_subs']
         else:
             self.default_subs = False
 
@@ -114,6 +114,7 @@ class ScaffoldBuilder():
             self.apply_default_substitutions(segnames)
 
         self.mol.segment_scan(initialize=False)
+        self.mol.check_segname_simulation_preparedness()
 
         return
 
@@ -561,6 +562,7 @@ class ScaffoldBuilder():
         biomt = self.mol.segname_info.biomt
 
         if self.default_subs:
+
             self.process_non_ff(self.mol.segnames())
 
         # Select all valid segments
