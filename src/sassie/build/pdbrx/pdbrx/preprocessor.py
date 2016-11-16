@@ -44,19 +44,19 @@ except NameError:
 
 
 class PreProcessor(object):
-    '''
+    """
     Preprocessor checks and edits an input SasMol ready for model building
-    '''
+    """
 
     def __init__(self, *args, **kwargs):
-        '''
+        """
         Setup logging and atrributes for preprocessing
 
         @type mol   :  SasMol
         @keyword mol:  Molecule data
         @type ui_type    :  str
         @keyword ui_type :  Choice of UI type
-        '''
+        """
 
         if 'mol' in kwargs:
             self.mol = kwargs['mol']
@@ -68,6 +68,11 @@ class PreProcessor(object):
             self.ui_type = kwargs['ui']
         else:
             self.ui_type = 'terminal'
+
+        if 'default_subs' in kwargs:
+            self.default_subs = kwargs['default_subs']
+        else:
+            self.default_subs = False
 
         self.logger = logging.getLogger(__name__)
 
@@ -86,12 +91,12 @@ class PreProcessor(object):
         return dict((int(x[0]), x[1].encode('ascii')) for x in data.items())
 
     def get_user_segmentation(self):
-        '''
+        """
         Get new segmentation from user
         @rtype :  dictionary
         @return:  Keys = atom index of start of segment,
                   Value = segname
-        '''
+        """
 
         mol = self.mol
 
@@ -116,14 +121,14 @@ class PreProcessor(object):
         return segname_starts
 
     def redefine_segments(self, segname_starts):
-        '''
+        """
         Alter segmentation in mol to follow user input then scan to obtain
         information for further processing.
 
         @type  segname_starts:  dictionary
         @param segname_starts:  Keys = atom index of start of segment,
                                 Value = segname
-        '''
+        """
 
         self.update_segments(segname_starts)
 
@@ -136,13 +141,13 @@ class PreProcessor(object):
         return
 
     def update_segments(self, segname_starts):
-        '''
+        """
         Alter segmentation in mol to follow user input.
 
         @type  segname_starts:  dictionary
         @param segname_starts:  Keys = atom index of start of segment,
                                 Value = segname
-        '''
+        """
 
         mol = self.mol
 
@@ -202,7 +207,7 @@ class PreProcessor(object):
         return order, sequences
 
     def list_fasta_sequences(self, sequences, ordered_names):
-        '''
+        """
         Create text to present input FASTA sequences as options for user
         selection and list of numbered options.
 
@@ -214,7 +219,7 @@ class PreProcessor(object):
         @rtype : list, list
         @return: List of strings containing FASTA sequence formatted for output
                  List of tuples of option number and sequence name
-        '''
+        """
 
         options = enumerate(ordered_names)
 
@@ -234,14 +239,14 @@ class PreProcessor(object):
         return rep, options
 
     def get_segment_moltype(self, segname):
-        '''
+        """
         Get the Moltype of the chosen segment
 
         @type segname :  str
         @param segname:  Name of segment for which moltype is required
         @rtype : str
         @return: Moltype of segmanent
-        '''
+        """
 
         mol = self.mol
 
@@ -253,7 +258,7 @@ class PreProcessor(object):
         return moltype
 
     def get_user_fasta_sequence(self, segname, moltype):
-        '''
+        """
         Get FASTA sequence from user to complete a segment with missing residues
 
         @type segname : string
@@ -262,7 +267,7 @@ class PreProcessor(object):
         @param moltype: Type of polymer being edited (protein/dna/rna)
         @rtype :  string
         @return:  FASTA sequence from user
-        '''
+        """
 
         valid_fasta = False
 
@@ -312,20 +317,20 @@ class PreProcessor(object):
         return fasta_sequence
 
     def reformat_fasta(self, fasta):
-        '''
+        """
         Reformat input FASTA string to a single line and upper case characters
         @type fasta :  string
         @param fasta:  FASTA sequence (possibly multiple lines)
         @rtype :       string
         @return:       Single line, all caps FASTA sequence
-        '''
+        """
 
         edited_fasta = fasta.upper()
 
         return edited_fasta.replace('\n', '')
 
     def validate_fasta(self, fasta, moltype):
-        '''
+        """
         Check fasta sequence is valid (i.e. contains only letters corresponding
         to monomer units appropriate to the moltype).
 
@@ -334,7 +339,7 @@ class PreProcessor(object):
         @type moltype : string
         @param moltype: Type of polymer being edited (protein/dna/rna)
         @return:
-        '''
+        """
 
         valid = False
 
@@ -351,7 +356,7 @@ class PreProcessor(object):
         return valid
 
     def match_fasta_model(self, segname, new_fasta):
-        '''
+        """
         Check FASTA sequence from user to ensure it makes sense with the known
         coordinate sequence
 
@@ -363,7 +368,7 @@ class PreProcessor(object):
         @rtype :  MatchObject
         @return:  Details of the matching region of the input fasta and
                   existing sequence of the selected segment
-        '''
+        """
 
         segname_info = self.mol.segname_info
 
@@ -380,7 +385,7 @@ class PreProcessor(object):
         return match
 
     def complete_sequence_fasta(self, segname, new_fasta):
-        '''
+        """
         Combine the input FASTA sequence with that existing in the coordinates
         of the selected segment.
 
@@ -394,7 +399,7 @@ class PreProcessor(object):
 
 
         @todo: Check what to do in the case of sequence gaps
-        '''
+        """
 
         segname_info = self.mol.segname_info
         model_no = self.mol.model_no
@@ -493,11 +498,11 @@ class PreProcessor(object):
         return inserted
 
     def get_biological_unit_transform(self):
-        '''
+        """
         Check matrix for biological unit transform from user
 
         @return:
-        '''
+        """
 
         segnames_json = json.dumps(self.mol.segnames())
 
@@ -524,11 +529,11 @@ class PreProcessor(object):
         return
 
     def check_biological_unit(self, biomt_unit):
-        '''
+        """
         Check biological unit transform from user is valid
 
         @return:
-        '''
+        """
 
         valid = True
 
@@ -545,7 +550,7 @@ class PreProcessor(object):
         return valid
 
     def biomt_json2data(self, json_biomt_rec):
-        '''
+        """
         Convert JSON format BIOMT records into numpy arrays for use in
         coordinate transforms
 
@@ -553,7 +558,7 @@ class PreProcessor(object):
         @param json_biomt_rec:  BIOMT records in JSON format
         @rtype :
         @return:
-        '''
+        """
 
         biomt_rec = yaml.safe_load(json_biomt_rec)
         valid = self.check_biological_unit(biomt_rec)
@@ -571,14 +576,14 @@ class PreProcessor(object):
         return biomt_rec
 
     def create_residue_descriptions(self):
-        '''
+        """
         Filter information from self.mol to provide residue descriptions for
         used in displaying structure contents for segment editing.
 
         @rtype : list
         @return: List of tuples describing segname, first atomic index,
                  resid, resname, chain and moltype for each residue
-        '''
+        """
 
         segnames = self.mol.segname()
         indices = self.mol.index()
@@ -598,12 +603,12 @@ class PreProcessor(object):
         return residue_descriptions
 
     def terminal_edit_options(self):
-        '''
+        """
         Present user with options to edit segmentation, sequence and BIOMT from
         the commandline.
 
         @return:
-        '''
+        """
 
         mol = self.mol
 
@@ -722,11 +727,11 @@ class PreProcessor(object):
         return
 
     def user_edit_options(self):
-        '''
+        """
         Get user input from terminal or other source. ONLY TERMINAL CURRENTLY
 
         @return:
-        '''
+        """
 
         if self.ui_type == 'terminal':
 

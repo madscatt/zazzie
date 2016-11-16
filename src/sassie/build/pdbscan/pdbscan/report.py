@@ -212,14 +212,26 @@ def generate_simulation_prep_report(mol):
         contents.append(line)
 
         if not checks['start']:
-            start_warnings.append(segname)
+            if segname in mol.segname_info.sequence:
+                start_warnings.append(segname)
+
 
     rep += pdt.create_pandoc_table(header, contents, widths, just)
 
     if start_warnings:
+
         rep.append('\n')
-        warn_txt = ('WARNING: Segments {:s} do not start with resid 1, check '
-                    'sequence is correct\n'.format(','.join(start_warnings)))
+
+        if len(start_warnings) == 1:
+
+            warn_txt = ('WARNING: Segment {:s} does not start '
+                        'with resid 1, check sequence is '
+                        'correct\n'.format(','.join(start_warnings)))
+        else:
+
+            warn_txt = ('WARNING: Segments {:s} do not start with resid 1,'
+                        ' check sequence is '
+                        'correct\n'.format(','.join(start_warnings)))
 
         rep.append(warn_txt)
 

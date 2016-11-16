@@ -23,12 +23,14 @@ from __future__ import division  # You don't need this in Python3
 
 import logging
 import sassie.build.pdbscan.pdbscan as pdbscan
+import sassie.build.pdbscan.pdbscan.pdbscan_utils as utils
 import sassie.build.pdbscan.pdbscan.report as report
 from . import segment_choice
 from . import biomt_choice
 from . import altloc_choice
 import sasmol.sasmol as sasmol
 import numpy as np
+
 
 class ScaffoldBuilder():
     '''
@@ -72,6 +74,11 @@ class ScaffoldBuilder():
         else:
             self.ui = 'terminal'
 
+        if 'default_subs' in kwargs:
+            self.default_subs = kwargs['default_subs']
+        else:
+            self.default_subs = False
+
         return
 
     def check_segment_status(self, segnames_to_check):
@@ -95,14 +102,51 @@ class ScaffoldBuilder():
 
         return accepted_segnames == segnames_to_check
 
-    def process_non_ff(self):
+    def process_non_ff(self, segnames):
         """
         Stub which will eventually process non-standard CHARMM residues
-        using CGENFF or CHARM-GUI glycan reader for example
+        using CGENFF or CHARM-GUI glycan reader for example. For now apply
+        standard substitutions then cry off if thats not enough.
 
         """
 
+        if self.default_subs:
+            self.apply_default_substitutions(segnames)
+
+        self.mol.segment_scan(initialize=False)
+        self.mol.check_segname_simulation_preparedness()
+
         return
+
+    def create_excess_mask(self, model_no=1):
+        """
+        Create a SasMol style mask to select all excess atoms
+
+        @type model_no :  int
+        @param model_no:  Model number
+        @rtype : numpy.array
+        @return: Integer mask for all atoms (1 = excess, 0 = not)
+        """
+
+        excess = self.mol.segname_info.excess_atoms[model_no]
+        mol = self.mol
+
+        mask = np.zeros(mol.natoms())
+
+        for segname, res_info in excess.iteritems():
+
+            for resid, excess_info in res_info.iteritems():
+
+                for name in excess_info['atoms']:
+                    sel_txt = ('segname[i] == "{0:s}" and resid[i] == {1:d}'
+                               ' and name[i] == "{2:s}"'.format(
+                        segname, resid, name))
+
+                    err, tmp_mask = mol.get_subset_mask(sel_txt)
+
+                    mask = np.logical_or(tmp_mask, mask)
+
+        return mask.astype(int)
 
     def select_specified_regions(self):
         """
@@ -124,7 +168,6 @@ class ScaffoldBuilder():
         for segname, resids in selected_altlocs.iteritems():
 
             for resid, loc in resids.iteritems():
-
                 sel_txt = 'segname[i] == "{0:s}" and resid[i] == {1:d} and loc[i] == "{2:s}"'.format(
                     segname, resid, loc)
                 err, tmp_mask = self.mol.get_subset_mask(sel_txt)
@@ -138,6 +181,10 @@ class ScaffoldBuilder():
         for line in err:
             self.logger.warning(line)
 
+        excess_mask = self.create_excess_mask()
+
+        segname_mask = np.logical_and(segname_mask, ~excess_mask)
+
         # Combine segname and altloc masks
         # Note: sasmol uses 0/1 based masks not boolean
         mask = np.logical_and(segname_mask, alt_loc_mask).astype(int)
@@ -149,16 +196,12 @@ class ScaffoldBuilder():
 
         self.selected_mol.segname_info = self.mol.segname_info
 
-        # TODO: Renumber residues in selected segments where needed
-        # TODO: Update segname_info in line with changes & tidy redundant bits
-
         self.fix_residue_numbering()
 
         # Purge non-selected segments from segname_info
         for segname in self.selected_mol.segname_info.subdivs:
 
             if segname not in selected_segnames:
-
                 self.selected_mol.segname_info.purge_subdiv(segname)
 
         return
@@ -174,8 +217,7 @@ class ScaffoldBuilder():
         selected_segnames = self.selected_segnames
 
         for segname in selected_segnames:
-
-                segname_info.subdiv_renumber_from_one(segname)
+            segname_info.subdiv_renumber_from_one(segname)
 
         return
 
@@ -226,7 +268,6 @@ class ScaffoldBuilder():
                     m = biomt['trans'][i]
 
                     if not ((u == np.identity(3)).all() and (m == np.array([0.0, 0.0, 0.0])).all()):
-
                         new_mols.append(sasmol.SasMol(0))
 
                         selected_mol.copy_molecule_using_mask(
@@ -267,12 +308,11 @@ class ScaffoldBuilder():
             tmp_segnames = model.segname()
 
             for segname in model_segnames:
-
                 new_segname = mol.next_segname_generator(
                     existing=existing_segnames)
 
                 tmp_segnames = [new_segname if x ==
-                                segname else x for x in tmp_segnames]
+                                               segname else x for x in tmp_segnames]
 
                 existing_segnames.append(new_segname)
 
@@ -303,8 +343,10 @@ class ScaffoldBuilder():
 
             for model in models:
 
-                if combined_model == None:
+                if combined_model is None:
+
                     combined_model = model
+
                 else:
 
                     tmp_model = sasmol.SasMol(0)
@@ -354,10 +396,11 @@ class ScaffoldBuilder():
                 if not self.check_segment_status(selected_segnames):
 
                     # TODO: This is just a stub - needs filling out
-                    self.process_non_ff()
+                    self.process_non_ff(selected_segnames)
 
                     if self.check_segment_status(selected_segnames):
                         choice_made = True
+
                 else:
                     choice_made = True
 
@@ -440,6 +483,72 @@ class ScaffoldBuilder():
 
         return
 
+    def apply_default_substitutions(self, segnames):
+
+        substitutions = {
+            '2AS': 'ASP', '3AH': 'HIS', '5HP': 'GLU', 'ACL': 'ARG',
+            'AGM': 'ARG', 'AIB': 'ALA', 'ALM': 'ALA', 'ALO': 'THR',
+            'ALY': 'LYS', 'ARM': 'ARG', 'ASA': 'ASP', 'ASB': 'ASP',
+            'ASK': 'ASP', 'ASL': 'ASP', 'ASQ': 'ASP', 'AYA': 'ALA',
+            'BCS': 'CYS', 'BHD': 'ASP', 'BMT': 'THR', 'BNN': 'ALA',
+            'BUC': 'CYS', 'BUG': 'LEU', 'C5C': 'CYS', 'C6C': 'CYS',
+            'CAS': 'CYS', 'CCS': 'CYS', 'CEA': 'CYS', 'CGU': 'GLU',
+            'CHG': 'ALA', 'CLE': 'LEU', 'CME': 'CYS', 'CSD': 'ALA',
+            'CSO': 'CYS', 'CSP': 'CYS', 'CSS': 'CYS', 'CSW': 'CYS',
+            'CSX': 'CYS', 'CXM': 'MET', 'CY1': 'CYS', 'CY3': 'CYS',
+            'CYG': 'CYS', 'CYM': 'CYS', 'CYQ': 'CYS', 'DAH': 'PHE',
+            'DAL': 'ALA', 'DAR': 'ARG', 'DAS': 'ASP', 'DCY': 'CYS',
+            'DGL': 'GLU', 'DGN': 'GLN', 'DHA': 'ALA', 'DHI': 'HIS',
+            'DIL': 'ILE', 'DIV': 'VAL', 'DLE': 'LEU', 'DLY': 'LYS',
+            'DNP': 'ALA', 'DPN': 'PHE', 'DPR': 'PRO', 'DSN': 'SER',
+            'DSP': 'ASP', 'DTH': 'THR', 'DTR': 'TRP', 'DTY': 'TYR',
+            'DVA': 'VAL', 'EFC': 'CYS', 'FLA': 'ALA', 'FME': 'MET',
+            'GGL': 'GLU', 'GL3': 'GLY', 'GLZ': 'GLY', 'GMA': 'GLU',
+            'GSC': 'GLY', 'HAC': 'ALA', 'HAR': 'ARG', 'HIC': 'HIS',
+            'HIP': 'HIS', 'HMR': 'ARG', 'HPQ': 'PHE', 'HTR': 'TRP',
+            'HYP': 'PRO', 'IAS': 'ASP', 'IIL': 'ILE', 'IYR': 'TYR',
+            'KCX': 'LYS', 'LLP': 'LYS', 'LLY': 'LYS', 'LTR': 'TRP',
+            'LYM': 'LYS', 'LYZ': 'LYS', 'MAA': 'ALA', 'MEN': 'ASN',
+            'MHS': 'HIS', 'MIS': 'SER', 'MLE': 'LEU', 'MPQ': 'GLY',
+            'MSA': 'GLY', 'MSE': 'MET', 'MVA': 'VAL', 'NEM': 'HIS',
+            'NEP': 'HIS', 'NLE': 'LEU', 'NLN': 'LEU', 'NLP': 'LEU',
+            'NMC': 'GLY', 'OAS': 'SER', 'OCS': 'CYS', 'OMT': 'MET',
+            'PAQ': 'TYR', 'PCA': 'GLU', 'PEC': 'CYS', 'PHI': 'PHE',
+            'PHL': 'PHE', 'PR3': 'CYS', 'PRR': 'ALA', 'PTR': 'TYR',
+            'PYX': 'CYS', 'SAC': 'SER', 'SAR': 'GLY', 'SCH': 'CYS',
+            'SCS': 'CYS', 'SCY': 'CYS', 'SEL': 'SER', 'SEP': 'SER',
+            'SET': 'SER', 'SHC': 'CYS', 'SHR': 'LYS', 'SMC': 'CYS',
+            'SOC': 'CYS', 'STY': 'TYR', 'SVA': 'SER', 'TIH': 'ALA',
+            'TPL': 'TRP', 'TPO': 'THR', 'TPQ': 'ALA', 'TRG': 'LYS',
+            'TRO': 'TRP', 'TYB': 'TYR', 'TYI': 'TYR', 'TYQ': 'TYR',
+            'TYS': 'TYR', 'TYY': 'TYR'
+        }
+
+        made_subs = False
+
+        err, mask = self.mol.get_subset_mask('residue_flag[i] == True')
+
+        tmp_mol = pdbscan.SasMolScan()
+
+        frame = self.mol.model_no - 1
+        self.mol.copy_molecule_using_mask(tmp_mol, mask, frame)
+
+        segnames = tmp_mol.segname()
+        resnames = tmp_mol.resname()
+        resids = tmp_mol.resid()
+
+        info = zip(segnames, resids, resnames)
+        info = utils.uniquify_list(info)
+
+        for segname, resid, resname in info:
+
+            if segname in segnames and resname in substitutions:
+
+                sub_name = substitutions[resname]
+                self.mol.set_property_residue(resid, segname, 'resname', sub_name, subdiv_type='segname')
+
+        return
+
     def create_default_scaffold(self):
         '''
         Create a scaffold without user input. Choose all segments which
@@ -451,6 +560,10 @@ class ScaffoldBuilder():
 
         sim_ready_checks = self.mol.sim_ready
         biomt = self.mol.segname_info.biomt
+
+        if self.default_subs:
+
+            self.process_non_ff(self.mol.segnames())
 
         # Select all valid segments
         selected_segnames = []
@@ -509,7 +622,6 @@ class ScaffoldBuilder():
                 choice = ''
 
                 while choice.lower() not in ['y', 'n', 'yes', 'no']:
-
                     choice = raw_input().lower()
 
                 if choice.lower() in ['n', 'no']:
