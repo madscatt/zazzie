@@ -32,6 +32,7 @@ class sascalc::SasCalc
         const int _Natoms;
         const int _Nq;
         const double _Qmax;
+        double *_q;
         std::vector<B_t> _B_neutron_vector;
         std::vector<B_t> _B_xray_vector;
         std::vector<double> _neutron_I0;
@@ -43,7 +44,7 @@ class sascalc::SasCalc
 
     // methods
     public:
-        virtual sascalc::ScResults * calculate(const double *const coor, const int Nframes) const = 0;
+        virtual sascalc::ScResults * calculate(const double *const coor, const int Nframes) = 0;
 
     // meta
     public:

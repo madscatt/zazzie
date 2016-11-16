@@ -57,6 +57,12 @@ _Nq(scvar._Nq)
             _xray_I0.push_back(scvar._v_xray_contrasts[idx_contrast].second);
         }
     }
+    // _q
+    _q = new double[_Nq]; 
+    for (int iq=0; iq<_Nq; ++iq)
+    {
+        _q[iq] = iq*(_Qmax/(_Nq-1));
+    }
 }
 
 
@@ -66,4 +72,5 @@ _Nq(scvar._Nq)
 sascalc::SasCalc::
 ~SasCalc()
 {
+    delete [] _q;
 }

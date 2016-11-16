@@ -38,11 +38,11 @@ class sascalc::GV :
     protected:
         double * _getGV(int Ngv) const;
         int _tolerance_to_ngv(const double tolerance) const;
-        void _calculate_singleFrame_fixed(const bool *const flag_skip, const int Nitems, const double *const coor, double *const Iq, const int Ngv) const;
-        void _calculate_singleFrame_converge(const double *const coor, double *const Iq, const double tolerance) const;
+        virtual void _calculate_singleFrame_fixed(const int *const flag_skip, const int Nitems, const double *const coor, double *const Iq, const int Ngv);
+        void _calculate_singleFrame_converge(const double *const coor, double *const Iq, const double tolerance);
 
     public:
-        virtual sascalc::ScResults * calculate(const double *const coor, const int Nframes) const;
+        virtual sascalc::ScResults * calculate(const double *const coor, const int Nframes);
 
     // meta
     public:

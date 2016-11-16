@@ -3,10 +3,23 @@
 
 #include <iostream>
 
+#if CPP_LIB == 1
 #include <GV.h>
 #include <ScVars.h>
+#endif
+
+#if CUDA_LIB == 1
+#include <cudaGV.h>
+#endif
+
+#if CUDA_DRIVER == 1
+#include <cuda.h>
+#include <cuda_runtime.h>
+#include <cuda_runtime_api.h>
+#endif
 
 #define DEBUG 0
+#define NGPU 0 ///< @NOTE to ZHL
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //
@@ -111,7 +124,26 @@ PyObject *initialize(PyObject *self, PyObject *args)
     if(DEBUG) p_scvars->show();
 
     // construct SasCalc object
-    sascalc::SasCalc *p_sascalc = new sascalc::GV(Natoms, *p_scvars, B_neutron, B_xray);
+    sascalc::SasCalc *p_sascalc;
+#if USE_CUDA == 1
+    int gpu_device_count;
+    cudaError_t cudaErr = cudaGetDeviceCount( &gpu_device_count );
+    if (cudaErr == cudaSuccess && gpu_device_count)
+    {
+        CALL_CUDA(cudaSetDevice(NGPU));
+        p_sascalc = new sascalc::cudaGV(Natoms, *p_scvars, B_neutron, B_xray);
+        CALL_CUDA(cudaDeviceSynchronize());
+        std::cout<<"running Sascalc on GPU"<<std::endl;
+    }
+    else
+    {
+        p_sascalc = new sascalc::GV(Natoms, *p_scvars, B_neutron, B_xray);
+        std::cout<<"running Sascalc on CPU"<<std::endl;
+    }
+#elif USE_CPU == 1
+    p_sascalc = new sascalc::GV(Natoms, *p_scvars, B_neutron, B_xray);
+    std::cout<<"running Sascalc on CPU"<<std::endl;
+#endif
 
 
     ///< return
@@ -194,8 +226,8 @@ PyObject *clean(PyObject *self, PyObject *args)
         return Py_None;
     }
 
-    sascalc::SasCalc * p_gv = static_cast<sascalc::SasCalc*>(PyCObject_AsVoidPtr(sascalc_object));
-    delete p_gv;
+    sascalc::SasCalc * p_sascalc = static_cast<sascalc::SasCalc*>(PyCObject_AsVoidPtr(sascalc_object));
+    delete p_sascalc;
 
     ///< return
     Py_INCREF(Py_None);
