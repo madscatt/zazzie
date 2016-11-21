@@ -128,7 +128,11 @@ class ScaffoldBuilder():
         @return: Integer mask for all atoms (1 = excess, 0 = not)
         """
 
-        excess = self.mol.segname_info.excess_atoms[model_no]
+        if model_no in self.mol.segname_info.excess_atoms[model_no]:
+            excess = self.mol.segname_info.excess_atoms[model_no]
+        else:
+            excess = {}
+
         mol = self.mol
 
         mask = np.zeros(mol.natoms())
