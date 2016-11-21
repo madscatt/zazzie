@@ -1055,7 +1055,7 @@ class Info():
 
     def update_after_renumber(self, subdiv, resid_mapping):
 
-        self.number_gaps[subdiv] = []
+        self.number_gaps[subdiv] = {}
 
         for model_no in self.missing_resids.keys():
 
