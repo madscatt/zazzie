@@ -209,7 +209,7 @@ class ScaffoldBuilder():
 
                 self.selected_mol.segname_info.purge_subdiv(segname)
 
-        # self.fix_residue_numbering()
+        self.fix_residue_numbering()
 
         return
 
