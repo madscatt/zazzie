@@ -1043,7 +1043,7 @@ class Info():
             new_resid = ndx + 1
             old_resid = resid_info[0]
 
-            new_sequence.append((new_resid, old_resid))
+            new_sequence.append((new_resid, resid_info[1]))
 
             old_to_new_resid[old_resid] = new_resid
 
@@ -1051,7 +1051,7 @@ class Info():
 
         self.update_after_renumber(subdiv, old_to_new_resid)
 
-        return
+        return old_to_new_resid
 
     def update_after_renumber(self, subdiv, resid_mapping):
 
