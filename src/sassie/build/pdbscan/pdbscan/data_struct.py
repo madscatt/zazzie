@@ -1038,14 +1038,17 @@ class Info():
 
         old_to_new_resid = {}
 
-        for ndx, resid_info in enumerate(self.sequence[subdiv]):
+        new_resid = 0
 
-            new_resid = ndx + 1
-            old_resid = resid_info[0]
+        for old_resid, resname in self.sequence[subdiv]:
 
-            new_sequence.append((new_resid, resid_info[1]))
+            if resname:
 
-            old_to_new_resid[old_resid] = new_resid
+                new_resid += 1
+
+                new_sequence.append((new_resid, resname))
+
+                old_to_new_resid[old_resid] = new_resid
 
         self.sequence[subdiv] = new_sequence
 
