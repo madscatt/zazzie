@@ -1068,7 +1068,8 @@ class Info():
 
                 for old_resid, resname in self.missing_resids[model_no][subdiv].iteritems():
 
-                    new_missing[resid_mapping[old_resid]] = resname
+                    if resname:
+                        new_missing[resid_mapping[old_resid]] = resname
 
                 self.missing_resids[model_no][subdiv] = new_missing
 

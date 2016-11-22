@@ -508,6 +508,11 @@ class SasMolScan(sasmol.SasMol):
         else:
             info = self.chain_info
 
+        if not selected_subdivs:
+            info.sequence = {}
+        else:
+            info.sequence[selected_subdivs[0]] = []
+
         # Get list of tuples (subdiv, resid, resnames, moltypes) for all
         # protein and nucleic residues so we can build sequences
         resid_description = [
