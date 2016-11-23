@@ -1837,7 +1837,7 @@ class SasMolScan(sasmol.SasMol):
 
 
         if std_locs == set([' ']):
-            next_loc_ord = ord('A')
+            next_loc_ord = ord('A') + 1
         else:
             next_loc_ord = max([ord(x) for x in std_locs if x != ' ']) + 1
 
