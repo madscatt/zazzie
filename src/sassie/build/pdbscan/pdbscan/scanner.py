@@ -1728,7 +1728,10 @@ class SasMolScan(sasmol.SasMol):
         init_locs = set([locs[x] for x in ndxs])
 
         #chr_start = ord('A') - 1
-        chr_start = max([ord(x) for x in init_locs])
+        if init_locs == set([' ']):
+            chr_start = ord('A') - 1
+        else:
+            chr_start = max([ord(x) for x in init_locs if x != ' '])
 
         seen_locs = set([])
 
@@ -1832,7 +1835,11 @@ class SasMolScan(sasmol.SasMol):
 
         std_locs = set([locs[x] for x in ndxs if resnames[x] == resname])
 
-        next_loc_ord = max([ord(x) for x in std_locs if x != ' ']) + 1
+
+        if std_locs == set([' ']):
+            next_loc_ord = ord('A')
+        else:
+            next_loc_ord = max([ord(x) for x in std_locs if x != ' ']) + 1
 
         alt_res_locs = {}
 
