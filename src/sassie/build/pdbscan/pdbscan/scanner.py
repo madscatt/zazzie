@@ -1832,7 +1832,7 @@ class SasMolScan(sasmol.SasMol):
 
         std_locs = set([locs[x] for x in ndxs if resnames[x] == resname])
 
-        next_loc_ord = max([ord(x) for x in std_locs]) + 1
+        next_loc_ord = max([ord(x) for x in std_locs if x != ' ']) + 1
 
         alt_res_locs = {}
 
