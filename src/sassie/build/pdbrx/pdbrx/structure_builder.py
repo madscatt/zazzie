@@ -20,7 +20,7 @@ structures
 '''
 
 import logging
-import os
+import os, sys
 import copy
 import numpy as np
 
