@@ -6,6 +6,9 @@ os_type = platform.system()
 
 os.environ["CC"] = "h5cc"
 
+os.environ["CC"] = "/share/apps/local/bin/gcc"
+os.environ["CXX"] = "/share/apps/local/bin/gcc"
+
 ### USER EDIT
 cpp_buildingBlock_dir=os.path.join('.','extensions')
 cuda_buildingBlock_dir=os.path.join('.','extensions')
@@ -17,9 +20,10 @@ cuda_library_name = 'cudaSascalc'
 
 if os_type == "Darwin":
     cuda_dir = os.path.join(os.path.sep,'usr','local','cuda')
+    share_dir = os.path.join(os.path.sep,'usr','local')
 elif os_type == "Linux":
     cuda_dir = os.path.join(os.path.sep,'share','apps','local','cuda')
-
+    share_dir = os.path.join(os.path.sep,'share','apps','local')
 
 # Third-party modules - we depend on numpy for everything
 import numpy
@@ -60,14 +64,11 @@ library_names = []
 rpath = []
 macros = []
 
-
 if cpp_lib:
     include_dir_names.append(os.path.join(cpp_buildingBlock_dir,'include'))
-    #include_dir_names.append('/usr/local/include')
-    ##include_dir_names.append('/home/hailiang/work/tools/hdf5/include')
     library_dir_names.append(os.path.join(cpp_buildingBlock_dir,'lib'))
-    ##library_dir_names.append(os.path.join('/home/hailiang/work/tools/hdf5/lib'))
-    #library_dir_names.append(os.path.join('/usr/local/lib'))
+    library_dir_names.append(os.path.join(share_dir,'lib'))
+    library_dir_names.append(os.path.join('usr','lib','x86_64-linux-gnu'))
     library_names.append(cpp_library_name)
     library_names.append("hdf5_cpp")
     library_names.append("hdf5")
@@ -75,13 +76,13 @@ if cpp_lib:
 if cuda_driver:
     include_dir_names.append(os.path.join(cuda_dir,'include'))
     library_dir_names.append(os.path.join(cuda_dir,'lib64'))
-    #library_dir_names.append(os.path.join(cuda_dir,'lib'))
-    #library_names.append('cuda')
+    library_dir_names.append(os.path.join(share_dir,'lib'))
     library_names.append('cudart')
     macros.append(('CUDA_DRIVER','1'))
 if cuda_lib:
     include_dir_names.append(os.path.join(cuda_buildingBlock_dir,'include'))
     library_dir_names.append(os.path.join(cuda_buildingBlock_dir,'lib'))
+    library_dir_names.append(os.path.join(share_dir,'lib'))
     library_names.append(cpp_library_name) #ZHL hack
     library_names.append(cuda_library_name)
     macros.append(('CUDA_LIB','1'))

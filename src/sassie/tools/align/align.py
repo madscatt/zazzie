@@ -57,7 +57,6 @@ class align_input_variables():
     def __init__(self, parent=None):
         pass
 
-
 class align():
 
     def __init__(self, parent=None):
