@@ -15,12 +15,6 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 '''
-# test commit
-# test commit
-# test commit
-# test commit
-# test commit
-# test commit
 import os
 import sys
 import string
