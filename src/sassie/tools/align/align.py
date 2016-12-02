@@ -15,7 +15,6 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 '''
-
 import os
 import sys
 import string
@@ -56,7 +55,6 @@ class align_input_variables():
 
     def __init__(self, parent=None):
         pass
-
 
 class align():
 

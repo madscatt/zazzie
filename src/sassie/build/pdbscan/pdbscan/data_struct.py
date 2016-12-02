@@ -1038,20 +1038,23 @@ class Info():
 
         old_to_new_resid = {}
 
-        for ndx, resid_info in enumerate(self.sequence[subdiv]):
+        new_resid = 0
 
-            new_resid = ndx + 1
-            old_resid = resid_info[0]
+        for old_resid, resname in self.sequence[subdiv]:
 
-            new_sequence.append((new_resid, old_resid))
+            if resname:
 
-            old_to_new_resid[old_resid] = new_resid
+                new_resid += 1
+
+                new_sequence.append((new_resid, resname))
+
+                old_to_new_resid[old_resid] = new_resid
 
         self.sequence[subdiv] = new_sequence
 
         self.update_after_renumber(subdiv, old_to_new_resid)
 
-        return
+        return old_to_new_resid
 
     def update_after_renumber(self, subdiv, resid_mapping):
 
@@ -1065,7 +1068,8 @@ class Info():
 
                 for old_resid, resname in self.missing_resids[model_no][subdiv].iteritems():
 
-                    new_missing[resid_mapping[old_resid]] = resname
+                    if resname:
+                        new_missing[resid_mapping[old_resid]] = resname
 
                 self.missing_resids[model_no][subdiv] = new_missing
 

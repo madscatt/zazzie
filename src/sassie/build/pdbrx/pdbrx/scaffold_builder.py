@@ -159,7 +159,9 @@ class ScaffoldBuilder():
 
         """
 
-        selected_segnames = ['"{0:s}"'.format(x) for x in self.selected_segnames]
+        selected_segnames = self.selected_segnames
+
+        txt_selected_segnames = ['"{0:s}"'.format(x) for x in selected_segnames]
         selected_altlocs = self.selected_altlocs
 
         natoms = self.mol.natoms()
@@ -179,7 +181,7 @@ class ScaffoldBuilder():
                 alt_loc_mask = np.logical_or(
                     alt_loc_mask, tmp_mask).astype(int)
 
-        sel_txt = 'segname[i] in [{0:s}]'.format(','.join(selected_segnames))
+        sel_txt = 'segname[i] in [{0:s}]'.format(','.join(txt_selected_segnames))
         err, segname_mask = self.mol.get_subset_mask(sel_txt)
 
         for line in err:
@@ -200,13 +202,14 @@ class ScaffoldBuilder():
 
         self.selected_mol.segname_info = self.mol.segname_info
 
-        self.fix_residue_numbering()
-
         # Purge non-selected segments from segname_info
         for segname in self.selected_mol.segname_info.subdivs:
 
             if segname not in selected_segnames:
+
                 self.selected_mol.segname_info.purge_subdiv(segname)
+
+        self.fix_residue_numbering()
 
         return
 
@@ -217,11 +220,31 @@ class ScaffoldBuilder():
         @return:
         """
 
+        mol = self.selected_mol
         segname_info = self.selected_mol.segname_info
         selected_segnames = self.selected_segnames
 
+        resid_map = {}
+
         for segname in selected_segnames:
-            segname_info.subdiv_renumber_from_one(segname)
+
+            resid_map[segname] = segname_info.subdiv_renumber_from_one(segname)
+
+        res_info = zip(mol.segname(), mol.resid())
+
+        renumbered_resids = []
+
+        for segname, resid in res_info:
+
+            if resid in resid_map[segname]:
+
+                renumbered_resids.append(resid_map[segname][resid])
+
+            else:
+
+                renumbered_resids.append(resid)
+
+        mol.setResid(renumbered_resids)
 
         return
 

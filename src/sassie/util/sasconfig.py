@@ -4,12 +4,12 @@ import os
 ###     BEGIN SYSADMIN EDIT ###
 ###     BEGIN SYSADMIN EDIT ###
 
-#__arch__ = "cluster"
-__arch__ = "mac"
+__arch__ = "cluster"
+#__arch__ = "mac"
 # __arch__ = "linux"
 
-__cuda__ = False
-#__cuda__ = True
+#__cuda__ = False
+__cuda__ = True
 
 # total memory for single GPU card (4799 MiB) Tesla K20m
 __gpu_memory__ = 4799

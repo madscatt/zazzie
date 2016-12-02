@@ -508,6 +508,11 @@ class SasMolScan(sasmol.SasMol):
         else:
             info = self.chain_info
 
+        if not selected_subdivs:
+            info.sequence = {}
+        else:
+            info.sequence[selected_subdivs[0]] = []
+
         # Get list of tuples (subdiv, resid, resnames, moltypes) for all
         # protein and nucleic residues so we can build sequences
         resid_description = [
@@ -1720,7 +1725,13 @@ class SasMolScan(sasmol.SasMol):
         locs = self.loc()
         names = self.name()
 
-        chr_start = ord('A') - 1
+        init_locs = set([locs[x] for x in ndxs])
+
+        #chr_start = ord('A') - 1
+        if init_locs == set([' ']):
+            chr_start = ord('A') - 1
+        else:
+            chr_start = max([ord(x) for x in init_locs if x != ' '])
 
         seen_locs = set([])
 
@@ -1805,7 +1816,55 @@ class SasMolScan(sasmol.SasMol):
         resnames = self.resname()
         ndxs = self.ndxs_of_residue(resid, subdiv, subdiv_type=subdiv_type)
 
-        return resnames[ndxs[0]]
+        found_resnames = set([])
+
+        for ndx in ndxs:
+            found_resnames.add(resnames[ndx])
+
+        return resnames[ndxs[0]], len(found_resnames) == 1
+
+    def separate_multi_resname(self, resid, subdiv, subdiv_type='chain'):
+
+        resnames = self.resname()
+        locs = self.loc()
+        names = self.name()
+
+        ndxs = self.ndxs_of_residue(resid, subdiv, subdiv_type=subdiv_type)
+
+        resname = resnames[ndxs[0]]
+
+        std_locs = set([locs[x] for x in ndxs if resnames[x] == resname])
+
+
+        if std_locs == set([' ']):
+            next_loc_ord = ord('A') + 1
+        else:
+            next_loc_ord = max([ord(x) for x in std_locs if x != ' ']) + 1
+
+        alt_res_locs = {}
+
+        for ndx in ndxs:
+
+            cur_resname = resnames[ndx]
+
+            if cur_resname != resname:
+
+                loc = locs[ndx]
+
+                if loc in std_locs or loc == 'A':
+
+                    if cur_resname in alt_res_locs:
+
+                        locs[ndx] = alt_res_locs[cur_resname]
+
+                    else:
+
+                        new_loc = chr(next_loc_ord)
+                        locs[ndx] = new_loc
+                        alt_res_locs[cur_resname] = new_loc
+                        next_loc_ord +=1
+
+        return
 
     def residue_atom_check(self, resid, subdiv, subdiv_type='chain'):
         """
@@ -1840,8 +1899,12 @@ class SasMolScan(sasmol.SasMol):
         @todo: Check that terminal residues are handled correctly
         """
 
-        resname = self.get_resid_resname(
+        resname, single_resname = self.get_resid_resname(
             resid, subdiv, subdiv_type=subdiv_type)
+
+        if not single_resname:
+            multi_resname_map = self.separate_multi_resname(
+                resid, subdiv, subdiv_type=subdiv_type)
 
         coor_atoms = self.get_atom_names_residue(
             resid, subdiv, subdiv_type=subdiv_type)
