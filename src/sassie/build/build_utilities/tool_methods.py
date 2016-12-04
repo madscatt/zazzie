@@ -24,6 +24,7 @@ import os
 import random
 import logging
 import numpy
+import math
 import string
 import time
 
@@ -32,6 +33,7 @@ import sassie.util.sasconfig as sasconfig
 import sassie.util.module_utilities as module_utilities
 import sassie.util.basis_to_python as basis_to_python
 #import sassie.build.build_utilities.rot as rot
+import sasmol.sasmath as sasmath
 import rot
 
 #
@@ -265,12 +267,27 @@ class build_utilities():
                 axis = numpy.array([0.0, 1.0, 0.0])
             elif(mvars.alignment_vector_axis == 'z'):
                 axis = numpy.array([0.0, 0.0, 1.0])
-            rotation_matrix = rot.rotation_matrix(ak, axis)
-            print('rotation_matrix = ', rotation_matrix)
-            coor = mvars.molecule.coor()[frame]
-            new_coor = rotation_matrix.dot(coor)
-            #mvars.molecule.coor()[frame] = new_coor
-            #mvars.molecule.write_pdb(os.path.join(self.runpath, 'junk.pdb', frame, 'w')
+            #mat = rot.rotation_matrix(ak, axis)
+            #print('mat = ', mat)
+            print('ak = ', ak)
+            print('axis = ', axis)
+            rotvec = numpy.cross(ak, axis)
+            sine = numpy.linalg.norm(rotvec)
+            cosine = numpy.dot(ak, axis)
+            try:
+                theta = math.atan(sine/cosine)
+            except:
+                print('cosine = 0\nstopping here\n\n')
+                sys.exit()
+            r1 = rotvec[0] ; r2 = rotvec[1] ; r3 = rotvec[2]
+            mvars.molecule.general_axis_rotate(frame, theta, r1,r2,r3) 
+            
+            
+            #coordt = mvars.molecule.coor()[frame,:].T
+            #error, matrix_product = sasmath.matrix_multiply(mat,coordt)
+            #new_coor = matrix_product.T
+            #mvars.molecule.coor()[frame,:] = new_coor
+            mvars.molecule.write_pdb('junk.pdb', frame, 'w')
             
             #mvars.settle_on_plane 
             #mvars.plane 
