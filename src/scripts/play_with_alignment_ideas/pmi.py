@@ -120,15 +120,15 @@ def align_on_pmi(input_filename):
 
     uk, ak, I = m1.calcpmi(frame)
 
-    idx = uk.argsort()[::-1]   
-    uk = uk[idx]
-    ak = -1.0*ak[:,idx]
-
-    nak1=numpy.array([ak[0][0],ak[1][0],ak[2][0]])
-    nak2=numpy.array([ak[0][1],ak[1][1],ak[2][1]])
-    nak3=numpy.array([ak[0][2],ak[1][2],ak[2][2]])
-
-    ak=numpy.array([nak1,nak2,nak3])
+#    idx = uk.argsort()[::-1]   
+#    uk = uk[idx]
+#    ak = -1.0*ak[:,idx]
+#
+#    nak1=numpy.array([ak[0][0],ak[1][0],ak[2][0]])
+#    nak2=numpy.array([ak[0][1],ak[1][1],ak[2][1]])
+#    nak3=numpy.array([ak[0][2],ak[1][2],ak[2][2]])
+#
+#    ak=numpy.array([nak1,nak2,nak3])
     
     print 
     print 'initial eigenvectors:'
@@ -140,6 +140,8 @@ def align_on_pmi(input_filename):
     print 'ak[2] = ', ak[2]
     print
     print 'I = ', I
+
+    sys.exit()
 
     print
     print "first rotation"
@@ -164,15 +166,15 @@ def align_on_pmi(input_filename):
     m1.general_axis_rotate(frame,angle,rotvec[0],rotvec[1],rotvec[2])
 
     uk, ak, I = m1.calcpmi(frame)
-    idx = uk.argsort()[::-1]   
-    uk = uk[idx]
-    ak = -1.0*ak[:,idx]
-
-    nak1=numpy.array([ak[0][0],ak[1][0],ak[2][0]])
-    nak2=numpy.array([ak[0][1],ak[1][1],ak[2][1]])
-    nak3=numpy.array([ak[0][2],ak[1][2],ak[2][2]])
-
-    ak=numpy.array([nak1,nak2,nak3])
+#    idx = uk.argsort()[::-1]   
+#    uk = uk[idx]
+#    ak = -1.0*ak[:,idx]
+#
+#    nak1=numpy.array([ak[0][0],ak[1][0],ak[2][0]])
+#    nak2=numpy.array([ak[0][1],ak[1][1],ak[2][1]])
+#    nak3=numpy.array([ak[0][2],ak[1][2],ak[2][2]])
+#
+#    ak=numpy.array([nak1,nak2,nak3])
     
     #ak=-1.0*ak
     print 'and the new eigenvectors are:'
@@ -203,15 +205,15 @@ def align_on_pmi(input_filename):
     m1.general_axis_rotate(frame,angle,rotvec[0],rotvec[1],rotvec[2])
 
     uk, ak, I = m1.calcpmi(frame)
-    idx = uk.argsort()[::-1]   
-    uk = uk[idx]
-    ak = -1.0*ak[:,idx]
-
-    nak1=numpy.array([ak[0][0],ak[1][0],ak[2][0]])
-    nak2=numpy.array([ak[0][1],ak[1][1],ak[2][1]])
-    nak3=numpy.array([ak[0][2],ak[1][2],ak[2][2]])
-
-    ak=numpy.array([nak1,nak2,nak3])
+#    idx = uk.argsort()[::-1]   
+#    uk = uk[idx]
+#    ak = -1.0*ak[:,idx]
+#
+#    nak1=numpy.array([ak[0][0],ak[1][0],ak[2][0]])
+#    nak2=numpy.array([ak[0][1],ak[1][1],ak[2][1]])
+#    nak3=numpy.array([ak[0][2],ak[1][2],ak[2][2]])
+#
+#    ak=numpy.array([nak1,nak2,nak3])
     
     print 'and the new eigenvectors are:'
     print 'ak[0] = ', ak[0]
@@ -225,5 +227,7 @@ if __name__ == '__main__':
     input_filename = 'test.pdb'
     input_filename = 'tor3.pdb'
     input_filename = 'fc_rough.pdb'
+    input_filename = 'lysozyme.pdb'
+    input_filename = 'min3.pdb'
 
     align_on_pmi(input_filename)

@@ -31,7 +31,10 @@ import sasmol.sasmol as sasmol
 import sassie.util.sasconfig as sasconfig
 import sassie.util.module_utilities as module_utilities
 import sassie.util.basis_to_python as basis_to_python
+#import sassie.build.build_utilities.rot as rot
+import rot
 
+#
 #       TOOL_METHODS 
 #
 #       09/04/2016      --      initial coding                  :       jc
@@ -138,8 +141,17 @@ class build_utilities():
             mvars.rotation_array = variables['rotation_array'][0] 
        
         
+        mvars.align_pmi_on_axis_flag = variables['align_pmi_on_axis_flag'][0]
+        if(mvars.align_pmi_on_axis_flag):
+
+            mvars.pmi_eigenvector = variables['pmi_eigenvector'][0]
+            mvars.alignment_vector_axis = variables['alignment_vector_axis'][0]
+            mvars.settle_on_plane = variables['settle_on_plane'][0]
+            mvars.plane = variables['plane'][0]
+
         mvars.fasta_utilities_flag = variables['fasta_utilities_flag'][0]
         
+
         if(mvars.fasta_utilities_flag):
             mvars.fasta_input_option = variables['fasta_input_option'][0]
 
@@ -241,6 +253,27 @@ class build_utilities():
     
             mvars.molecule.write_pdb(os.path.join(self.runpath, mvars.translation_rotation_output_filename), frame, 'w')
 
+        elif(mvars.align_pmi_on_axis_flag):
+
+            mvars.molecule.center(frame)
+            uk, ak, I = mvars.molecule.calcpmi(frame) 
+            ak = ak[mvars.pmi_eigenvector - 1] 
+           
+            if(mvars.alignment_vector_axis == 'x'):
+                axis = numpy.array([1.0, 0.0, 0.0])
+            elif(mvars.alignment_vector_axis == 'y'):
+                axis = numpy.array([0.0, 1.0, 0.0])
+            elif(mvars.alignment_vector_axis == 'z'):
+                axis = numpy.array([0.0, 0.0, 1.0])
+            rotation_matrix = rot.rotation_matrix(ak, axis)
+            print('rotation_matrix = ', rotation_matrix)
+            coor = mvars.molecule.coor()[frame]
+            new_coor = rotation_matrix.dot(coor)
+            #mvars.molecule.coor()[frame] = new_coor
+            #mvars.molecule.write_pdb(os.path.join(self.runpath, 'junk.pdb', frame, 'w')
+            
+            #mvars.settle_on_plane 
+            #mvars.plane 
         
         return
     
