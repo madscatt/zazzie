@@ -120,16 +120,7 @@ def align_on_pmi(input_filename):
 
     uk, ak, I = m1.calcpmi(frame)
 
-#    idx = uk.argsort()[::-1]   
-#    uk = uk[idx]
-#    ak = -1.0*ak[:,idx]
-#
-#    nak1=numpy.array([ak[0][0],ak[1][0],ak[2][0]])
-#    nak2=numpy.array([ak[0][1],ak[1][1],ak[2][1]])
-#    nak3=numpy.array([ak[0][2],ak[1][2],ak[2][2]])
-#
-#    ak=numpy.array([nak1,nak2,nak3])
-    
+    ak[0] = -1 * ak[0]
     print 
     print 'initial eigenvectors:'
     print 'uk = ', uk
@@ -140,8 +131,7 @@ def align_on_pmi(input_filename):
     print 'ak[2] = ', ak[2]
     print
     print 'I = ', I
-
-    sys.exit()
+    print 'det ak = ', numpy.linalg.det([ak])
 
     print
     print "first rotation"
@@ -151,6 +141,7 @@ def align_on_pmi(input_filename):
 
     rotvec = numpy.cross(ak[2],numpy.array([0,0,1.0]))
     sine = numpy.linalg.norm(rotvec)
+    rotvec = rotvec/numpy.linalg.norm(rotvec)
     cosine = numpy.dot(ak[2], numpy.array([0,0,1.0]))
     try:
         angle = 1.0*math.atan(sine/cosine)
@@ -159,30 +150,26 @@ def align_on_pmi(input_filename):
         sys.exit()
     print 'angle = ',angle
     print 'rotvec= ',rotvec
-    print 'angle should be = ', 1.570457424779631
-    print 'rotvec should be = ', '-0.9999999425 2.113354e-7 0.0'
+    
+    #print 'angle should be = ', 1.570457424779631
+    #print 'rotvec should be = ', '-0.9999999425 2.113354e-7 0.0'
+    
+    
     #m1.general_axis_rotate(frame,theta,ux,uy,uz)
     m1.center(frame)
     m1.general_axis_rotate(frame,angle,rotvec[0],rotvec[1],rotvec[2])
 
     uk, ak, I = m1.calcpmi(frame)
-#    idx = uk.argsort()[::-1]   
-#    uk = uk[idx]
-#    ak = -1.0*ak[:,idx]
-#
-#    nak1=numpy.array([ak[0][0],ak[1][0],ak[2][0]])
-#    nak2=numpy.array([ak[0][1],ak[1][1],ak[2][1]])
-#    nak3=numpy.array([ak[0][2],ak[1][2],ak[2][2]])
-#
-#    ak=numpy.array([nak1,nak2,nak3])
-    
-    #ak=-1.0*ak
     print 'and the new eigenvectors are:'
     print 'ak[0] = ', ak[0]
     print 'ak[1] = ', ak[1]
     print 'ak[2] = ', ak[2]
 
+    ak[0] = -1 * ak[0]
+    #ak = ak/numpy.linalg.norm(ak)
     print
+    print 'det ak = ', numpy.linalg.det([ak])
+
     print "second rotation"
     print 'vector 1 = ', ak[1]
     print 'vector 2 = ', [0,1.0,0]
@@ -190,6 +177,7 @@ def align_on_pmi(input_filename):
     com = m1.calccom(frame)
     rotvec = 1.0*numpy.cross(ak[1],numpy.array([0,1.0,0]))
     sine = numpy.linalg.norm(rotvec)
+    rotvec = rotvec/numpy.linalg.norm(rotvec)
     cosine = numpy.dot(ak[1], numpy.array([0,1.0,0]))
     try:
         angle = 1.0*math.atan(sine/cosine)
@@ -198,22 +186,14 @@ def align_on_pmi(input_filename):
         sys.exit()
     print 'angle = ',angle
     print 'rotvec= ',rotvec
-    print 'angle should be = ', 1.5707962131085322
-    print 'rotvec should be = ', '5.959831601542385e-8 0.0 -0.9999999999999918'
+    #print 'angle should be = ', 1.5707962131085322
+    #print 'rotvec should be = ', '5.959831601542385e-8 0.0 -0.9999999999999918'
     
     m1.center(frame)
     m1.general_axis_rotate(frame,angle,rotvec[0],rotvec[1],rotvec[2])
 
     uk, ak, I = m1.calcpmi(frame)
-#    idx = uk.argsort()[::-1]   
-#    uk = uk[idx]
-#    ak = -1.0*ak[:,idx]
-#
-#    nak1=numpy.array([ak[0][0],ak[1][0],ak[2][0]])
-#    nak2=numpy.array([ak[0][1],ak[1][1],ak[2][1]])
-#    nak3=numpy.array([ak[0][2],ak[1][2],ak[2][2]])
-#
-#    ak=numpy.array([nak1,nak2,nak3])
+    ak[0] = -1 * ak[0]
     
     print 'and the new eigenvectors are:'
     print 'ak[0] = ', ak[0]
