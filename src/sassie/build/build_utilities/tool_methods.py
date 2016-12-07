@@ -259,38 +259,41 @@ class build_utilities():
 
             mvars.molecule.center(frame)
             uk, ak, I = mvars.molecule.calcpmi(frame) 
+            ''' right handed coordinate frame '''
+            ak[0] = -1.0 * ak[0]
+            #print('ak = ', ak)
+            ''' check if right handed coordinate frame '''
+            if numpy.linalg.det([ak]) < 0:
+                print('determinant not equal +1')
+                print(numpy.linalg.det(ak))
+                sys.exit()
             ak = ak[mvars.pmi_eigenvector - 1] 
-           
+            #print('ak = ', ak)
             if(mvars.alignment_vector_axis == 'x'):
                 axis = numpy.array([1.0, 0.0, 0.0])
             elif(mvars.alignment_vector_axis == 'y'):
                 axis = numpy.array([0.0, 1.0, 0.0])
             elif(mvars.alignment_vector_axis == 'z'):
                 axis = numpy.array([0.0, 0.0, 1.0])
-            #mat = rot.rotation_matrix(ak, axis)
-            #print('mat = ', mat)
-            print('ak = ', ak)
-            print('axis = ', axis)
+
+            #print('axis = ', axis)
             rotvec = numpy.cross(ak, axis)
             sine = numpy.linalg.norm(rotvec)
+            rotvec = rotvec/numpy.linalg.norm(rotvec)
             cosine = numpy.dot(ak, axis)
             try:
                 theta = math.atan(sine/cosine)
             except:
                 print('cosine = 0\nstopping here\n\n')
                 sys.exit()
+            #print('theta = ', theta)
+            #print('rotvec = ', rotvec)
             r1 = rotvec[0] ; r2 = rotvec[1] ; r3 = rotvec[2]
             mvars.molecule.general_axis_rotate(frame, theta, r1,r2,r3) 
-            
-            
-            #coordt = mvars.molecule.coor()[frame,:].T
-            #error, matrix_product = sasmath.matrix_multiply(mat,coordt)
-            #new_coor = matrix_product.T
-            #mvars.molecule.coor()[frame,:] = new_coor
             mvars.molecule.write_pdb('junk.pdb', frame, 'w')
             
-            #mvars.settle_on_plane 
             #mvars.plane 
+            #mvars.settle_on_plane 
         
         return
     

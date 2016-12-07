@@ -64,10 +64,12 @@ rotation_array = '0.0, 0.0, 0.0'
 ### i am working here
 
 align_pmi_on_axis_flag = True
-pmi_eigenvector = '1'
-alignment_vector_axis = 'x'
+pmi_eigenvector = '3'
+''' values: x, y, z '''
+alignment_vector_axis = 'z'
 settle_on_plane = True
-plane = 'z' ''' values: x, y, z '''
+''' values: x, y, z '''
+plane = 'z' 
 
 ### i stop working here
 
