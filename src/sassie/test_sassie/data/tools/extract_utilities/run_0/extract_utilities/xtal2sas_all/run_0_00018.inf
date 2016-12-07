@@ -1,0 +1,41 @@
+1. Neutrons used
+2. PDB input file = ./tmp//tmp.pdb -- H
+3. I(q) .vs. q output file = _1.iq
+4. Dimensions (A): x:  -54.32,   7.42, y:  -92.02,  51.58, z:  -67.10,  98.75
+5. Box diagonal length (A) =  341.85
+6. Box Size (A): x:   92.61 , y:  215.40 , z:  248.78
+7. # data points in R-space = 416
+8. Dmax = 208.046 , fraction D2O in solvent =   1.000
+9. M.W. = 46592.01  , volume (JACROT,increased) (A^3)= 58990.44
+10. volume(s.v.=0.73) (A^3) = 56477.04
+11. Rg (A) =  62.45 , Io =      0.019
+12. Level of hydration, 0, rH2O (A) =      0.00, probe radius =      0.00
+13. # of atom types read:
+   H : 3378
+   C : 2080
+   N : 616
+   O : 632
+   S : 24
+   P : 0
+14. # of residues read:
+    33  GLY
+    38  ALA
+    25  VAL
+    30  LEU
+    24  ILE
+     7  PHE
+     8  TYR
+     7  TRP
+    13  ASP
+    33  GLU
+    21  SER
+    25  THR
+    23  ASN
+    31  GLN
+    34  LYS
+    24  ARG
+     0  HIS
+    14  MET
+    10  CYS
+    22  PRO
+     0  WAT
