@@ -156,8 +156,8 @@ class Test_Extract_Utilities_Filter(MockerTestCase):
         '''
         test if extract_sas and/or extract_trajectory is checked
         '''
-        self.extract_trajectory = 'False'
-        self.extract_sas = 'False'
+        self.extract_trajectory = False
+        self.extract_sas = False
         return_error = gui_mimic_extract_utilities.run_module(
             self, test_filter=True)
 

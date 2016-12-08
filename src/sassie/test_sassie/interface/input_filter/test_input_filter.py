@@ -18,6 +18,7 @@
 import os
 import string
 import sassie.interface.input_filter as input_filter
+#import input_filter as input_filter
 
 
 
@@ -171,8 +172,8 @@ class Test_Input_Filter(MockerTestCase):
         self.integer_array   = '1,2,3,4,5'
         self.float_array     = '1.5,2.5,3.5,3.5,5.5'
         self.formula_array   = ['KCl','C4H11NO3','(C42H82NO8P)10']
-        self.test_flag1      = 'False'
-        self.test_flag2      = 'True'
+        self.test_flag1      = False
+        self.test_flag2      = True
         self.precision = 3
 
     def run_filter(self, **kwargs):
@@ -344,21 +345,10 @@ class Test_Input_Filter(MockerTestCase):
         expected_error = ['integer_array: could not read array of values']
         assert_equals(return_error, expected_error) 
 
-    def test_8(self):
-        '''
-        test if string can be converted to boolean True or False
-        '''
-
-        self.test_flag1 = 'Y'
-        return_error = self.run_filter()
-
-        ''' check for variable error '''
-        expected_error = ['test_flag1: could not boolean input type']
-        assert_equals(return_error, expected_error)
 
     ''' Testing check_pdb_dcd'''
 
-    def test_9(self):
+    def test_8(self):
         '''
         test if PDB file exists and is valid:  no errors
         '''
@@ -373,7 +363,7 @@ class Test_Input_Filter(MockerTestCase):
         expected_value = 1
         assert_equals(value, expected_value)
 
-    def test_10(self):
+    def test_9(self):
         '''
         test if PDB file exists
         '''
@@ -387,7 +377,7 @@ class Test_Input_Filter(MockerTestCase):
         expected_fileexist = False
         assert_equals(fileexist, expected_fileexist)
 
-    def test_11(self):
+    def test_10(self):
         '''
         test if PDB file is a valid PDB file
         '''
@@ -401,7 +391,7 @@ class Test_Input_Filter(MockerTestCase):
         expected_value = 0
         assert_equals(value, expected_value)
 
-    def test_12(self):
+    def test_11(self):
         '''
         test if DCD file exists and is valid:  no errors
         '''
@@ -416,7 +406,7 @@ class Test_Input_Filter(MockerTestCase):
         expected_value = 1
         assert_equals(value, expected_value)
 
-    def test_13(self):
+    def test_12(self):
         '''
         test if DCD file exists
         '''
@@ -430,7 +420,7 @@ class Test_Input_Filter(MockerTestCase):
         expected_fileexist = False
         assert_equals(fileexist, expected_fileexist)
 
-    def test_14(self):
+    def test_13(self):
         '''
         test if DCD file is a valid DCD file
         '''
@@ -446,7 +436,7 @@ class Test_Input_Filter(MockerTestCase):
 
     '''Testing check_binary'''
 
-    def test_15(self):
+    def test_14(self):
         '''
         check if DCD file is binary
         '''
@@ -459,7 +449,7 @@ class Test_Input_Filter(MockerTestCase):
         expected_flag = True
         assert_equals(flag, expected_flag)
 
-    def test_16(self):
+    def test_15(self):
         '''
         check if PDB file not binary
         '''
@@ -474,7 +464,7 @@ class Test_Input_Filter(MockerTestCase):
     
     ''' Testing check_file_exists'''
     
-    def test_17(self):
+    def test_16(self):
         '''
         check if path/file doesn't exist
         '''
@@ -488,7 +478,7 @@ class Test_Input_Filter(MockerTestCase):
         expected_error = ['file : ./non_existent.pdb does not exist']
         assert_equals(return_error, expected_error)
 
-    def test_18(self):
+    def test_17(self):
         '''
         check if path/file exists
         '''
@@ -503,7 +493,7 @@ class Test_Input_Filter(MockerTestCase):
 
     '''Testing check_name'''
 
-    def test_19(self):
+    def test_18(self):
         '''
         check if name has no incorrect characters
         '''
@@ -516,7 +506,7 @@ class Test_Input_Filter(MockerTestCase):
         expected_error = []
         assert_equals(return_error, expected_error)
 
-    def test_20(self):
+    def test_19(self):
         '''
         check if name has incorrect characters
         '''
@@ -531,7 +521,7 @@ class Test_Input_Filter(MockerTestCase):
 
     '''Testing check_exe'''
 
-    def test_21(self):
+    def test_20(self):
         '''
         check if exe file exists and is executable:  no errors
         '''
@@ -544,7 +534,7 @@ class Test_Input_Filter(MockerTestCase):
         expected_error = []
         assert_equals(return_error, expected_error)
 
-    def test_22a(self):
+    def test_21(self):
         '''
         check if exe file is not accessible
         '''
@@ -565,7 +555,7 @@ class Test_Input_Filter(MockerTestCase):
         assert_equals(new_error, expected_error)
 
 
-    def test_22b(self):
+    def test_22(self):
         '''
         check if exe file is not a file
         '''
@@ -586,7 +576,7 @@ class Test_Input_Filter(MockerTestCase):
         assert_equals(new_error, expected_error)
                                          
 
-    def test_22c(self):
+    def test_23(self):
         '''
         check if exe file is a directory
         '''
@@ -610,7 +600,7 @@ class Test_Input_Filter(MockerTestCase):
                                                                    
     '''Testing check_permissions'''
 
-    def test_23(self):
+    def test_24(self):
         '''
         check if path has exists and has read and write permissions:  no errors
         '''
@@ -628,7 +618,7 @@ class Test_Input_Filter(MockerTestCase):
         assert_equals(readvalue, expected_readvalue)
         assert_equals(writevalue, expected_writevalue)
 
-    def test_24(self):
+    def test_25(self):
         '''
         check if path has write permission
         '''
@@ -642,7 +632,7 @@ class Test_Input_Filter(MockerTestCase):
         expected_existvalue = False
         assert_equals(existvalue, expected_existvalue)
                                          
-    def test_25(self):
+    def test_26(self):
         '''
         check if path has read permission
         '''
@@ -672,7 +662,7 @@ class Test_Input_Filter(MockerTestCase):
         ''' remove the directory '''
         os.system('rm -Rf empty_folder')
 
-    def test_26(self):
+    def test_27(self):
         '''
         check if path has write permission
         '''
@@ -688,7 +678,7 @@ class Test_Input_Filter(MockerTestCase):
                                          
     '''Testing certify_pdb_pdb'''
 
-    def test_27(self):
+    def test_28(self):
         '''
         check if pdb files exist, can be read and are compatible:  no errors
         '''
@@ -703,7 +693,7 @@ class Test_Input_Filter(MockerTestCase):
         assert_equals(fileexist, expected_filexist)
         assert_equals(value, expected_value)
 
-    def test_28(self):
+    def test_29(self):
         '''
         check if pdb file exists
         '''
@@ -719,7 +709,7 @@ class Test_Input_Filter(MockerTestCase):
         assert_equals(fileexist, expected_filexist)
         assert_equals(value, expected_value)
                                           
-    def test_29(self):
+    def test_30(self):
         '''
         check if second pdb file exists
         '''
@@ -735,7 +725,7 @@ class Test_Input_Filter(MockerTestCase):
         assert_equals(fileexist, expected_filexist)
         assert_equals(value, expected_value)
 
-    def test_30(self):
+    def test_31(self):
         '''
         check if pdb file can be read
         '''
@@ -751,7 +741,7 @@ class Test_Input_Filter(MockerTestCase):
         assert_equals(fileexist, expected_filexist)
         assert_equals(value, expected_value)
                                           
-    def test_31(self):
+    def test_32(self):
         '''
         check if second pdb file can be read
         '''
@@ -767,7 +757,7 @@ class Test_Input_Filter(MockerTestCase):
         assert_equals(fileexist, expected_filexist)
         assert_equals(value, expected_value)
 
-    def test_32(self):
+    def test_33(self):
         '''
         check if pdb files are compatible
         '''
@@ -785,7 +775,7 @@ class Test_Input_Filter(MockerTestCase):
                                           
     '''Testing certify_pdb_psf'''
 
-    def test_33(self):
+    def test_34(self):
         '''
         check if pdb and psf files exist, can be read and are compatible:  no errors
         '''
@@ -800,7 +790,7 @@ class Test_Input_Filter(MockerTestCase):
         assert_equals(fileexist, expected_filexist)
         assert_equals(value, expected_value)
 
-    def test_34(self):
+    def test_35(self):
         '''
         check if pdb file exists
         '''
@@ -816,7 +806,7 @@ class Test_Input_Filter(MockerTestCase):
         assert_equals(fileexist, expected_filexist)
         assert_equals(value, expected_value)
                                           
-    def test_35(self):
+    def test_36(self):
         '''
         check if psf file exists
         '''
@@ -832,7 +822,7 @@ class Test_Input_Filter(MockerTestCase):
         assert_equals(fileexist, expected_filexist)
         assert_equals(value, expected_value)
 
-    def test_36(self):
+    def test_37(self):
         '''
         check if pdb file can be read
         '''
@@ -848,7 +838,7 @@ class Test_Input_Filter(MockerTestCase):
         assert_equals(fileexist, expected_filexist)
         assert_equals(value, expected_value)
                                           
-    def test_37(self):
+    def test_38(self):
         '''
         check if psf file can be read
         '''
@@ -864,7 +854,7 @@ class Test_Input_Filter(MockerTestCase):
         assert_equals(fileexist, expected_filexist)
         assert_equals(value, expected_value)
 
-    def test_38(self):
+    def test_39(self):
         '''
         check if pdb and psf files are compatible
         '''
@@ -882,7 +872,7 @@ class Test_Input_Filter(MockerTestCase):
 
     '''Testing certify_dcd_psf''' 
 
-    def test_39(self):
+    def test_40(self):
         '''
         check if dcd and psf files exist, can be read and are compatible:  no errors
         '''
@@ -897,7 +887,7 @@ class Test_Input_Filter(MockerTestCase):
         assert_equals(fileexist, expected_filexist)
         assert_equals(value, expected_value)                                             
 
-    def test_40(self):
+    def test_41(self):
         '''
         check if psf file exists
         '''
@@ -913,7 +903,7 @@ class Test_Input_Filter(MockerTestCase):
         assert_equals(fileexist, expected_filexist)
         assert_equals(value, expected_value)
 
-    def test_41(self):
+    def test_42(self):
         '''
         check if dcd file can be read
         '''
@@ -929,7 +919,7 @@ class Test_Input_Filter(MockerTestCase):
         assert_equals(fileexist, expected_filexist)
         assert_equals(value, expected_value)
                                           
-    def test_42(self):
+    def test_43(self):
         '''
         check if psf file can be read
         '''
@@ -945,7 +935,7 @@ class Test_Input_Filter(MockerTestCase):
         assert_equals(fileexist, expected_filexist)
         assert_equals(value, expected_value)
 
-    def test_43(self):
+    def test_44(self):
         '''
         check if dcd and psf files are compatible
         '''
@@ -963,7 +953,7 @@ class Test_Input_Filter(MockerTestCase):
                                           
     '''Testing read_psf_file'''
 
-    def test_44(self):
+    def test_45(self):
         '''
         check if psf file can be read:  no errors
         '''
@@ -979,7 +969,7 @@ class Test_Input_Filter(MockerTestCase):
     '''Testing certify_pdb_dcd'''
 
 
-    def test_45(self):
+    def test_46(self):
         '''
         check if pdb and dcd files can be read and are compatible:  no errors
         '''
@@ -992,7 +982,7 @@ class Test_Input_Filter(MockerTestCase):
         expected_value = 1
         assert_equals(value, expected_value)                                             
 
-    def test_46(self):
+    def test_47(self):
         '''
         check if pdb file exists
         '''
@@ -1006,7 +996,7 @@ class Test_Input_Filter(MockerTestCase):
         expected_value = 0
         assert_equals(value, expected_value)
 
-    def test_47(self):
+    def test_48(self):
         '''
         check if dcd file can be read
         '''
@@ -1020,7 +1010,7 @@ class Test_Input_Filter(MockerTestCase):
         expected_value = 0
         assert_equals(value, expected_value)
                                           
-    def test_48(self):
+    def test_49(self):
         '''
         check if pdb file can be read
         '''
@@ -1034,7 +1024,7 @@ class Test_Input_Filter(MockerTestCase):
         expected_value = 0
         assert_equals(value, expected_value)
 
-    def test_49(self):
+    def test_50(self):
         '''
         check if pdb and dcd files are compatible
         '''
@@ -1050,7 +1040,7 @@ class Test_Input_Filter(MockerTestCase):
                                           
     '''Testing get_pdb_stats'''
 
-    def test_50(self):
+    def test_51(self):
         '''
         check if pdb file stats can be read:  no errors
         '''
@@ -1071,7 +1061,7 @@ class Test_Input_Filter(MockerTestCase):
         assert_equals(result00, expected_result00)
         assert_equals(result10, expected_result10)
 
-    def test_51(self):
+    def test_52(self):
         '''
         check if pdb file stats can be read
         '''
@@ -1091,7 +1081,7 @@ class Test_Input_Filter(MockerTestCase):
 
     '''Testing get_pdb_complex_stats'''
 
-    def test_52(self):
+    def test_53(self):
         '''
         check if complex pdb file protein segment stats can be read:  no errors
         '''
@@ -1114,7 +1104,7 @@ class Test_Input_Filter(MockerTestCase):
         assert_equals(result00, expected_result00)
         assert_equals(result10, expected_result10)
 
-    def test_52(self):
+    def test_54(self):
         '''
         check if complex pdb file RNA segment stats can be read:  no errors
         '''
@@ -1136,7 +1126,7 @@ class Test_Input_Filter(MockerTestCase):
         assert_equals(result00, expected_result00)
         assert_equals(result10, expected_result10)        
 
-    def test_54(self):
+    def test_55(self):
         '''
         check if complex pdb file protein segment stats can be read
         '''
@@ -1157,7 +1147,7 @@ class Test_Input_Filter(MockerTestCase):
                                           
     '''Testing check_and_convert_formula'''
 
-    def test_55(self):
+    def test_56(self):
         '''
         check if formulas can be read and converted:  no errors
         '''
@@ -1172,7 +1162,7 @@ class Test_Input_Filter(MockerTestCase):
         assert_equals(error, expected_error)
         assert_equals(formulas, expected_formulas)
 
-    def test_56(self):
+    def test_57(self):
         '''
         check if formulas has non-alphanumeric character
         '''
@@ -1192,7 +1182,7 @@ class Test_Input_Filter(MockerTestCase):
         print expected_error[0].message
         assert_equals(error[0].message, expected_error[0].message)
 
-    def test_57(self):
+    def test_58(self):
         '''
         check if formulas has an incorrect character
         '''
@@ -1214,7 +1204,7 @@ class Test_Input_Filter(MockerTestCase):
         print expected_error[0].message
         assert_equals(error[0].message, expected_error[0].message)
 
-    def test_58(self):
+    def test_59(self):
         '''
         check if formula array length can be found
         '''

@@ -44,7 +44,6 @@ def check_and_convert_formula(formula_array):
 
     return error, formulas
 
-
 def check_name(filename):
     bad_characters = ["<", ">", "|", "\\",
                       ":", "(", ")", "&", ";", "#", "?", "*"]
@@ -54,10 +53,8 @@ def check_name(filename):
         if character in bad_characters:
             error.append('file or path : ' + filename +
                          ' has incorrect character : ' + character)
+#            print('file or path has incorrect character : ' + character)
             return error
-        # elif character.isspace():
-        #	error.append('file or path : '+filename+' has white space characters : '+character)
-        #	return error
     return error
 
 
@@ -111,9 +108,10 @@ def type_check_and_convert(svariables):
 
     for key in svariables:
 
-        # print key,svariables[key][0],svariables[key][1]
-
         if (svariables[key][1] == 'string'):
+            variables[key] = svariables[key]
+
+        elif (svariables[key][1] == 'boolean'):
             variables[key] = svariables[key]
 
         elif (svariables[key][1] == 'float'):
@@ -136,10 +134,10 @@ def type_check_and_convert(svariables):
 
         elif (svariables[key][1] == 'float_array'):
             value = svariables.get(key)
-            # print 'value[0] = ',value[0]
+
             try:
                 lin = string.split(value[0], ',')
-                # print 'lin = ',lin
+
                 duma = []
                 for x in xrange(len(lin)):
                     try:
@@ -156,10 +154,10 @@ def type_check_and_convert(svariables):
 
         elif (svariables[key][1] == 'int_array'):
             value = svariables.get(key)
-            # print 'value[0] = ',value[0]
+
             try:
                 lin = string.split(value[0], ',')
-                # print 'lin = ',lin
+
                 duma = []
                 for x in xrange(len(lin)):
                     try:
@@ -171,23 +169,6 @@ def type_check_and_convert(svariables):
                 variables[key] = (duma, 'int_array')
             except:
                 error.append(key + ': could not read array of values')
-                return error, variables
-
-        elif (svariables[key][1] == 'boolean'):
-            value = svariables.get(key)
-            true_list = ['True', 'true', 'T', 't', 'TRUE']
-            false_list = ['False', 'false', 'F', 'f', 'FALSE']
-
-            try:
-                if value[0] in true_list:
-                    variables[key] = (True, 'boolean')
-                elif value[0] in false_list:
-                    variables[key] = (False, 'boolean')
-                else:
-                    error.append(key + ': could not boolean input type')
-                    return error, variables
-            except:
-                error.append(key + ': could not boolean input type')
                 return error, variables
 
     return error, variables
@@ -230,7 +211,7 @@ def check_pdb_dcd(infile, filetype):
         fileexist = os.path.isfile(infile)
         if(fileexist):
             binary = check_binary(infile)
-            print 'binary = ', binary
+            print('binary = ', binary)
             test_mol = sasmol.SasMol(0)
             fileexist = 1
             if(filetype == 'pdb' and not binary):
@@ -288,13 +269,13 @@ def read_psf_file(psffile):
 
     st = string.split(infile[2])
     num_remarks = locale.atoi(st[0])
-    print 'remarks = ', num_remarks
+    print('remarks = ', num_remarks)
     offset1 = 2 + num_remarks + 2
     st = string.split(infile[offset1])
     natoms = locale.atoi(st[0])
-    print 'natoms = ', natoms
+    print('natoms = ', natoms)
     offset2 = offset1 + natoms + 2
-    for i in range(offset1 + 1, offset1 + 1 + natoms):
+    for i in xrange(offset1 + 1, offset1 + 1 + natoms):
         tal = string.split(infile[i])
         segments.append(tal[1])
         names.append(tal[4])

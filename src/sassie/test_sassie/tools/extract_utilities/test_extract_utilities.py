@@ -237,7 +237,7 @@ class Test_Extract_Utilities(MockerTestCase):
         extract_trajectory:  test dcd input, dcd output, weight file
         '''
 
-        self.extract_sas = 'False'   
+        self.extract_sas = False   
 
         gui_mimic_extract_utilities.run_module(self)
 
@@ -263,7 +263,7 @@ class Test_Extract_Utilities(MockerTestCase):
         extract_trajectory:  test dcd input, dcd output, text file
         '''
 
-        self.extract_sas = 'False' 
+        self.extract_sas = False 
         self.option = 'text_file'
         self.local_value = os.path.join(other_data_path,'hiv1_gag_text_file.txt')
         self.output_filename = 'chosen_text.dcd'
@@ -292,7 +292,7 @@ class Test_Extract_Utilities(MockerTestCase):
         extract_trajectory:  test dcd input, dcd output, range
         '''
 
-        self.extract_sas = 'False' 
+        self.extract_sas = False 
         self.option = 'range'
         self.local_value = '2-5'
         self.output_filename = 'chosen_range.dcd'
@@ -321,7 +321,7 @@ class Test_Extract_Utilities(MockerTestCase):
         extract_trajectory:  test dcd input, dcd output, single frame
         '''
 
-        self.extract_sas = 'False' 
+        self.extract_sas = False 
         self.option = 'single_frame'
         self.local_value = '7'
         self.output_filename = 'single_frame.dcd'
@@ -350,7 +350,7 @@ class Test_Extract_Utilities(MockerTestCase):
         extract_trajectory:  test dcd input, dcd output, periodic
         '''
 
-        self.extract_sas = 'False' 
+        self.extract_sas = False 
         self.option = 'sampling_frequency'
         self.local_value = '2'
         self.output_filename = 'periodic.dcd'
@@ -379,7 +379,7 @@ class Test_Extract_Utilities(MockerTestCase):
         extract_trajectory:  test dcd input, dcd output, all
         '''
 
-        self.extract_sas = 'False' 
+        self.extract_sas = False 
         self.option = 'all'
         self.output_filename = 'all.dcd'
 
@@ -407,7 +407,7 @@ class Test_Extract_Utilities(MockerTestCase):
         extract_trajectory:  test dcd input, pdb output, weight_file
         '''
 
-        self.extract_sas = 'False'   
+        self.extract_sas = False   
         self.output_filename = 'chosen_weights.pdb'
 
         gui_mimic_extract_utilities.run_module(self)
@@ -423,7 +423,7 @@ class Test_Extract_Utilities(MockerTestCase):
         extract_trajectory:  test dcd input, pdb output, text_file
         '''
 
-        self.extract_sas = 'False'
+        self.extract_sas = False
         self.option = 'text_file'
         self.local_value = os.path.join(other_data_path,'hiv1_gag_text_file.txt')   
         self.output_filename = 'chosen_text.pdb'
@@ -441,7 +441,7 @@ class Test_Extract_Utilities(MockerTestCase):
         extract_trajectory:  test dcd input, pdb output, range
         '''
 
-        self.extract_sas = 'False'
+        self.extract_sas = False
         self.option = 'range'
         self.local_value = '2-5'  
         self.output_filename = 'chosen_range.pdb'
@@ -458,7 +458,7 @@ class Test_Extract_Utilities(MockerTestCase):
         '''
         extract_trajectory:  test dcd input, pdb output, single frame
         '''
-        self.extract_sas = 'False'   
+        self.extract_sas = False   
         self.option = 'single_frame'
         self.local_value = '1'
         self.output_filename = 'single_frame.pdb'
@@ -475,7 +475,7 @@ class Test_Extract_Utilities(MockerTestCase):
         '''
         extract_trajectory:  test dcd input, pdb output, periodic
         '''
-        self.extract_sas = 'False'   
+        self.extract_sas = False   
         self.option = 'sampling_frequency'
         self.local_value = '2'
         self.output_filename = 'periodic.pdb'
@@ -492,7 +492,7 @@ class Test_Extract_Utilities(MockerTestCase):
         '''
         extract_trajectory:  test dcd input, pdb output, all
         '''
-        self.extract_sas = 'False'   
+        self.extract_sas = False   
         self.option = 'all'
         self.output_filename = 'all.pdb'
 
@@ -509,7 +509,7 @@ class Test_Extract_Utilities(MockerTestCase):
         extract_trajectory:  test pdb input, dcd output, weight file
         '''
 
-        self.extract_sas = 'False' 
+        self.extract_sas = False 
 #        self.option = 'weight_file'
         self.trajectory_filename = os.path.join(pdb_data_path,'hiv1_gag_20_frames.pdb')
 #        self.local_value = os.path.join(other_data_path,'hiv1_gag_weight_file.txt')
@@ -539,7 +539,7 @@ class Test_Extract_Utilities(MockerTestCase):
         extract_trajectory:  test pdb input, dcd output, text file
         '''
 
-        self.extract_sas = 'False' 
+        self.extract_sas = False 
         self.option = 'text_file'
         self.trajectory_filename = os.path.join(pdb_data_path,'hiv1_gag_20_frames.pdb')
         self.local_value = os.path.join(other_data_path,'hiv1_gag_text_file.txt')
@@ -569,7 +569,7 @@ class Test_Extract_Utilities(MockerTestCase):
         extract_trajectory:  test pdb input, dcd output, range
         '''
 
-        self.extract_sas = 'False' 
+        self.extract_sas = False 
         self.option = 'range'
         self.trajectory_filename = os.path.join(pdb_data_path,'hiv1_gag_20_frames.pdb')
         self.local_value = '2-5'
@@ -599,7 +599,7 @@ class Test_Extract_Utilities(MockerTestCase):
         extract_trajectory:  test pdb input, dcd output, single frame
         '''
 
-        self.extract_sas = 'False' 
+        self.extract_sas = False 
         self.option = 'single_frame'
         self.trajectory_filename = os.path.join(pdb_data_path,'hiv1_gag_20_frames.pdb')
         self.local_value = '1'
@@ -629,7 +629,7 @@ class Test_Extract_Utilities(MockerTestCase):
         extract_trajectory:  test pdb input, dcd output, periodic
         '''
 
-        self.extract_sas = 'False' 
+        self.extract_sas = False 
         self.option = 'sampling_frequency'
         self.trajectory_filename = os.path.join(pdb_data_path,'hiv1_gag_20_frames.pdb')
         self.local_value = '2'
@@ -659,7 +659,7 @@ class Test_Extract_Utilities(MockerTestCase):
         extract_trajectory:  test pdb input, dcd output, all
         '''
 
-        self.extract_sas = 'False' 
+        self.extract_sas = False 
         self.option = 'all'
         self.trajectory_filename = os.path.join(pdb_data_path,'hiv1_gag_20_frames.pdb')
         self.output_filename = 'all_pdb_input.dcd'
@@ -688,7 +688,7 @@ class Test_Extract_Utilities(MockerTestCase):
         extract_trajectory:  test pdb input, pdb output, weight_file
         '''
 
-        self.extract_sas = 'False'   
+        self.extract_sas = False   
         self.output_filename = 'chosen_weights_pdb_input.pdb'
         self.trajectory_filename = os.path.join(pdb_data_path,'hiv1_gag_20_frames.pdb')
 
@@ -705,7 +705,7 @@ class Test_Extract_Utilities(MockerTestCase):
         extract_trajectory:  test pdb input, pdb output, text_file
         '''
 
-        self.extract_sas = 'False'
+        self.extract_sas = False
         self.option = 'text_file'   
         self.output_filename = 'chosen_text_pdb_input.pdb'
         self.trajectory_filename = os.path.join(pdb_data_path,'hiv1_gag_20_frames.pdb')
@@ -724,7 +724,7 @@ class Test_Extract_Utilities(MockerTestCase):
         extract_trajectory:  test pdb input, pdb output, range
         '''
 
-        self.extract_sas = 'False'
+        self.extract_sas = False
         self.option = 'range'   
         self.output_filename = 'chosen_range_pdb_input.pdb'
         self.trajectory_filename = os.path.join(pdb_data_path,'hiv1_gag_20_frames.pdb')
@@ -743,7 +743,7 @@ class Test_Extract_Utilities(MockerTestCase):
         extract_trajectory:  test pdb input, pdb output, single frame
         '''
 
-        self.extract_sas = 'False'
+        self.extract_sas = False
         self.option = 'single_frame'   
         self.output_filename = 'single_frame_pdb_input.pdb'
         self.trajectory_filename = os.path.join(pdb_data_path,'hiv1_gag_20_frames.pdb')
@@ -762,7 +762,7 @@ class Test_Extract_Utilities(MockerTestCase):
         extract_trajectory:  test pdb input, pdb output, periodic
         '''
 
-        self.extract_sas = 'False'
+        self.extract_sas = False
         self.option = 'sampling_frequency'   
         self.output_filename = 'periodic_pdb_input.pdb'
         self.trajectory_filename = os.path.join(pdb_data_path,'hiv1_gag_20_frames.pdb')
@@ -781,7 +781,7 @@ class Test_Extract_Utilities(MockerTestCase):
         extract_trajectory:  test pdb input, pdb output, all
         '''
 
-        self.extract_sas = 'False'
+        self.extract_sas = False
         self.option = 'all'   
         self.output_filename = 'all_pdb_input.pdb'
         self.trajectory_filename = os.path.join(pdb_data_path,'hiv1_gag_20_frames.pdb')
@@ -799,7 +799,7 @@ class Test_Extract_Utilities(MockerTestCase):
         extract_sas  test SasCalc, weight file
         '''
 
-        self.extract_trajectory = 'False'
+        self.extract_trajectory = False
   
         gui_mimic_extract_utilities.run_module(self)
 
@@ -828,7 +828,7 @@ class Test_Extract_Utilities(MockerTestCase):
         extract_sas  test SasCalc, text file
         '''
 
-        self.extract_trajectory = 'False'
+        self.extract_trajectory = False
         self.option = 'text_file'
         self.local_value = os.path.join(other_data_path, 'hiv1_gag_text_file.txt')
   
@@ -857,7 +857,7 @@ class Test_Extract_Utilities(MockerTestCase):
         extract_sas  test SasCalc, range
         '''
 
-        self.extract_trajectory = 'False'
+        self.extract_trajectory = False
         self.option = 'range'
         self.local_value = '2-5'
   
@@ -886,7 +886,7 @@ class Test_Extract_Utilities(MockerTestCase):
         extract_sas  test SasCalc, single frame
         '''
 
-        self.extract_trajectory = 'False'
+        self.extract_trajectory = False
         self.option = 'single_frame'
         self.local_value = '1'
   
@@ -915,7 +915,7 @@ class Test_Extract_Utilities(MockerTestCase):
         extract_sas  test SasCalc, periodic
         '''
 
-        self.extract_trajectory = 'False'
+        self.extract_trajectory = False
         self.option = 'sampling_frequency'
         self.local_value = '2'
   
@@ -945,7 +945,7 @@ class Test_Extract_Utilities(MockerTestCase):
         extract_sas  test SasCalc, all
         '''
 
-        self.extract_trajectory = 'False'
+        self.extract_trajectory = False
         self.option = 'all'
   
         gui_mimic_extract_utilities.run_module(self)
@@ -974,7 +974,7 @@ class Test_Extract_Utilities(MockerTestCase):
         extract_sas  test xtal2sas, weight file
         '''
 
-        self.extract_trajectory = 'False'
+        self.extract_trajectory = False
         self.sas_type = '1'
         self.sas_paths = os.path.join(other_data_path,'hiv1_gag_0','xtal2sas')
   
@@ -992,7 +992,7 @@ class Test_Extract_Utilities(MockerTestCase):
         extract_sas  test xtal2sas, text file
         '''
 
-        self.extract_trajectory = 'False'
+        self.extract_trajectory = False
         self.sas_type = '1'
         self.sas_paths = os.path.join(other_data_path,'hiv1_gag_0','xtal2sas')
         self.local_value = os.path.join(other_data_path, 'hiv1_gag_text_file.txt')
@@ -1012,7 +1012,7 @@ class Test_Extract_Utilities(MockerTestCase):
         extract_sas  test xtal2sas, range
         '''
 
-        self.extract_trajectory = 'False'
+        self.extract_trajectory = False
         self.sas_type = '1'
         self.sas_paths = os.path.join(other_data_path,'hiv1_gag_0','xtal2sas')
         self.local_value = '2-5'
@@ -1032,7 +1032,7 @@ class Test_Extract_Utilities(MockerTestCase):
         extract_sas  test xtal2sas, single frame
         '''
 
-        self.extract_trajectory = 'False'
+        self.extract_trajectory = False
         self.sas_type = '1'
         self.sas_paths = os.path.join(other_data_path,'hiv1_gag_0','xtal2sas')
         self.local_value = '1'
@@ -1052,7 +1052,7 @@ class Test_Extract_Utilities(MockerTestCase):
         extract_sas  test xtal2sas, periodic
         '''
 
-        self.extract_trajectory = 'False'
+        self.extract_trajectory = False
         self.sas_type = '1'
         self.sas_paths = os.path.join(other_data_path,'hiv1_gag_0','xtal2sas')
         self.local_value = '2'
@@ -1072,7 +1072,7 @@ class Test_Extract_Utilities(MockerTestCase):
         extract_sas  test xtal2sas, all
         '''
 
-        self.extract_trajectory = 'False'
+        self.extract_trajectory = False
         self.sas_type = '1'
         self.sas_paths = os.path.join(other_data_path,'hiv1_gag_0','xtal2sas')
         self.option = 'all'
@@ -1091,7 +1091,7 @@ class Test_Extract_Utilities(MockerTestCase):
         extract_sas  test cryson, weight file
         '''
 
-        self.extract_trajectory = 'False'
+        self.extract_trajectory = False
         self.sas_type = '2'
         self.sas_paths = os.path.join(other_data_path,'hiv1_gag_0','cryson')
   
@@ -1109,7 +1109,7 @@ class Test_Extract_Utilities(MockerTestCase):
         extract_sas  test cryson, text file
         '''
 
-        self.extract_trajectory = 'False'
+        self.extract_trajectory = False
         self.sas_type = '2'
         self.sas_paths = os.path.join(other_data_path,'hiv1_gag_0','cryson')
         self.local_value = os.path.join(other_data_path, 'hiv1_gag_text_file.txt')
@@ -1129,7 +1129,7 @@ class Test_Extract_Utilities(MockerTestCase):
         extract_sas  test cryson, range
         '''
 
-        self.extract_trajectory = 'False'
+        self.extract_trajectory = False
         self.sas_type = '2'
         self.sas_paths = os.path.join(other_data_path,'hiv1_gag_0','cryson')
         self.local_value = '2-5'
@@ -1149,7 +1149,7 @@ class Test_Extract_Utilities(MockerTestCase):
         extract_sas  test cryson, single_frame
         '''
 
-        self.extract_trajectory = 'False'
+        self.extract_trajectory = False
         self.sas_type = '2'
         self.sas_paths = os.path.join(other_data_path,'hiv1_gag_0','cryson')
         self.local_value = '1'
@@ -1169,7 +1169,7 @@ class Test_Extract_Utilities(MockerTestCase):
         extract_sas  test cryson, periodic
         '''
 
-        self.extract_trajectory = 'False'
+        self.extract_trajectory = False
         self.sas_type = '2'
         self.sas_paths = os.path.join(other_data_path,'hiv1_gag_0','cryson')
         self.local_value = '2'
@@ -1189,7 +1189,7 @@ class Test_Extract_Utilities(MockerTestCase):
         extract_sas  test cryson, all
         '''
 
-        self.extract_trajectory = 'False'
+        self.extract_trajectory = False
         self.sas_type = '2'
         self.sas_paths = os.path.join(other_data_path,'hiv1_gag_0','cryson')
         self.option = 'all'
@@ -1208,7 +1208,7 @@ class Test_Extract_Utilities(MockerTestCase):
         extract_sas  test crysol, weight file
         '''
 
-        self.extract_trajectory = 'False'
+        self.extract_trajectory = False
         self.sas_type = '3'
         self.sas_paths = os.path.join(other_data_path,'hiv1_gag_0','crysol')
   
@@ -1226,7 +1226,7 @@ class Test_Extract_Utilities(MockerTestCase):
         extract_sas  test crysol, text file
         '''
 
-        self.extract_trajectory = 'False'
+        self.extract_trajectory = False
         self.sas_type = '3'
         self.sas_paths = os.path.join(other_data_path,'hiv1_gag_0','crysol')
         self.local_value = os.path.join(other_data_path, 'hiv1_gag_text_file.txt')
@@ -1246,7 +1246,7 @@ class Test_Extract_Utilities(MockerTestCase):
         extract_sas  test crysol, range
         '''
 
-        self.extract_trajectory = 'False'
+        self.extract_trajectory = False
         self.sas_type = '3'
         self.sas_paths = os.path.join(other_data_path,'hiv1_gag_0','crysol')
         self.local_value = '2-5'
@@ -1266,7 +1266,7 @@ class Test_Extract_Utilities(MockerTestCase):
         extract_sas  test crysol, single frame
         '''
 
-        self.extract_trajectory = 'False'
+        self.extract_trajectory = False
         self.sas_type = '3'
         self.sas_paths = os.path.join(other_data_path,'hiv1_gag_0','crysol')
         self.local_value = '1'
@@ -1286,7 +1286,7 @@ class Test_Extract_Utilities(MockerTestCase):
         extract_sas  test crysol, periodic
         '''
 
-        self.extract_trajectory = 'False'
+        self.extract_trajectory = False
         self.sas_type = '3'
         self.sas_paths = os.path.join(other_data_path,'hiv1_gag_0','crysol')
         self.local_value = '2'
@@ -1306,7 +1306,7 @@ class Test_Extract_Utilities(MockerTestCase):
         extract_sas  test crysol, all
         '''
 
-        self.extract_trajectory = 'False'
+        self.extract_trajectory = False
         self.sas_type = '3'
         self.sas_paths = os.path.join(other_data_path,'hiv1_gag_0','crysol')
         self.option = 'all'

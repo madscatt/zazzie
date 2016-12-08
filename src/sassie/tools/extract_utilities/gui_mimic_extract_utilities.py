@@ -40,8 +40,8 @@ def user_variables(self, **kwargs):
 #    self.output_filename = 'single_frame.dcd' 
 #    self.output_filename = 'periodic.dcd'    
 #    self.output_filename = 'all.dcd'
-    self.extract_trajectory = 'True'
-    self.extract_sas = 'True'
+    self.extract_trajectory = True
+    self.extract_sas = True
     self.sas_type = '0'
 #    self.sas_type = '1'
 #    self.sas_type = '2'
@@ -80,8 +80,8 @@ def test_variables(self, paths):
     self.option = 'weight_file'
     self.local_value = os.path.join(other_data_path, 'hiv1_gag_weight_file.txt')
     self.output_filename = 'chosen_weights.dcd'
-    self.extract_trajectory = 'True'
-    self.extract_sas = 'True'
+    self.extract_trajectory = True
+    self.extract_sas = True
     self.sas_type = '0'
     self.sas_paths = os.path.join(other_data_path, 'hiv1_gag_0', 'sascalc', 'neutron_D2Op_100')+','+os.path.join(other_data_path, 'hiv1_gag_0', 'sascalc', 'neutron_D2Op_0')
 
