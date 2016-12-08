@@ -19,7 +19,7 @@ import sys
 import string
 import locale
 import sasmol.sasmol as sasmol
-import sasmol.sasutil as sasutil
+import sassie.util.sasutil as sasutil
 
 
 def check_and_convert_formula(formula_array):
@@ -30,13 +30,12 @@ def check_and_convert_formula(formula_array):
     try:
         number_of_formulas = len(formula_array)
     except:
-        error.append('no formulas entered')
-        return
+        error.append('unable to read formula')
+        return error, formulas
 
     for i in xrange(number_of_formulas):
 
-        error, formula_dictionary = sasutil.get_chemical_formula(formula_array[
-                                                                 i])
+        error, formula_dictionary = sasutil.get_chemical_formula(formula_array[i])
 
         if(len(error) > 0):
             return error, formulas
@@ -44,7 +43,6 @@ def check_and_convert_formula(formula_array):
             formulas.append(formula_dictionary)
 
     return error, formulas
-
 
 def check_name(filename):
     bad_characters = ["<", ">", "|", "\\",
@@ -55,7 +53,7 @@ def check_name(filename):
         if character in bad_characters:
             error.append('file or path : ' + filename +
                          ' has incorrect character : ' + character)
-            print('file or path has incorrect character : ' + character)
+#            print('file or path has incorrect character : ' + character)
             return error
     return error
 
@@ -90,17 +88,14 @@ def check_file_exists(infile):
 
 def check_exe(exe):
     error = []
-    try:
-        value = (os.path.isfile(exe) and os.access(exe, os.X_OK))
-    except:
-        error.append('Executable file : ' + exe + ' does not exist')
-        return error
-    if(not value):
-        error.append('Executable file : ' + exe +
-                     ' does not exist or can not be exectuted')
-        return error
     if(os.path.isdir(exe)):
         error.append('Executable file : ' + exe + ' is a directory!')
+        return error
+    elif not os.path.isfile(exe):
+        error.append('Executable file : ' + exe + ' is not a file')
+        return error
+    elif not os.access(exe, os.X_OK):
+        error.append('Executable file : ' + exe + ' is not accessible')
         return error
 
     return error

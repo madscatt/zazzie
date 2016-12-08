@@ -19,6 +19,7 @@ import sassie.interface.input_filter as input_filter
 
 def check_align(variables,**kwargs):
 
+
     path=variables['path'][0]
     infile=variables['infile'][0]
     pdbmol1=variables['pdbmol1'][0]
@@ -102,7 +103,7 @@ def check_align(variables,**kwargs):
                     error.append('mol 2 pdbfile '+pdbmol2+' and dcdfile '+infile+' are not compatible (different number of atoms)')
                     return error
             else:
-                error.append('mol 2 input file '+infile+' is not a valid pdb or dcd file')
+                error.append('mol 2 input file, '+infile+', is not a valid pdb or dcd file')
                 return error
         else:                   # is a pdb file
             locvariables=['name']
@@ -133,7 +134,7 @@ def check_align(variables,**kwargs):
         error.append('mol 2 pdb file does not have low residue amino acid, '+str(lowres2)+', range = '+str(resid2[0])+' : '+str(resid2[-1]))
         return error
     elif(highres2 not in resid2):
-        error.append('mol 2 pdb file does not have high residue amino acid, '+str(highres1)+', range = '+str(resid2[0])+' : '+str(resid2[-1]))
+        error.append('mol 2 pdb file does not have high residue amino acid, '+str(highres2)+', range = '+str(resid2[0])+' : '+str(resid2[-1]))
         return error
 	
     elif(highres1 - lowres1 < 2):

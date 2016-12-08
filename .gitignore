@@ -1,6 +1,9 @@
 #Annoying stuff
 *.swp
 *~
+*.DS_Store
+**/.DS_Store
+
 #data stuff
 *.npy
 *.npz
@@ -99,5 +102,3 @@ ENV/
 
 #Outputs
 Outputs/
-data/
-Data/
