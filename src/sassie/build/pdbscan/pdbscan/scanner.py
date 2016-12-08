@@ -32,7 +32,6 @@ import copy
 
 from itertools import groupby
 import itertools
-from operator import itemgetter
 
 import sasmol.sasmol as sasmol
 from sassie.util import sasconfig
@@ -88,6 +87,7 @@ class SasMolScan(sasmol.SasMol):
         self.sim_ready = {}
 
         self.anchors = self._build_anchor_dict()
+
 
         return
 
@@ -507,6 +507,11 @@ class SasMolScan(sasmol.SasMol):
             info = self.segname_info
         else:
             info = self.chain_info
+
+        if not selected_subdivs:
+            info.sequence = {}
+        else:
+            info.sequence[selected_subdivs[0]] = []
 
         # Get list of tuples (subdiv, resid, resnames, moltypes) for all
         # protein and nucleic residues so we can build sequences
@@ -1053,12 +1058,12 @@ class SasMolScan(sasmol.SasMol):
                     "min_dist"] < bond_length < bond_anchors["max_dist"]
 
             else:
-                if not pre_ndx:
+                if not pre_ndx.any():
                     logger.warning(
                         'Checked resid {0:d} in {1:s} for {2:s} bond but found no {3:s} atom'.format(
                             resid1, subdiv, moltype, bond_anchors['pre']))
 
-                if not post_ndx:
+                if not post_ndx.any():
                     logger.warning(
                         'Checked resid {0:d} in {1:s} for {2:s} bond but found no {3:s} atom'.format(
                             resid2, subdiv, moltype, bond_anchors['post']))
@@ -1403,15 +1408,15 @@ class SasMolScan(sasmol.SasMol):
             moltype = moltypes[ndx]
 
             if segname not in segtype:
+
                 segtype[segname] = moltype
+                new_segnames.append(segname)
 
-            if segtype[segname] != moltype:
-
-                if segname == last_segname and moltype == last_moltype:
+            elif segname == last_segname and moltype == last_moltype:
 
                     new_segnames.append(new_segnames[-1])
 
-                else:
+            else:
 
                     added_segnames.append(
                         self.name_split_segment(
@@ -1420,8 +1425,6 @@ class SasMolScan(sasmol.SasMol):
                             new_segnames))
 
                     new_segnames.append(added_segnames[-1])
-            else:
-                new_segnames.append(segname)
 
             last_segname = segname
             last_moltype = moltype
@@ -1722,7 +1725,13 @@ class SasMolScan(sasmol.SasMol):
         locs = self.loc()
         names = self.name()
 
-        chr_start = ord('A') - 1
+        init_locs = set([locs[x] for x in ndxs])
+
+        #chr_start = ord('A') - 1
+        if init_locs == set([' ']):
+            chr_start = ord('A') - 1
+        else:
+            chr_start = max([ord(x) for x in init_locs if x != ' '])
 
         seen_locs = set([])
 
@@ -1807,7 +1816,55 @@ class SasMolScan(sasmol.SasMol):
         resnames = self.resname()
         ndxs = self.ndxs_of_residue(resid, subdiv, subdiv_type=subdiv_type)
 
-        return resnames[ndxs[0]]
+        found_resnames = set([])
+
+        for ndx in ndxs:
+            found_resnames.add(resnames[ndx])
+
+        return resnames[ndxs[0]], len(found_resnames) == 1
+
+    def separate_multi_resname(self, resid, subdiv, subdiv_type='chain'):
+
+        resnames = self.resname()
+        locs = self.loc()
+        names = self.name()
+
+        ndxs = self.ndxs_of_residue(resid, subdiv, subdiv_type=subdiv_type)
+
+        resname = resnames[ndxs[0]]
+
+        std_locs = set([locs[x] for x in ndxs if resnames[x] == resname])
+
+
+        if std_locs == set([' ']):
+            next_loc_ord = ord('A') + 1
+        else:
+            next_loc_ord = max([ord(x) for x in std_locs if x != ' ']) + 1
+
+        alt_res_locs = {}
+
+        for ndx in ndxs:
+
+            cur_resname = resnames[ndx]
+
+            if cur_resname != resname:
+
+                loc = locs[ndx]
+
+                if loc in std_locs or loc == 'A':
+
+                    if cur_resname in alt_res_locs:
+
+                        locs[ndx] = alt_res_locs[cur_resname]
+
+                    else:
+
+                        new_loc = chr(next_loc_ord)
+                        locs[ndx] = new_loc
+                        alt_res_locs[cur_resname] = new_loc
+                        next_loc_ord +=1
+
+        return
 
     def residue_atom_check(self, resid, subdiv, subdiv_type='chain'):
         """
@@ -1816,7 +1873,7 @@ class SasMolScan(sasmol.SasMol):
         simulation. Missing hydrogens are only counted as naming is so variable
         in possible inputs.
 
-        Two substitutions are made to correct for CHARMM naming odities:
+        Two substitutions are made to correct for CHARMM naming oddities:
            1. name CD1 -> CD in ILE residues
            2. resname HIS -> HSE - standard choice for histidine protonation
 
@@ -1842,22 +1899,36 @@ class SasMolScan(sasmol.SasMol):
         @todo: Check that terminal residues are handled correctly
         """
 
-        resname = self.get_resid_resname(
+        resname, single_resname = self.get_resid_resname(
             resid, subdiv, subdiv_type=subdiv_type)
+
+        if not single_resname:
+            multi_resname_map = self.separate_multi_resname(
+                resid, subdiv, subdiv_type=subdiv_type)
 
         coor_atoms = self.get_atom_names_residue(
             resid, subdiv, subdiv_type=subdiv_type)
 
         if resname in utils.nucleic_res_charmm_dict:
+
             resname = utils.nucleic_res_charmm_dict[resname]
+
             for i in range(len(coor_atoms)):
+
                 if coor_atoms[i][-1] == '*':
+
                     coor_atoms[i] = coor_atoms[i][:-1] + "'"
+
                 elif coor_atoms[i] == 'OP1':
+
                     coor_atoms[i] = 'O1P'
+
                 elif coor_atoms[i] == 'OP2':
+
                     coor_atoms[i] = 'O2P'
+
                 elif resname == 'THY' and coor_atoms[i] == 'C7':
+
                     coor_atoms[i] = 'C5M'
 
         heavy_missing = []
@@ -1870,10 +1941,10 @@ class SasMolScan(sasmol.SasMol):
 
         # Standard HIS in CHARMM is HSE (epsilon protonated)
         if resname == 'HIS':
-            charmm = False
             resname = 'HSE'
-        else:
-            charmm = True
+
+        # Initially assume residue will be available
+        charmm = True
 
         hyd_naming_correct = False
 
@@ -1883,8 +1954,11 @@ class SasMolScan(sasmol.SasMol):
         # If residue not found in topology then it is not available in CHARMM
         try:
             ff_atoms = set([x[0] for x in t.topology_info[resname]['ATOM']])
+
         except KeyError:
+
             charmm = False
+
             return heavy_missing, heavy_excess, n_hyd_missing, n_hyd_excess, hyd_naming_correct, charmm, altlocs
 
         # Get list of heavy and hydrogen atoms from CHARMM forcefield
@@ -2020,7 +2094,7 @@ class SasMolScan(sasmol.SasMol):
                                                     subdiv_type=subdiv_type)
 
                 # If the resid is in the CHARMM forcefield topology record
-                # if atoms are missing and named correctly
+                # check if any atoms are missing or named incorrectly
                 if charmm:
 
                     if heavy_missing:
@@ -2112,6 +2186,11 @@ class SasMolScan(sasmol.SasMol):
 
                 chain_missing_res = chain_info.missing_resids[model_no][chain]
 
+                if chain in chain_info.number_gaps:
+                    chain_num_gaps = chain_info.number_gaps[chain]
+                else:
+                    chain_num_gaps = {}
+
                 # If we are at a chain terminus then chain_info may contain
                 # information of preceding/following residues - copy this in
                 if start_ndx in chain_starts:
@@ -2120,7 +2199,7 @@ class SasMolScan(sasmol.SasMol):
 
                     for resid, resname in chain_missing_res.iteritems():
 
-                        if resid < start_resid:
+                        if resid < start_resid and resname != '':
 
                             segname_info.add_missing_resid(
                                 segname, resid, resname, model_no=model_no)
@@ -2131,7 +2210,7 @@ class SasMolScan(sasmol.SasMol):
 
                     for resid, resname in chain_missing_res.iteritems():
 
-                        if resid > end_resid:
+                        if resid > end_resid and resname != '':
 
                             segname_info.add_missing_resid(
                                 segname, resid, resname, model_no=model_no)
@@ -2145,22 +2224,33 @@ class SasMolScan(sasmol.SasMol):
 
                     if resid in chain_missing_res.keys():
 
-                        if (resid not in segname_info.sequence[segname]) or (segname_info.sequence[segname][resid] == ''):
+                        # if ((resid not in segname_info.sequence[segname]) or
+                        #         (segname_info.sequence[segname][resid] == '')):
+                        if (resid not in segname_info.sequence[segname]):
 
-                            segname_info.add_missing_resid(segname, resid, chain_missing_res[
-                                                           resid], model_no=model_no)
+                            segname_info.add_missing_resid(segname,
+                                                           resid,
+                                                           chain_missing_res[resid],
+                                                           model_no=model_no)
+
+                    if resid in chain_num_gaps.keys():
+
+                        segname_info.add_number_gap(segname, resid, chain_num_gaps[resid])
 
         # Complete segment sequences with resnames from missing residues
         seg_missing = segname_info.missing_resids[model_no]
 
-        for segname in seg_missing.keys():
+        for segname in sorted(seg_missing.keys()):
 
             seq = segname_info.sequence[segname]
             resid_list = [x[0] for x in seq]
 
             pre_seq = []
 
-            for resid, resname in seg_missing[segname].iteritems():
+
+            for resid in sorted(seg_missing[segname].keys()):
+
+                resname = seg_missing[segname][resid]
 
                 if (resid, '') in seq:
 
@@ -2250,7 +2340,10 @@ class SasMolScan(sasmol.SasMol):
         seg_charmm = zip(segnames, charmm_ready)
 
         for segment, charmm in groupby(seg_charmm, lambda x: x[0]):
-            if sum([x[1] for x in charmm]):
+
+            charmm_checks = list(charmm)
+
+            if sum([x[1] for x in charmm_checks]) == len(charmm_checks):
                 seg_charmm_valid[segment] = True
             else:
                 seg_charmm_valid[segment] = False
@@ -2841,6 +2934,18 @@ class SasMolScan(sasmol.SasMol):
         self.get_segment_sequence_info()
 
         return
+
+    def any_charmm_ready_segments(self):
+
+        ready = False
+
+        for segname in self.segnames():
+
+            if self.sim_ready[segname]['charmm']:
+                ready = True
+                break
+
+        return ready
 
     def run_scan(self):
         """

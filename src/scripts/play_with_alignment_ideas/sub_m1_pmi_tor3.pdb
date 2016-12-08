@@ -1,0 +1,4 @@
+ATOM      1 CA   GLY     1       1.000  -0.000   0.000  0.00  0.00      DUM  C  
+ATOM      2 CA   GLY     2      -0.000  -0.936   0.353  0.00  0.00      DUM  C  
+ATOM      3 CA   GLY     3       0.000   0.353   0.936  0.00  0.00      DUM  C  
+END

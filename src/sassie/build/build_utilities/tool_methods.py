@@ -24,6 +24,7 @@ import os
 import random
 import logging
 import numpy
+import math
 import string
 import time
 
@@ -31,7 +32,9 @@ import sasmol.sasmol as sasmol
 import sassie.util.sasconfig as sasconfig
 import sassie.util.module_utilities as module_utilities
 import sassie.util.basis_to_python as basis_to_python
+import sasmol.sasmath as sasmath
 
+#
 #       TOOL_METHODS 
 #
 #       09/04/2016      --      initial coding                  :       jc
@@ -138,8 +141,17 @@ class build_utilities():
             mvars.rotation_array = variables['rotation_array'][0] 
        
         
+        mvars.align_pmi_on_axis_flag = variables['align_pmi_on_axis_flag'][0]
+        if(mvars.align_pmi_on_axis_flag):
+
+            mvars.pmi_eigenvector = variables['pmi_eigenvector'][0]
+            mvars.alignment_vector_axis = variables['alignment_vector_axis'][0]
+            mvars.settle_on_plane = variables['settle_on_plane'][0]
+            mvars.plane = variables['plane'][0]
+
         mvars.fasta_utilities_flag = variables['fasta_utilities_flag'][0]
         
+
         if(mvars.fasta_utilities_flag):
             mvars.fasta_input_option = variables['fasta_input_option'][0]
 
@@ -241,6 +253,45 @@ class build_utilities():
     
             mvars.molecule.write_pdb(os.path.join(self.runpath, mvars.translation_rotation_output_filename), frame, 'w')
 
+        elif(mvars.align_pmi_on_axis_flag):
+
+            mvars.molecule.center(frame)
+            uk, ak, I = mvars.molecule.calcpmi(frame) 
+            ''' right handed coordinate frame '''
+            ak[0] = -1.0 * ak[0]
+            #print('ak = ', ak)
+            ''' check if right handed coordinate frame '''
+            if numpy.linalg.det([ak]) < 0:
+                print('determinant not equal +1')
+                print(numpy.linalg.det(ak))
+                sys.exit()
+            ak = ak[mvars.pmi_eigenvector - 1] 
+            #print('ak = ', ak)
+            if(mvars.alignment_vector_axis == 'x'):
+                axis = numpy.array([1.0, 0.0, 0.0])
+            elif(mvars.alignment_vector_axis == 'y'):
+                axis = numpy.array([0.0, 1.0, 0.0])
+            elif(mvars.alignment_vector_axis == 'z'):
+                axis = numpy.array([0.0, 0.0, 1.0])
+
+            #print('axis = ', axis)
+            rotvec = numpy.cross(ak, axis)
+            sine = numpy.linalg.norm(rotvec)
+            rotvec = rotvec/numpy.linalg.norm(rotvec)
+            cosine = numpy.dot(ak, axis)
+            try:
+                theta = math.atan(sine/cosine)
+            except:
+                print('cosine = 0\nstopping here\n\n')
+                sys.exit()
+            #print('theta = ', theta)
+            #print('rotvec = ', rotvec)
+            r1 = rotvec[0] ; r2 = rotvec[1] ; r3 = rotvec[2]
+            mvars.molecule.general_axis_rotate(frame, theta, r1,r2,r3) 
+            mvars.molecule.write_pdb('junk.pdb', frame, 'w')
+            
+            #mvars.plane 
+            #mvars.settle_on_plane 
         
         return
     

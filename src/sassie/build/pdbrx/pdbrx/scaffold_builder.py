@@ -2,9 +2,7 @@
 """
 Build the scaffold PDB to be used as the basis of the final parameterized
 model. Also need to store data about regions to be completed.
-"""
 
-'''
     SASSIE: Copyright (C) 2011 Joseph E. Curtis, Ph.D.
 
     This program is free software: you can redistribute it and/or modify
@@ -19,21 +17,26 @@ model. Also need to store data about regions to be completed.
 
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-'''
+"""
 
-import json
-import yaml
+from __future__ import division  # You don't need this in Python3
+
 import logging
-import pickle
 import sassie.build.pdbscan.pdbscan as pdbscan
+import sassie.build.pdbscan.pdbscan.pdbscan_utils as utils
 import sassie.build.pdbscan.pdbscan.report as report
-import segment_choice
-import biomt_choice
-import altloc_choice
+from . import segment_choice
+from . import biomt_choice
+from . import altloc_choice
 import sasmol.sasmol as sasmol
 import numpy as np
 
+
 class ScaffoldBuilder():
+    '''
+    Build structure to form scaffold for building. Scaffold contains only
+    regions selected by user and apply appropriate BIOMTs.
+    '''
 
     def __init__(self, *args, **kwargs):
 
@@ -59,7 +62,8 @@ class ScaffoldBuilder():
             self.prep_report = report.generate_simulation_prep_report(self.mol)
 
             if self.mol.segname_info.biomt:
-                self.biomt_report = report.create_biomt_summary(self.mol.segname_info.biomt)
+                self.biomt_report = report.create_biomt_summary(
+                    self.mol.segname_info.biomt)
 
         else:
             # TODO: Make a better decision on what to do here
@@ -70,9 +74,14 @@ class ScaffoldBuilder():
         else:
             self.ui = 'terminal'
 
+        if 'default_subs' in kwargs:
+            self.default_subs = kwargs['default_subs']
+        else:
+            self.default_subs = False
+
         return
 
-    def check_segment_status(self):
+    def check_segment_status(self, segnames_to_check):
         """
         Determine if the segments listed in self.selected_segnames
         are passed as ready for CHARMM parameterization
@@ -85,22 +94,63 @@ class ScaffoldBuilder():
 
         accepted_segnames = []
 
-        for segname in self.selected_segnames:
+        for segname in segnames_to_check:
 
             checks = sim_ready_checks[segname]
             if checks['charmm']:
                 accepted_segnames.append(segname)
 
-        return accepted_segnames ==  self.selected_segnames
+        return accepted_segnames == segnames_to_check
 
-    def process_non_ff(self):
+    def process_non_ff(self, segnames):
         """
         Stub which will eventually process non-standard CHARMM residues
-        using CGENFF or CHARM-GUI glycan reader for example
+        using CGENFF or CHARM-GUI glycan reader for example. For now apply
+        standard substitutions then cry off if thats not enough.
 
         """
 
+        if self.default_subs:
+            self.apply_default_substitutions(segnames)
+
+        self.mol.segment_scan(initialize=False)
+        self.mol.check_segname_simulation_preparedness()
+
         return
+
+    def create_excess_mask(self, model_no=1):
+        """
+        Create a SasMol style mask to select all excess atoms
+
+        @type model_no :  int
+        @param model_no:  Model number
+        @rtype : numpy.array
+        @return: Integer mask for all atoms (1 = excess, 0 = not)
+        """
+
+        if model_no in self.mol.segname_info.excess_atoms:
+            excess = self.mol.segname_info.excess_atoms[model_no]
+        else:
+            excess = {}
+
+        mol = self.mol
+
+        mask = np.zeros(mol.natoms())
+
+        for segname, res_info in excess.iteritems():
+
+            for resid, excess_info in res_info.iteritems():
+
+                for name in excess_info['atoms']:
+                    sel_txt = ('segname[i] == "{0:s}" and resid[i] == {1:d}'
+                               ' and name[i] == "{2:s}"'.format(
+                        segname, resid, name))
+
+                    err, tmp_mask = mol.get_subset_mask(sel_txt)
+
+                    mask = np.logical_or(tmp_mask, mask)
+
+        return mask.astype(int)
 
     def select_specified_regions(self):
         """
@@ -109,7 +159,9 @@ class ScaffoldBuilder():
 
         """
 
-        selected_segnames = ['"{0:s}"'.format(x) for x in self.selected_segnames]
+        selected_segnames = self.selected_segnames
+
+        txt_selected_segnames = ['"{0:s}"'.format(x) for x in selected_segnames]
         selected_altlocs = self.selected_altlocs
 
         natoms = self.mol.natoms()
@@ -122,17 +174,22 @@ class ScaffoldBuilder():
         for segname, resids in selected_altlocs.iteritems():
 
             for resid, loc in resids.iteritems():
-
-                sel_txt = 'segname[i] == "{0:s}" and resid[i] == {1:d} and loc[i] == "{2:s}"'.format(segname, resid, loc)
+                sel_txt = 'segname[i] == "{0:s}" and resid[i] == {1:d} and loc[i] == "{2:s}"'.format(
+                    segname, resid, loc)
                 err, tmp_mask = self.mol.get_subset_mask(sel_txt)
 
-                alt_loc_mask = np.logical_or(alt_loc_mask,tmp_mask).astype(int)
+                alt_loc_mask = np.logical_or(
+                    alt_loc_mask, tmp_mask).astype(int)
 
-        sel_txt = 'segname[i] in [{0:s}]'.format(','.join(selected_segnames))
+        sel_txt = 'segname[i] in [{0:s}]'.format(','.join(txt_selected_segnames))
         err, segname_mask = self.mol.get_subset_mask(sel_txt)
 
         for line in err:
             self.logger.warning(line)
+
+        excess_mask = self.create_excess_mask()
+
+        segname_mask = np.logical_and(segname_mask, ~excess_mask)
 
         # Combine segname and altloc masks
         # Note: sasmol uses 0/1 based masks not boolean
@@ -141,9 +198,53 @@ class ScaffoldBuilder():
         self.selected_mol = pdbscan.SasMolScan()
 
         frame = self.mol.model_no - 1
-        self.mol.copy_molecule_using_mask(self.selected_mol,mask, frame)
+        self.mol.copy_molecule_using_mask(self.selected_mol, mask, frame)
 
         self.selected_mol.segname_info = self.mol.segname_info
+
+        # Purge non-selected segments from segname_info
+        for segname in self.selected_mol.segname_info.subdivs:
+
+            if segname not in selected_segnames:
+
+                self.selected_mol.segname_info.purge_subdiv(segname)
+
+        self.fix_residue_numbering()
+
+        return
+
+    def fix_residue_numbering(self):
+        """
+        Renumber selected segments to start at residue 1.
+
+        @return:
+        """
+
+        mol = self.selected_mol
+        segname_info = self.selected_mol.segname_info
+        selected_segnames = self.selected_segnames
+
+        resid_map = {}
+
+        for segname in selected_segnames:
+
+            resid_map[segname] = segname_info.subdiv_renumber_from_one(segname)
+
+        res_info = zip(mol.segname(), mol.resid())
+
+        renumbered_resids = []
+
+        for segname, resid in res_info:
+
+            if resid in resid_map[segname]:
+
+                renumbered_resids.append(resid_map[segname][resid])
+
+            else:
+
+                renumbered_resids.append(resid)
+
+        mol.setResid(renumbered_resids)
 
         return
 
@@ -175,7 +276,8 @@ class ScaffoldBuilder():
 
             biomt = biomts[biomt_no]
 
-            segs_to_transform = list(set(biomt['subdivs']).intersection(selected_segnames))
+            segs_to_transform = list(
+                set(biomt['subdivs']).intersection(selected_segnames))
 
             if segs_to_transform:
 
@@ -192,11 +294,11 @@ class ScaffoldBuilder():
                     u = biomt['rot'][i]
                     m = biomt['trans'][i]
 
-                    if not ( (u == np.identity(3)).all() and (m == np.array([0.0,0.0,0.0])).all() ):
-
+                    if not ((u == np.identity(3)).all() and (m == np.array([0.0, 0.0, 0.0])).all()):
                         new_mols.append(sasmol.SasMol(0))
 
-                        selected_mol.copy_molecule_using_mask(new_mols[-1],mask, frame)
+                        selected_mol.copy_molecule_using_mask(
+                            new_mols[-1], mask, frame)
 
                         new_mols[-1].apply_biomt(frame, sel_txt, u, m)
 
@@ -233,10 +335,11 @@ class ScaffoldBuilder():
             tmp_segnames = model.segname()
 
             for segname in model_segnames:
+                new_segname = mol.next_segname_generator(
+                    existing=existing_segnames)
 
-                new_segname = mol.next_segname_generator(existing = existing_segnames)
-
-                tmp_segnames = [new_segname if x == segname else x for x in tmp_segnames]
+                tmp_segnames = [new_segname if x ==
+                                               segname else x for x in tmp_segnames]
 
                 existing_segnames.append(new_segname)
 
@@ -267,8 +370,10 @@ class ScaffoldBuilder():
 
             for model in models:
 
-                if combined_model == None:
+                if combined_model is None:
+
                     combined_model = model
+
                 else:
 
                     tmp_model = sasmol.SasMol(0)
@@ -289,63 +394,264 @@ class ScaffoldBuilder():
 
         return
 
-    def user_system_selection(self):
+    def terminal_segment_selection(self):
+        '''
+        Get user to select segments from the terminal
+
+        @return:
+        '''
 
         mol = self.mol
         segname_list = mol.segnames()
         prep_report = self.prep_report
+
+        choice_made = False
+
+        while not choice_made:
+
+            if len(segname_list) > 1:
+
+                selected_segnames = segment_choice.select_segnames(
+                    segname_list, prep_report)
+
+            else:
+
+                selected_segnames = [segname_list[0]]
+
+            if selected_segnames:
+
+                if not self.check_segment_status(selected_segnames):
+
+                    # TODO: This is just a stub - needs filling out
+                    self.process_non_ff(selected_segnames)
+
+                    if self.check_segment_status(selected_segnames):
+                        choice_made = True
+
+                else:
+                    choice_made = True
+
+            else:
+
+                print("No segnames selected")
+
+            self.selected_segnames = selected_segnames
+
+        return
+
+    def get_segnames_altlocs_selected(self):
+        '''
+        Return list of segnames fro segments containing altlocs from those
+        selected for final model.
+
+        @return:
+        '''
+
+        altlocs = self.mol.segname_info.altloc
+        alt_segnames = []
+
+        for segname in self.selected_segnames:
+
+            if segname in altlocs and len(altlocs[segname]) > 0:
+                alt_segnames.append(segname)
+
+        return alt_segnames
+
+    def _defaut_altloc(self):
+        '''
+        Chose the first altloc for all residues in which one is present
+
+        @return:
+        '''
+
+        altlocs = self.mol.segname_info.altloc
+
+        for segname in self.selected_segnames:
+
+            self.selected_altlocs[segname] = {}
+
+            if segname in altlocs:
+
+                seg_altlocs = altlocs[segname]
+
+                for resid, locs in seg_altlocs.iteritems():
+                    # Select first non-blank loc label
+                    chosable_locs = [x for x in locs if x != ' ']
+                    chosen_loc = chosable_locs[0]
+
+                    self.selected_altlocs[segname][resid] = chosen_loc
+
+    def create_scaffold_model(self):
+        '''
+        Create the scaffold model - extract the selected regions and apply
+        BIOMT transforms. Application of the BIOMT transforms creates
+        moved duplicates of the selected segments - these are initially
+        created as separate models and then merged.
+
+        @return:
+        '''
+
+        self.select_specified_regions()
+
+        if self.selected_biomt:
+
+            models = self.apply_biomt_to_model()
+
+            self.segname_map = self.update_models_segname_original_index(
+                models)
+
+            self.merge_models(models)
+
+        else:
+
+            self.scaffold_model = self.selected_mol
+
+        # self.scaffold_model.write_pdb('combined_test.pdb', 0, 'w')
+
+        return
+
+    def apply_default_substitutions(self, segnames):
+
+        substitutions = {
+            '2AS': 'ASP', '3AH': 'HIS', '5HP': 'GLU', 'ACL': 'ARG',
+            'AGM': 'ARG', 'AIB': 'ALA', 'ALM': 'ALA', 'ALO': 'THR',
+            'ALY': 'LYS', 'ARM': 'ARG', 'ASA': 'ASP', 'ASB': 'ASP',
+            'ASK': 'ASP', 'ASL': 'ASP', 'ASQ': 'ASP', 'AYA': 'ALA',
+            'BCS': 'CYS', 'BHD': 'ASP', 'BMT': 'THR', 'BNN': 'ALA',
+            'BUC': 'CYS', 'BUG': 'LEU', 'C5C': 'CYS', 'C6C': 'CYS',
+            'CAS': 'CYS', 'CCS': 'CYS', 'CEA': 'CYS', 'CGU': 'GLU',
+            'CHG': 'ALA', 'CLE': 'LEU', 'CME': 'CYS', 'CSD': 'ALA',
+            'CSO': 'CYS', 'CSP': 'CYS', 'CSS': 'CYS', 'CSW': 'CYS',
+            'CSX': 'CYS', 'CXM': 'MET', 'CY1': 'CYS', 'CY3': 'CYS',
+            'CYG': 'CYS', 'CYM': 'CYS', 'CYQ': 'CYS', 'DAH': 'PHE',
+            'DAL': 'ALA', 'DAR': 'ARG', 'DAS': 'ASP', 'DCY': 'CYS',
+            'DGL': 'GLU', 'DGN': 'GLN', 'DHA': 'ALA', 'DHI': 'HIS',
+            'DIL': 'ILE', 'DIV': 'VAL', 'DLE': 'LEU', 'DLY': 'LYS',
+            'DNP': 'ALA', 'DPN': 'PHE', 'DPR': 'PRO', 'DSN': 'SER',
+            'DSP': 'ASP', 'DTH': 'THR', 'DTR': 'TRP', 'DTY': 'TYR',
+            'DVA': 'VAL', 'EFC': 'CYS', 'FLA': 'ALA', 'FME': 'MET',
+            'GGL': 'GLU', 'GL3': 'GLY', 'GLZ': 'GLY', 'GMA': 'GLU',
+            'GSC': 'GLY', 'HAC': 'ALA', 'HAR': 'ARG', 'HIC': 'HIS',
+            'HIP': 'HIS', 'HMR': 'ARG', 'HPQ': 'PHE', 'HTR': 'TRP',
+            'HYP': 'PRO', 'IAS': 'ASP', 'IIL': 'ILE', 'IYR': 'TYR',
+            'KCX': 'LYS', 'LLP': 'LYS', 'LLY': 'LYS', 'LTR': 'TRP',
+            'LYM': 'LYS', 'LYZ': 'LYS', 'MAA': 'ALA', 'MEN': 'ASN',
+            'MHS': 'HIS', 'MIS': 'SER', 'MLE': 'LEU', 'MPQ': 'GLY',
+            'MSA': 'GLY', 'MSE': 'MET', 'MVA': 'VAL', 'NEM': 'HIS',
+            'NEP': 'HIS', 'NLE': 'LEU', 'NLN': 'LEU', 'NLP': 'LEU',
+            'NMC': 'GLY', 'OAS': 'SER', 'OCS': 'CYS', 'OMT': 'MET',
+            'PAQ': 'TYR', 'PCA': 'GLU', 'PEC': 'CYS', 'PHI': 'PHE',
+            'PHL': 'PHE', 'PR3': 'CYS', 'PRR': 'ALA', 'PTR': 'TYR',
+            'PYX': 'CYS', 'SAC': 'SER', 'SAR': 'GLY', 'SCH': 'CYS',
+            'SCS': 'CYS', 'SCY': 'CYS', 'SEL': 'SER', 'SEP': 'SER',
+            'SET': 'SER', 'SHC': 'CYS', 'SHR': 'LYS', 'SMC': 'CYS',
+            'SOC': 'CYS', 'STY': 'TYR', 'SVA': 'SER', 'TIH': 'ALA',
+            'TPL': 'TRP', 'TPO': 'THR', 'TPQ': 'ALA', 'TRG': 'LYS',
+            'TRO': 'TRP', 'TYB': 'TYR', 'TYI': 'TYR', 'TYQ': 'TYR',
+            'TYS': 'TYR', 'TYY': 'TYR'
+        }
+
+        made_subs = False
+
+        err, mask = self.mol.get_subset_mask('residue_flag[i] == True')
+
+        tmp_mol = pdbscan.SasMolScan()
+
+        frame = self.mol.model_no - 1
+        self.mol.copy_molecule_using_mask(tmp_mol, mask, frame)
+
+        segnames = tmp_mol.segname()
+        resnames = tmp_mol.resname()
+        resids = tmp_mol.resid()
+
+        info = zip(segnames, resids, resnames)
+        info = utils.uniquify_list(info)
+
+        for segname, resid, resname in info:
+
+            if segname in segnames and resname in substitutions:
+
+                sub_name = substitutions[resname]
+                self.mol.set_property_residue(resid, segname, 'resname', sub_name, subdiv_type='segname')
+
+        return
+
+    def create_default_scaffold(self):
+        '''
+        Create a scaffold without user input. Choose all segments which
+        contain only standard CHARMM residues, apply author suggested BIOMT
+        and the first AltLoc available.
+
+        @return:
+        '''
+
+        sim_ready_checks = self.mol.sim_ready
+        biomt = self.mol.segname_info.biomt
+
+        if self.default_subs:
+
+            self.process_non_ff(self.mol.segnames())
+
+        # Select all valid segments
+        selected_segnames = []
+
+        for segname in sim_ready_checks.keys():
+
+            if sim_ready_checks[segname]['charmm']:
+                selected_segnames.append(segname)
+
+        self.selected_segnames = selected_segnames
+
+        # Select first AltLoc where necessary
+        self._defaut_altloc()
+
+        # Apply all BIOMT records suggested by PDB author
+        if biomt:
+
+            auth_biomt = []
+
+            for biomt_ndx, info in biomt.iteritems():
+                if info['auth_bio_unit']:
+                    auth_biomt.append(biomt_ndx)
+
+            self.selected_biomt = auth_biomt
+
+        self.create_scaffold_model()
+
+        return
+
+    def user_system_selection(self):
+        '''
+        Get user to select the regions of the protein to be included in the
+        final model. Also select which AltLoc to use if multiple available.
+
+        @return:
+        '''
+
+        mol = self.mol
+        altlocs = self.mol.segname_info.altloc
         biomol_report = self.biomt_report
 
         if self.ui == 'terminal':
 
-            choice_made = False
+            self.terminal_segment_selection()
 
-            while not choice_made:
-
-                if len(segname_list) > 1:
-
-                    self.selected_segnames = segment_choice.select_segnames(segname_list, prep_report)
-
-                else:
-
-                    self.selected_segnames = [segname_list[0]]
-
-                if self.selected_segnames:
-
-                    if not self.check_segment_status():
-
-                        self.process_non_ff()
-
-                        if self.check_segment_status():
-                            choice_made = True
-                    else:
-                        choice_made = True
-
-                else:
-
-                    print("No segnames selected")
-
-            altlocs = self.mol.segname_info.altloc
-            alt_segnames = []
-
-            for segname in self.selected_segnames:
-
-                if segname in altlocs and len(altlocs[segname]) > 0:
-
-                    alt_segnames.append(segname)
+            alt_segnames = self.get_segnames_altlocs_selected()
 
             if len(alt_segnames) > 0:
-                print("Multiple conformations were found for residues in the following segments:")
+
+                print("Multiple conformations were found for residues "
+                      "in the following segments:")
                 print(str(alt_segnames))
-                print("Are you happy using the first conformation (altloc) for all residues? (answer [y]es/[n]o)")
+                print("Are you happy using the first conformation (altloc)"
+                      " for all residues? (answer [y]es/[n]o)")
 
                 choice = ''
 
-                while choice.lower() not in ['y','n','yes','no']:
-
+                while choice.lower() not in ['y', 'n', 'yes', 'no']:
                     choice = raw_input().lower()
 
-                if choice.lower() in ['n','no']:
+                if choice.lower() in ['n', 'no']:
 
                     for segname in self.selected_segnames:
 
@@ -359,31 +665,19 @@ class ScaffoldBuilder():
 
                                 chosable_locs = [x for x in locs if x != ' ']
 
-                                chosen_altloc = altloc_choice.select_altloc(segname, resid, chosable_locs)
+                                chosen_altloc = altloc_choice.select_altloc(
+                                    segname, resid, chosable_locs)
 
                                 if chosen_altloc:
-                                    self.selected_altlocs[segname][resid] = chosen_altloc[0]
+                                    self.selected_altlocs[segname][
+                                        resid] = chosen_altloc[0]
                                 else:
-                                    self.selected_altlocs[segname][resid] = list(locs).remove(' ')[0]
+                                    self.selected_altlocs[segname][
+                                        resid] = list(locs).remove(' ')[0]
 
                 else:
 
-                    for segname in self.selected_segnames:
-
-                        self.selected_altlocs[segname] = {}
-
-                        if segname in altlocs:
-
-                            seg_altlocs = altlocs[segname]
-
-                            for resid, locs in seg_altlocs.iteritems():
-
-                                # Select first non-blank loc label
-                                chosable_locs = [x for x in locs if x != ' ']
-                                chosen_loc = chosable_locs[0]
-
-                                self.selected_altlocs[segname][resid] = chosen_loc
-
+                    self._defaut_altloc()
 
             if self.mol.segname_info.biomt:
 
@@ -391,7 +685,8 @@ class ScaffoldBuilder():
 
                 if len(biomt_list) > 1:
 
-                    sel_biomt = biomt_choice.select_biomt(biomt_list, biomol_report)
+                    sel_biomt = biomt_choice.select_biomt(
+                        biomt_list, biomol_report)
                     self.selected_biomt = [int(x) for x in sel_biomt]
 
                 else:
@@ -401,23 +696,6 @@ class ScaffoldBuilder():
         else:
             pass
 
-        self.select_specified_regions()
-
-        if self.selected_biomt:
-
-            models = self.apply_biomt_to_model()
-
-            self.segname_map = self.update_models_segname_original_index(models)
-
-            self.merge_models(models)
-
-        else:
-
-            self.scaffold_model = self.selected_mol
-
-        self.scaffold_model.write_pdb('combined_test.pdb',0,'w')
-        #
-        # with open('combined_segname_info.pkl', 'w') as out_file:
-        #     pickle.dump(self.scaffold_model, out_file, -1)
+        self.create_scaffold_model()
 
         return

@@ -1,5 +1,6 @@
-#!/usr/bin/python
-'''
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+"""
 Curses Picker
 
 Based on the code from:
@@ -15,15 +16,32 @@ usage:
 opts = Picker(
    title = 'Delete all files',
    options = ["Yes", "No"]
-).getSelected()
+).get_selected()
 
 
 returns a simple list
 cancel returns False
-'''
+
+    SASSIE: Copyright (C) 2011 Joseph E. Curtis, Ph.D.
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+"""
 
 import curses
 import curses.wrapper
+
 
 class Picker:
     """Allows you to select from a list with curses"""
@@ -59,6 +77,10 @@ class Picker:
     info_offset = 0
 
     def curses_start(self):
+        """
+        Setup curses environment
+        @return:
+        """
 
         self.stdscr = curses.initscr()
         curses.noecho()
@@ -93,6 +115,10 @@ class Picker:
             )
 
     def curses_stop(self):
+        """
+        Clean up curses environemnt after exit
+        @return:
+        """
 
         curses.nocbreak()
         self.stdscr.keypad(0)
@@ -100,30 +126,46 @@ class Picker:
         curses.echo()
         curses.endwin()
 
-    def getSelected(self):
-        if self.aborted == True:
-            return( False )
+    def get_selected(self):
+        """
+        Return input after user makes choice
+
+        @return:
+        """
+
+        if self.aborted:
+            return (False)
 
         ret_s = filter(lambda x: x["selected"], self.all_options)
         ret = map(lambda x: x["label"], ret_s)
-        return( ret )
+        
+        return ret
 
     def redraw_info(self):
+        """
+        Redraw information section after user has moved viewing window.
+
+        @return:
+        """
 
         info_offset = self.info_offset
 
         line_no = 0
 
-        visible_lines = self.info[info_offset:info_offset+self.info_height]
+        visible_lines = self.info[info_offset:info_offset + self.info_height]
 
         for line in visible_lines:
-
-            self.win_info.addstr(line_no,0,line)
+            self.win_info.addstr(line_no, 0, line)
             line_no += 1
 
         return
 
     def redraw(self):
+        """
+        Redraw screen after update.
+
+        @return:
+        """
 
         self.win_pick.clear()
         self.win_pick.border(
@@ -132,16 +174,23 @@ class Picker:
             self.border[4], self.border[5],
             self.border[6], self.border[7]
         )
+
         self.win_pick.addstr(
             self.window_height + 4, 5, " " + self.footer + " "
         )
 
         position = 0
-        range = self.all_options[self.offset:self.offset+self.window_height+1]
-        for option in range:
-            if option["selected"] == True:
+
+        available = self.all_options[self.offset:self.offset + self.window_height + 1]
+
+        for option in available:
+
+            if option["selected"]:
+
                 line_label = self.c_selected + " "
+
             else:
+
                 line_label = self.c_empty + " "
 
             self.win_pick.addstr(position + 2, 5, line_label + option["label"])
@@ -160,7 +209,7 @@ class Picker:
             0, self.window_width - 8,
             " " + str(self.selcount) + "/" + str(self.length) + " "
         )
-        self.win_pick.addstr(self.cursor + 2,1, self.arrow)
+        self.win_pick.addstr(self.cursor + 2, 1, self.arrow)
 
         if self.info:
             self.win_info.clear()
@@ -174,8 +223,12 @@ class Picker:
 
         self.win_pick.refresh()
 
-
     def check_info_cursor(self):
+        """
+        Ensure cursor is within the list of options.
+
+        @return:
+        """
 
         if self.info_cursor < 0:
 
@@ -191,12 +244,23 @@ class Picker:
         self.info_cursor = 0
 
     def check_cursor_up(self):
+        """
+        Update cursor position after user scrolls up
+
+        @return:
+        """
+
         if self.cursor < 0:
             self.cursor = 0
             if self.offset > 0:
                 self.offset = self.offset - 1
 
     def check_cursor_down(self):
+        """
+        Update cursor position after user scrolls down
+        @return:
+        """
+
         if self.cursor >= self.length:
             self.cursor = self.cursor - 1
 
@@ -208,6 +272,12 @@ class Picker:
                 self.offset = self.offset - 1
 
     def select_mutually_exclusive(self):
+        """
+        Select option if those in list are mutually exclusive - i.e. selection
+        of one item inverts the selection of the others.
+
+        @return:
+        """
 
         old_value = self.all_options[self.selected]["selected"]
         new_value = not old_value
@@ -219,6 +289,13 @@ class Picker:
                 self.all_options[i]["selected"] = old_value
 
     def curses_loop(self, stdscr):
+        """
+        Main loop
+
+        @param stdscr:
+        @return:
+        """
+        
         while 1:
             self.redraw()
             c = stdscr.getch()
@@ -247,7 +324,7 @@ class Picker:
                     option['selected'] = not option['selected']
 
             elif c == curses.KEY_NPAGE:
-                self.info_cursor +=1
+                self.info_cursor += 1
 
             elif c == curses.KEY_PPAGE:
                 self.info_cursor -= 1
@@ -264,22 +341,25 @@ class Picker:
             # compute selected position only after dealing with limits
             self.selected = self.cursor + self.offset
 
-            temp = self.getSelected()
+            temp = self.get_selected()
             self.selcount = len(temp)
 
     def __init__(
-        self,
-        options,
-        title='Select',
-        arrow="-->",
-        footer="Space = toggle, Enter = accept, i = invert, q = cancel",
-        more="...",
-        border="||--++++",
-        c_selected="[X]",
-        c_empty="[ ]",
-        info = [],
-        mutually_exclusive = False
+            self,
+            options,
+            title='Select',
+            arrow="-->",
+            footer="Space = toggle, Enter = accept, i = invert, q = cancel",
+            more="...",
+            border="||--++++",
+            c_selected="[X]",
+            c_empty="[ ]",
+            info=[],
+            mutually_exclusive=False
     ):
+
+        """ Setup screen for display"""
+
         self.title = title
         self.arrow = arrow
         self.footer = footer
@@ -316,5 +396,5 @@ class Picker:
             self.window_y = self.info_y + self.info_height + 5
 
         self.curses_start()
-        curses.wrapper( self.curses_loop )
+        curses.wrapper(self.curses_loop)
         self.curses_stop()

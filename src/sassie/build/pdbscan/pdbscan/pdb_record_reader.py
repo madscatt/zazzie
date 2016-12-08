@@ -389,7 +389,8 @@ rec_schemas = {
         ('record', 0, 6, None),          # 0,  record type name
         ('strand', 7, 10, int),          # 1,  strand number
         ('id', 11, 14, None),            # 2,  sheet ID
-        ('no_strands', 14, 16, int),     # 3,  number of strands
+        ('no_strands', 14, 16, None),    # 3,  number of strands
+                                         # no conversion as can be blank
         ('resname1', 17, 20, None),      # 4,  residue name start of strand (1)
         ('chain1', 21, None, None),      # 5,  chain ID 1
         ('resid1', 22, 26, int),         # 6.  residue sequence number 1
@@ -398,10 +399,9 @@ rec_schemas = {
         ('chain2', 32, None, None),      # 9,  chain ID 2
         ('resid2', 33, 37, int),         # 10.  residue sequence number 2
         ('insert2', 37, None, None),     # 11,  insertion code 2
-        # 12,  sense of strand (wrt last strand)
-        # Not converting as some files have no value
         #('sense', 38, 40, int),
-        ('sense', 38, 40, None),
+        ('sense', 38, 40, None),         # 12,  sense of strand (wrt last strand)
+                                         # No conversion as can be blank
         ('bonding', 41, 70, None)        # 13,  bonding information
         #
         #        ('cur_atomname', 41, 45, None),  # 13,  atom in current strand

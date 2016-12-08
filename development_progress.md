@@ -8,7 +8,7 @@
 | Contrast Calculator |              |
 | Align               |      x       | 
 | Data Interpolation  |              |  
-| Extract Utilities   |              |    
+| Extract Utilities   |      x       |    
 | Merge Utilities     |              |       
 | PDB Scan            |      x       |   
 | PDB Rx              |      x       |    
@@ -28,5 +28,6 @@
 | Density Plot        |              |  
 | Capriqorn           |              |      
 | SasCalc-PBC         |              |  
+| Input Filter        |              |  
 
 

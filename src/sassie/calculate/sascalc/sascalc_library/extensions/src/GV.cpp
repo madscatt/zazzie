@@ -94,7 +94,7 @@ _tolerance_to_ngv(const double tolerance) const
 //////////////////////////////////////////////////////////
 void
 sascalc::GV::
-_calculate_singleFrame_fixed(const bool *const flag_skip, const int Nitems, const double *const coor, double *const Iq, const int Ngv) const
+_calculate_singleFrame_fixed(const int *const flag_skip, const int Nitems, const double *const coor, double *const Iq, const int Ngv)
 {
     // locals
     int iatom,iq,igv;
@@ -113,7 +113,7 @@ _calculate_singleFrame_fixed(const bool *const flag_skip, const int Nitems, cons
     for (iq=0; iq<_Nq; ++iq)
     {
         for (item=0; item<Nitems; ++item) if (!flag_skip[item]) Iq[item*_Nq + iq] = 0.0;
-        qmag = iq*(_Qmax/(_Nq-1));
+        qmag = _q[iq];
         //std::cout<<"Q: "<<qmag<<std::endl;
         for (igv=0; igv<Ngv; ++igv)
         {
@@ -147,7 +147,7 @@ _calculate_singleFrame_fixed(const bool *const flag_skip, const int Nitems, cons
                         Ireal[item] += b*cose;
                         Iimag[item] += b*sine;
                     }
-                    //if (item==1 && iq==1 && igv==1 && iatom==0) std::cout<<"("<<qx<<" "<<qy<<" "<<qz<<"), ("<<x<<" "<<y<<" "<<z<<") "<<b<<std::endl;
+                    //if (item==0 && iq==1 && igv==1 && iatom==1) std::cout<<"("<<qx<<" "<<qy<<" "<<qz<<"), ("<<x<<" "<<y<<" "<<z<<") "<<b<<std::endl;
                     ++item;
                 }
                 // xray
@@ -185,7 +185,7 @@ _calculate_singleFrame_fixed(const bool *const flag_skip, const int Nitems, cons
 //////////////////////////////////////////////////////////
 void
 sascalc::GV::
-_calculate_singleFrame_converge(const double *const coor, double *const Iq, const double tolerance) const
+_calculate_singleFrame_converge(const double *const coor, double *const Iq, const double tolerance)
 {
     const int Nitems = _B_neutron_vector.size()+_B_xray_vector.size();
 
@@ -195,7 +195,7 @@ _calculate_singleFrame_converge(const double *const coor, double *const Iq, cons
     double * Iq_run_ave_previous = new double[Nitems*_Nq];
 
     int i, item;
-    bool *flag_skip = new bool[Nitems];
+    int *flag_skip = new int[Nitems];
     int *Ngvs = new int[Nitems];
     double *err = new double[Nitems];
     for (item=0; item<Nitems; ++item)
@@ -237,7 +237,7 @@ _calculate_singleFrame_converge(const double *const coor, double *const Iq, cons
     delete [] err;
 }
 
-bool replace(std::string& str, const std::string& from, const std::string& to) {
+int replace(std::string& str, const std::string& from, const std::string& to) {
     size_t start_pos = str.find(from);
     if(start_pos == std::string::npos)
         return false;
@@ -250,7 +250,7 @@ bool replace(std::string& str, const std::string& from, const std::string& to) {
 //////////////////////////////////////////////////////////
 sascalc::ScResults *
 sascalc::GV::
-calculate(const double *const coor, const int Nframes) const
+calculate(const double *const coor, const int Nframes)
 {
     // initialize a SasResults object
     sascalc::ScResults * pResults = new sascalc::ScResults(Nframes, _Nq, _Qmax);
@@ -258,7 +258,7 @@ calculate(const double *const coor, const int Nframes) const
     const int Nitems = _B_neutron_vector.size()+_B_xray_vector.size();
     double * Iq = new double[Nframes * Nitems * _Nq];
     int item, count;
-    bool *flag_skip = new bool[Nitems];
+    int *flag_skip = new int[Nitems];
     for (item=0; item<Nitems; ++item) flag_skip[item] = false;
 
     // loop over frames
@@ -280,7 +280,7 @@ calculate(const double *const coor, const int Nframes) const
             std::string B_descriptor = std::string("neutron ") + ss.str() + B_neutron.first;
             pResults->push_result(std::make_pair(std::string(B_descriptor), Iq + offset + item*_Nq));
 
-            bool flag_complete = false;
+            int flag_complete = false;
             char *Bs = strdup(B_descriptor.c_str());
             char * pch;
             pch = strtok (Bs, " ");
@@ -320,7 +320,7 @@ calculate(const double *const coor, const int Nframes) const
             std::string B_descriptor = std::string("x-ray ") + ss.str() + B_xray.first;
             pResults->push_result(std::make_pair(std::string(B_descriptor), Iq + offset + item*_Nq));
 
-            bool flag_complete = false;
+            int flag_complete = false;
             char *Bs = strdup(B_descriptor.c_str());
             char * pch;
             pch = strtok (Bs, " ");

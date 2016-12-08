@@ -22,8 +22,11 @@ import sasmol.sasmol as sasmol
 import sassie.util.sasconfig as sasconfig
 import sassie.util.module_utilities as module_utilities
 import sassie.util.basis_to_python as basis_to_python
-import sassie.calculate.sascalc.sascalc_utils as sascalc_utils
-import sassie.calculate.sascalc.sascalc_library.sascalc_lib as sascalc_lib
+#import sassie.calculate.sascalc_utils as sascalc_utils
+import sascalc_utils as sascalc_utils
+#sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)),'..','cpp_extension'))
+#sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)),'sascalc_library'))
+import sassie.calculate.sascalc.sascalc_library.SasCalc as SasCalc
 
 '''
     SASCALC is the module that contains the functions that are used to calculate the neutron or x-ray scattering profile, as well as additional useful output such as p(r) and Vc, based on the user given structure.
@@ -205,7 +208,7 @@ class sascalc():
 
     def run(self):
         '''
-        method to perform sascalc calculation
+        method to perform SasCalc calculation
         '''
 
         log = self.log
@@ -217,17 +220,16 @@ class sascalc():
         frame = 0
         frames_per_batch = scvars.frames_per_batch
 
-        log.debug('in sascalc')
+        log.debug('in SasCalc')
 
         pgui("\n"+"="*60+" \n")
         pgui("DATA FROM RUN: %s \n\n" %(time.asctime( time.gmtime( time.time() ) ) ))
-        pgui('>>> starting sascalc\n')
+        pgui('>>> starting SasCalc\n')
 
 
         print "initializing sascalc object..."
         ''' create the sascalc object '''
-
-        sascalc_object = sascalc_lib.SasCalc(mol, mvars, scvars)
+        sascalc_object = SasCalc.SasCalc(mol, mvars, scvars)
 
         sascalc_coor = numpy.transpose(mol.coor(),axes=(0,2,1))
 

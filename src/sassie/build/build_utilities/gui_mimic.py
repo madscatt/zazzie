@@ -46,7 +46,7 @@ constraint_fields = 'beta, beta'
 constraint_resets = 'True, True'
 constraint_filenames = 'constrain_heavy.pdb, constrain_backbone.pdb'
 
-translation_rotation_flag = True
+translation_rotation_flag = False
 translation_rotation_output_filename = 'trans_rot.pdb'
 pre_center_flag = False
 translation_array = '0.0, 0.0, 0.0'
@@ -59,6 +59,19 @@ rotation_order = 'xyz'
 #rotation_order = 'zxy'
 #rotation_order = 'zyx'
 rotation_array = '0.0, 0.0, 0.0'
+
+
+### i am working here
+
+align_pmi_on_axis_flag = True
+pmi_eigenvector = '3'
+''' values: x, y, z '''
+alignment_vector_axis = 'z'
+settle_on_plane = True
+''' values: x, y, z '''
+plane = 'z' 
+
+### i stop working here
 
 fasta_utilities_flag = False
 fasta_input_option = 'file'
@@ -104,6 +117,11 @@ svariables['rotation_axes'] = (rotation_axes, 'string')
 svariables['rotation_order'] = (rotation_order, 'string')
 svariables['rotation_array'] = (rotation_array, 'float_array')
 
+svariables['align_pmi_on_axis_flag'] = (align_pmi_on_axis_flag, 'boolean')
+svariables['pmi_eigenvector'] = (pmi_eigenvector, 'int')
+svariables['alignment_vector_axis'] = (alignment_vector_axis, 'string')
+svariables['settle_on_plane'] = (settle_on_plane, 'string')
+svariables['plane'] = (plane, 'string')
 
 
 svariables['fasta_utilities_flag'] = (fasta_utilities_flag, 'boolean')

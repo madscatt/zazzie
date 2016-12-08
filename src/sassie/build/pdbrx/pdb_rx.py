@@ -26,6 +26,7 @@ import sassie.build.pdbscan.pdbscan.report as report
 import sassie.build.pdbrx.pdbrx as pdbrx
 
 import os
+import sys
 
 if sasconfig.__level__ == "DEBUG": DEBUG = True
 	
@@ -92,12 +93,20 @@ class PDBRx():
 
         pgui('Initiating scan')
         mol.run_scan()
+
+        # if mvars.use_defaults and not mol.any_charmm_ready_segments():
+        #
+        #     pgui('-' * 50)
+        #     pgui('Run terminated: No processable segments found.')
+        #     pgui('-' * 50)
+        #     sys.exit(0)
+
         mol.copy_biomt_segments()
 
         if not mvars.use_defaults:
 
             pgui('Preprocessing starts here')
-            preprocessor = pdbrx.preprocessor.PreProcessor(mol=mol)
+            preprocessor = pdbrx.preprocessor.PreProcessor(mol=mol,default_subs=True)
 
             for line in report.generate_simulation_prep_report(mol):
 
@@ -105,26 +114,31 @@ class PDBRx():
 
             preprocessor.user_edit_options()
 
-        scaffold_builder = pdbrx.scaffold_builder.ScaffoldBuilder(mol=mol)
+        pgui('Build scaffold structure')
 
-        scaffold_builder.user_system_selection()
+        scaffold_builder = pdbrx.scaffold_builder.ScaffoldBuilder(mol=mol,
+                                                                  default_subs=True)
+
+        if mvars.use_defaults:
+
+            scaffold_builder.create_default_scaffold()
+
+        else:
+
+            scaffold_builder.user_system_selection()
 
         if not os.path.isdir('./tmp_struct'):
             os.mkdir('./tmp_struct')
 
+        pgui('Start structure completion')
         structure_builder = pdbrx.structure_builder.StructureBuilder(scaffold_builder.scaffold_model, './tmp_struct')
 
         completed_mol = structure_builder.complete_structure()
 
-        completed_mol.write_pdb('wonder.pdb',0,'w')
-
         out_prefix = os.path.splitext(os.path.basename(mvars.pdbfile))[0] + '_charmm'
-
-        #top_file_path = os.path.join(sasconfig.__bin_path__,'toppar','top_all27_prot_na.inp')
 
         segname_info = scaffold_builder.scaffold_model.segname_info
 
-        #psfgen = pdbrx.apply_psfgen.PsfgenDriver(completed_mol, segname_info, top_file_path, self.runpath, out_prefix)
         psfgen = pdbrx.apply_psfgen.PsfgenDriver(completed_mol, segname_info, mvars.topfile, self.runpath, out_prefix)
 
         psfgen.run_psfgen()
