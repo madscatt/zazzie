@@ -32,9 +32,7 @@ import sasmol.sasmol as sasmol
 import sassie.util.sasconfig as sasconfig
 import sassie.util.module_utilities as module_utilities
 import sassie.util.basis_to_python as basis_to_python
-#import sassie.build.build_utilities.rot as rot
 import sasmol.sasmath as sasmath
-import rot
 
 #
 #       TOOL_METHODS 
