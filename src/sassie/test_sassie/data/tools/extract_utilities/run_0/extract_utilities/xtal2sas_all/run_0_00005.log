@@ -1,0 +1,40 @@
+*** Determine P(R) function from *.PDB file ***
+PDB INPUT FILE : PDB input file = ./tmp//tmp.pdb
+X-RAYS or NEUTRONS (X/N): Number of I(Q) values: Maximum Q value: Intensity at I(0): Flag = 0, water mass density that of bulk water.  
+flag = 1, surface polar residues hydrated with water mass density of bound water, SAAS caculation.  
+Flag = 2, all surface residues hydrated with water mass density of bound water.  
+Enter Hydration choice:  Input percent D2O in solvent (0-100 percent): Input fraction of exchanged NH peptide (0.8-0.9): Number of output file iterations: (1-100): Number of HITS: (100-10000): Is protein (./tmp//tmp.pdb) protonated or deuterated? <H/D>: Reading input file ./tmp//tmp.pdb
+READING DATA FROM FILE
+READING DATA FROM FILE
+READING DATA FROM FILE
+DONE READING DATA FROM FILE
+DONE READING DATA FROM FILE
+DONE READING DATA FROM FILE
+# ATOMS READ       : 6730    # AMINO ACIDS READ :  431
+
+***LOOP # : 1***
+1. Neutrons used
+2. %D2O= 100.000 , AA volume increase =   0.000
+3. PDB input file = ./tmp//tmp.pdb -- H
+4. Output: P(R) function = _1.pr
+5. Output: Random point coordinates = _1.crd
+6. Output: information file = _1.inf
+7. Output: I(q) .vs. q = _1.iq
+8. Io =      0.019,  radius H2O(bound) =  0.00
+Determine BOX SIZE to put protein in....
+ max_AA = 430
+9. Dimensions = x:  -32.11,  14.60, y:  -92.91,  41.41, z:  -63.57,  99.03
+10. Box diagonal =  324.02 ; Box size = x:   70.07 , y:  201.48 , z:  243.89
+Generate random points ....
+back from Generate random points ....
+SLAMITS = 1000
+past loop for Ntrials....
+TOTAL HITS = 1000, TOTAL SHOOTS = 74434
+Random point coordinates written to file _1.crd .
+Calculating P(R) function ....
+iq data
+11. # data points in R-space = 400
+12. Rg = 60.994129
+Dumping out correlation function to file _1.pr .
+Dumping out information to file _1.inf .
+I(q) .vs. q was dumped out to _1.iq .

@@ -1,0 +1,55 @@
+   C R Y S O N    Version 2.7  -- 06/11/09 
+ 
+ 
+ -- Program  started  at   02-Nov-2016   12:11:04--
+ 
+ --------  Real space resolution and grid  -------- 
+ 
+  Maximum order of harmonics ............................ : 15
+  Order of Fibonacci grid ............................... : 17
+  Total number of directions ............................ : 2585
+ 
+ ------------  Reciprocal space grid  -------------
+ 
+   in s = 4*pi*sin(theta)/lambda [1/angstrom] 
+  Maximum scattering angle .............................. : 0.3000
+  Number of angular points .............................. : 31
+Explicit hydrogen/deuterium used
+ Perdeuteration, chain [X] (0<y<1) ...................... : 0.0
+ D2O fraction in solvent ................................ : 1.000
+ 
+ --- Structural parameters (sizes in angstroms) --- 
+ 
+ PDB file name .......................................... : ./tmp//dum.pdb
+  Number of atoms read .................................. : 6730
+ Geometric Center:   -7.917  -23.900    9.721
+ For 1397  zero directions radius    5.29 assumed
+ Atomic     Rg   :  61.86       Envelope   Rg      :  60.09    
+ Shape      Rg   :  62.55       Envelope  volume   : 0.1281E+06
+ Shell    volume : 0.2188E+05   Envelope  surface  :  6685.    
+ Shell      Rg   :  64.66       Envelope  radius   :  105.8    
+ Shell    width  :  3.000       Envelope  diameter :  205.7    
+ Molecular Weight: 0.4790E+05   Dry volume         : 0.5805E+05
+ Displaced volume: 0.5933E+05   Average atomic rad.:  1.281    
+ Solvent density :  6.404       Particle contrast  : -4.597    
+ Number of residuals :               422
+ 
+ -- No data fitting, parameters entered manually --
+ 
+ Contrast of the solvation shell ........................ : 0.6404
+ Average atomic radius .................................. : 1.282
+ Excluded Volume ........................................ : 5.933e+4
+ Solvent density ........................................ : 6.404
+ Average atomic volume .................................. : 8.815
+ Radius of gyration from atomic structure
+ Rg ( Atoms - Excluded Volume + Shell ) ................. : 62.72
+ Rg from the slope of net intensity ..................... : 61.78
+  
+ ----------------  Output files  ------------------
+  
+ Coefficients   saved to file dum00.flm
+ CRYSON data    saved to file dum00.sav
+Intensities    saved to file dum00.int
+Net amplitudes saved to file dum00.alm
+ 
+   C R Y S O N    Version 2.7  -- 06/11/09  ----  terminated at   02-Nov-2016   12:11:05--

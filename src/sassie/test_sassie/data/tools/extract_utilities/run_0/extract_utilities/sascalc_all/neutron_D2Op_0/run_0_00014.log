@@ -1,0 +1,18 @@
+#Structural Information:
+1. PDB input file = /share/apps/genapp/sassie2/results/users/skrueger/demo/hiv1_gag.pdb
+2. Number of atoms = 6730; Mw = 47874.61
+3. Dimensions = x: -40.39, 8.33, y: -92.25, 39.38, z: -68.74, 99.44
+4. Maximum radial dimension Dmax = 219.05 A (contrast-independent)
+5. Molecular center of mass = x: -14.27, y: -23.06, z: 9.68 (contrast-independent)
+6. Molecular Rg = 62.954960 A (contrast-independent)
+#Scattering Intensity:
+7. Source = neutron
+8. D2O % =   0.000
+9. Non-exchangeable H deuteration file = run_0/sascalc/neutron_D2Op_0/HDexchange_Info_D2Op_0.txt
+10. Exchangeable H deuteration file = run_0/sascalc/neutron_D2Op_0/Deuteration_Info_D2Op_0.txt
+11. PDB output file with explicit D atoms = run_0/sascalc/neutron_D2Op_0/D2Op_0.pdb
+12. I(q) .vs. q file = run_0/sascalc/neutron_D2Op_0/run_0_00014.iq
+13. Number of golden vectors used = 35
+14. Io =      1.000
+15. Center of Mass = -14.22, y: -22.76, z: 9.80 (contrast-dependent)
+16. Rg = 62.397097 A (contrast-dependent)

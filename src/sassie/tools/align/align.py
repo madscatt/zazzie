@@ -206,8 +206,9 @@ class align():
             dcdfile = avars.m2.open_dcd_read(mvars.path+mvars.infile)
             avars.nf = dcdfile[2]
             avars.intype = 'dcd'
+            avars.dcdfile = dcdfile
             log.debug('>> input file is a DCD file')
-            log.debug('number of frames: '+avars.nf)
+            log.debug('number of frames: '+str(avars.nf))
         elif(mvars.infile[-3:] =='pdb'):
             avars.m2.read_pdb(mvars.path+mvars.infile)
             avars.nf = avars.m2.number_of_frames()
@@ -336,7 +337,7 @@ class align():
                 avars.sub_m2.center(0)
                 avars.coor_sub_m2 = avars.sub_m2.coor[0]
                 avars.m2.align(i,avars.coor_sub_m2,avars.com_sub_m2,avars.coor_sub_m1,avars.com_sub_m1)
-            log.debug(vars(avars))
+#            log.debug(vars(avars))
             
 
             write_frame_to_file(i+1)
