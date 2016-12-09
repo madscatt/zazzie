@@ -3,28 +3,6 @@ import sasmol.sasmol as sasmol
 import numpy, math
 import sys 
 
-
-
-def rotation_matrix(A,B):
-# a and b are in the form of numpy array
-
-   ax = A[0]
-   ay = A[1]
-   az = A[2]
-
-   bx = B[0]
-   by = B[1]
-   bz = B[2]
-
-   au = A/(numpy.sqrt(ax*ax + ay*ay + az*az))
-   bu = B/(numpy.sqrt(bx*bx + by*by + bz*bz))
-
-   R=numpy.array([[bu[0]*au[0], bu[0]*au[1], bu[0]*au[2]], [bu[1]*au[0], bu[1]*au[1], bu[1]*au[2]], [bu[2]*au[0], bu[2]*au[1], bu[2]*au[2]] ])
-
-
-   return(R)
-
-
 def make_and_write_pdb(coor_array, pdbfilename):
 
     m1 = sasmol.SasMol(0)
