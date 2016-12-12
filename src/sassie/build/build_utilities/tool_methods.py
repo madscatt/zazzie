@@ -105,10 +105,15 @@ class build_utilities():
         mvars.pdb_utilities_flag = variables['pdb_utilities_flag'][0]
          
         if(mvars.pdb_utilities_flag):
-            mvars.pdbfile = variables['pdbfile'][0]
+            mvars.input_pdbfile = variables['input_pdbfile'][0]
        
         mvars.renumber_flag = variables['renumber_flag'][0]
-        
+        mvars.pdb_constraints_flag = variables['pdb_constraints_flag'][0]
+        mvars.translation_rotation_flag = variables['translation_rotation_flag'][0]
+        mvars.align_pmi_on_cardinal_axes_flag = variables['align_pmi_on_cardinal_axes_flag'][0]
+        mvars.align_pmi_on_axis_flag = variables['align_pmi_on_axis_flag'][0]
+        mvars.fasta_utilities_flag = variables['fasta_utilities_flag'][0]
+
         if(mvars.renumber_flag): 
             mvars.renumber_output_filename = variables['renumber_output_filename'][0]
             mvars.renumber_indices_flag = variables['renumber_indices_flag'][0]
@@ -121,38 +126,34 @@ class build_utilities():
             if(mvars.renumber_resids_flag):
                 mvars.first_resid = variables['first_resid'][0]
        
-        mvars.pdb_constraints_flag = variables['pdb_constraints_flag'][0]
-       
-        if(mvars.pdb_constraints_flag):
+        elif(mvars.pdb_constraints_flag):
             mvars.number_of_constraint_files = variables['number_of_constraint_files'][0]
             mvars.constraint_options = variables['constraint_options'][0]
             mvars.constraint_filenames = variables['constraint_filenames'][0]
             mvars.constraint_fields = variables['constraint_fields'][0]
             mvars.constraint_resets = variables['constraint_resets'][0]
-             
-        mvars.translation_rotation_flag = variables['translation_rotation_flag'][0]
         
-        if(mvars.translation_rotation_flag):
+        elif(mvars.translation_rotation_flag):
             mvars.translation_rotation_output_filename = variables['translation_rotation_output_filename'][0]
             mvars.pre_center_flag = variables['pre_center_flag'][0] 
             mvars.translation_array = variables['translation_array'][0] 
-            mvars.rotation_axes = variables['rotation_axes'][0] 
-            mvars.rotation_order = variables['rotation_order'][0] 
-            mvars.rotation_array = variables['rotation_array'][0] 
+            mvars.rotation_flag = variables['rotation_flag'][0] 
+            mvars.rotation_type = variables['rotation_type'][0] 
+            mvars.rotation_axes_order = variables['rotation_axes_order'][0] 
+            mvars.rotation_theta = variables['rotation_theta'][0] 
        
-        
-        mvars.align_pmi_on_axis_flag = variables['align_pmi_on_axis_flag'][0]
-        if(mvars.align_pmi_on_axis_flag):
-
+        elif(mvars.align_pmi_on_axis_flag):
+            mvars.align_pmi_output_filename = variables['align_pmi_output_filename'][0]
             mvars.pmi_eigenvector = variables['pmi_eigenvector'][0]
             mvars.alignment_vector_axis = variables['alignment_vector_axis'][0]
-            mvars.settle_on_plane = variables['settle_on_plane'][0]
-            mvars.plane = variables['plane'][0]
-
-        mvars.fasta_utilities_flag = variables['fasta_utilities_flag'][0]
-        
-
-        if(mvars.fasta_utilities_flag):
+            mvars.user_vector_2 = variables['user_vector_2'][0]
+            mvars.settle_on_surface_flag = variables['settle_on_surface_flag'][0]
+            if(mvars.settle_on_surface_flag):
+                mvars.surface_plane = variables['surface_plane'][0]
+                mvars.invert_along_axis_flag = variables['invert_along_axis_flag'][0]
+        elif(mvars.align_pmi_on_cardinal_axes_flag):
+            mvars.align_pmi_output_filename = variables['align_pmi_output_filename'][0]
+        elif(mvars.fasta_utilities_flag):
             mvars.fasta_input_option = variables['fasta_input_option'][0]
 
             if(mvars.fasta_input_option == 'sequence'):
@@ -175,7 +176,7 @@ class build_utilities():
 
         if(mvars.pdb_utilities_flag):
             mvars.molecule = sasmol.SasMol(0)
-            mvars.molecule.read_pdb(mvars.pdbfile)
+            mvars.molecule.read_pdb(mvars.input_pdbfile)
 
             if(mvars.pdb_constraints_flag):
 
@@ -192,7 +193,21 @@ class build_utilities():
             if(mvars.translation_rotation_flag):
 
                 mvars.translation_array = numpy.array(mvars.translation_array, numpy.float)
-
+                
+                if(mvars.rotation_flag):
+                    dum_order = []
+                    dum_theta = {}
+                    for axis in mvars.rotation_axes_order:
+                        dum_order.append(axis)
+                        if axis == 'x':
+                            dum_theta['x'] = mvars.rotation_theta[0]
+                        elif axis == 'y':
+                            dum_theta['y'] = mvars.rotation_theta[1]
+                        elif axis == 'z':
+                            dum_theta['z'] = mvars.rotation_theta[2]
+                    mvars.rotation_axes_order = dum_order
+                    mvars.rotation_theta = dum_theta
+                    print('rt = ', mvars.rotation_theta)
 
         if(mvars.fasta_utilities_flag):
             pass
@@ -247,11 +262,30 @@ class build_utilities():
 
             mvars.molecule.translate(frame, mvars.translation_array)            
 
-            ### ROTATION CODE GOES HERE
-
-
+            if(mvars.rotation_flag):
+                if(mvars.rotation_type == 'cardinal'):
+                    for axis in mvars.rotation_axes_order:
+                        center_of_mass = mvars.molecule.calccom(frame)
+                        mvars.molecule.center(frame)
+                        theta = mvars.rotation_theta[axis]
+                        mvars.molecule.rotate(frame,axis,theta)
+                        mvars.molecule.moveto(frame, center_of_mass)
+                elif(mvars.rotation_type == 'user_vector'):
+                    for axis in mvars.rotation_axes_order:
+                        center_of_mass = mvars.molecule.calccom(frame)
+                        mvars.molecule.center(frame)
+                        theta = mvars.rotation_theta[axis]
+                        ux = user_vector_1[0]
+                        uy = user_vector_1[1]
+                        uz = user_vector_1[2]
+                        mvars.molecule.general_axis_rotate(frame,theta,ux,uy,uz)
+                        mvars.molecule.moveto(frame, center_of_mass)
     
-            mvars.molecule.write_pdb(os.path.join(self.runpath, mvars.translation_rotation_output_filename), frame, 'w')
+                mvars.molecule.write_pdb(os.path.join(self.runpath, mvars.translation_rotation_output_filename), frame, 'w')
+
+        elif(mvars.align_pmi_on_cardinal_axes_flag):
+
+            pass
 
         elif(mvars.align_pmi_on_axis_flag):
 
@@ -288,10 +322,37 @@ class build_utilities():
             #print('rotvec = ', rotvec)
             r1 = rotvec[0] ; r2 = rotvec[1] ; r3 = rotvec[2]
             mvars.molecule.general_axis_rotate(frame, theta, r1,r2,r3) 
-            mvars.molecule.write_pdb('junk.pdb', frame, 'w')
-            
-            #mvars.plane 
-            #mvars.settle_on_plane 
+
+            if(mvars.settle_on_surface_flag):
+                minmax = mvars.molecule.calcminmax()
+                print('minmax = ', minmax)
+                minimum = minmax[0]
+                maximum = minmax[1]
+                print('minimum = ', minimum)
+                print('maximum = ', maximum)
+                if(mvars.alignment_vector_axis == 'x'):
+                    mvars.molecule.translate(frame, [-minimum[0], 0.0, 0.0])
+                elif(mvars.alignment_vector_axis == 'y'):
+                    mvars.molecule.translate(frame, [0.0, -minimum[1], 0.0])
+                elif(mvars.alignment_vector_axis == 'z'):
+                    mvars.molecule.translate(frame, [0.0, 0.0, -minimum[2]])
+                minmax = mvars.molecule.calcminmax()
+                print('minmax = ', minmax)
+
+                mvars.molecule.write_pdb(os.path.join(self.runpath,'moved_'+mvars.align_pmi_output_filename), frame, 'w')
+                if(mvars.invert_along_axis_flag):
+                    center_of_mass = mvars.molecule.calccom(frame)
+                    mvars.molecule.center(frame)
+                    if(mvars.alignment_vector_axis == 'x'):
+                        mvars.molecule.rotate(frame, 'y', math.pi)
+                    elif(mvars.alignment_vector_axis == 'y'):
+                        mvars.molecule.rotate(frame, 'z', math.pi)
+                    elif(mvars.alignment_vector_axis == 'z'):
+                        mvars.molecule.rotate(frame, 'x', math.pi)
+                    mvars.molecule.moveto(frame, center_of_mass)
+                    mvars.molecule.write_pdb(os.path.join(self.runpath,'inverted_moved_'+mvars.align_pmi_output_filename), frame, 'w')
+
+            mvars.molecule.write_pdb(os.path.join(self.runpath,mvars.align_pmi_output_filename), frame, 'w')
         
         return
     
