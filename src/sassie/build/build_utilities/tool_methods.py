@@ -292,7 +292,7 @@ class build_utilities():
             mvars.molecule.center(frame)
             uk, ak, I = mvars.molecule.calcpmi(frame) 
             ''' right handed coordinate frame '''
-            ak[0] = -1.0 * ak[0]
+            #ak[0] = -1.0 * ak[0]
             #print('ak = ', ak)
             ''' check if right handed coordinate frame '''
             if numpy.linalg.det([ak]) < 0:
