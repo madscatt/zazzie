@@ -325,11 +325,11 @@ class build_utilities():
 
             if(mvars.settle_on_surface_flag):
                 minmax = mvars.molecule.calcminmax()
-                print('minmax = ', minmax)
+                #print('minmax = ', minmax)
                 minimum = minmax[0]
                 maximum = minmax[1]
-                print('minimum = ', minimum)
-                print('maximum = ', maximum)
+                #print('minimum = ', minimum)
+                #print('maximum = ', maximum)
                 if(mvars.alignment_vector_axis == 'x'):
                     mvars.molecule.translate(frame, [-minimum[0], 0.0, 0.0])
                 elif(mvars.alignment_vector_axis == 'y'):
@@ -337,7 +337,7 @@ class build_utilities():
                 elif(mvars.alignment_vector_axis == 'z'):
                     mvars.molecule.translate(frame, [0.0, 0.0, -minimum[2]])
                 minmax = mvars.molecule.calcminmax()
-                print('minmax = ', minmax)
+                #print('minmax = ', minmax)
 
                 mvars.molecule.write_pdb(os.path.join(self.runpath,'moved_'+mvars.align_pmi_output_filename), frame, 'w')
                 if(mvars.invert_along_axis_flag):
@@ -373,6 +373,6 @@ class build_utilities():
         pgui("\n\n") 
         pgui("%s \n" % ('=' * 60)) 
         
-        #time.sleep(2) 
+        time.sleep(2) 
 
         return
