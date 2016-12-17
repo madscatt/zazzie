@@ -141,6 +141,7 @@ class build_utilities():
             mvars.rotation_type = variables['rotation_type'][0] 
             mvars.rotation_axes_order = variables['rotation_axes_order'][0] 
             mvars.rotation_theta = variables['rotation_theta'][0] 
+            mvars.user_vector_1 = variables['user_vector_1'][0]
        
         elif(mvars.align_pmi_on_axis_flag):
             mvars.align_pmi_output_filename = variables['align_pmi_output_filename'][0]
@@ -193,21 +194,24 @@ class build_utilities():
             if(mvars.translation_rotation_flag):
 
                 mvars.translation_array = numpy.array(mvars.translation_array, numpy.float)
-                
+                print('translation array = ', mvars.translation_array) 
                 if(mvars.rotation_flag):
                     dum_order = []
                     dum_theta = {}
                     for axis in mvars.rotation_axes_order:
                         dum_order.append(axis)
                         if axis == 'x':
-                            dum_theta['x'] = mvars.rotation_theta[0]
+                            dum_theta['x'] = mvars.rotation_theta[0] * math.pi/180.0
                         elif axis == 'y':
-                            dum_theta['y'] = mvars.rotation_theta[1]
+                            dum_theta['y'] = mvars.rotation_theta[1] * math.pi/180.0
                         elif axis == 'z':
-                            dum_theta['z'] = mvars.rotation_theta[2]
+                            dum_theta['z'] = mvars.rotation_theta[2] * math.pi/180.0
                     mvars.rotation_axes_order = dum_order
                     mvars.rotation_theta = dum_theta
                     print('rt = ', mvars.rotation_theta)
+                    if(mvars.rotation_type == 'user_vector'):
+                        mvars.user_vector_1 = numpy.array(mvars.user_vector_1, numpy.float)
+                        print('user_vector_1 = ', mvars.user_vector_1) 
 
         if(mvars.fasta_utilities_flag):
             pass
@@ -250,10 +254,13 @@ class build_utilities():
                 mvars.molecule.renumber(resid=mvars.first_resid)
 
             mvars.molecule.write_pdb(os.path.join(self.runpath, mvars.renumber_output_filename), frame, 'w')
+            mvars.output_pdb_filename = [mvars.renumber_output_filename]
 
         elif(mvars.pdb_constraints_flag):
+            mvars.output_pdb_filename = []
             for i in xrange(mvars.number_of_constraint_files):
                 mvars.molecule.make_constraint_pdb(os.path.join(self.runpath, mvars.constraint_filenames[i]), mvars.constraint_options[i], field=mvars.constraint_fields[i], reset=mvars.constraint_resets[i])
+                mvars.output_pdb_filename.append(mvars.constraint_filenames[i])
 
         elif(mvars.translation_rotation_flag):
 
@@ -264,9 +271,6 @@ class build_utilities():
 
             if(mvars.rotation_flag):
                 if(mvars.rotation_type == 'cardinal'):
-                    for axis in mvars.rotation_axes_order:
-                        center_of_mass = mvars.molecule.calccom(frame)
-                        mvars.molecule.center(frame)
                         theta = mvars.rotation_theta[axis]
                         mvars.molecule.rotate(frame,axis,theta)
                         mvars.molecule.moveto(frame, center_of_mass)
@@ -275,13 +279,14 @@ class build_utilities():
                         center_of_mass = mvars.molecule.calccom(frame)
                         mvars.molecule.center(frame)
                         theta = mvars.rotation_theta[axis]
-                        ux = user_vector_1[0]
-                        uy = user_vector_1[1]
-                        uz = user_vector_1[2]
+                        ux = mvars.user_vector_1[0]
+                        uy = mvars.user_vector_1[1]
+                        uz = mvars.user_vector_1[2]
                         mvars.molecule.general_axis_rotate(frame,theta,ux,uy,uz)
                         mvars.molecule.moveto(frame, center_of_mass)
     
-                mvars.molecule.write_pdb(os.path.join(self.runpath, mvars.translation_rotation_output_filename), frame, 'w')
+            mvars.molecule.write_pdb(os.path.join(self.runpath, mvars.translation_rotation_output_filename), frame, 'w')
+            mvars.output_pdb_filename = [mvars.translation_rotation_output_filename]
 
         elif(mvars.align_pmi_on_cardinal_axes_flag):
 
@@ -339,7 +344,7 @@ class build_utilities():
                 minmax = mvars.molecule.calcminmax()
                 #print('minmax = ', minmax)
 
-                mvars.molecule.write_pdb(os.path.join(self.runpath,'moved_'+mvars.align_pmi_output_filename), frame, 'w')
+                #mvars.molecule.write_pdb(os.path.join(self.runpath,'moved_'+mvars.align_pmi_output_filename), frame, 'w')
                 if(mvars.invert_along_axis_flag):
                     center_of_mass = mvars.molecule.calccom(frame)
                     mvars.molecule.center(frame)
@@ -350,9 +355,10 @@ class build_utilities():
                     elif(mvars.alignment_vector_axis == 'z'):
                         mvars.molecule.rotate(frame, 'x', math.pi)
                     mvars.molecule.moveto(frame, center_of_mass)
-                    mvars.molecule.write_pdb(os.path.join(self.runpath,'inverted_moved_'+mvars.align_pmi_output_filename), frame, 'w')
+                    #mvars.molecule.write_pdb(os.path.join(self.runpath,'inverted_moved_'+mvars.align_pmi_output_filename), frame, 'w')
 
             mvars.molecule.write_pdb(os.path.join(self.runpath,mvars.align_pmi_output_filename), frame, 'w')
+            mvars.output_pdb_filename = [mvars.align_pmi_output_filename]
         
         return
     
@@ -365,8 +371,11 @@ class build_utilities():
         log = self.log
         log.debug('in epilogue')
         pgui = self.run_utils.print_gui
+        mvars = self.mvars
 
-        pgui('New PDB file(s) saved in %s directory\n\n' % (self.runpath+os.path.sep)) 
+        pgui('New PDB file(s) saved in %s directory\n' % (self.runpath+os.path.sep)) 
+        for name in mvars.output_pdb_filename:
+            pgui(name+'\n')
         self.run_utils.clean_up(log) 
         pgui('\nrun json inputs saved to:\n    %s\n' % os.path.join(self.runpath, self.parmfile)) 
         pgui('\nrun log output saved to:\n    %s\n' % os.path.join(self.runpath, self.logfile)) 
