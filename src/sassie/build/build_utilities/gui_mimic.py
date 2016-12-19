@@ -147,7 +147,7 @@ if len(error) > 0:
 #import pprint; pprint.pprint(variables); exit()
 
 txtQueue = multiprocessing.JoinableQueue()
-build_utilities = tool_methods.build_utilities()
+build_utilities = build_utilities.build_utilities()
 build_utilities.main(variables, txtQueue)
 this_text = txtQueue.get(True, timeout=0.1)
 
