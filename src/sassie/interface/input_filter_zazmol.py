@@ -18,7 +18,7 @@ import os
 import sys
 import string
 import locale
-import sasmol.sasmol as sasmol
+import sasmol.system as system
 import sassie.util.sasutil as sasutil
 
 
@@ -212,7 +212,7 @@ def check_pdb_dcd(infile, filetype):
         if(fileexist):
             binary = check_binary(infile)
             print('binary = ', binary)
-            test_mol = sasmol.SasMol(0)
+            test_mol = system.Molecule(0)
             fileexist = 1
             if(filetype == 'pdb' and not binary):
                 test_mol.read_pdb(infile, fastread=True)
@@ -238,8 +238,8 @@ def certify_pdb_pdb(pdbfile1, pdbfile2):
         fileexist2 = os.path.isfile(pdbfile2)
         if(fileexist1 and fileexist2):
             fileexist = 1
-            pdbmol1 = sasmol.SasMol(0)
-            pdbmol2 = sasmol.SasMol(1)
+            pdbmol1 = system.Molecule(0)
+            pdbmol2 = system.Molecule(1)
             try:
                 pdbmol1.read_pdb(pdbfile1, fastread=True)
                 pdbmol2.read_pdb(pdbfile2, fastread=True)
@@ -300,7 +300,7 @@ def certify_dcd_psf(dcdfile, psffile):
             fileexist = 1
             try:
                 natoms_psf, names_psf = read_psf_file(psffile)
-                dcdmol = sasmol.SasMol(1)
+                dcdmol = system.Molecule(1)
 
                 dcdfile = dcdmol.open_dcd_read(dcdfile)
                 natoms_dcd = dcdfile[1]
@@ -327,7 +327,7 @@ def certify_pdb_psf(pdbfile, psffile):
             fileexist = 1
             try:
                 natoms_psf, names_psf = read_psf_file(psffile)
-                pdbmol = sasmol.SasMol(1)
+                pdbmol = system.Molecule(1)
                 pdbmol.read_pdb(pdbfile, fastread=True)
                 natoms_pdb = pdbmol.natoms()
                 names_pdb = pdbmol.name()
@@ -354,8 +354,8 @@ def certify_pdb_dcd(pdbfile, dcdfile):
     '''
     value = 0
     try:
-        pdbmol = sasmol.SasMol(0)
-        dcdmol = sasmol.SasMol(1)
+        pdbmol = system.Molecule(0)
+        dcdmol = system.Molecule(1)
 
         pdbmol.read_pdb(pdbfile, fastread=True)
         natoms_pdb = pdbmol.natoms()
@@ -374,7 +374,7 @@ def certify_pdb_dcd(pdbfile, dcdfile):
 def get_pdb_stats(filename, variables):
     value = 0
     try:
-        a = sasmol.SasMol(0)
+        a = system.Molecule(0)
         a.read_pdb(filename, fastread=True)
         result = []
         try:
@@ -428,11 +428,11 @@ def get_pdb_stats(filename, variables):
 def get_pdb_complex_stats(filename, segname, variables):
     value = 0
     try:
-        o = sasmol.SasMol(0)
+        o = system.Molecule(0)
         o.read_pdb(filename, fastread=True)
         seg_filter = 'segname[i] == "' + segname.strip() + '"'
         error, seg_mask = o.get_subset_mask(seg_filter)
-        a = sasmol.SasMol(1)
+        a = system.Molecule(1)
         error = o.copy_molecule_using_mask(a, seg_mask, 0)
         result = []
         try:
