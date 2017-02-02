@@ -6,13 +6,13 @@
 | Module              | Initial Code | Initial Test Code | Refactor Code | Update Test Code | Code Review | Docs | Sassie-web Alpha | Sassie-web Beta | Sassie-web |
 |---------------------|--------------|-------------------|---------------|------------------|-------------|------|------------------|-----------------|------------|
 | Contrast Calculator |              |
-| Align               |      x       | 
-| Data Interpolation  |              |  
-| Extract Utilities   |      x       |    
+| Align               |      x       |         x 
+| Data Interpolation  |      x       |         x 
+| Extract Utilities   |      x       |         x
 | Merge Utilities     |              |       
 | PDB Scan            |      x       |   
 | PDB Rx              |      x       |    
-| Build Utilities     |              |   
+| Build Utilities     |      x       |   
 | Monomer Monte Carlo |              |       
 | Complex Monte Carlo |              |    
 | Energy Minimization |              |    
@@ -28,6 +28,6 @@
 | Density Plot        |              |  
 | Capriqorn           |              |      
 | SasCalc-PBC         |              |  
-| Input Filter        |              |  
+| Input Filter        |      x       |         x 
 
 
