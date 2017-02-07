@@ -53,10 +53,12 @@ class Test_Align_Filter(MockerTestCase):
     lowres2:      integer     low residue for overlap molecule 2    
     highres2:     integer     high residue for overlap molecule 2   
 
-    Inputs not tested (deprecated functionality):
+    Inputs not tested:
 
-    ebasis1:      string      extra basis statement molecule 1 
-    ebasis2:      string      extra basis statement molecule 2 
+    ebasis1:      string      extra basis statement molecule 1  (deprecated functionality)
+    ebasis2:      string      extra basis statement molecule 2  (deprecated functionality)
+    zflag:        boolean     flag for Z cutoff         (type checked by input_filter.py)
+    zcutoff:      float       Z coordinate cutoff value (type checked by input_filter.py)
 
     Use cases tested:
 

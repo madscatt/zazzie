@@ -27,7 +27,10 @@ def user_variables(self, **kwargs):
 #    self.infile = os.path.join('./', 'hiv1_gag.pdb')
     self.infile = os.path.join('./', 'hiv1_gag_20_frames.dcd')
     self.ofile = 'aligned_hiv1_gag_20_frames.dcd'
-#    self.ofile = 'aligned_hiv1_gag.pdb'
+#    self.ofile = 'aligned_hiv1_gag_zcutoff.dcd'
+#    self.ofile = 'aligned_hiv1_gag_20_frames.pdb'
+#    self.ofile = 'aligned_hiv1_gag_zcutoff.pdb'
+    self.ofile = 'aligned_hiv1_gag.pdb'
     self.basis1 = 'CA'
     self.basis2 = 'CA'
     self.lowres1 = '145'
@@ -36,6 +39,9 @@ def user_variables(self, **kwargs):
     self.highres2 = '350'
     self.ebasis1 = 'None'
     self.ebasis2 = 'None'
+    self.zflag = False
+#    self.zflag = True
+    self.zcutoff = '-66.0' #If there are ANY atoms with a z-value less than the cutoff the frame will not be written to disk.
 
     ### END USER INPUT ###
     ### END USER INPUT ###
@@ -72,6 +78,9 @@ def test_variables(self, paths):
     self.ebasis1 = 'None'
     self.ebasis2 = 'None'
 
+    self.zflag = False
+    self.zcutoff = '0.0'
+
     self.precision = 3
 
 
@@ -100,6 +109,9 @@ def run_module(self, **kwargs):
     svariables['ebasis1'] = (self.ebasis1, 'string')
     svariables['ebasis2'] = (self.ebasis2, 'string')
 
+    svariables['zflag'] = (self.zflag, 'boolean')
+    svariables['zcutoff'] = (self.zcutoff, 'float')
+    
     error, self.variables = input_filter.type_check_and_convert(svariables)
 
     if(len(error) > 0):
@@ -131,10 +143,7 @@ def run_module(self, **kwargs):
     txtQueue = multiprocessing.JoinableQueue()
     this_align = align.align()
     this_align.main(self.variables, txtQueue)
-#    this_text = txtQueue.get(True, timeout=0.1)
 
-#    txtQueue = multiprocessing.JoinableQueue()
-#    align.align(self.variables, txtQueue)
 
 class gui_mimic_align():
     '''

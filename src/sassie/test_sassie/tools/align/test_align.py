@@ -54,7 +54,9 @@ class Test_Align(MockerTestCase):
     3.  Extra basis statement ('None' or appropriate command.  Two examples of appropriate commands are given in the align docs.)
         a.  extra basis statement is 'None' 
         b.  extra basis statement is not 'None'
-
+    4.  Z coordinate filter
+        a.  zflag is True (provide z cutoff value)
+        b.  zflag is False (z cutoff value is ignored)
 
     Inputs tested:
 
@@ -69,12 +71,15 @@ class Test_Align(MockerTestCase):
     highres1:     integer     high residue for overlap molecule 1   : 2 values (protein, RNA)
     lowres2:      integer     low residue for overlap molecule 2    : 2 values (protein, RNA)
     highres2:     integer     high residue for overlap molecule 2   : 2 values (protein, RNA)
+    zflag:        boolean     flag for zcutoff value                : 2 values (True or False)
+    zcutoff:      float       cutoff value for z coordinate         : any float
 
     Conditions:
 
     basis 1 must equal basis 2
     overlap regions for molecules 1 and 2 must have the same number of atoms
-
+    zcutoff == True: frames containing ANY atoms with a z-value less than the cutoff are not written
+    
     Inputs not tested (deprecated functionality):
 
     ebasis1:      string      extra basis statement molecule 1 
@@ -102,6 +107,7 @@ class Test_Align(MockerTestCase):
              *    basis 2: CA     *  *   basis 2: P      *   *    basis 2: CA    *  *   basis 2: P      *
              *  lowres 1=lowres 2 *  * lowres 1=lowres2  *   * lowres 1=lowres 2 *  * lowres 1=lowres2  *
              * highres 1=highres 2*  *highres 1=highres 2*   *highres 1=highres 2*  *highres 1=highres 2*
+             *                    *  *                   *   *  zcutoff tested   *  *                   *
              **********************  *********************   *********************  *********************
 
     '''
@@ -247,6 +253,41 @@ class Test_Align(MockerTestCase):
         correct_outfile = os.path.join(
             module_data_path, 'aligned_rna.pdb.minmax')
         assert_equals(filecmp.cmp(outfile, correct_outfile), True)
+
+    def test_5(self):
+        '''
+        test dcd input, CA,CA basis and zcutoff
+        '''
+
+        self.ofile = 'aligned_hiv1_gag_20_frames_zcutoff.dcd'
+        self.zflag = True
+        self.zcutoff = '-66.0'
+        
+        gui_mimic_align.run_module(self)
+
+        ''' confirm output dcd file is correct '''
+        outfile = os.path.join(self.runname, self.module, self.ofile)
+        molecule = sasmol.SasMol(0)
+        molecule.read_pdb(self.pdbmol2)
+        molecule.read_dcd(outfile)
+        result_coor = molecule.coor()
+
+        correct_outfile = os.path.join(
+            module_data_path, 'aligned_hiv1_gag_20_frames_zcutoff.dcd')
+        correct_molecule = sasmol.SasMol(0)
+        correct_molecule.read_pdb(self.pdbmol2)
+        correct_molecule.read_dcd(correct_outfile)
+        correct_coor = correct_molecule.coor()
+
+        self.assert_list_almost_equal(
+            correct_coor, result_coor, self.precision)
+
+        ''' confirm output minmax file is correct '''
+        outfile = os.path.join(self.runname, self.module,
+                               self.ofile + '.minmax')
+        correct_outfile = os.path.join(
+            module_data_path, 'aligned_hiv1_gag_20_frames_zcutoff.dcd.minmax')
+        assert_equals(filecmp.cmp(outfile, correct_outfile), True)        
 
     def tearDown(self):
         if os.path.exists(self.runname):

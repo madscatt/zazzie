@@ -44,12 +44,13 @@ from numpy.distutils.core import Extension, setup
 ### begin user edit ###
 
 all_packages = ['sassie', 'sassie.util','sassie.build', 
-    'sassie.interface', 'sassie.interface.align', 'sassie.interface.extract_utilities',
-    'sassie.tools', 'sassie.tools.align', 'sassie.tools.extract_utilities',
-    'sassie.interface', 'sassie.interface.chi_square_filter', 
+    'sassie.interface', 'sassie.interface.align', 'sassie.interface.extract_utilities','sassie.interface.data_interpolation',
+    'sassie.tools', 'sassie.tools.align', 'sassie.tools.extract_utilities', 'sassie.tools.data_interpolation',
+    'sassie.tools.merge_utilities',
+    'sassie.interface', 'sassie.interface.chi_square_filter', 'sassie.interface.merge_utilities',
     'sassie.analyze', 'sassie.analyze.chi_square_filter',
     'sassie.calculate', 'sassie.calculate.sascalc',
-    'sassie.interface.sascalc',
+    'sassie.interface.sascalc', 
     'sassie.calculate.sascalc.sascalc_library',
     'sassie.simulate', 
     'sassie.simulate.torsion_angle_monte_carlo',
