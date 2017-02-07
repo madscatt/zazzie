@@ -9,7 +9,7 @@
 | Align               |      x       |         x 
 | Data Interpolation  |      x       |         x 
 | Extract Utilities   |      x       |         x
-| Merge Utilities     |              |       
+| Merge Utilities     |      x       |         x
 | PDB Scan            |      x       |   
 | PDB Rx              |      x       |    
 | Build Utilities     |      x       |   
@@ -18,9 +18,9 @@
 | Energy Minimization |              |    
 | Torsion Angle MD    |              |     
 | Two-Body Grid       |              |     
-| ProDy               |              |   
+| ProDy               |      x       |   
 | Torsion Angle MC    |      x       |        
-| SasDock             |      x       |      
+| SasDock             |              |      
 | SasCalc             |              |  
 | SLD MOL             |              |   
 | EM to SAS           |              |        
