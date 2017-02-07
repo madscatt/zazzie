@@ -1,0 +1,11 @@
+lowest Rg = 	56.884013	highest Rg = 	65.707602
+accepted 	32	 out of 	50	 moves : 	64.000000 %
+overlapped 	18	 out of 	50	 moves : 	36.000000 %
+bad rg2 	0	 out of 	50	 moves : 	0.000000 %
+average accepted rg2 = 	63.093206
+average total rg2 of ensemble = 	63.417021
+
+minimum x = -94.883446	 maximum x = 39.666786 -> range: 134.550232 Angstroms
+minimum y = -133.296781	 maximum y = 40.991383 -> range: 174.288164 Angstroms
+minimum z = -90.226984	 maximum z = 96.862521 -> range: 187.089505 Angstroms
+
