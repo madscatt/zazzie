@@ -1,0 +1,1 @@
+[{"expdata": "/Users/skrueger/git_working_copies/zazzie/src/sassie/test_sassie/tools/data_interpolation/../../data/other_common/sans_data.sub", "plotflag": 0, "app": "data_interpolation", "runname": "run_0", "io": 0.04, "ioe": 0.001, "ofile": "sans_data.dat", "maxpoints": 16, "dq": 0.02}]

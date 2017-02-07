@@ -1,0 +1,4 @@
+runname	run_0
+pdb_name	/Users/skrueger/svn/sassie_1.0/trunk/sassie/core_testing/system_integration/tools/merge_utilities/../../data/pdb_common/hiv1_gag.pdb
+dcd_name	run_0.dcd
+sas_name	run_0/merge_utilities/xtal2sas
