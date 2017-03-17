@@ -111,6 +111,7 @@ def run_module(self, **kwargs):
         print 'error = ', error
         if not(self.testflag):
             sys.exit()
+        return error
 
     try:
         if kwargs['file_check']:
@@ -124,6 +125,7 @@ def run_module(self, **kwargs):
         print 'error = ', error
         if not(self.testflag):
             sys.exit()
+        return error
 
     try:
         if kwargs['test_filter']:

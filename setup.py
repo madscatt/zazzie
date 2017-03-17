@@ -47,8 +47,8 @@ all_packages = ['sassie', 'sassie.util','sassie.build',
     'sassie.interface', 'sassie.interface.align', 'sassie.interface.extract_utilities','sassie.interface.data_interpolation',
     'sassie.tools', 'sassie.tools.align', 'sassie.tools.extract_utilities', 'sassie.tools.data_interpolation',
     'sassie.tools.merge_utilities',
-    'sassie.interface', 'sassie.interface.chi_square_filter', 'sassie.interface.merge_utilities',
-    'sassie.analyze', 'sassie.analyze.chi_square_filter',
+    'sassie.interface', 'sassie.interface.chi_square_filter', 'sassie.interface.merge_utilities','sassie.interface.density_plot',
+    'sassie.analyze', 'sassie.analyze.chi_square_filter','sassie.analyze.density_plot',
     'sassie.calculate', 'sassie.calculate.sascalc',
     'sassie.interface.sascalc', 
     'sassie.calculate.sascalc.sascalc_library',
@@ -126,6 +126,8 @@ setup(name='sassie',
 
     ext_modules=[
         Extension('sassie.simulate.torsion_angle_monte_carlo.ooverlap',['src/sassie/simulate/torsion_angle_monte_carlo/extensions/ooverlap/ooverlap.c'],include_dirs=[numpy_include]),
+    Extension('sassie.analyze.cube',['src/sassie/analyze/extensions/cube/cube.c']),
+	Extension('sassie.analyze.renorm',['src/sassie/analyze/extensions/renorm/renorm.c']),
     Extension('sassie.simulate.torsion_angle_monte_carlo.dna_overlap',['src/sassie/simulate/torsion_angle_monte_carlo/extensions/dna_overlap/dna_overlap.f'])
         ]
 
