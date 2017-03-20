@@ -24,8 +24,8 @@
 | SasCalc             |              |  
 | SLD MOL             |              |   
 | EM to SAS           |              |        
-| Chi-Square Filter   |              |      
-| Density Plot        |              |  
+| Chi-Square Filter   |      x       |         x
+| Density Plot        |      x       |         x
 | Capriqorn           |              |      
 | SasCalc-PBC         |              |  
 | Input Filter        |      x       |         x 
