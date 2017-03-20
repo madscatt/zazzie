@@ -1,0 +1,1 @@
+Fraction D2O: 0.00; exH region:   1; fraction exH: 0.95; number exH:     0

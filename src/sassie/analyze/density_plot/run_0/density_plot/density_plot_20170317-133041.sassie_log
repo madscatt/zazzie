@@ -1,0 +1,152 @@
+Date		Time		File		Method		Line	Level	Message
+2017-03-17 13:30:41,242 - module_utilities.py - setup_logging - 133 - DEBUG - in setup_logging
+2017-03-17 13:30:41,244 - module_utilities.py - setup_logging - 134 - INFO - Program started
+2017-03-17 13:30:41,244 - module_utilities.py - preamble - 95 - DEBUG - in preamble
+2017-03-17 13:30:41,244 - module_utilities.py - preamble - 98 - INFO - module_application : density_plot
+2017-03-17 13:30:41,244 - module_utilities.py - preamble - 99 - INFO - executed by user : skrueger on Fri Mar 17 13:30:41 2017
+2017-03-17 13:30:41,244 - module_utilities.py - preamble - 100 - INFO - current directory : /Users/skrueger/git_working_copies/zazzie/src/sassie/analyze/density_plot
+2017-03-17 13:30:41,250 - module_utilities.py - preamble - 101 - INFO - hostname : P641702.campus.nist.gov
+2017-03-17 13:30:41,250 - density_plot.py - main - 87 - DEBUG - in main
+2017-03-17 13:30:41,250 - density_plot.py - unpack_variables - 118 - DEBUG - in unpack_variables
+2017-03-17 13:30:41,250 - density_plot.py - unpack_variables - 133 - DEBUG - {'dcdfile': './hiv1_gag_20_frames.dcd', 'nsegments': 1, 'ylength': 100.0, 'equalweights': 0, 'zlength': 100.0, 'app': 'density_plot', 'pdbfile': './hiv1_gag.pdb', 'runname': 'run_0', 'save_occupancy': 'Y', 'xlength': 100.0, 'ofile': 'test', 'weightsfile': 'weights_file_density_plot.txt', 'gridsp': 5.0}
+2017-03-17 13:30:41,250 - density_plot.py - process_input_variables - 144 - DEBUG - in process_input_variables
+2017-03-17 13:30:41,250 - density_plot.py - process_input_variables - 146 - DEBUG - segvariables: [[u'1', '6', '123', u'CA', u'GAG']]
+2017-03-17 13:30:41,250 - density_plot.py - process_input_variables - 154 - DEBUG - len(segvariables): 1
+2017-03-17 13:30:41,250 - density_plot.py - process_input_variables - 155 - DEBUG - nsegments: 1
+2017-03-17 13:30:41,250 - density_plot.py - process_input_variables - 186 - DEBUG - {'dcdfile': './hiv1_gag_20_frames.dcd', 'nsegments': 1, 'allslow': ['6'], 'ylength': 100.0, 'equalweights': 0, 'zlength': 100.0, 'app': 'density_plot', 'allshigh': ['123'], 'allsname': [u'GAG'], 'allsbasis': [u'CA'], 'pdbfile': './hiv1_gag.pdb', 'runname': 'run_0', 'save_occupancy': 'Y', 'allsnumregions': [u'1'], 'xlength': 100.0, 'ofile': 'test', 'weightsfile': 'weights_file_density_plot.txt', 'gridsp': 5.0}
+2017-03-17 13:30:41,250 - density_plot.py - process_input_variables - 187 - DEBUG - {'ahigh': [[123]], 'anregions': [1], 'alow': [[6]]}
+2017-03-17 13:30:41,250 - module_utilities.py - general_setup - 58 - DEBUG - in general_setup
+2017-03-17 13:30:41,251 - module_utilities.py - write_json_file - 22 - DEBUG - in write_json_file
+2017-03-17 13:30:41,251 - module_utilities.py - write_json_file - 24 - INFO - writing json files with input variables
+2017-03-17 13:30:41,251 - module_utilities.py - write_json_file - 28 - INFO - writing parameters to density_plot_20170317-133041.sassie_json
+2017-03-17 13:30:41,254 - module_utilities.py - write_json_file - 32 - INFO - backing up existing .last_sas.json file to .last_sas.json_backup
+2017-03-17 13:30:41,258 - module_utilities.py - write_json_file - 36 - INFO - backing up existing .last_sas_density_plot.json file to .last_sas_density_plot.json_backup
+2017-03-17 13:30:41,258 - module_utilities.py - write_json_file - 40 - INFO - writing parameters to .last_sas.json file
+2017-03-17 13:30:41,259 - module_utilities.py - write_json_file - 44 - INFO - writing parameters to .last_sas_density_plot.json file
+2017-03-17 13:30:41,259 - module_utilities.py - write_json_file - 46 - INFO - input variables: [{"dcdfile": "./hiv1_gag_20_frames.dcd", "allslow": ["6"], "xlength": 100.0, "ylength": 100.0, "equalweights": 0, "nsegments": 1, "zlength": 100.0, "app": "density_plot", "save_occupancy": "Y", "allshigh": ["123"], "pdbfile": "./hiv1_gag.pdb", "runname": "run_0", "allsname": ["GAG"], "allsnumregions": ["1"], "allsbasis": ["CA"], "ofile": "test", "weightsfile": "weights_file_density_plot.txt", "gridsp": 5.0}]
+2017-03-17 13:30:41,259 - module_utilities.py - general_setup - 75 - INFO - setting runpath directory to : run_0/density_plot
+2017-03-17 13:30:41,259 - module_utilities.py - general_setup - 82 - INFO - creating directory : run_0/density_plot
+2017-03-17 13:30:41,259 - density_plot.py - initialization - 366 - DEBUG - in initialization
+2017-03-17 13:30:41,259 - density_plot.py - initialization - 377 - DEBUG - runname(2) = run_0
+2017-03-17 13:30:41,259 - density_plot.py - initialization - 379 - DEBUG - densitypath = run_0/density_plot/
+2017-03-17 13:30:41,551 - module_utilities.py - print_gui - 148 - INFO - calculating min and max over all frames
+2017-03-17 13:30:41,556 - density_plot.py - initialization - 407 - DEBUG - number of frames = 20
+2017-03-17 13:30:41,556 - density_plot.py - initialization - 408 - DEBUG - intype = dcd
+2017-03-17 13:30:41,557 - density_plot.py - initialization - 414 - DEBUG - 
+segment = 1 :
+	num regions = 1
+2017-03-17 13:30:41,557 - density_plot.py - initialization - 415 - DEBUG - 	low = [6]
+2017-03-17 13:30:41,557 - density_plot.py - initialization - 416 - DEBUG - 	high = [123]
+
+2017-03-17 13:30:41,558 - density_plot.py - initialization - 459 - DEBUG - weights:  [ 0.  0.  0.  0.  0.  0.  0.  0.  0.  0.  0.  0.  1.  1.  0.  1.  1.  0.
+  0.  1.]
+2017-03-17 13:30:41,558 - module_utilities.py - print_gui - 148 - INFO - total_min_array = [-53.72644806 -93.35799408 -84.51082611]
+2017-03-17 13:30:41,559 - module_utilities.py - print_gui - 148 - INFO - total_max_array = [  20.98281288   54.82112122  100.76850891]
+2017-03-17 13:30:41,559 - module_utilities.py - print_gui - 148 - INFO - actual xlength = 74.709261
+2017-03-17 13:30:41,559 - module_utilities.py - print_gui - 148 - INFO - actual ylength = 148.179115
+2017-03-17 13:30:41,560 - module_utilities.py - print_gui - 148 - INFO - actual zlength = 185.279335
+2017-03-17 13:30:41,560 - module_utilities.py - print_gui - 148 - INFO - reset xmin to fit molecule: -58.7264480591
+2017-03-17 13:30:41,560 - module_utilities.py - print_gui - 148 - INFO - reset ymin to fit molecule: -98.3579940796
+2017-03-17 13:30:41,560 - module_utilities.py - print_gui - 148 - INFO - reset zmin to fit molecule: -89.5108261108
+2017-03-17 13:30:41,560 - module_utilities.py - print_gui - 148 - INFO - reset ymax to fit molecule: 59.8211212158
+2017-03-17 13:30:41,561 - module_utilities.py - print_gui - 148 - INFO - reset zmax to fit molecule: 105.768508911
+2017-03-17 13:30:41,683 - density_plot.py - initialization - 514 - DEBUG - full_mask = 1 1 0
+2017-03-17 13:30:41,683 - density_plot.py - initialization - 516 - DEBUG - number of atoms full = 431
+2017-03-17 13:30:41,797 - density_plot.py - initialization - 527 - DEBUG - number of atoms segment 0 = 431
+2017-03-17 13:30:41,979 - density_plot.py - initialization - 541 - DEBUG - number of atoms segment 0 region 0 = 118
+2017-03-17 13:30:41,979 - density_plot.py - initialization - 546 - DEBUG - {'dcdfile': './hiv1_gag_20_frames.dcd', 'nsegments': 1, 'allslow': ['6'], 'ylength': 100.0, 'equalweights': 0, 'zlength': 100.0, 'app': 'density_plot', 'allshigh': ['123'], 'allsname': [u'GAG'], 'allsbasis': [u'CA'], 'pdbfile': './hiv1_gag.pdb', 'runname': 'run_0', 'save_occupancy': 'Y', 'allsnumregions': [u'1'], 'xlength': 100.0, 'ofile': 'test', 'weightsfile': 'weights_file_density_plot.txt', 'gridsp': 5.0}
+2017-03-17 13:30:41,979 - density_plot.py - initialization - 547 - DEBUG - {'zmin': -89.510826110839844, 'anregions': [1], 'xmin': -58.726448059082031, 'ymin': -98.357994079589844, 'nf': 20, 'full_mask': array([0, 0, 0, ..., 0, 0, 0], dtype=int32), 'm1': <sasmol.sasmol.SasMol object at 0x10b1427d0>, 'nzgp': 39, 'number_atoms_segments': [431], 'wst': '_unequalweights', 'soutfile': [<open file 'run_0/density_plot/test_5.0_unequalweights_segment_1_complete.cube', mode 'w' at 0x10b07a420>], 'intype': 'dcd', 'nygp': 31, 'ahigh': [[123]], 'outfile': <open file 'run_0/density_plot/test_5.0_unequalweights_complete.cube', mode 'w' at 0x10b07a270>, 'ang2au': 1.8897261249935897, 'segments_mask': [array([0, 0, 0, ..., 0, 0, 0], dtype=int32)], 'nxgp': 21, 'aroutfile': [[<open file 'run_0/density_plot/test_5.0_unequalweights_segment_1_region_1.cube', mode 'w' at 0x10b07a4b0>]], 'anumber_atoms_regions': [[118]], 'aregions_mask': [[array([0, 0, 0, ..., 0, 0, 0], dtype=int32)]], 'number_atoms_full': 431, 'weights': array([ 0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  1.,
+        1.,  0.,  1.,  1.,  0.,  0.,  1.]), 'alow': [[6]], 'densitypath': 'run_0/density_plot/', 'ldcdfile': [<Swig Object of type 'FILE *' at 0x10b078090>, 6730, 20, 0, 5]}
+2017-03-17 13:30:41,981 - density_plot.py - density - 606 - DEBUG - in density
+2017-03-17 13:30:41,981 - module_utilities.py - print_gui - 148 - INFO - 
+============================================================ 
+
+2017-03-17 13:30:41,981 - module_utilities.py - print_gui - 148 - INFO - DATA FROM RUN: Fri Mar 17 17:30:41 2017 
+
+
+2017-03-17 13:30:41,982 - module_utilities.py - print_gui - 148 - INFO - COMPLETED 2 of 20 : 10.0 % done
+
+2017-03-17 13:30:41,983 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.1
+2017-03-17 13:30:41,984 - module_utilities.py - print_gui - 148 - INFO - COMPLETED 4 of 20 : 20.0 % done
+
+2017-03-17 13:30:41,984 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.2
+2017-03-17 13:30:41,985 - module_utilities.py - print_gui - 148 - INFO - COMPLETED 6 of 20 : 30.0 % done
+
+2017-03-17 13:30:41,985 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.3
+2017-03-17 13:30:41,987 - module_utilities.py - print_gui - 148 - INFO - COMPLETED 8 of 20 : 40.0 % done
+
+2017-03-17 13:30:41,987 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.4
+2017-03-17 13:30:41,988 - module_utilities.py - print_gui - 148 - INFO - COMPLETED 10 of 20 : 50.0 % done
+
+2017-03-17 13:30:41,988 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.5
+2017-03-17 13:30:41,989 - module_utilities.py - print_gui - 148 - INFO - COMPLETED 12 of 20 : 60.0 % done
+
+2017-03-17 13:30:41,989 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.6
+2017-03-17 13:30:41,991 - module_utilities.py - print_gui - 148 - INFO - COMPLETED 14 of 20 : 70.0 % done
+
+2017-03-17 13:30:41,991 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.7
+2017-03-17 13:30:41,992 - module_utilities.py - print_gui - 148 - INFO - COMPLETED 16 of 20 : 80.0 % done
+
+2017-03-17 13:30:41,992 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.8
+2017-03-17 13:30:41,993 - module_utilities.py - print_gui - 148 - INFO - COMPLETED 18 of 20 : 90.0 % done
+
+2017-03-17 13:30:41,994 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.9
+2017-03-17 13:30:41,995 - module_utilities.py - print_gui - 148 - INFO - COMPLETED 20 of 20 : 100.0 % done
+
+2017-03-17 13:30:41,995 - module_utilities.py - print_gui - 148 - INFO - STATUS	1.0
+2017-03-17 13:30:41,995 - density_plot.py - write_occupancy - 270 - DEBUG - in write_occupancy
+2017-03-17 13:30:41,995 - density_plot.py - write_occupancy - 290 - DEBUG - fltr 1 in write_occupancy: segname[natom] == "GAG" and name[natom] == "CA"
+2017-03-17 13:30:41,996 - density_plot.py - write_cube_header - 198 - DEBUG - in write_cube_header
+2017-03-17 13:30:42,110 - density_plot.py - write_occupancy - 303 - DEBUG - fltr 2 in write_occupancy: name[natom]=='CA' and segname[natom]=='GAG'
+2017-03-17 13:30:42,110 - density_plot.py - write_cube_header - 198 - DEBUG - in write_cube_header
+2017-03-17 13:30:42,220 - density_plot.py - write_cube_header - 198 - DEBUG - in write_cube_header
+2017-03-17 13:30:42,220 - density_plot.py - write_occupancy - 318 - DEBUG - fltr 3 in write_occupancy: name[natom]=='CA' and segname[natom]=='GAG' and (resid[natom]>=6 and resid[natom]<=123)
+2017-03-17 13:30:42,673 - module_utilities.py - print_gui - 148 - INFO - WROTE 21 of 21 : 100.0 % done
+
+2017-03-17 13:30:42,673 - module_utilities.py - print_gui - 148 - INFO - STATUS	1.0
+2017-03-17 13:30:42,687 - module_utilities.py - print_gui - 148 - INFO - Wrote occupancy data to : run_0/density_plot/test_5.0_unequalweights_occupancy.txt
+
+
+2017-03-17 13:30:42,692 - module_utilities.py - print_gui - 148 - INFO - 
+renormalizing bins
+2017-03-17 13:30:42,692 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.0
+2017-03-17 13:30:42,692 - module_utilities.py - print_gui - 148 - INFO - writing cube files to disk
+2017-03-17 13:30:42,692 - density_plot.py - density - 754 - DEBUG - fltr in first call to write_cube: segname[natom] == "GAG" and name[natom] == "CA"
+2017-03-17 13:30:42,692 - density_plot.py - write_cube - 223 - DEBUG - in write_cube
+2017-03-17 13:30:42,693 - density_plot.py - write_cube_header - 198 - DEBUG - in write_cube_header
+2017-03-17 13:30:42,928 - module_utilities.py - print_gui - 148 - INFO - 
+WROTE 21 of 21 grid points : 100.0 % done
+
+2017-03-17 13:30:42,929 - module_utilities.py - print_gui - 148 - INFO - STATUS	1.0
+2017-03-17 13:30:42,935 - module_utilities.py - print_gui - 148 - INFO - Wrote the density data to : run_0/density_plot/test_5.0_unequalweights_complete.cube
+
+
+2017-03-17 13:30:42,935 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.0
+2017-03-17 13:30:42,935 - density_plot.py - density - 768 - DEBUG - fltr in 2nd call to write_cube:  name[natom]=="CA" and segname[natom]=="GAG"
+2017-03-17 13:30:42,935 - density_plot.py - write_cube - 223 - DEBUG - in write_cube
+2017-03-17 13:30:42,936 - density_plot.py - write_cube_header - 198 - DEBUG - in write_cube_header
+2017-03-17 13:30:43,171 - module_utilities.py - print_gui - 148 - INFO - 
+WROTE 21 of 21 grid points : 100.0 % done
+
+2017-03-17 13:30:43,171 - module_utilities.py - print_gui - 148 - INFO - STATUS	1.0
+2017-03-17 13:30:43,177 - module_utilities.py - print_gui - 148 - INFO - Wrote the density data to : run_0/density_plot/test_5.0_unequalweights_segment_1_complete.cube
+
+
+2017-03-17 13:30:43,178 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.0
+2017-03-17 13:30:43,178 - density_plot.py - density - 785 - DEBUG - flter in 3rd call to write_cube: name[natom]=="CA" and segname[natom]=="GAG" and (resid[natom]>=6 and resid[natom]<=123)
+2017-03-17 13:30:43,178 - density_plot.py - write_cube - 223 - DEBUG - in write_cube
+2017-03-17 13:30:43,178 - density_plot.py - write_cube_header - 198 - DEBUG - in write_cube_header
+2017-03-17 13:30:43,480 - module_utilities.py - print_gui - 148 - INFO - 
+WROTE 21 of 21 grid points : 100.0 % done
+
+2017-03-17 13:30:43,480 - module_utilities.py - print_gui - 148 - INFO - STATUS	1.0
+2017-03-17 13:30:43,486 - module_utilities.py - print_gui - 148 - INFO - Wrote the density data to : run_0/density_plot/test_5.0_unequalweights_segment_1_region_1.cube
+
+
+2017-03-17 13:30:43,487 - density_plot.py - epilogue - 803 - DEBUG - in epilogue
+2017-03-17 13:30:43,487 - module_utilities.py - clean_up - 157 - DEBUG - in clean_up
+2017-03-17 13:30:43,494 - module_utilities.py - print_gui - 148 - INFO - 
+============================================================ 
+
+
+2017-03-17 13:30:43,494 - module_utilities.py - print_gui - 148 - INFO - DENSITY_PLOT IS DONE

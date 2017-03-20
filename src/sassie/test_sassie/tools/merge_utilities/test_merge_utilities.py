@@ -192,7 +192,7 @@ class Test_Merge_Utilities(MockerTestCase):
         for common_dir in dirs_cmp.common_dirs:
             new_dir1 = os.path.join(dir1, common_dir)
             new_dir2 = os.path.join(dir2, common_dir)
-            if not are_dir_trees_equal(new_dir1, new_dir2):
+            if not self.check_dir_trees_equal(new_dir1, new_dir2):
                 return False
         return True
 
