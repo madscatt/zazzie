@@ -5,7 +5,7 @@
 
 | Module              | Initial Code | Initial Test Code | Refactor Code | Update Test Code | Code Review | Docs | Sassie-web Alpha | Sassie-web Beta | Sassie-web |
 |---------------------|--------------|-------------------|---------------|------------------|-------------|------|------------------|-----------------|------------|
-| Contrast Calculator |              |
+| Contrast Calculator |      x       |         x
 | Align               |      x       |         x 
 | Data Interpolation  |      x       |         x 
 | Extract Utilities   |      x       |         x
