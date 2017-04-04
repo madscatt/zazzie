@@ -1,0 +1,48 @@
+#Date: Wed Mar 29 18:28:17 2017
+
+#Files used: protein_sequence.txt (1)
+
+#Chemical formulas used: 1. H48C36O36, 2. H48C36O36
+
+#Solvent Components:
+#Component, molar conc, volume (A^3), Mw (kDA), x-ray SL, neutron SL (10^-12 cm), x-ray SLD, neutron SLD (10^10 cm^-2)
+#	H2O	 55.51	 29.9	 0.018	  2.820	 -0.168	  9.428	 -0.561
+
+#XRAY Contrast (10^10 cm^-2):
+#Protein, Molecule 1, Molecule 2, Complex
+#  3.034	  0.332	  2.106	  2.940
+
+#NEUTRON Contrast:
+#Molecule 1 Match Point: 35.98 %D2O
+#Molecule 2 Match Point: 37.56 %D2O
+#Protein Match Point: 43.52 %D2O
+#Complex Match Point: 43.12 %D2O
+
+#Fraction of exchanged protein hydrogens: 0.95
+#Fraction of exchanged nucleic acid hydrogens: 1.00
+#Fraction of exchanged molecule 1 hydrogens: 0.95
+#Fraction of exchanged molecule 2 hydrogens: 0.45
+
+#NEUTRON Contrast (10^10 cm^-2):
+# frac D2O, Protein, Molecule 1, Molecule 2, Complex
+ 0.00	  2.427	  2.245	  2.551	  2.425
+ 0.05	  2.148	  1.933	  2.212	  2.144
+ 0.10	  1.870	  1.622	  1.872	  1.864
+ 0.15	  1.592	  1.310	  1.533	  1.583
+ 0.20	  1.313	  0.998	  1.193	  1.302
+ 0.25	  1.035	  0.686	  0.853	  1.021
+ 0.30	  0.756	  0.374	  0.514	  0.740
+ 0.35	  0.477	  0.062	  0.174	  0.459
+ 0.40	  0.198	 -0.250	 -0.166	  0.177
+ 0.45	 -0.081	 -0.562	 -0.505	 -0.104
+ 0.50	 -0.360	 -0.875	 -0.845	 -0.386
+ 0.55	 -0.639	 -1.187	 -1.184	 -0.667
+ 0.60	 -0.918	 -1.499	 -1.524	 -0.949
+ 0.65	 -1.198	 -1.811	 -1.864	 -1.231
+ 0.70	 -1.478	 -2.124	 -2.203	 -1.513
+ 0.75	 -1.757	 -2.436	 -2.543	 -1.795
+ 0.80	 -2.037	 -2.748	 -2.883	 -2.077
+ 0.85	 -2.317	 -3.061	 -3.222	 -2.360
+ 0.90	 -2.597	 -3.373	 -3.562	 -2.642
+ 0.95	 -2.877	 -3.686	 -3.902	 -2.924
+ 1.00	 -3.158	 -3.998	 -4.241	 -3.207

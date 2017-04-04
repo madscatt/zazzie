@@ -10,6 +10,7 @@ import shutil
 #import align as align
 
 import sassie.tools.align.align as align
+#import align as align
 import sassie.interface.input_filter as input_filter
 import sassie.interface.align.align_filter as align_filter
 import multiprocessing

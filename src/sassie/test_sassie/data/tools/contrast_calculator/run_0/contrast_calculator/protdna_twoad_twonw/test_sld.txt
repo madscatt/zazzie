@@ -1,0 +1,53 @@
+#Date: Wed Mar 29 19:21:56 2017
+
+#Files used: protein_sequence.txt (1), dna_sequence.txt (2)
+
+#Chemical formulas used: 1. H48C36O36, 2. H48C36O36
+
+#Solvent Components:
+#Component, molar conc, volume (A^3), Mw (kDA), x-ray SL, neutron SL (10^-12 cm), x-ray SLD, neutron SLD (10^10 cm^-2)
+#	H2O	 55.51	 29.9	 0.018	  2.820	 -0.168	  9.428	 -0.561
+#	Na1Cl1	  0.15	 29.3	 0.058	  7.896	  1.321	 26.958	  4.509
+#	K1Cl1	  0.05	 35.9	 0.075	 10.152	  1.325	 28.318	  3.695
+#Totals: x-ray SL, neutron SL (10^-12 cm), x-ray SLD, neutron SLD (10^10 cm^-2)
+#	157.636	 -9.020	  9.494	 -0.543
+
+#XRAY SLD (10^10 cm^-2):
+#Protein, NA, Molecule 1, Molecule 2, Complex, Solvent
+# 12.462	 15.583	  9.759	 11.534	 15.315	  9.494
+
+#NEUTRON SLDs:
+#Molecule 1 Match Point: 35.84 %D2O
+#Molecule 2 Match Point: 37.44 %D2O
+#Protein Match Point: 43.40 %D2O
+#DNA Match Point: 64.45 %D2O
+#Complex Match Point: 62.82 %D2O
+
+#Fraction of exchanged protein hydrogens: 0.95
+#Fraction of exchanged nucleic acid hydrogens: 1.00
+#Fraction of exchanged molecule 1 hydrogens: 0.95
+#Fraction of exchanged molecule 2 hydrogens: 0.45
+
+#NEUTRON SLDs (10^10 cm^-2):
+# frac D2O, Protein, DNA, Molecule 1, Molecule 2, Complex, Solvent
+ 0.00	  1.865	  3.463	  1.684	  1.990	  3.330	 -0.543
+ 0.05	  1.935	  3.499	  1.720	  1.999	  3.368	 -0.197
+ 0.10	  2.005	  3.535	  1.756	  2.007	  3.407	  0.150
+ 0.15	  2.075	  3.571	  1.793	  2.016	  3.446	  0.497
+ 0.20	  2.144	  3.608	  1.829	  2.024	  3.484	  0.844
+ 0.25	  2.214	  3.644	  1.865	  2.032	  3.523	  1.191
+ 0.30	  2.283	  3.680	  1.901	  2.041	  3.561	  1.537
+ 0.35	  2.353	  3.716	  1.937	  2.049	  3.600	  1.884
+ 0.40	  2.422	  3.752	  1.973	  2.058	  3.639	  2.231
+ 0.45	  2.491	  3.788	  2.009	  2.066	  3.677	  2.578
+ 0.50	  2.560	  3.824	  2.045	  2.075	  3.715	  2.925
+ 0.55	  2.629	  3.860	  2.081	  2.083	  3.754	  3.271
+ 0.60	  2.697	  3.895	  2.117	  2.092	  3.792	  3.618
+ 0.65	  2.766	  3.931	  2.153	  2.100	  3.831	  3.965
+ 0.70	  2.834	  3.967	  2.188	  2.109	  3.869	  4.312
+ 0.75	  2.903	  4.003	  2.224	  2.117	  3.907	  4.659
+ 0.80	  2.971	  4.039	  2.260	  2.125	  3.946	  5.005
+ 0.85	  3.039	  4.075	  2.295	  2.134	  3.984	  5.352
+ 0.90	  3.107	  4.110	  2.331	  2.142	  4.022	  5.699
+ 0.95	  3.175	  4.146	  2.367	  2.151	  4.060	  6.046
+ 1.00	  3.243	  4.182	  2.402	  2.159	  4.099	  6.393
