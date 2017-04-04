@@ -84,7 +84,7 @@ class data_interpolation():
 
         self.initialization()
 
-        self.interpolate(input_variables, txtOutput)
+        self.interpolate()
 
         self.epilogue()
 
@@ -322,7 +322,7 @@ class data_interpolation():
         return
 
 
-    def interpolate(self,variables, txtOutput):
+    def interpolate(self):
         '''
         INTERPOLATE is the function to read in variables from GUI input and 
         calculate an approximate data set to be used in subsequent modeling

@@ -1,0 +1,46 @@
+#Date: Wed Mar 29 17:57:49 2017
+
+#Files used: protein_sequence.txt (1)
+
+#Solvent Components:
+#Component, molar conc, volume (A^3), Mw (kDA), x-ray SL, neutron SL (10^-12 cm), x-ray SLD, neutron SLD (10^10 cm^-2)
+#	H2O	 55.51	 29.9	 0.018	  2.820	 -0.168	  9.428	 -0.561
+#	Na1Cl1	  0.15	 29.3	 0.058	  7.896	  1.321	 26.958	  4.509
+#	K1Cl1	  0.05	 35.9	 0.075	 10.152	  1.325	 28.318	  3.695
+#Totals: x-ray SL, neutron SL (10^-12 cm), x-ray SLD, neutron SLD (10^10 cm^-2)
+#	157.636	 -9.020	  9.494	 -0.543
+
+#XRAY Contrast (10^10 cm^-2):
+#Protein, Complex
+#  2.967	  2.967
+
+#NEUTRON Contrast:
+#Protein Match Point: 43.40 %D2O
+#Complex Match Point: 43.40 %D2O
+
+#Fraction of exchanged protein hydrogens: 0.95
+#Fraction of exchanged nucleic acid hydrogens: 1.00
+
+#NEUTRON Contrast (10^10 cm^-2):
+# frac D2O, Protein, Complex
+ 0.00	  2.409	  2.409
+ 0.05	  2.132	  2.132
+ 0.10	  1.855	  1.855
+ 0.15	  1.578	  1.578
+ 0.20	  1.301	  1.301
+ 0.25	  1.023	  1.023
+ 0.30	  0.746	  0.746
+ 0.35	  0.468	  0.468
+ 0.40	  0.191	  0.191
+ 0.45	 -0.087	 -0.087
+ 0.50	 -0.365	 -0.365
+ 0.55	 -0.643	 -0.643
+ 0.60	 -0.921	 -0.921
+ 0.65	 -1.199	 -1.199
+ 0.70	 -1.477	 -1.477
+ 0.75	 -1.756	 -1.756
+ 0.80	 -2.034	 -2.034
+ 0.85	 -2.313	 -2.313
+ 0.90	 -2.592	 -2.592
+ 0.95	 -2.871	 -2.871
+ 1.00	 -3.150	 -3.150

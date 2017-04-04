@@ -94,7 +94,7 @@ class merge_utilities():
 
         self.initialization()
 
-        self.merge_utilities(input_variables, txtOutput)
+        self.merge_utilities()
 
         self.epilogue()
 
@@ -421,7 +421,7 @@ class merge_utilities():
         log.debug(vars(avars))
 
 
-    def merge_utilities(self,variables,txtOutput):
+    def merge_utilities(self):
         '''
 	    MERGE_UTILITIES is a module that allows one to merge coordinates and
 	    scattering profiles from a series of runs.  Note that each coordinate
@@ -473,7 +473,7 @@ class merge_utilities():
             pgui(mergest)
             avars.trajectory_names = string.split(mvars.trajectory_names, ',')
 
-            self.merge_trajectory_files(txtOutput)
+            self.merge_trajectory_files()
 
             fraction_done = 0.5
             report_string = 'STATUS\t' + str(fraction_done)
@@ -484,7 +484,7 @@ class merge_utilities():
             mergest = '\n merging sas files\n'
             pgui(mergest)
 
-            self.merge_sas_files(txtOutput)
+            self.merge_sas_files()
 
         avars.output_log_file.close()
 
@@ -494,7 +494,7 @@ class merge_utilities():
 
         return
 
-    def merge_trajectory_files(self, txtOutput):
+    def merge_trajectory_files(self):
 
         log = self.log
         log.debug('in merge trajectory files')
@@ -593,7 +593,7 @@ class merge_utilities():
         return
 
 
-    def merge_sas_files(self, txtOutput):
+    def merge_sas_files(self):
 
         log = self.log
         log.debug('in merge sas files')

@@ -1,0 +1,53 @@
+#Date: Wed Mar 29 19:25:31 2017
+
+#Files used: skp_trimer.pdb (1), ompA.pdb (1)
+
+#Chemical formulas used: 1. H48C36O36, 2. H48C36O36
+
+#Solvent Components:
+#Component, molar conc, volume (A^3), Mw (kDA), x-ray SL, neutron SL (10^-12 cm), x-ray SLD, neutron SLD (10^10 cm^-2)
+#	H2O	 55.51	 29.9	 0.018	  2.820	 -0.168	  9.428	 -0.561
+#	Na1Cl1	  0.15	 29.3	 0.058	  7.896	  1.321	 26.958	  4.509
+#	K1Cl1	  0.05	 35.9	 0.075	 10.152	  1.325	 28.318	  3.695
+#Totals: x-ray SL, neutron SL (10^-12 cm), x-ray SLD, neutron SLD (10^10 cm^-2)
+#	157.636	 -9.020	  9.494	 -0.543
+
+#XRAY Contrast (10^10 cm^-2):
+#Protein, Molecule 1, Molecule 2, Complex
+#  2.798	  0.265	  2.039	  2.759
+
+#NEUTRON Contrast:
+#Molecule 1 Match Point: 35.84 %D2O
+#Molecule 2 Match Point: 37.44 %D2O
+#Protein Match Point: 43.72 %D2O
+#60.0 %D Protein Match Point: 87.47 %D2O
+#Complex Match Point: 61.96 %D2O
+
+#Fraction of exchanged protein hydrogens: 0.95
+#Fraction of exchanged nucleic acid hydrogens: 1.00
+#Fraction of exchanged molecule 1 hydrogens: 0.95
+#Fraction of exchanged molecule 2 hydrogens: 0.45
+
+#NEUTRON Contrast (10^10 cm^-2):
+# frac D2O, Protein, 60.0 %D Protein, Molecule 1, Molecule 2, Complex
+ 0.00	  2.399	  5.044	  2.227	  2.533	  3.488
+ 0.05	  2.125	  4.756	  1.917	  2.195	  3.207
+ 0.10	  1.852	  4.469	  1.606	  1.857	  2.926
+ 0.15	  1.578	  4.181	  1.296	  1.518	  2.645
+ 0.20	  1.304	  3.893	  0.985	  1.180	  2.364
+ 0.25	  1.030	  3.605	  0.674	  0.842	  2.083
+ 0.30	  0.755	  3.317	  0.364	  0.503	  1.802
+ 0.35	  0.481	  3.029	  0.053	  0.165	  1.521
+ 0.40	  0.206	  2.740	 -0.258	 -0.173	  1.239
+ 0.45	 -0.068	  2.452	 -0.569	 -0.512	  0.958
+ 0.50	 -0.343	  2.164	 -0.880	 -0.850	  0.676
+ 0.55	 -0.618	  1.875	 -1.190	 -1.188	  0.394
+ 0.60	 -0.893	  1.586	 -1.501	 -1.527	  0.112
+ 0.65	 -1.168	  1.298	 -1.812	 -1.865	 -0.170
+ 0.70	 -1.443	  1.009	 -2.123	 -2.203	 -0.452
+ 0.75	 -1.719	  0.720	 -2.434	 -2.542	 -0.734
+ 0.80	 -1.994	  0.431	 -2.746	 -2.880	 -1.016
+ 0.85	 -2.270	  0.142	 -3.057	 -3.218	 -1.298
+ 0.90	 -2.546	 -0.147	 -3.368	 -3.557	 -1.581
+ 0.95	 -2.821	 -0.436	 -3.679	 -3.895	 -1.863
+ 1.00	 -3.097	 -0.725	 -3.990	 -4.233	 -2.146

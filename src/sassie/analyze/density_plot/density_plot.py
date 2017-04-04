@@ -94,7 +94,7 @@ class density_plot():
 
         self.initialization()
 
-        self.density(input_variables, segvariables, txtOutput)
+        self.density()
 
         self.epilogue()
 
@@ -562,7 +562,7 @@ class density_plot():
 
 
 
-    def density(self,variables, segvariables, txtOutput):
+    def density(self):
         '''
         DENSITY_PLOT is the function to read in variables from GUI input and compare
         generate three-dimensional volumetric data files using the GAUSSIAN file

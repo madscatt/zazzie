@@ -1,0 +1,43 @@
+#Date: Wed Mar 29 19:35:36 2017
+
+#Files used: pai_seq.txt (1), c36_dsDNA60_min.pdb (1)
+
+#Solvent Components:
+#Component, molar conc, volume (A^3), Mw (kDA), x-ray SL, neutron SL (10^-12 cm), x-ray SLD, neutron SLD (10^10 cm^-2)
+#	H2O	 55.51	 29.9	 0.018	  2.820	 -0.168	  9.428	 -0.561
+
+#XRAY Contrast (10^10 cm^-2):
+#Protein, NA, Complex
+#  3.026	  6.162	  4.482
+
+#NEUTRON Contrast:
+#Protein Match Point: 42.32 %D2O
+#DNA Match Point: 63.35 %D2O
+#Complex Match Point: 52.53 %D2O
+
+#Fraction of exchanged protein hydrogens: 0.95
+#Fraction of exchanged nucleic acid hydrogens: 1.00
+
+#NEUTRON Contrast (10^10 cm^-2):
+# frac D2O, Protein, DNA, Complex
+ 0.00	  2.427	  3.971	  3.144
+ 0.05	  2.141	  3.658	  2.845
+ 0.10	  1.854	  3.344	  2.546
+ 0.15	  1.568	  3.031	  2.247
+ 0.20	  1.282	  2.718	  1.948
+ 0.25	  0.995	  2.404	  1.649
+ 0.30	  0.708	  2.091	  1.350
+ 0.35	  0.422	  1.778	  1.050
+ 0.40	  0.135	  1.464	  0.751
+ 0.45	 -0.152	  1.151	  0.452
+ 0.50	 -0.439	  0.837	  0.152
+ 0.55	 -0.726	  0.524	 -0.147
+ 0.60	 -1.013	  0.211	 -0.447
+ 0.65	 -1.301	 -0.103	 -0.746
+ 0.70	 -1.588	 -0.416	 -1.046
+ 0.75	 -1.876	 -0.730	 -1.345
+ 0.80	 -2.163	 -1.044	 -1.645
+ 0.85	 -2.451	 -1.357	 -1.945
+ 0.90	 -2.738	 -1.671	 -2.245
+ 0.95	 -3.026	 -1.984	 -2.544
+ 1.00	 -3.314	 -2.298	 -2.844

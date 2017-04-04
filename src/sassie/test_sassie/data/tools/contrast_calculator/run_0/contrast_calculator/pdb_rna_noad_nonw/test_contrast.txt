@@ -1,0 +1,42 @@
+#Date: Wed Mar 29 14:47:44 2017
+
+#Files used: trunc2a_min.pdb (1)
+
+#Solvent Components:
+#Component, molar conc, volume (A^3), Mw (kDA), x-ray SL, neutron SL (10^-12 cm), x-ray SLD, neutron SLD (10^10 cm^-2)
+#	H2O	 55.51	 29.9	 0.018	  2.820	 -0.168	  9.428	 -0.561
+
+#XRAY Contrast (10^10 cm^-2):
+#NA, Complex
+#  6.166	  6.166
+
+#NEUTRON Contrast:
+#RNA Match Point: 64.23 %D2O
+#Complex Match Point: 64.23 %D2O
+
+#Fraction of exchanged protein hydrogens: 0.95
+#Fraction of exchanged nucleic acid hydrogens: 1.00
+
+#NEUTRON Contrast (10^10 cm^-2):
+# frac D2O, RNA, Complex
+ 0.00	  3.962	  3.962
+ 0.05	  3.654	  3.654
+ 0.10	  3.345	  3.345
+ 0.15	  3.037	  3.037
+ 0.20	  2.729	  2.729
+ 0.25	  2.421	  2.421
+ 0.30	  2.112	  2.112
+ 0.35	  1.804	  1.804
+ 0.40	  1.495	  1.495
+ 0.45	  1.187	  1.187
+ 0.50	  0.879	  0.879
+ 0.55	  0.570	  0.570
+ 0.60	  0.262	  0.262
+ 0.65	 -0.047	 -0.047
+ 0.70	 -0.356	 -0.356
+ 0.75	 -0.664	 -0.664
+ 0.80	 -0.973	 -0.973
+ 0.85	 -1.281	 -1.281
+ 0.90	 -1.590	 -1.590
+ 0.95	 -1.899	 -1.899
+ 1.00	 -2.208	 -2.208

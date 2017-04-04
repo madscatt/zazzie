@@ -1,0 +1,43 @@
+#Date: Wed Mar 29 18:59:51 2017
+
+#Chemical formulas used: 1. H10660C5460P130O1040N130
+
+#Solvent Components:
+#Component, molar conc, volume (A^3), Mw (kDA), x-ray SL, neutron SL (10^-12 cm), x-ray SLD, neutron SLD (10^10 cm^-2)
+#	H2O	 55.51	 29.9	 0.018	  2.820	 -0.168	  9.428	 -0.561
+
+#XRAY Contrast (10^10 cm^-2):
+#Molecule 1, Complex
+# -0.042	 -0.042
+
+#NEUTRON Contrast:
+#Molecule 1 Match Point: 11.85 %D2O
+#Complex Match Point: 11.85 %D2O
+
+#Fraction of exchanged protein hydrogens: 0.95
+#Fraction of exchanged nucleic acid hydrogens: 1.00
+#Fraction of exchanged molecule 1 hydrogens: 0.00
+
+#NEUTRON Contrast (10^10 cm^-2):
+# frac D2O, Molecule 1, Complex
+ 0.00	  0.825	  0.825
+ 0.05	  0.477	  0.477
+ 0.10	  0.129	  0.129
+ 0.15	 -0.219	 -0.219
+ 0.20	 -0.567	 -0.567
+ 0.25	 -0.915	 -0.915
+ 0.30	 -1.263	 -1.263
+ 0.35	 -1.612	 -1.612
+ 0.40	 -1.960	 -1.960
+ 0.45	 -2.308	 -2.308
+ 0.50	 -2.656	 -2.656
+ 0.55	 -3.004	 -3.004
+ 0.60	 -3.352	 -3.352
+ 0.65	 -3.700	 -3.700
+ 0.70	 -4.048	 -4.048
+ 0.75	 -4.396	 -4.396
+ 0.80	 -4.744	 -4.744
+ 0.85	 -5.092	 -5.092
+ 0.90	 -5.441	 -5.441
+ 0.95	 -5.789	 -5.789
+ 1.00	 -6.137	 -6.137

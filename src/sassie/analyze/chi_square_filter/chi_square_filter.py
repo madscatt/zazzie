@@ -82,7 +82,7 @@ class chi_square_filter():
 
         self.initialization()
 
-        self.find_best(input_variables, txtOutput)
+        self.find_best()
 
         self.epilogue()
 
@@ -220,7 +220,7 @@ class chi_square_filter():
         log.debug(vars(avars))
 
 
-    def find_best(self, variables, txtOutput):
+    def find_best(self):
         '''
         FIND_BEST is the function to read in variables from GUI input and compare
         interpolated experimental data to synthetic data sets generated from
