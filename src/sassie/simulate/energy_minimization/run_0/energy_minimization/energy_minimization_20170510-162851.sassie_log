@@ -1,0 +1,79 @@
+Date		Time		File		Method		Line	Level	Message
+2017-05-10 16:28:51,340 - module_utilities.py - setup_logging - 133 - DEBUG - in setup_logging
+2017-05-10 16:28:51,341 - module_utilities.py - setup_logging - 134 - INFO - Program started
+2017-05-10 16:28:51,342 - module_utilities.py - preamble - 95 - DEBUG - in preamble
+2017-05-10 16:28:51,342 - module_utilities.py - preamble - 98 - INFO - module_application : energy_minimization
+2017-05-10 16:28:51,342 - module_utilities.py - preamble - 99 - INFO - executed by user : skrueger on Wed May 10 16:28:51 2017
+2017-05-10 16:28:51,342 - module_utilities.py - preamble - 100 - INFO - current directory : /Users/skrueger/git_working_copies/zazzie/src/sassie/simulate/energy_minimization
+2017-05-10 16:28:51,347 - module_utilities.py - preamble - 101 - INFO - hostname : P641702.campus.nist.gov
+2017-05-10 16:28:51,347 - energy_minimization.py - main - 89 - DEBUG - in main
+2017-05-10 16:28:51,347 - energy_minimization.py - unpack_variables - 111 - DEBUG - in unpack_variables
+2017-05-10 16:28:51,347 - energy_minimization.py - unpack_variables - 133 - DEBUG - {'md': 1, 'resparmfile': '/usr/local/bin/toppar/par_all27_prot_na.inp', 'mdsteps': 20, 'dcdfreq': 20, 'app': 'energy_minimization', 'velocity_restart_file': 'False', 'extended_system_restart_file': 'False', 'keepout': 1, 'infile': 'ten_mer.pdb', 'ncpu': 2, 'outfile': 'min_ten_mer.dcd', 'external_input_file': 'external_input.inp', 'pdbfile': 'ten_mer2.pdb', 'runname': 'run_0', 'use_external_input_file': False, 'infiletype': 'pdb', 'dielect': 80.0, 'nsteps': 100, 'psffile': 'ten_mer.psf', 'temperature': 300.0}
+2017-05-10 16:28:51,347 - module_utilities.py - general_setup - 58 - DEBUG - in general_setup
+2017-05-10 16:28:51,348 - module_utilities.py - write_json_file - 22 - DEBUG - in write_json_file
+2017-05-10 16:28:51,348 - module_utilities.py - write_json_file - 24 - INFO - writing json files with input variables
+2017-05-10 16:28:51,348 - module_utilities.py - write_json_file - 28 - INFO - writing parameters to energy_minimization_20170510-162851.sassie_json
+2017-05-10 16:28:51,352 - module_utilities.py - write_json_file - 32 - INFO - backing up existing .last_sas.json file to .last_sas.json_backup
+2017-05-10 16:28:51,355 - module_utilities.py - write_json_file - 36 - INFO - backing up existing .last_sas_energy_minimization.json file to .last_sas_energy_minimization.json_backup
+2017-05-10 16:28:51,356 - module_utilities.py - write_json_file - 40 - INFO - writing parameters to .last_sas.json file
+2017-05-10 16:28:51,356 - module_utilities.py - write_json_file - 44 - INFO - writing parameters to .last_sas_energy_minimization.json file
+2017-05-10 16:28:51,356 - module_utilities.py - write_json_file - 46 - INFO - input variables: [{"md": 1, "nsteps": 100, "resparmfile": "/usr/local/bin/toppar/par_all27_prot_na.inp", "temperature": 300.0, "mdsteps": 20, "dcdfreq": 20, "app": "energy_minimization", "velocity_restart_file": "False", "use_external_input_file": false, "keepout": 1, "dielect": 80.0, "ncpu": 2, "outfile": "min_ten_mer.dcd", "pdbfile": "ten_mer2.pdb", "psffile": "ten_mer.psf", "external_input_file": "external_input.inp", "infiletype": "pdb", "infile": "ten_mer.pdb", "extended_system_restart_file": "False", "runname": "run_0"}]
+2017-05-10 16:28:51,356 - module_utilities.py - general_setup - 75 - INFO - setting runpath directory to : run_0/energy_minimization
+2017-05-10 16:28:51,357 - module_utilities.py - general_setup - 82 - INFO - creating directory : run_0/energy_minimization
+2017-05-10 16:28:51,357 - energy_minimization.py - initialization - 155 - DEBUG - in initialization
+2017-05-10 16:28:51,357 - module_utilities.py - print_gui - 148 - INFO - 
+path = run_0/energy_minimization/
+2017-05-10 16:28:51,357 - module_utilities.py - print_gui - 148 - INFO - infile = ten_mer.pdb
+2017-05-10 16:28:51,357 - module_utilities.py - print_gui - 148 - INFO - psffile = ten_mer.psf
+2017-05-10 16:28:51,358 - module_utilities.py - print_gui - 148 - INFO - pdbfile = ten_mer2.pdb
+2017-05-10 16:28:51,372 - module_utilities.py - print_gui - 148 - INFO - 
+infiletype = pdb
+2017-05-10 16:28:51,379 - energy_minimization.py - initialization - 209 - DEBUG - 
+number of frames = 1
+2017-05-10 16:28:51,379 - energy_minimization.py - minimize - 268 - DEBUG - in minimize
+2017-05-10 16:28:51,379 - energy_minimization.py - minimize - 274 - DEBUG - {'md': 1, 'resparmfile': '/usr/local/bin/toppar/par_all27_prot_na.inp', 'mdsteps': 20, 'dcdfreq': 20, 'app': 'energy_minimization', 'velocity_restart_file': 'False', 'extended_system_restart_file': 'False', 'keepout': 1, 'infile': 'ten_mer.pdb', 'ncpu': 2, 'outfile': 'min_ten_mer.dcd', 'external_input_file': 'external_input.inp', 'pdbfile': 'ten_mer2.pdb', 'runname': 'run_0', 'use_external_input_file': False, 'infiletype': 'pdb', 'dielect': 80.0, 'nsteps': 100, 'psffile': 'ten_mer.psf', 'temperature': 300.0}
+2017-05-10 16:28:51,379 - energy_minimization.py - minimize - 275 - DEBUG - {'path': 'run_0/energy_minimization/', 'vers': 'version 0.7 : 06/16/12 : jc', 'm1': <sasmol.sasmol.SasMol object at 0x1095659d0>, 'nf': 1}
+2017-05-10 16:28:51,379 - module_utilities.py - print_gui - 148 - INFO - 
+============================================================ 
+
+2017-05-10 16:28:51,379 - module_utilities.py - print_gui - 148 - INFO - DATA FROM RUN: Wed May 10 20:28:51 2017 
+
+
+2017-05-10 16:28:51,379 - module_utilities.py - print_gui - 148 - INFO - 
+minimizing frame 1 of 1
+2017-05-10 16:28:51,380 - energy_minimization.py - minimize - 290 - DEBUG - writing temporary PDB file
+2017-05-10 16:28:51,382 - energy_minimization.py - minimize - 298 - DEBUG - writing temporary NAMD input file
+2017-05-10 16:28:51,382 - module_utilities.py - print_gui - 148 - INFO - starting minimization (nfiles = 1)
+2017-05-10 16:28:51,382 - module_utilities.py - print_gui - 148 - INFO - version 0.7 : 06/16/12 : jc : min_ten_mer.dcd run started at : Wed May 10 16:28:51 2017
+2017-05-10 16:28:51,382 - module_utilities.py - print_gui - 148 - INFO - 
+> using 2 cpus
+
+2017-05-10 16:28:51,383 - energy_minimization.py - minimize - 347 - DEBUG - 
+> nst = /usr/local/bin/namd/charmrun +p2 /usr/local/bin/namd/namd2 temp.inp >& junk.out &
+
+2017-05-10 16:28:51,388 - module_utilities.py - print_gui - 148 - INFO - process id = 94395
+
+2017-05-10 16:29:01,417 - module_utilities.py - print_gui - 148 - INFO - finished minimization
+2017-05-10 16:29:11,419 - module_utilities.py - print_gui - 148 - INFO - COMPLETED 1 of 1 : 100.0 % done
+
+2017-05-10 16:29:11,419 - module_utilities.py - print_gui - 148 - INFO - COMPLETED 1 of 1 : 100.0 % done
+
+2017-05-10 16:29:11,419 - module_utilities.py - print_gui - 148 - INFO - STATUS	1.0
+2017-05-10 16:29:11,434 - energy_minimization.py - minimize - 417 - DEBUG - thisdcd = run_0/energy_minimization/min_00001.dcd
+
+2017-05-10 16:29:11,445 - module_utilities.py - print_gui - 148 - INFO - 
+> finished minimizing all frames
+
+2017-05-10 16:29:11,445 - energy_minimization.py - epilogue - 464 - DEBUG - in epilogue
+2017-05-10 16:29:11,445 - energy_minimization.py - epilogue - 466 - DEBUG - {'md': 1, 'resparmfile': '/usr/local/bin/toppar/par_all27_prot_na.inp', 'mdsteps': 20, 'dcdfreq': 20, 'app': 'energy_minimization', 'velocity_restart_file': 'False', 'extended_system_restart_file': 'False', 'keepout': 1, 'infile': 'ten_mer.pdb', 'ncpu': 2, 'outfile': 'min_ten_mer.dcd', 'external_input_file': 'external_input.inp', 'pdbfile': 'ten_mer2.pdb', 'runname': 'run_0', 'use_external_input_file': False, 'infiletype': 'pdb', 'dielect': 80.0, 'nsteps': 100, 'psffile': 'ten_mer.psf', 'temperature': 300.0}
+2017-05-10 16:29:11,445 - energy_minimization.py - epilogue - 467 - DEBUG - {'path': 'run_0/energy_minimization/', 'vers': 'version 0.7 : 06/16/12 : jc', 'm1': <sasmol.sasmol.SasMol object at 0x1095659d0>, 'dcdlist': ['run_0/energy_minimization/min_00001.dcd'], 'nf': 1}
+2017-05-10 16:29:11,469 - module_utilities.py - clean_up - 157 - DEBUG - in clean_up
+2017-05-10 16:29:11,477 - module_utilities.py - print_gui - 148 - INFO - Total number of frames = 1
+
+
+2017-05-10 16:29:11,477 - module_utilities.py - print_gui - 148 - INFO - Minimized structures saved to : ./run_0/energy_minimization/
+
+2017-05-10 16:29:11,477 - module_utilities.py - print_gui - 148 - INFO - 
+============================================================ 
+
+2017-05-10 16:29:11,982 - module_utilities.py - print_gui - 148 - INFO - NAMD MINIMIZATION IS DONE

@@ -1,0 +1,8 @@
+lowest Rg = 	43.935621	highest Rg = 	48.175601
+accepted 	0	 out of 	20	 moves : 	0.000000 %
+overlapped 	20	 out of 	20	 moves : 	100.000000 %
+bad rg2 	0	 out of 	20	 moves : 	0.000000 %
+bad z-filter 	20	 out of 	20	 moves : 	100.000000 %
+bad constaints 	0	 out of 	20	 moves : 	0.000000 %
+average accepted rg2 = 	0.000000
+average total rg2 of ensemble = 	46.188781

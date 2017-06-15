@@ -1,0 +1,5 @@
+# structure number (structure 1 = 1; not 0), Rg (accepted)
+0	47.798260	4
+1	56.984634	8
+2	50.370671	9
+3	49.856625	10
