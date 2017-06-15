@@ -16,7 +16,7 @@
 '''
 
 import os
-import sassie.simulate.monte_carlo.complex.gui_mimic_complex_monte_carlo as gui_mimic_complex_monte_carlo
+import sassie.simulate.complex_monte_carlo.gui_mimic_complex_monte_carlo as gui_mimic_complex_monte_carlo
 #import gui_mimic_complex_monte_carlo as gui_mimic_complex_monte_carlo
 
 import filecmp
