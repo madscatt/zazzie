@@ -1,0 +1,983 @@
+Date		Time		File		Method		Line	Level	Message
+2017-04-20 14:13:48,551 - module_utilities.py - setup_logging - 133 - DEBUG - in setup_logging
+2017-04-20 14:13:48,553 - module_utilities.py - setup_logging - 134 - INFO - Program started
+2017-04-20 14:13:48,553 - module_utilities.py - preamble - 95 - DEBUG - in preamble
+2017-04-20 14:13:48,553 - module_utilities.py - preamble - 98 - INFO - module_application : monomer_monte_carlo
+2017-04-20 14:13:48,553 - module_utilities.py - preamble - 99 - INFO - executed by user : skrueger on Thu Apr 20 14:13:48 2017
+2017-04-20 14:13:48,553 - module_utilities.py - preamble - 100 - INFO - current directory : /Users/skrueger/git_working_copies/zazzie/src/sassie/simulate/monomer_monte_carlo
+2017-04-20 14:13:48,557 - module_utilities.py - preamble - 101 - INFO - hostname : P641702.campus.nist.gov
+2017-04-20 14:13:48,558 - monomer_monte_carlo.py - main - 98 - DEBUG - in main
+2017-04-20 14:13:48,558 - monomer_monte_carlo.py - unpack_variables - 120 - DEBUG - in unpack_variables
+2017-04-20 14:13:48,558 - monomer_monte_carlo.py - unpack_variables - 154 - DEBUG - {'dcdfile': 'run_0.dcd', 'cutoff': 0.8, 'cflag': 0, 'directedmc': 0.0, 'app': 'monomer_monte_carlo', 'highrg': 400.0, 'lowrg': 0.0, 'seed': [1, 123], 'zflag': 0, 'molecule_type': 'protein', 'psffilename': 'gag_start.psf', 'basis': 'heavy', 'trials': 200, 'confile': 'monomer_mc_constraints.txt', 'zcutoff': -35.0, 'numcont': [22, 6, 21, 12, 5], 'nonbondscale': 1.0, 'reslow': [123, 277, 354, 378, 408], 'parmfilename': 'par_all27_prot_na.inp', 'parmfilepath': '/share/apps/local/bintoppar', 'goback': 20, 'psffilepath': './', 'plotflag': 1, 'dtheta': [30.0, 30.0, 30.0, 30.0, 30.0], 'path': './', 'nonbondflag': 0, 'highres1': 350, 'temp': 300.0, 'lowres1': 284, 'numranges': 5, 'pdbfile': 'gag_start.pdb', 'runname': 'run_0'}
+2017-04-20 14:13:48,558 - module_utilities.py - general_setup - 58 - DEBUG - in general_setup
+2017-04-20 14:13:48,558 - module_utilities.py - write_json_file - 22 - DEBUG - in write_json_file
+2017-04-20 14:13:48,558 - module_utilities.py - write_json_file - 24 - INFO - writing json files with input variables
+2017-04-20 14:13:48,558 - module_utilities.py - write_json_file - 28 - INFO - writing parameters to monomer_monte_carlo_20170420-141348.sassie_json
+2017-04-20 14:13:48,562 - module_utilities.py - write_json_file - 32 - INFO - backing up existing .last_sas.json file to .last_sas.json_backup
+2017-04-20 14:13:48,566 - module_utilities.py - write_json_file - 36 - INFO - backing up existing .last_sas_monomer_monte_carlo.json file to .last_sas_monomer_monte_carlo.json_backup
+2017-04-20 14:13:48,566 - module_utilities.py - write_json_file - 40 - INFO - writing parameters to .last_sas.json file
+2017-04-20 14:13:48,567 - module_utilities.py - write_json_file - 44 - INFO - writing parameters to .last_sas_monomer_monte_carlo.json file
+2017-04-20 14:13:48,567 - module_utilities.py - write_json_file - 46 - INFO - input variables: [{"dcdfile": "run_0.dcd", "cutoff": 0.8, "psffilename": "gag_start.psf", "cflag": 0, "directedmc": 0.0, "app": "monomer_monte_carlo", "highrg": 400.0, "lowrg": 0.0, "seed": [1, 123], "zflag": 0, "molecule_type": "protein", "plotflag": 1, "basis": "heavy", "trials": 200, "confile": "monomer_mc_constraints.txt", "zcutoff": -35.0, "numcont": [22, 6, 21, 12, 5], "nonbondscale": 1.0, "reslow": [123, 277, 354, 378, 408], "parmfilename": "par_all27_prot_na.inp", "parmfilepath": "/share/apps/local/bintoppar", "goback": 20, "psffilepath": "./", "dtheta": [30.0, 30.0, 30.0, 30.0, 30.0], "path": "./", "nonbondflag": 0, "highres1": 350, "temp": 300.0, "lowres1": 284, "numranges": 5, "pdbfile": "gag_start.pdb", "runname": "run_0"}]
+2017-04-20 14:13:48,567 - module_utilities.py - general_setup - 75 - INFO - setting runpath directory to : run_0/monomer_monte_carlo
+2017-04-20 14:13:48,567 - module_utilities.py - general_setup - 82 - INFO - creating directory : run_0/monomer_monte_carlo
+2017-04-20 14:13:48,567 - monomer_monte_carlo.py - initialization - 292 - DEBUG - in initialization
+2017-04-20 14:13:48,862 - monomer_monte_carlo.py - initialization - 356 - DEBUG - first_last_resid = [1, 431]
+2017-04-20 14:13:48,862 - monomer_monte_carlo.py - initialization - 387 - DEBUG - basis_filter = not name[i][0] == "H" 
+
+2017-04-20 14:13:49,059 - monomer_monte_carlo.py - initialization - 537 - DEBUG - {'dcdfile': 'run_0.dcd', 'cutoff': 0.8, 'cflag': 0, 'directedmc': 0.0, 'app': 'monomer_monte_carlo', 'highrg': 400.0, 'lowrg': 0.0, 'seed': [1, 123], 'zflag': 0, 'molecule_type': 'protein', 'psffilename': 'gag_start.psf', 'basis': 'heavy', 'trials': 200, 'confile': 'monomer_mc_constraints.txt', 'zcutoff': -35.0, 'numcont': [22, 6, 21, 12, 5], 'nonbondscale': 1.0, 'reslow': [123, 277, 354, 378, 408], 'parmfilename': 'par_all27_prot_na.inp', 'parmfilepath': '/share/apps/local/bintoppar/', 'goback': 20, 'psffilepath': './', 'plotflag': 1, 'dtheta': [30.0, 30.0, 30.0, 30.0, 30.0], 'path': './', 'nonbondflag': 0, 'highres1': 350, 'temp': 300.0, 'lowres1': 284, 'numranges': 5, 'pdbfile': 'gag_start.pdb', 'runname': 'run_0'}
+2017-04-20 14:13:49,059 - monomer_monte_carlo.py - initialization - 538 - DEBUG - {'badrg': 0, 'over': 0, 'lowestrg': 1000.0, 'mask_b_array': [], 'arg': 0.0, 'type_array': [], 'pairdat': ['dum', 1, 1.0], 'dihedral_parameters': [[[0, [[0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.4, 1.0, 0.0, 0.0, 0.0, 0.0], [0.3, 1.0, 0.0, -0.3, 4.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0]]], [1, [[0.4, 1.0, 0.0, 0.0, 0.0, 0.0], [0.3, 1.0, 0.0, -0.3, 4.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0]]], [2, [[0.4, 1.0, 0.0, 0.0, 0.0, 0.0], [0.3, 1.0, 0.0, -0.3, 4.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0]]], [3, [[0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0]]], [4, [[0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0]]]], [[0, [[0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.8, 3.0, 0.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0]]], [1, [[0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.8, 3.0, 0.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0]]], [2, [[0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.8, 3.0, 0.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0]]], [3, [[0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0]]], [4, [[0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0]]]]], 'graph': <Gnuplot._Gnuplot.Gnuplot instance at 0x1086d43b0>, 'm1': <sasmol.sasmol.SasMol object at 0x1084d2950>, 'mask_a_array': [], 'nsteps': 0, 'cutoff_array': [], 'genpaths': 'run_0/monomer_monte_carlo/', 'beta': 2.4143077672626622e+20, 'basis_atom': 'CA', 'first_last_resid': [1, 431], 'lastsasfile': <open file './.last_sas', mode 'w' at 0x108448db0>, 'accepted': 0, 'hrg': 0.0, 'basis_mask': array([1, 0, 0, ..., 1, 0, 0], dtype=int32), 'all_rg_tally': [], 'distance_array': [], 'vdw_factor': 0.3, 'badz': 0, 'trg': 0.0, 'dcdoutfile': <Swig Object of type 'FILE *' at 0x1019cdf30>, 'badc': 0, 'accepted_rg_tally': []}
+2017-04-20 14:13:49,060 - monomer_monte_carlo.py - dihedralgenerate - 595 - DEBUG - in dihedralgenerate
+2017-04-20 14:13:49,060 - monomer_monte_carlo.py - dihedralgenerate - 600 - DEBUG - {'dcdfile': 'run_0.dcd', 'cutoff': 0.8, 'cflag': 0, 'directedmc': 0.0, 'app': 'monomer_monte_carlo', 'highrg': 400.0, 'lowrg': 0.0, 'seed': [1, 123], 'zflag': 0, 'molecule_type': 'protein', 'psffilename': 'gag_start.psf', 'basis': 'heavy', 'trials': 200, 'confile': 'monomer_mc_constraints.txt', 'zcutoff': -35.0, 'numcont': [22, 6, 21, 12, 5], 'nonbondscale': 1.0, 'reslow': [123, 277, 354, 378, 408], 'parmfilename': 'par_all27_prot_na.inp', 'parmfilepath': '/share/apps/local/bintoppar/', 'goback': 20, 'psffilepath': './', 'plotflag': 1, 'dtheta': [30.0, 30.0, 30.0, 30.0, 30.0], 'path': './', 'nonbondflag': 0, 'highres1': 350, 'temp': 300.0, 'lowres1': 284, 'numranges': 5, 'pdbfile': 'gag_start.pdb', 'runname': 'run_0'}
+2017-04-20 14:13:49,060 - monomer_monte_carlo.py - dihedralgenerate - 601 - DEBUG - {'badrg': 0, 'over': 0, 'lowestrg': 1000.0, 'mask_b_array': [], 'arg': 0.0, 'type_array': [], 'pairdat': ['dum', 1, 1.0], 'dihedral_parameters': [[[0, [[0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.4, 1.0, 0.0, 0.0, 0.0, 0.0], [0.3, 1.0, 0.0, -0.3, 4.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0]]], [1, [[0.4, 1.0, 0.0, 0.0, 0.0, 0.0], [0.3, 1.0, 0.0, -0.3, 4.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0]]], [2, [[0.4, 1.0, 0.0, 0.0, 0.0, 0.0], [0.3, 1.0, 0.0, -0.3, 4.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0]]], [3, [[0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0]]], [4, [[0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0]]]], [[0, [[0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.8, 3.0, 0.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0]]], [1, [[0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.8, 3.0, 0.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0]]], [2, [[0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.8, 3.0, 0.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0]]], [3, [[0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0]]], [4, [[0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0]]]]], 'graph': <Gnuplot._Gnuplot.Gnuplot instance at 0x1086d43b0>, 'm1': <sasmol.sasmol.SasMol object at 0x1084d2950>, 'mask_a_array': [], 'nsteps': 0, 'cutoff_array': [], 'genpaths': 'run_0/monomer_monte_carlo/', 'beta': 2.4143077672626622e+20, 'basis_atom': 'CA', 'first_last_resid': [1, 431], 'lastsasfile': <open file './.last_sas', mode 'w' at 0x108448db0>, 'accepted': 0, 'hrg': 0.0, 'basis_mask': array([1, 0, 0, ..., 1, 0, 0], dtype=int32), 'all_rg_tally': [], 'distance_array': [], 'vdw_factor': 0.3, 'badz': 0, 'trg': 0.0, 'dcdoutfile': <Swig Object of type 'FILE *' at 0x1019cdf30>, 'badc': 0, 'accepted_rg_tally': []}
+2017-04-20 14:13:49,061 - module_utilities.py - print_gui - 148 - INFO - 
+============================================================ 
+
+2017-04-20 14:13:49,062 - module_utilities.py - print_gui - 148 - INFO - DATA FROM RUN: Thu Apr 20 18:13:49 2017 
+
+
+2017-04-20 14:13:49,062 - monomer_monte_carlo.py - get_flexible_residues - 211 - DEBUG - flexible_residues = [123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133, 134, 135, 136, 137, 138, 139, 140, 141, 142, 143, 144, 277, 278, 279, 280, 281, 282, 354, 355, 356, 357, 358, 359, 360, 361, 362, 363, 364, 365, 366, 367, 368, 369, 370, 371, 372, 373, 374, 378, 379, 380, 381, 382, 383, 384, 385, 386, 387, 388, 389, 408, 409, 410, 411, 412]
+2017-04-20 14:13:49,062 - monomer_monte_carlo.py - get_rotation_indices - 223 - DEBUG - getting rotation indices for molecule
+2017-04-20 14:13:49,083 - monomer_monte_carlo.py - get_rotation_indices - 267 - DEBUG - done getting rotation indices
+2017-04-20 14:13:49,366 - module_utilities.py - print_gui - 148 - INFO - 
+COMPLETED 2 of 200 : 1.0 % done
+
+2017-04-20 14:13:49,366 - module_utilities.py - print_gui - 148 - INFO - 0 configurations accepted out of 2: 0.0 %
+
+
+2017-04-20 14:13:49,366 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.01
+2017-04-20 14:13:49,487 - module_utilities.py - print_gui - 148 - INFO - 
+COMPLETED 4 of 200 : 2.0 % done
+
+2017-04-20 14:13:49,487 - module_utilities.py - print_gui - 148 - INFO - 0 configurations accepted out of 4: 0.0 %
+
+
+2017-04-20 14:13:49,488 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.02
+2017-04-20 14:13:49,607 - module_utilities.py - print_gui - 148 - INFO - 
+COMPLETED 6 of 200 : 3.0 % done
+
+2017-04-20 14:13:49,607 - module_utilities.py - print_gui - 148 - INFO - 0 configurations accepted out of 6: 0.0 %
+
+
+2017-04-20 14:13:49,608 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.03
+2017-04-20 14:13:49,700 - module_utilities.py - print_gui - 148 - INFO - 
+COMPLETED 8 of 200 : 4.0 % done
+
+2017-04-20 14:13:49,700 - module_utilities.py - print_gui - 148 - INFO - 0 configurations accepted out of 8: 0.0 %
+
+
+2017-04-20 14:13:49,700 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.04
+2017-04-20 14:13:49,808 - module_utilities.py - print_gui - 148 - INFO - 
+COMPLETED 10 of 200 : 5.0 % done
+
+2017-04-20 14:13:49,808 - module_utilities.py - print_gui - 148 - INFO - 0 configurations accepted out of 10: 0.0 %
+
+
+2017-04-20 14:13:49,808 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.05
+2017-04-20 14:13:49,838 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.055
+2017-04-20 14:13:49,880 - module_utilities.py - print_gui - 148 - INFO - 
+COMPLETED 12 of 200 : 6.0 % done
+
+2017-04-20 14:13:49,880 - module_utilities.py - print_gui - 148 - INFO - 0 configurations accepted out of 12: 0.0 %
+
+
+2017-04-20 14:13:49,880 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.06
+2017-04-20 14:13:49,881 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.06
+2017-04-20 14:13:49,919 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.065
+2017-04-20 14:13:49,958 - module_utilities.py - print_gui - 148 - INFO - 
+COMPLETED 14 of 200 : 7.0 % done
+
+2017-04-20 14:13:49,958 - module_utilities.py - print_gui - 148 - INFO - 0 configurations accepted out of 14: 0.0 %
+
+
+2017-04-20 14:13:49,959 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.07
+2017-04-20 14:13:49,959 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.07
+2017-04-20 14:13:50,002 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.075
+2017-04-20 14:13:50,031 - module_utilities.py - print_gui - 148 - INFO - 
+COMPLETED 16 of 200 : 8.0 % done
+
+2017-04-20 14:13:50,032 - module_utilities.py - print_gui - 148 - INFO - 0 configurations accepted out of 16: 0.0 %
+
+
+2017-04-20 14:13:50,032 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.08
+2017-04-20 14:13:50,032 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.08
+2017-04-20 14:13:50,086 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.085
+2017-04-20 14:13:50,131 - module_utilities.py - print_gui - 148 - INFO - 
+COMPLETED 18 of 200 : 9.0 % done
+
+2017-04-20 14:13:50,131 - module_utilities.py - print_gui - 148 - INFO - 2 configurations accepted out of 18: 11.1111111111 %
+
+
+2017-04-20 14:13:50,131 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.09
+2017-04-20 14:13:50,131 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.09
+2017-04-20 14:13:50,166 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.095
+2017-04-20 14:13:50,211 - module_utilities.py - print_gui - 148 - INFO - 
+COMPLETED 20 of 200 : 10.0 % done
+
+2017-04-20 14:13:50,211 - module_utilities.py - print_gui - 148 - INFO - 4 configurations accepted out of 20: 20.0 %
+
+
+2017-04-20 14:13:50,211 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.1
+2017-04-20 14:13:50,214 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.1
+2017-04-20 14:13:50,264 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.105
+2017-04-20 14:13:50,345 - module_utilities.py - print_gui - 148 - INFO - 
+COMPLETED 22 of 200 : 11.0 % done
+
+2017-04-20 14:13:50,345 - module_utilities.py - print_gui - 148 - INFO - 6 configurations accepted out of 22: 27.2727272727 %
+
+
+2017-04-20 14:13:50,345 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.11
+2017-04-20 14:13:50,345 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.11
+2017-04-20 14:13:50,456 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.115
+2017-04-20 14:13:50,471 - module_utilities.py - print_gui - 148 - INFO - 
+COMPLETED 24 of 200 : 12.0 % done
+
+2017-04-20 14:13:50,472 - module_utilities.py - print_gui - 148 - INFO - 6 configurations accepted out of 24: 25.0 %
+
+
+2017-04-20 14:13:50,472 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.12
+2017-04-20 14:13:50,472 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.12
+2017-04-20 14:13:50,487 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.125
+2017-04-20 14:13:50,592 - module_utilities.py - print_gui - 148 - INFO - 
+COMPLETED 26 of 200 : 13.0 % done
+
+2017-04-20 14:13:50,593 - module_utilities.py - print_gui - 148 - INFO - 6 configurations accepted out of 26: 23.0769230769 %
+
+
+2017-04-20 14:13:50,593 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.13
+2017-04-20 14:13:50,593 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.13
+2017-04-20 14:13:50,654 - monomer_monte_carlo.py - dihedralgenerate - 768 - DEBUG - ran_num: 0.564359
+
+2017-04-20 14:13:50,654 - module_utilities.py - print_gui - 148 - INFO - 
+reloading coordinates from a previously accepted structure
+2017-04-20 14:13:50,655 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.135
+2017-04-20 14:13:50,687 - module_utilities.py - print_gui - 148 - INFO - 
+COMPLETED 28 of 200 : 14.0 % done
+
+2017-04-20 14:13:50,687 - module_utilities.py - print_gui - 148 - INFO - 7 configurations accepted out of 28: 25.0 %
+
+
+2017-04-20 14:13:50,687 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.14
+2017-04-20 14:13:50,689 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.14
+2017-04-20 14:13:50,730 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.145
+2017-04-20 14:13:50,784 - module_utilities.py - print_gui - 148 - INFO - 
+COMPLETED 30 of 200 : 15.0 % done
+
+2017-04-20 14:13:50,784 - module_utilities.py - print_gui - 148 - INFO - 9 configurations accepted out of 30: 30.0 %
+
+
+2017-04-20 14:13:50,784 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.15
+2017-04-20 14:13:50,785 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.15
+2017-04-20 14:13:50,858 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.155
+2017-04-20 14:13:50,897 - module_utilities.py - print_gui - 148 - INFO - 
+COMPLETED 32 of 200 : 16.0 % done
+
+2017-04-20 14:13:50,897 - module_utilities.py - print_gui - 148 - INFO - 9 configurations accepted out of 32: 28.125 %
+
+
+2017-04-20 14:13:50,898 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.16
+2017-04-20 14:13:50,898 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.16
+2017-04-20 14:13:51,007 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.165
+2017-04-20 14:13:51,033 - module_utilities.py - print_gui - 148 - INFO - 
+COMPLETED 34 of 200 : 17.0 % done
+
+2017-04-20 14:13:51,033 - module_utilities.py - print_gui - 148 - INFO - 9 configurations accepted out of 34: 26.4705882353 %
+
+
+2017-04-20 14:13:51,033 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.17
+2017-04-20 14:13:51,033 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.17
+2017-04-20 14:13:51,067 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.175
+2017-04-20 14:13:51,177 - module_utilities.py - print_gui - 148 - INFO - 
+COMPLETED 36 of 200 : 18.0 % done
+
+2017-04-20 14:13:51,178 - module_utilities.py - print_gui - 148 - INFO - 9 configurations accepted out of 36: 25.0 %
+
+
+2017-04-20 14:13:51,178 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.18
+2017-04-20 14:13:51,178 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.18
+2017-04-20 14:13:51,202 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.185
+2017-04-20 14:13:51,219 - module_utilities.py - print_gui - 148 - INFO - 
+COMPLETED 38 of 200 : 19.0 % done
+
+2017-04-20 14:13:51,219 - module_utilities.py - print_gui - 148 - INFO - 9 configurations accepted out of 38: 23.6842105263 %
+
+
+2017-04-20 14:13:51,219 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.19
+2017-04-20 14:13:51,219 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.19
+2017-04-20 14:13:51,332 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.195
+2017-04-20 14:13:51,394 - module_utilities.py - print_gui - 148 - INFO - 
+COMPLETED 40 of 200 : 20.0 % done
+
+2017-04-20 14:13:51,394 - module_utilities.py - print_gui - 148 - INFO - 9 configurations accepted out of 40: 22.5 %
+
+
+2017-04-20 14:13:51,394 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.2
+2017-04-20 14:13:51,395 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.2
+2017-04-20 14:13:51,509 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.205
+2017-04-20 14:13:51,571 - module_utilities.py - print_gui - 148 - INFO - 
+COMPLETED 42 of 200 : 21.0 % done
+
+2017-04-20 14:13:51,572 - module_utilities.py - print_gui - 148 - INFO - 9 configurations accepted out of 42: 21.4285714286 %
+
+
+2017-04-20 14:13:51,572 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.21
+2017-04-20 14:13:51,572 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.21
+2017-04-20 14:13:51,681 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.215
+2017-04-20 14:13:51,792 - module_utilities.py - print_gui - 148 - INFO - 
+COMPLETED 44 of 200 : 22.0 % done
+
+2017-04-20 14:13:51,792 - module_utilities.py - print_gui - 148 - INFO - 9 configurations accepted out of 44: 20.4545454545 %
+
+
+2017-04-20 14:13:51,792 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.22
+2017-04-20 14:13:51,792 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.22
+2017-04-20 14:13:51,901 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.225
+2017-04-20 14:13:51,932 - module_utilities.py - print_gui - 148 - INFO - 
+COMPLETED 46 of 200 : 23.0 % done
+
+2017-04-20 14:13:51,932 - module_utilities.py - print_gui - 148 - INFO - 9 configurations accepted out of 46: 19.5652173913 %
+
+
+2017-04-20 14:13:51,932 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.23
+2017-04-20 14:13:51,933 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.23
+2017-04-20 14:13:52,047 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.235
+2017-04-20 14:13:52,075 - module_utilities.py - print_gui - 148 - INFO - 
+COMPLETED 48 of 200 : 24.0 % done
+
+2017-04-20 14:13:52,075 - module_utilities.py - print_gui - 148 - INFO - 9 configurations accepted out of 48: 18.75 %
+
+
+2017-04-20 14:13:52,075 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.24
+2017-04-20 14:13:52,075 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.24
+2017-04-20 14:13:52,109 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.245
+2017-04-20 14:13:52,173 - module_utilities.py - print_gui - 148 - INFO - 
+COMPLETED 50 of 200 : 25.0 % done
+
+2017-04-20 14:13:52,173 - module_utilities.py - print_gui - 148 - INFO - 9 configurations accepted out of 50: 18.0 %
+
+
+2017-04-20 14:13:52,173 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.25
+2017-04-20 14:13:52,173 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.25
+2017-04-20 14:13:52,235 - monomer_monte_carlo.py - dihedralgenerate - 768 - DEBUG - ran_num: 0.484909
+
+2017-04-20 14:13:52,235 - module_utilities.py - print_gui - 148 - INFO - 
+reloading coordinates from a previously accepted structure
+2017-04-20 14:13:52,235 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.255
+2017-04-20 14:13:52,268 - module_utilities.py - print_gui - 148 - INFO - 
+COMPLETED 52 of 200 : 26.0 % done
+
+2017-04-20 14:13:52,268 - module_utilities.py - print_gui - 148 - INFO - 10 configurations accepted out of 52: 19.2307692308 %
+
+
+2017-04-20 14:13:52,269 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.26
+2017-04-20 14:13:52,271 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.26
+2017-04-20 14:13:52,353 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.265
+2017-04-20 14:13:52,399 - module_utilities.py - print_gui - 148 - INFO - 
+COMPLETED 54 of 200 : 27.0 % done
+
+2017-04-20 14:13:52,399 - module_utilities.py - print_gui - 148 - INFO - 12 configurations accepted out of 54: 22.2222222222 %
+
+
+2017-04-20 14:13:52,399 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.27
+2017-04-20 14:13:52,399 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.27
+2017-04-20 14:13:52,433 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.275
+2017-04-20 14:13:52,467 - module_utilities.py - print_gui - 148 - INFO - 
+COMPLETED 56 of 200 : 28.0 % done
+
+2017-04-20 14:13:52,468 - module_utilities.py - print_gui - 148 - INFO - 13 configurations accepted out of 56: 23.2142857143 %
+
+
+2017-04-20 14:13:52,468 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.28
+2017-04-20 14:13:52,468 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.28
+2017-04-20 14:13:52,546 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.285
+2017-04-20 14:13:52,675 - module_utilities.py - print_gui - 148 - INFO - 
+COMPLETED 58 of 200 : 29.0 % done
+
+2017-04-20 14:13:52,675 - module_utilities.py - print_gui - 148 - INFO - 13 configurations accepted out of 58: 22.4137931034 %
+
+
+2017-04-20 14:13:52,675 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.29
+2017-04-20 14:13:52,675 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.29
+2017-04-20 14:13:52,725 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.295
+2017-04-20 14:13:52,856 - module_utilities.py - print_gui - 148 - INFO - 
+COMPLETED 60 of 200 : 30.0 % done
+
+2017-04-20 14:13:52,856 - module_utilities.py - print_gui - 148 - INFO - 13 configurations accepted out of 60: 21.6666666667 %
+
+
+2017-04-20 14:13:52,857 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.3
+2017-04-20 14:13:52,858 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.3
+2017-04-20 14:13:52,901 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.305
+2017-04-20 14:13:52,934 - module_utilities.py - print_gui - 148 - INFO - 
+COMPLETED 62 of 200 : 31.0 % done
+
+2017-04-20 14:13:52,934 - module_utilities.py - print_gui - 148 - INFO - 14 configurations accepted out of 62: 22.5806451613 %
+
+
+2017-04-20 14:13:52,934 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.31
+2017-04-20 14:13:52,934 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.31
+2017-04-20 14:13:53,060 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.315
+2017-04-20 14:13:53,189 - module_utilities.py - print_gui - 148 - INFO - 
+COMPLETED 64 of 200 : 32.0 % done
+
+2017-04-20 14:13:53,189 - module_utilities.py - print_gui - 148 - INFO - 16 configurations accepted out of 64: 25.0 %
+
+
+2017-04-20 14:13:53,189 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.32
+2017-04-20 14:13:53,190 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.32
+2017-04-20 14:13:53,319 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.325
+2017-04-20 14:13:53,369 - module_utilities.py - print_gui - 148 - INFO - 
+COMPLETED 66 of 200 : 33.0 % done
+
+2017-04-20 14:13:53,370 - module_utilities.py - print_gui - 148 - INFO - 18 configurations accepted out of 66: 27.2727272727 %
+
+
+2017-04-20 14:13:53,370 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.33
+2017-04-20 14:13:53,370 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.33
+2017-04-20 14:13:53,450 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.335
+2017-04-20 14:13:53,480 - module_utilities.py - print_gui - 148 - INFO - 
+COMPLETED 68 of 200 : 34.0 % done
+
+2017-04-20 14:13:53,480 - module_utilities.py - print_gui - 148 - INFO - 19 configurations accepted out of 68: 27.9411764706 %
+
+
+2017-04-20 14:13:53,480 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.34
+2017-04-20 14:13:53,481 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.34
+2017-04-20 14:13:53,516 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.345
+2017-04-20 14:13:53,591 - module_utilities.py - print_gui - 148 - INFO - 
+COMPLETED 70 of 200 : 35.0 % done
+
+2017-04-20 14:13:53,591 - module_utilities.py - print_gui - 148 - INFO - 19 configurations accepted out of 70: 27.1428571429 %
+
+
+2017-04-20 14:13:53,591 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.35
+2017-04-20 14:13:53,591 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.35
+2017-04-20 14:13:53,620 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.355
+2017-04-20 14:13:53,698 - module_utilities.py - print_gui - 148 - INFO - 
+COMPLETED 72 of 200 : 36.0 % done
+
+2017-04-20 14:13:53,698 - module_utilities.py - print_gui - 148 - INFO - 20 configurations accepted out of 72: 27.7777777778 %
+
+
+2017-04-20 14:13:53,698 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.36
+2017-04-20 14:13:53,698 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.36
+2017-04-20 14:13:53,728 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.365
+2017-04-20 14:13:53,807 - module_utilities.py - print_gui - 148 - INFO - 
+COMPLETED 74 of 200 : 37.0 % done
+
+2017-04-20 14:13:53,807 - module_utilities.py - print_gui - 148 - INFO - 20 configurations accepted out of 74: 27.027027027 %
+
+
+2017-04-20 14:13:53,808 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.37
+2017-04-20 14:13:53,808 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.37
+2017-04-20 14:13:53,886 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.375
+2017-04-20 14:13:54,011 - module_utilities.py - print_gui - 148 - INFO - 
+COMPLETED 76 of 200 : 38.0 % done
+
+2017-04-20 14:13:54,011 - module_utilities.py - print_gui - 148 - INFO - 20 configurations accepted out of 76: 26.3157894737 %
+
+
+2017-04-20 14:13:54,011 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.38
+2017-04-20 14:13:54,011 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.38
+2017-04-20 14:13:54,054 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.385
+2017-04-20 14:13:54,132 - module_utilities.py - print_gui - 148 - INFO - 
+COMPLETED 78 of 200 : 39.0 % done
+
+2017-04-20 14:13:54,132 - module_utilities.py - print_gui - 148 - INFO - 20 configurations accepted out of 78: 25.641025641 %
+
+
+2017-04-20 14:13:54,132 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.39
+2017-04-20 14:13:54,133 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.39
+2017-04-20 14:13:54,209 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.395
+2017-04-20 14:13:54,256 - module_utilities.py - print_gui - 148 - INFO - 
+COMPLETED 80 of 200 : 40.0 % done
+
+2017-04-20 14:13:54,256 - module_utilities.py - print_gui - 148 - INFO - 20 configurations accepted out of 80: 25.0 %
+
+
+2017-04-20 14:13:54,256 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.4
+2017-04-20 14:13:54,258 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.4
+2017-04-20 14:13:54,294 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.405
+2017-04-20 14:13:54,375 - module_utilities.py - print_gui - 148 - INFO - 
+COMPLETED 82 of 200 : 41.0 % done
+
+2017-04-20 14:13:54,375 - module_utilities.py - print_gui - 148 - INFO - 22 configurations accepted out of 82: 26.8292682927 %
+
+
+2017-04-20 14:13:54,375 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.41
+2017-04-20 14:13:54,375 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.41
+2017-04-20 14:13:54,507 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.415
+2017-04-20 14:13:54,586 - module_utilities.py - print_gui - 148 - INFO - 
+COMPLETED 84 of 200 : 42.0 % done
+
+2017-04-20 14:13:54,586 - module_utilities.py - print_gui - 148 - INFO - 24 configurations accepted out of 84: 28.5714285714 %
+
+
+2017-04-20 14:13:54,586 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.42
+2017-04-20 14:13:54,587 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.42
+2017-04-20 14:13:54,665 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.425
+2017-04-20 14:13:54,695 - module_utilities.py - print_gui - 148 - INFO - 
+COMPLETED 86 of 200 : 43.0 % done
+
+2017-04-20 14:13:54,695 - module_utilities.py - print_gui - 148 - INFO - 25 configurations accepted out of 86: 29.0697674419 %
+
+
+2017-04-20 14:13:54,695 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.43
+2017-04-20 14:13:54,696 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.43
+2017-04-20 14:13:54,738 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.435
+2017-04-20 14:13:54,865 - monomer_monte_carlo.py - dihedralgenerate - 768 - DEBUG - ran_num: 0.611977
+
+2017-04-20 14:13:54,865 - module_utilities.py - print_gui - 148 - INFO - 
+reloading coordinates from a previously accepted structure
+2017-04-20 14:13:54,866 - module_utilities.py - print_gui - 148 - INFO - 
+COMPLETED 88 of 200 : 44.0 % done
+
+2017-04-20 14:13:54,866 - module_utilities.py - print_gui - 148 - INFO - 25 configurations accepted out of 88: 28.4090909091 %
+
+
+2017-04-20 14:13:54,866 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.44
+2017-04-20 14:13:54,867 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.44
+2017-04-20 14:13:54,945 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.445
+2017-04-20 14:13:55,020 - module_utilities.py - print_gui - 148 - INFO - 
+COMPLETED 90 of 200 : 45.0 % done
+
+2017-04-20 14:13:55,020 - module_utilities.py - print_gui - 148 - INFO - 26 configurations accepted out of 90: 28.8888888889 %
+
+
+2017-04-20 14:13:55,020 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.45
+2017-04-20 14:13:55,020 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.45
+2017-04-20 14:13:55,048 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.455
+2017-04-20 14:13:55,125 - module_utilities.py - print_gui - 148 - INFO - 
+COMPLETED 92 of 200 : 46.0 % done
+
+2017-04-20 14:13:55,125 - module_utilities.py - print_gui - 148 - INFO - 26 configurations accepted out of 92: 28.2608695652 %
+
+
+2017-04-20 14:13:55,125 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.46
+2017-04-20 14:13:55,126 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.46
+2017-04-20 14:13:55,206 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.465
+2017-04-20 14:13:55,289 - module_utilities.py - print_gui - 148 - INFO - 
+COMPLETED 94 of 200 : 47.0 % done
+
+2017-04-20 14:13:55,290 - module_utilities.py - print_gui - 148 - INFO - 26 configurations accepted out of 94: 27.6595744681 %
+
+
+2017-04-20 14:13:55,290 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.47
+2017-04-20 14:13:55,290 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.47
+2017-04-20 14:13:55,319 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.475
+2017-04-20 14:13:55,443 - module_utilities.py - print_gui - 148 - INFO - 
+COMPLETED 96 of 200 : 48.0 % done
+
+2017-04-20 14:13:55,443 - module_utilities.py - print_gui - 148 - INFO - 26 configurations accepted out of 96: 27.0833333333 %
+
+
+2017-04-20 14:13:55,444 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.48
+2017-04-20 14:13:55,444 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.48
+2017-04-20 14:13:55,574 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.485
+2017-04-20 14:13:55,651 - module_utilities.py - print_gui - 148 - INFO - 
+COMPLETED 98 of 200 : 49.0 % done
+
+2017-04-20 14:13:55,651 - module_utilities.py - print_gui - 148 - INFO - 26 configurations accepted out of 98: 26.5306122449 %
+
+
+2017-04-20 14:13:55,651 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.49
+2017-04-20 14:13:55,651 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.49
+2017-04-20 14:13:55,692 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.495
+2017-04-20 14:13:55,731 - module_utilities.py - print_gui - 148 - INFO - 
+COMPLETED 100 of 200 : 50.0 % done
+
+2017-04-20 14:13:55,731 - module_utilities.py - print_gui - 148 - INFO - 26 configurations accepted out of 100: 26.0 %
+
+
+2017-04-20 14:13:55,732 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.5
+2017-04-20 14:13:55,735 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.5
+2017-04-20 14:13:55,781 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.505
+2017-04-20 14:13:55,818 - module_utilities.py - print_gui - 148 - INFO - 
+COMPLETED 102 of 200 : 51.0 % done
+
+2017-04-20 14:13:55,818 - module_utilities.py - print_gui - 148 - INFO - 26 configurations accepted out of 102: 25.4901960784 %
+
+
+2017-04-20 14:13:55,818 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.51
+2017-04-20 14:13:55,819 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.51
+2017-04-20 14:13:55,898 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.515
+2017-04-20 14:13:55,935 - module_utilities.py - print_gui - 148 - INFO - 
+COMPLETED 104 of 200 : 52.0 % done
+
+2017-04-20 14:13:55,935 - module_utilities.py - print_gui - 148 - INFO - 26 configurations accepted out of 104: 25.0 %
+
+
+2017-04-20 14:13:55,935 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.52
+2017-04-20 14:13:55,935 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.52
+2017-04-20 14:13:55,963 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.525
+2017-04-20 14:13:56,005 - module_utilities.py - print_gui - 148 - INFO - 
+COMPLETED 106 of 200 : 53.0 % done
+
+2017-04-20 14:13:56,005 - module_utilities.py - print_gui - 148 - INFO - 26 configurations accepted out of 106: 24.5283018868 %
+
+
+2017-04-20 14:13:56,005 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.53
+2017-04-20 14:13:56,005 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.53
+2017-04-20 14:13:56,033 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.535
+2017-04-20 14:13:56,078 - module_utilities.py - print_gui - 148 - INFO - 
+COMPLETED 108 of 200 : 54.0 % done
+
+2017-04-20 14:13:56,078 - module_utilities.py - print_gui - 148 - INFO - 26 configurations accepted out of 108: 24.0740740741 %
+
+
+2017-04-20 14:13:56,078 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.54
+2017-04-20 14:13:56,078 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.54
+2017-04-20 14:13:56,153 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.545
+2017-04-20 14:13:56,229 - monomer_monte_carlo.py - dihedralgenerate - 768 - DEBUG - ran_num: 0.322655
+
+2017-04-20 14:13:56,229 - module_utilities.py - print_gui - 148 - INFO - 
+reloading coordinates from a previously accepted structure
+2017-04-20 14:13:56,229 - module_utilities.py - print_gui - 148 - INFO - 
+COMPLETED 110 of 200 : 55.0 % done
+
+2017-04-20 14:13:56,230 - module_utilities.py - print_gui - 148 - INFO - 26 configurations accepted out of 110: 23.6363636364 %
+
+
+2017-04-20 14:13:56,230 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.55
+2017-04-20 14:13:56,230 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.55
+2017-04-20 14:13:56,341 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.555
+2017-04-20 14:13:56,473 - module_utilities.py - print_gui - 148 - INFO - 
+COMPLETED 112 of 200 : 56.0 % done
+
+2017-04-20 14:13:56,473 - module_utilities.py - print_gui - 148 - INFO - 27 configurations accepted out of 112: 24.1071428571 %
+
+
+2017-04-20 14:13:56,473 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.56
+2017-04-20 14:13:56,473 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.56
+2017-04-20 14:13:56,517 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.565
+2017-04-20 14:13:56,564 - module_utilities.py - print_gui - 148 - INFO - 
+COMPLETED 114 of 200 : 57.0 % done
+
+2017-04-20 14:13:56,564 - module_utilities.py - print_gui - 148 - INFO - 29 configurations accepted out of 114: 25.4385964912 %
+
+
+2017-04-20 14:13:56,564 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.57
+2017-04-20 14:13:56,565 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.57
+2017-04-20 14:13:56,609 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.575
+2017-04-20 14:13:56,658 - module_utilities.py - print_gui - 148 - INFO - 
+COMPLETED 116 of 200 : 58.0 % done
+
+2017-04-20 14:13:56,659 - module_utilities.py - print_gui - 148 - INFO - 31 configurations accepted out of 116: 26.724137931 %
+
+
+2017-04-20 14:13:56,659 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.58
+2017-04-20 14:13:56,659 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.58
+2017-04-20 14:13:56,704 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.585
+2017-04-20 14:13:56,784 - module_utilities.py - print_gui - 148 - INFO - 
+COMPLETED 118 of 200 : 59.0 % done
+
+2017-04-20 14:13:56,785 - module_utilities.py - print_gui - 148 - INFO - 33 configurations accepted out of 118: 27.9661016949 %
+
+
+2017-04-20 14:13:56,785 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.59
+2017-04-20 14:13:56,785 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.59
+2017-04-20 14:13:56,836 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.595
+2017-04-20 14:13:56,886 - module_utilities.py - print_gui - 148 - INFO - 
+COMPLETED 120 of 200 : 60.0 % done
+
+2017-04-20 14:13:56,886 - module_utilities.py - print_gui - 148 - INFO - 33 configurations accepted out of 120: 27.5 %
+
+
+2017-04-20 14:13:56,886 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.6
+2017-04-20 14:13:56,888 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.6
+2017-04-20 14:13:56,919 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.605
+2017-04-20 14:13:56,951 - module_utilities.py - print_gui - 148 - INFO - 
+COMPLETED 122 of 200 : 61.0 % done
+
+2017-04-20 14:13:56,952 - module_utilities.py - print_gui - 148 - INFO - 33 configurations accepted out of 122: 27.0491803279 %
+
+
+2017-04-20 14:13:56,952 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.61
+2017-04-20 14:13:56,952 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.61
+2017-04-20 14:13:56,993 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.615
+2017-04-20 14:13:57,040 - module_utilities.py - print_gui - 148 - INFO - 
+COMPLETED 124 of 200 : 62.0 % done
+
+2017-04-20 14:13:57,040 - module_utilities.py - print_gui - 148 - INFO - 33 configurations accepted out of 124: 26.6129032258 %
+
+
+2017-04-20 14:13:57,040 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.62
+2017-04-20 14:13:57,040 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.62
+2017-04-20 14:13:57,090 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.625
+2017-04-20 14:13:57,131 - module_utilities.py - print_gui - 148 - INFO - 
+COMPLETED 126 of 200 : 63.0 % done
+
+2017-04-20 14:13:57,131 - module_utilities.py - print_gui - 148 - INFO - 33 configurations accepted out of 126: 26.1904761905 %
+
+
+2017-04-20 14:13:57,132 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.63
+2017-04-20 14:13:57,132 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.63
+2017-04-20 14:13:57,170 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.635
+2017-04-20 14:13:57,221 - module_utilities.py - print_gui - 148 - INFO - 
+COMPLETED 128 of 200 : 64.0 % done
+
+2017-04-20 14:13:57,221 - module_utilities.py - print_gui - 148 - INFO - 33 configurations accepted out of 128: 25.78125 %
+
+
+2017-04-20 14:13:57,221 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.64
+2017-04-20 14:13:57,222 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.64
+2017-04-20 14:13:57,264 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.645
+2017-04-20 14:13:57,378 - module_utilities.py - print_gui - 148 - INFO - 
+COMPLETED 130 of 200 : 65.0 % done
+
+2017-04-20 14:13:57,378 - module_utilities.py - print_gui - 148 - INFO - 33 configurations accepted out of 130: 25.3846153846 %
+
+
+2017-04-20 14:13:57,379 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.65
+2017-04-20 14:13:57,379 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.65
+2017-04-20 14:13:57,488 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.655
+2017-04-20 14:13:57,503 - module_utilities.py - print_gui - 148 - INFO - 
+COMPLETED 132 of 200 : 66.0 % done
+
+2017-04-20 14:13:57,503 - module_utilities.py - print_gui - 148 - INFO - 33 configurations accepted out of 132: 25.0 %
+
+
+2017-04-20 14:13:57,504 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.66
+2017-04-20 14:13:57,504 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.66
+2017-04-20 14:13:57,631 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.665
+2017-04-20 14:13:57,662 - module_utilities.py - print_gui - 148 - INFO - 
+COMPLETED 134 of 200 : 67.0 % done
+
+2017-04-20 14:13:57,662 - module_utilities.py - print_gui - 148 - INFO - 34 configurations accepted out of 134: 25.3731343284 %
+
+
+2017-04-20 14:13:57,662 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.67
+2017-04-20 14:13:57,662 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.67
+2017-04-20 14:13:57,791 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.675
+2017-04-20 14:13:57,920 - module_utilities.py - print_gui - 148 - INFO - 
+COMPLETED 136 of 200 : 68.0 % done
+
+2017-04-20 14:13:57,920 - module_utilities.py - print_gui - 148 - INFO - 34 configurations accepted out of 136: 25.0 %
+
+
+2017-04-20 14:13:57,920 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.68
+2017-04-20 14:13:57,921 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.68
+2017-04-20 14:13:57,998 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.685
+2017-04-20 14:13:58,030 - module_utilities.py - print_gui - 148 - INFO - 
+COMPLETED 138 of 200 : 69.0 % done
+
+2017-04-20 14:13:58,030 - module_utilities.py - print_gui - 148 - INFO - 35 configurations accepted out of 138: 25.3623188406 %
+
+
+2017-04-20 14:13:58,030 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.69
+2017-04-20 14:13:58,030 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.69
+2017-04-20 14:13:58,074 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.695
+2017-04-20 14:13:58,121 - module_utilities.py - print_gui - 148 - INFO - 
+COMPLETED 140 of 200 : 70.0 % done
+
+2017-04-20 14:13:58,121 - module_utilities.py - print_gui - 148 - INFO - 37 configurations accepted out of 140: 26.4285714286 %
+
+
+2017-04-20 14:13:58,121 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.7
+2017-04-20 14:13:58,123 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.7
+2017-04-20 14:13:58,175 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.705
+2017-04-20 14:13:58,208 - module_utilities.py - print_gui - 148 - INFO - 
+COMPLETED 142 of 200 : 71.0 % done
+
+2017-04-20 14:13:58,208 - module_utilities.py - print_gui - 148 - INFO - 39 configurations accepted out of 142: 27.4647887324 %
+
+
+2017-04-20 14:13:58,208 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.71
+2017-04-20 14:13:58,209 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.71
+2017-04-20 14:13:58,290 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.715
+2017-04-20 14:13:58,418 - module_utilities.py - print_gui - 148 - INFO - 
+COMPLETED 144 of 200 : 72.0 % done
+
+2017-04-20 14:13:58,418 - module_utilities.py - print_gui - 148 - INFO - 41 configurations accepted out of 144: 28.4722222222 %
+
+
+2017-04-20 14:13:58,418 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.72
+2017-04-20 14:13:58,418 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.72
+2017-04-20 14:13:58,450 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.725
+2017-04-20 14:13:58,529 - module_utilities.py - print_gui - 148 - INFO - 
+COMPLETED 146 of 200 : 73.0 % done
+
+2017-04-20 14:13:58,530 - module_utilities.py - print_gui - 148 - INFO - 43 configurations accepted out of 146: 29.4520547945 %
+
+
+2017-04-20 14:13:58,530 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.73
+2017-04-20 14:13:58,530 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.73
+2017-04-20 14:13:58,574 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.735
+2017-04-20 14:13:58,659 - module_utilities.py - print_gui - 148 - INFO - 
+COMPLETED 148 of 200 : 74.0 % done
+
+2017-04-20 14:13:58,660 - module_utilities.py - print_gui - 148 - INFO - 45 configurations accepted out of 148: 30.4054054054 %
+
+
+2017-04-20 14:13:58,660 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.74
+2017-04-20 14:13:58,660 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.74
+2017-04-20 14:13:58,707 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.745
+2017-04-20 14:13:58,745 - module_utilities.py - print_gui - 148 - INFO - 
+COMPLETED 150 of 200 : 75.0 % done
+
+2017-04-20 14:13:58,745 - module_utilities.py - print_gui - 148 - INFO - 47 configurations accepted out of 150: 31.3333333333 %
+
+
+2017-04-20 14:13:58,745 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.75
+2017-04-20 14:13:58,745 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.75
+2017-04-20 14:13:58,791 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.755
+2017-04-20 14:13:58,917 - module_utilities.py - print_gui - 148 - INFO - 
+COMPLETED 152 of 200 : 76.0 % done
+
+2017-04-20 14:13:58,917 - module_utilities.py - print_gui - 148 - INFO - 49 configurations accepted out of 152: 32.2368421053 %
+
+
+2017-04-20 14:13:58,917 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.76
+2017-04-20 14:13:58,918 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.76
+2017-04-20 14:13:58,966 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.765
+2017-04-20 14:13:59,010 - module_utilities.py - print_gui - 148 - INFO - 
+COMPLETED 154 of 200 : 77.0 % done
+
+2017-04-20 14:13:59,011 - module_utilities.py - print_gui - 148 - INFO - 51 configurations accepted out of 154: 33.1168831169 %
+
+
+2017-04-20 14:13:59,011 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.77
+2017-04-20 14:13:59,011 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.77
+2017-04-20 14:13:59,126 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.775
+2017-04-20 14:13:59,192 - monomer_monte_carlo.py - dihedralgenerate - 768 - DEBUG - ran_num: 0.251777
+
+2017-04-20 14:13:59,192 - module_utilities.py - print_gui - 148 - INFO - 
+reloading coordinates from a previously accepted structure
+2017-04-20 14:13:59,192 - module_utilities.py - print_gui - 148 - INFO - 
+COMPLETED 156 of 200 : 78.0 % done
+
+2017-04-20 14:13:59,192 - module_utilities.py - print_gui - 148 - INFO - 51 configurations accepted out of 156: 32.6923076923 %
+
+
+2017-04-20 14:13:59,193 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.78
+2017-04-20 14:13:59,193 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.78
+2017-04-20 14:13:59,240 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.785
+2017-04-20 14:13:59,290 - module_utilities.py - print_gui - 148 - INFO - 
+COMPLETED 158 of 200 : 79.0 % done
+
+2017-04-20 14:13:59,291 - module_utilities.py - print_gui - 148 - INFO - 53 configurations accepted out of 158: 33.5443037975 %
+
+
+2017-04-20 14:13:59,291 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.79
+2017-04-20 14:13:59,291 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.79
+2017-04-20 14:13:59,323 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.795
+2017-04-20 14:13:59,402 - module_utilities.py - print_gui - 148 - INFO - 
+COMPLETED 160 of 200 : 80.0 % done
+
+2017-04-20 14:13:59,402 - module_utilities.py - print_gui - 148 - INFO - 55 configurations accepted out of 160: 34.375 %
+
+
+2017-04-20 14:13:59,403 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.8
+2017-04-20 14:13:59,405 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.8
+2017-04-20 14:13:59,516 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.805
+2017-04-20 14:13:59,540 - module_utilities.py - print_gui - 148 - INFO - 
+COMPLETED 162 of 200 : 81.0 % done
+
+2017-04-20 14:13:59,541 - module_utilities.py - print_gui - 148 - INFO - 55 configurations accepted out of 162: 33.950617284 %
+
+
+2017-04-20 14:13:59,541 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.81
+2017-04-20 14:13:59,541 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.81
+2017-04-20 14:13:59,577 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.815
+2017-04-20 14:13:59,594 - module_utilities.py - print_gui - 148 - INFO - 
+COMPLETED 164 of 200 : 82.0 % done
+
+2017-04-20 14:13:59,594 - module_utilities.py - print_gui - 148 - INFO - 55 configurations accepted out of 164: 33.5365853659 %
+
+
+2017-04-20 14:13:59,594 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.82
+2017-04-20 14:13:59,594 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.82
+2017-04-20 14:13:59,610 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.825
+2017-04-20 14:13:59,627 - module_utilities.py - print_gui - 148 - INFO - 
+COMPLETED 166 of 200 : 83.0 % done
+
+2017-04-20 14:13:59,628 - module_utilities.py - print_gui - 148 - INFO - 55 configurations accepted out of 166: 33.1325301205 %
+
+
+2017-04-20 14:13:59,628 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.83
+2017-04-20 14:13:59,628 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.83
+2017-04-20 14:13:59,643 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.835
+2017-04-20 14:13:59,678 - module_utilities.py - print_gui - 148 - INFO - 
+COMPLETED 168 of 200 : 84.0 % done
+
+2017-04-20 14:13:59,678 - module_utilities.py - print_gui - 148 - INFO - 55 configurations accepted out of 168: 32.7380952381 %
+
+
+2017-04-20 14:13:59,679 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.84
+2017-04-20 14:13:59,679 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.84
+2017-04-20 14:13:59,741 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.845
+2017-04-20 14:13:59,803 - module_utilities.py - print_gui - 148 - INFO - 
+COMPLETED 170 of 200 : 85.0 % done
+
+2017-04-20 14:13:59,803 - module_utilities.py - print_gui - 148 - INFO - 55 configurations accepted out of 170: 32.3529411765 %
+
+
+2017-04-20 14:13:59,804 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.85
+2017-04-20 14:13:59,804 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.85
+2017-04-20 14:13:59,819 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.855
+2017-04-20 14:13:59,835 - module_utilities.py - print_gui - 148 - INFO - 
+COMPLETED 172 of 200 : 86.0 % done
+
+2017-04-20 14:13:59,835 - module_utilities.py - print_gui - 148 - INFO - 55 configurations accepted out of 172: 31.976744186 %
+
+
+2017-04-20 14:13:59,835 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.86
+2017-04-20 14:13:59,836 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.86
+2017-04-20 14:13:59,956 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.865
+2017-04-20 14:14:00,034 - module_utilities.py - print_gui - 148 - INFO - 
+COMPLETED 174 of 200 : 87.0 % done
+
+2017-04-20 14:14:00,035 - module_utilities.py - print_gui - 148 - INFO - 55 configurations accepted out of 174: 31.6091954023 %
+
+
+2017-04-20 14:14:00,035 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.87
+2017-04-20 14:14:00,035 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.87
+2017-04-20 14:14:00,143 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.875
+2017-04-20 14:14:00,170 - module_utilities.py - print_gui - 148 - INFO - 
+COMPLETED 176 of 200 : 88.0 % done
+
+2017-04-20 14:14:00,170 - module_utilities.py - print_gui - 148 - INFO - 55 configurations accepted out of 176: 31.25 %
+
+
+2017-04-20 14:14:00,170 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.88
+2017-04-20 14:14:00,170 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.88
+2017-04-20 14:14:00,230 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.885
+2017-04-20 14:14:00,256 - module_utilities.py - print_gui - 148 - INFO - 
+COMPLETED 178 of 200 : 89.0 % done
+
+2017-04-20 14:14:00,256 - module_utilities.py - print_gui - 148 - INFO - 55 configurations accepted out of 178: 30.8988764045 %
+
+
+2017-04-20 14:14:00,256 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.89
+2017-04-20 14:14:00,256 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.89
+2017-04-20 14:14:00,273 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.895
+2017-04-20 14:14:00,302 - module_utilities.py - print_gui - 148 - INFO - 
+COMPLETED 180 of 200 : 90.0 % done
+
+2017-04-20 14:14:00,302 - module_utilities.py - print_gui - 148 - INFO - 55 configurations accepted out of 180: 30.5555555556 %
+
+
+2017-04-20 14:14:00,302 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.9
+2017-04-20 14:14:00,305 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.9
+2017-04-20 14:14:00,369 - monomer_monte_carlo.py - dihedralgenerate - 768 - DEBUG - ran_num: 0.952011
+
+2017-04-20 14:14:00,369 - module_utilities.py - print_gui - 148 - INFO - 
+reloading coordinates from a previously accepted structure
+2017-04-20 14:14:00,371 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.905
+2017-04-20 14:14:00,421 - module_utilities.py - print_gui - 148 - INFO - 
+COMPLETED 182 of 200 : 91.0 % done
+
+2017-04-20 14:14:00,421 - module_utilities.py - print_gui - 148 - INFO - 56 configurations accepted out of 182: 30.7692307692 %
+
+
+2017-04-20 14:14:00,421 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.91
+2017-04-20 14:14:00,421 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.91
+2017-04-20 14:14:00,453 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.915
+2017-04-20 14:14:00,489 - module_utilities.py - print_gui - 148 - INFO - 
+COMPLETED 184 of 200 : 92.0 % done
+
+2017-04-20 14:14:00,489 - module_utilities.py - print_gui - 148 - INFO - 58 configurations accepted out of 184: 31.5217391304 %
+
+
+2017-04-20 14:14:00,489 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.92
+2017-04-20 14:14:00,490 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.92
+2017-04-20 14:14:00,598 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.925
+2017-04-20 14:14:00,629 - module_utilities.py - print_gui - 148 - INFO - 
+COMPLETED 186 of 200 : 93.0 % done
+
+2017-04-20 14:14:00,629 - module_utilities.py - print_gui - 148 - INFO - 58 configurations accepted out of 186: 31.1827956989 %
+
+
+2017-04-20 14:14:00,629 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.93
+2017-04-20 14:14:00,629 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.93
+2017-04-20 14:14:00,691 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.935
+2017-04-20 14:14:00,713 - module_utilities.py - print_gui - 148 - INFO - 
+COMPLETED 188 of 200 : 94.0 % done
+
+2017-04-20 14:14:00,713 - module_utilities.py - print_gui - 148 - INFO - 58 configurations accepted out of 188: 30.8510638298 %
+
+
+2017-04-20 14:14:00,713 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.94
+2017-04-20 14:14:00,714 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.94
+2017-04-20 14:14:00,745 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.945
+2017-04-20 14:14:00,769 - module_utilities.py - print_gui - 148 - INFO - 
+COMPLETED 190 of 200 : 95.0 % done
+
+2017-04-20 14:14:00,769 - module_utilities.py - print_gui - 148 - INFO - 58 configurations accepted out of 190: 30.5263157895 %
+
+
+2017-04-20 14:14:00,769 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.95
+2017-04-20 14:14:00,769 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.95
+2017-04-20 14:14:00,898 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.955
+2017-04-20 14:14:00,931 - module_utilities.py - print_gui - 148 - INFO - 
+COMPLETED 192 of 200 : 96.0 % done
+
+2017-04-20 14:14:00,931 - module_utilities.py - print_gui - 148 - INFO - 60 configurations accepted out of 192: 31.25 %
+
+
+2017-04-20 14:14:00,931 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.96
+2017-04-20 14:14:00,931 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.96
+2017-04-20 14:14:01,011 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.965
+2017-04-20 14:14:01,051 - module_utilities.py - print_gui - 148 - INFO - 
+COMPLETED 194 of 200 : 97.0 % done
+
+2017-04-20 14:14:01,051 - module_utilities.py - print_gui - 148 - INFO - 61 configurations accepted out of 194: 31.4432989691 %
+
+
+2017-04-20 14:14:01,051 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.97
+2017-04-20 14:14:01,052 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.97
+2017-04-20 14:14:01,129 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.975
+2017-04-20 14:14:01,169 - module_utilities.py - print_gui - 148 - INFO - 
+COMPLETED 196 of 200 : 98.0 % done
+
+2017-04-20 14:14:01,169 - module_utilities.py - print_gui - 148 - INFO - 61 configurations accepted out of 196: 31.1224489796 %
+
+
+2017-04-20 14:14:01,169 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.98
+2017-04-20 14:14:01,169 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.98
+2017-04-20 14:14:01,223 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.985
+2017-04-20 14:14:01,354 - module_utilities.py - print_gui - 148 - INFO - 
+COMPLETED 198 of 200 : 99.0 % done
+
+2017-04-20 14:14:01,355 - module_utilities.py - print_gui - 148 - INFO - 61 configurations accepted out of 198: 30.8080808081 %
+
+
+2017-04-20 14:14:01,355 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.99
+2017-04-20 14:14:01,355 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.99
+2017-04-20 14:14:01,385 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.995
+2017-04-20 14:14:01,516 - module_utilities.py - print_gui - 148 - INFO - 
+COMPLETED 200 of 200 : 100.0 % done
+
+2017-04-20 14:14:01,517 - module_utilities.py - print_gui - 148 - INFO - 61 configurations accepted out of 200: 30.5 %
+
+
+2017-04-20 14:14:01,517 - module_utilities.py - print_gui - 148 - INFO - STATUS	1.0
+2017-04-20 14:14:01,519 - module_utilities.py - print_gui - 148 - INFO - STATUS	1.0
+2017-04-20 14:14:01,523 - monomer_monte_carlo.py - epilogue - 855 - DEBUG - in epilogue
+2017-04-20 14:14:01,523 - monomer_monte_carlo.py - epilogue - 857 - DEBUG - {'dcdfile': 'run_0.dcd', 'cutoff': 0.8, 'cflag': 0, 'directedmc': 0.0, 'app': 'monomer_monte_carlo', 'highrg': 400.0, 'lowrg': 0.0, 'seed': [1, 123], 'zflag': 0, 'molecule_type': 'protein', 'psffilename': 'gag_start.psf', 'basis': 'heavy', 'trials': 200, 'confile': 'monomer_mc_constraints.txt', 'zcutoff': -35.0, 'numcont': [22, 6, 21, 12, 5], 'nonbondscale': 1.0, 'reslow': [123, 277, 354, 378, 408], 'parmfilename': 'par_all27_prot_na.inp', 'parmfilepath': '/share/apps/local/bintoppar/', 'goback': 20, 'psffilepath': './', 'plotflag': 1, 'dtheta': [30.0, 30.0, 30.0, 30.0, 30.0], 'path': './', 'nonbondflag': 0, 'highres1': 350, 'temp': 300.0, 'lowres1': 284, 'numranges': 5, 'pdbfile': 'gag_start.pdb', 'runname': 'run_0'}
+2017-04-20 14:14:01,523 - monomer_monte_carlo.py - epilogue - 858 - DEBUG - {'badrg': 0, 'over': 139, 'lowestrg': 38.909754245662683, 'minx': [-72.915605652324331, -81.976763472071667, -82.168689724822443, -77.217929674573611, -85.166005968089777, -85.166005886173323, -78.515296416441373, -81.444329892350964, -82.019952896385675, -77.063976904907392, -77.063976791907905, -57.952585727796013, -57.94251514369379, -64.207853267071741, -64.207853422057212, -64.207853211302606, -64.207853594931535, -62.824671780454963, -62.824672588722002, -60.682490539550486, -59.706741972428397, -59.706742379697381, -59.706742901566571, -59.706742742191182, -59.706742316089773, -64.207855041189731, -81.444328266680529, -80.085684220012212, -79.482456066860166, -77.342918659969769, -83.474329793791796, -86.95309778068966, -86.953098094215207, -59.030259088979307, -61.486303711741854, -64.415526114679025, -63.490223605438466, -56.11220154227626, -54.910687329249711, -54.91068757360383, -54.910687748529362, -56.62383969975744, -56.623840172630139, -64.357739746618279, -64.357739911361023, -79.167997008137164, -80.344395033333385, -77.967772320863403, -77.967772491424995, -77.653341758754678, -69.411407135971004, -57.926220684394664, -61.33596001026671, -62.448225476026749, -62.448224717649673, -60.238483735691112, -60.079101633439521, -60.229914934454683, -54.783154936069252, -55.494535764609502, -55.494536406832047], 'mask_b_array': [], 'minz': [-26.732186696152752, -26.732187622940916, -26.732187302824531, -26.732187442549389, -26.732187905772133, -14.010000149587208, -26.732187132368509, -26.732187602050097, -26.732187360817523, -26.732186456309307, -23.565361254190869, -23.565361672984626, -23.565361767436677, -19.012972308149667, -19.012972229458764, -19.012972515090379, -19.01297193717069, -19.01297281828246, -14.010000027473529, -14.010000159410939, -18.996858838079529, -15.154574548665416, -27.137513119299705, -30.11936463886207, -28.970688080600635, -14.010000267573355, -23.065569308978674, -23.06556920906338, -23.065569723227799, -23.06556932791003, -23.06556928136709, -23.065569085486267, -22.055955277442866, -26.042830630580379, -32.018251612583406, -32.018251233973842, -32.018251443551058, -32.018251608735895, -32.018251559152198, -51.416044457333399, -51.13341473450329, -51.133415584076566, -49.350457180666687, -49.350458189428302, -72.14760854850708, -72.147607742642933, -72.147608258112157, -72.147609001392908, -62.0819481585971, -62.081947680944118, -62.081948032457326, -23.565360949535052, -23.565361116158517, -23.56536018432412, -27.787517036697995, -23.565360650477572, -23.565360339654209, -23.565361471321086, -31.082682950293883, -31.082683121669753, -44.518744848783093], 'flexible_residues': [123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133, 134, 135, 136, 137, 138, 139, 140, 141, 142, 143, 144, 277, 278, 279, 280, 281, 282, 354, 355, 356, 357, 358, 359, 360, 361, 362, 363, 364, 365, 366, 367, 368, 369, 370, 371, 372, 373, 374, 378, 379, 380, 381, 382, 383, 384, 385, 386, 387, 388, 389, 408, 409, 410, 411, 412], 'arg': 2759.5492468022649, 'type_array': [], 'pairdat': ['phi', 123, 19.258136864752654], 'maxx': [82.005136262201589, 82.005136489940327, 82.005136498400191, 82.005136653601895, 82.005136558981164, 76.994167154287339, 82.005134572823309, 82.005134658119204, 82.005134560948832, 82.005134440159182, 83.147280332252834, 83.147280415557745, 83.147280415102998, 77.105743662656721, 74.306758997938729, 75.097460492053457, 75.097460378348998, 75.097460654118464, 77.051166510029759, 71.37736522678729, 77.530674516331757, 77.790809072329822, 78.597175663378835, 78.273725763945009, 76.384664607055967, 70.772655444184863, 81.290384771642636, 81.290384301220598, 81.290384864529827, 81.290384807842926, 81.290384701032266, 81.290384690829967, 80.89512623363585, 82.990466067033793, 92.419730068892335, 92.419729970841757, 92.419729889548549, 92.419730191407041, 92.419730009801654, 87.478799639080322, 87.168699596021696, 87.168698790016435, 83.426549292205095, 83.426548428124846, 80.605116709668124, 80.605116858802148, 80.605116728780885, 80.605117158562209, 72.682792883429542, 72.682793468397264, 72.682793046447188, 83.147277793185637, 83.147277843416447, 83.147277614233204, 82.278369556908984, 83.14727781699483, 83.147277602097503, 83.147277815467021, 82.766609535755649, 82.766609501817342, 79.503143248546962], 'maxy': [38.729091851868212, 38.729091569550803, 38.729091604519972, 38.729091469748788, 37.717896605289397, 37.717896636757253, 38.729091723168509, 38.729091576258973, 37.942685038574709, 38.729092112341384, 38.729091824912167, 38.056396223574836, 38.056396336354865, 39.978754734497976, 39.978754330695772, 39.9787546072791, 39.978754642970664, 40.132804077821163, 40.132804387686903, 40.132804133654467, 38.058885649571003, 38.058884556757434, 38.058885432346798, 38.058885211649219, 38.058884903708091, 39.978756251359123, 38.729091555552593, 38.674849394507604, 38.646938311061021, 38.3100756431893, 38.146663680959499, 36.369507014150123, 36.369507021922466, 36.56742790461535, 36.567427745113164, 36.567427918348976, 37.154275781344815, 29.899351765902871, 29.89935187383902, 29.899351944310396, 29.899351874346735, 29.899351966397095, 29.899352094988309, 29.899352138436807, 29.899352313533591, 29.832079915694919, 29.832079692086435, 29.832079191654238, 29.832079735284577, 24.681103142445433, 24.681103540317405, 38.073541162428398, 44.712991739591928, 43.335791103506295, 43.335791038373621, 39.234252115180965, 39.234252389005896, 39.234251529164666, 43.316288604648349, 43.316288277639664, 43.316288624480293], 'dihedral_parameters': [[[0, [[0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.4, 1.0, 0.0, 0.0, 0.0, 0.0], [0.3, 1.0, 0.0, -0.3, 4.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0]]], [1, [[0.4, 1.0, 0.0, 0.0, 0.0, 0.0], [0.3, 1.0, 0.0, -0.3, 4.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0]]], [2, [[0.4, 1.0, 0.0, 0.0, 0.0, 0.0], [0.3, 1.0, 0.0, -0.3, 4.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0]]], [3, [[0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0]]], [4, [[0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0], [0.6, 1.0, 0.0, 0.0, 0.0, 0.0]]]], [[0, [[0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.8, 3.0, 0.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0]]], [1, [[0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.8, 3.0, 0.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0]]], [2, [[0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.8, 3.0, 0.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0]]], [3, [[0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0]]], [4, [[0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0], [0.2, 1.0, 180.0, 0.0, 0.0, 0.0]]]]], 'graph': <Gnuplot._Gnuplot.Gnuplot instance at 0x1086d43b0>, 'm1': <sasmol.sasmol.SasMol object at 0x1084d2950>, 'mask_a_array': [], 'nsteps': 200, 'cutoff_array': [], 'genpaths': 'run_0/monomer_monte_carlo/', 'beta': 2.4143077672626622e+20, 'basis_atom': 'CA', 'first_last_resid': [1, 431], 'lastsasfile': <closed file './.last_sas', mode 'w' at 0x108448db0>, 'accepted': 61, 'hrg': 50.908536315698669, 'basis_mask': array([1, 0, 0, ..., 1, 0, 0], dtype=int32), 'all_rg_tally': [[0, 44.254657318862122], [1, 44.237807024539805], [2, 42.656125668446457], [3, 42.572139970654142], [4, 42.60999731933839], [5, 43.484637385515228], [6, 43.774733394673049], [7, 43.558171490238372], [8, 43.565305674701399], [9, 43.965714216627731], [10, 44.277510468335372], [11, 43.629771574050032], [12, 43.565700689414896], [13, 42.544048875955077], [14, 42.400730490399042], [15, 42.617960665922958], [16, 43.636358989723334], [17, 45.617158351602022], [18, 45.723631459041449], [19, 45.292154682577539], [20, 46.320624154391588], [21, 44.833804473730098], [22, 42.823528684128661], [23, 42.831992325826747], [24, 42.862382415410472], [25, 43.414531006402434], [26, 44.831425358713872], [27, 45.639619734919471], [28, 45.729788947797822], [29, 45.753399248672437], [30, 45.927263625109752], [31, 45.444106751335909], [32, 43.70933164005227], [33, 42.5345682509966], [34, 42.492710520962703], [35, 42.299605727693908], [36, 43.28840558741846], [37, 43.475703731460143], [38, 42.913332218826042], [39, 43.537796284620569], [40, 43.537513905014656], [41, 43.595281688372367], [42, 44.135462280894117], [43, 43.86250770193508], [44, 42.783479038473068], [45, 42.544931125694113], [46, 44.385254461449207], [47, 45.217292747338533], [48, 46.158991525122595], [49, 45.993795727451072], [50, 45.822968386328469], [51, 45.301924629554833], [52, 45.587193054498847], [53, 42.59494795618059], [54, 42.593864449972145], [55, 42.684464927721564], [56, 43.021383361496589], [57, 43.218482935464095], [58, 43.524288452367365], [59, 46.60607900885411], [60, 46.175107685855288], [61, 46.190897966293335], [62, 43.602614241101712], [63, 43.143150842158555], [64, 44.371505763091704], [65, 44.37731858773062], [66, 43.671642946712169], [67, 43.640044537773242], [68, 43.622864661317273], [69, 42.716795014533126], [70, 42.739059546947551], [71, 41.247799847606828], [72, 41.246703027245651], [73, 41.683429316775445], [74, 41.951082173079179], [75, 41.97704765689533], [76, 42.033562494543524], [77, 43.739595843638895], [78, 44.176335690520197], [79, 43.748534308062837], [80, 43.725517019367743], [81, 43.432277848139634], [82, 44.860312794582704], [83, 45.029678041750728], [84, 45.199444035009179], [85, 45.128400929413694], [86, 45.513135944102984], [87, 44.345465622570529], [88, 43.500831109910592], [89, 44.11667018706018], [90, 44.095676928007272], [91, 44.143821349886551], [92, 44.110561281891343], [93, 43.399323834865164], [94, 43.395489609414035], [95, 42.470141888283798], [96, 42.836702105054641], [97, 42.957597251351899], [98, 42.679481725985305], [99, 40.142112277428332], [100, 40.596326061859202], [101, 39.666438041481697], [102, 40.508765988705058], [103, 40.896911874437613], [104, 40.882088488963092], [105, 41.968104675505174], [106, 42.065827927657296], [107, 40.447928968784851], [108, 40.520141584708455], [109, 40.881915120007122], [110, 45.66997760247957], [111, 45.7264358285654], [112, 45.38094660965379], [113, 45.176180739050608], [114, 44.834054781674894], [115, 45.80309634755676], [116, 46.362583624280248], [117, 46.294547576272144], [118, 44.942639665878502], [119, 45.494609627480749], [120, 45.182853051686607], [121, 44.970492961490741], [122, 44.296845694023325], [123, 44.168214910863426], [124, 44.268401313336781], [125, 42.5287559855539], [126, 42.572160927339297], [127, 42.65948906064294], [128, 41.653529145312525], [129, 42.171214195758402], [130, 42.123062503274348], [131, 42.170008289727278], [132, 42.965196410913983], [133, 42.906866858624909], [134, 46.277291786380054], [135, 47.131112948453627], [136, 47.646262381117822], [137, 47.784424876636557], [138, 48.31538429596651], [139, 48.295192367886898], [140, 46.510026804534775], [141, 46.452426261018246], [142, 47.318963368449133], [143, 47.514555145608568], [144, 47.64962906328671], [145, 47.475564518017272], [146, 48.666535173607372], [147, 49.071682744875197], [148, 50.886909397940393], [149, 50.908536315698669], [150, 49.655223823052353], [151, 43.801686093543189], [152, 43.049179755137359], [153, 41.438739432678958], [154, 39.602720015551256], [155, 38.909754245662683], [156, 42.592637155919455], [157, 43.785695179588174], [158, 43.782506775402972], [159, 44.118961207821663], [160, 43.277923631805919], [161, 43.362614683415508], [162, 42.617369055848641], [163, 42.372784063591659], [164, 42.073012400686856], [165, 42.385487343994427], [166, 42.237612103028496], [167, 41.814471204113502], [168, 41.709446837949066], [169, 41.743140779208304], [170, 41.612471889115099], [171, 41.428032762638182], [172, 41.540466039315554], [173, 41.681587891311793], [174, 41.149286070028289], [175, 41.54387689062667], [176, 41.936180445116143], [177, 42.311359258715072], [178, 42.326015399455692], [179, 42.105432800868044], [180, 41.198671377537693], [181, 43.047222067592081], [182, 42.967383620271086], [183, 42.911945974381702], [184, 41.957919234835934], [185, 41.025659202833758], [186, 41.256989299289749], [187, 41.689973789116941], [188, 41.514680049965691], [189, 41.683203486627349], [190, 44.232894465160186], [191, 44.222913917980563], [192, 43.571923906123679], [193, 43.584841141428406], [194, 43.705032088216534], [195, 43.676004345541742], [196, 43.794026572412456], [197, 44.623243238224717], [198, 44.528538800434752], [199, 46.344626357063042]], 'maxz': [45.879536753325283, 45.837065695991228, 45.816997411426392, 50.123821554036311, 43.056590255892125, 44.305241275616154, 45.466405096500765, 40.118654286739769, 39.2422572597319, 50.314972489183006, 50.314973580226734, 54.67879588640794, 54.683719619742227, 43.367809068444025, 43.367808903313659, 43.367809249089866, 43.367808495366361, 45.064308184122737, 45.064307101878896, 49.797264215995312, 47.98634172057988, 47.986341468011318, 47.986340745097962, 47.986340892498056, 47.986341463555057, 43.367809503532527, 40.217413776021097, 41.323867105733818, 41.407953126453947, 44.274132059377116, 40.217413755823955, 40.217414087308867, 41.089495322391997, 45.013746637669847, 45.234865426397754, 44.786789160649562, 46.673754988307827, 42.200502250365282, 42.200502327974888, 39.759197261400253, 39.759197063542445, 39.936586754994401, 39.936585779751589, 46.974739860359328, 46.97473975770459, 35.038207550655173, 34.448018527169367, 28.649320588113465, 28.64932032861195, 23.978073999045669, 23.978074271055036, 54.684943409862598, 50.27101748232478, 50.788717675891313, 50.788718511885719, 53.91284021367894, 52.309417144161586, 51.528246500888692, 54.334031406790906, 53.480467628006977, 53.480466703793894], 'distance_array': [], 'miny': [-46.296820629968536, -46.296820173111186, -46.296820328410021, -46.296819924586707, -46.296819983618676, -48.836393428628931, -46.296821561609647, -46.296821525225624, -46.296821778026136, -46.296822661649571, -53.396827456765934, -53.396827310674389, -53.39682740984675, -69.567302347834115, -67.123614402282854, -64.399872957111754, -68.229973995106477, -68.22997357035527, -52.98453388008393, -42.095548172315993, -52.165933995801865, -53.013601752616047, -55.350417344220034, -57.145221272106753, -63.563562294992302, -67.660066814169909, -49.708021939503432, -49.708022255556195, -49.708021636685075, -49.708021618310148, -49.708022233062152, -49.708021929809036, -49.26420537505944, -42.730564239165389, -50.959360451678307, -50.959360392618208, -50.95936075519149, -50.959360083818119, -50.959360199510762, -46.6682290254181, -47.786840261536014, -47.786840850485554, -57.451690852548289, -57.45169128338987, -41.442996315464519, -41.442996780113347, -41.442996133812706, -41.44299537475132, -33.456461767027683, -33.456460569400924, -33.456461415404206, -53.396827958411599, -53.396827851861218, -53.396828191055327, -56.464193282443574, -53.396827965158813, -53.396828422719118, -53.396827540660894, -58.80602379597152, -58.806023521162878, -40.087886349708867], 'vdw_factor': 0.3, 'badz': 0, 'trg': 8749.1205557624853, 'dcdoutfile': <Swig Object of type 'FILE *' at 0x1019cdf30>, 'badc': 0, 'accepted_rg_tally': [[16, 1, 43.636358989723334], [17, 2, 45.617158351602022], [18, 3, 45.723631459041449], [19, 4, 45.292154682577539], [20, 5, 46.320624154391588], [21, 6, 44.833804473730098], [27, 7, 45.639619734919471], [28, 8, 45.729788947797822], [29, 9, 45.753399248672437], [51, 10, 45.301924629554833], [52, 11, 45.587193054498847], [53, 12, 42.59494795618059], [54, 13, 42.593864449972145], [61, 14, 46.190897966293335], [62, 15, 43.602614241101712], [63, 16, 43.143150842158555], [64, 17, 44.371505763091704], [65, 18, 44.37731858773062], [66, 19, 43.671642946712169], [71, 20, 41.247799847606828], [80, 21, 43.725517019367743], [81, 22, 43.432277848139634], [82, 23, 44.860312794582704], [83, 24, 45.029678041750728], [84, 25, 45.199444035009179], [88, 26, 43.500831109910592], [111, 27, 45.7264358285654], [112, 28, 45.38094660965379], [113, 29, 45.176180739050608], [114, 30, 44.834054781674894], [115, 31, 45.80309634755676], [116, 32, 46.362583624280248], [117, 33, 46.294547576272144], [132, 34, 42.965196410913983], [137, 35, 47.784424876636557], [138, 36, 48.31538429596651], [139, 37, 48.295192367886898], [140, 38, 46.510026804534775], [141, 39, 46.452426261018246], [142, 40, 47.318963368449133], [143, 41, 47.514555145608568], [144, 42, 47.64962906328671], [145, 43, 47.475564518017272], [146, 44, 48.666535173607372], [147, 45, 49.071682744875197], [148, 46, 50.886909397940393], [149, 47, 50.908536315698669], [150, 48, 49.655223823052353], [151, 49, 43.801686093543189], [152, 50, 43.049179755137359], [153, 51, 41.438739432678958], [156, 52, 42.592637155919455], [157, 53, 43.785695179588174], [158, 54, 43.782506775402972], [159, 55, 44.118961207821663], [181, 56, 43.047222067592081], [182, 57, 42.967383620271086], [183, 58, 42.911945974381702], [190, 59, 44.232894465160186], [191, 60, 44.222913917980563], [192, 61, 43.571923906123679]]}
+2017-04-20 14:14:01,526 - module_utilities.py - print_gui - 148 - INFO - Average accepted rg2 = 45.238512
+
+2017-04-20 14:14:01,526 - module_utilities.py - print_gui - 148 - INFO - 
+Configurations and statistics saved in ./run_0/monomer_monte_carlo/ directory
+
+
+2017-04-20 14:14:01,527 - module_utilities.py - print_gui - 148 - INFO - lowest Rg = 38.909754	 highest Rg = 50.908536
+
+2017-04-20 14:14:01,527 - module_utilities.py - print_gui - 148 - INFO - accepted 61 out of 200 : 30.500000 percent
+
+2017-04-20 14:14:01,527 - module_utilities.py - print_gui - 148 - INFO - overlap check discarded 139 out of 200 moves : 69.500000 percent
+
+2017-04-20 14:14:01,527 - module_utilities.py - print_gui - 148 - INFO - Rg cutoffs discarded 0 out of 200 moves : 0.000000 percent
+
+
+2017-04-20 14:14:01,527 - module_utilities.py - print_gui - 148 - INFO - minimum x = -86.953098	 maximum x = 92.419730 -> range: 179.372828 Angstroms
+
+2017-04-20 14:14:01,528 - module_utilities.py - print_gui - 148 - INFO - minimum y = -69.567302	 maximum y = 44.712992 -> range: 114.280294 Angstroms
+
+2017-04-20 14:14:01,528 - module_utilities.py - print_gui - 148 - INFO - minimum z = -72.147609	 maximum z = 54.684943 -> range: 126.832552 Angstroms
+
+2017-04-20 14:14:01,528 - module_utilities.py - clean_up - 157 - DEBUG - in clean_up
+2017-04-20 14:14:01,535 - module_utilities.py - print_gui - 148 - INFO - 
+============================================================ 
+
+2017-04-20 14:14:01,535 - module_utilities.py - print_gui - 148 - INFO - DIHEDRAL IS DONE

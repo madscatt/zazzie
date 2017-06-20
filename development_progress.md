@@ -12,10 +12,10 @@
 | Merge Utilities     |      x       |         x
 | PDB Scan            |      x       |   
 | PDB Rx              |      x       |    
-| Build Utilities     |      x       |   
-| Monomer Monte Carlo |              |       
-| Complex Monte Carlo |              |    
-| Energy Minimization |              |    
+| Build Utilities     |      x       |     
+| Monomer Monte Carlo |      x       |         x
+| Complex Monte Carlo |      x       |         x
+| Energy Minimization |      x       |         x
 | Torsion Angle MD    |              |     
 | Two-Body Grid       |              |     
 | ProDy               |      x       |   
