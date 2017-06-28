@@ -17,7 +17,7 @@
 | Complex Monte Carlo |      x       |         x
 | Energy Minimization |      x       |         x
 | Torsion Angle MD    |              |     
-| Two-Body Grid       |              |     
+| Two-Body Grid       |      x       |         x
 | ProDy               |      x       |   
 | Torsion Angle MC    |      x       |        
 | SasDock             |              |      
