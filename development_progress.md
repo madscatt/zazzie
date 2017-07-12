@@ -16,7 +16,7 @@
 | Monomer Monte Carlo |      x       |         x
 | Complex Monte Carlo |      x       |         x
 | Energy Minimization |      x       |         x
-| Torsion Angle MD    |              |     
+| Torsion Angle MD    |      x       |         x
 | Two-Body Grid       |      x       |         x
 | ProDy               |      x       |   
 | Torsion Angle MC    |      x       |        
