@@ -1,0 +1,112 @@
+open read card unit 1 name /usr/local/bin/toppar/top_all27_prot_na.inp
+
+read rtf card unit 1
+close unit 1
+
+open read card unit 2 name /usr/local/bin/toppar/par_all27_prot_na.inp
+
+read para card unit 2
+close unit 2
+read sequence pdb name run_0/torsion_angle_md/temp_0.pdb unit 10
+
+generate MA setup warn
+
+rewind unit 10
+
+read coor pdb name run_0/torsion_angle_md/temp_0.pdb sele segid MA END
+
+close unit 10
+
+ic param
+
+set tmpNIC ?NIC
+
+coor copy comp
+ic build comp
+coor copy select .not hydrogen end
+hbuild atom cdie eps 80 cutnb 10.0 ctofnb 7.5 ctonnb 6.5 shift vshift bygr
+
+faster on
+
+update atom rdie eps 4 cutnb 20 ctofnb 18 ctonnb 16 shift vshift bygr
+
+nbond elec switch rdie
+
+
+open unit 1 write form name tamd_output.psf
+
+write psf card unit 1
+* test
+*
+close unit 1
+
+
+open unit 2 write form name tamd_output.pdb
+
+write coor pdb unit 2
+* test
+*
+close unit 2
+
+energy
+
+
+coor stat mass sele all end
+
+set xcm = ?XAVE
+
+set ycm = ?YAVE
+
+set zcm = ?ZAVE
+
+MMFP
+
+	GEO sphere rcm force 5.0 droff 0.0 xref @xcm yref @ycm zref @zcm -
+sele all end
+
+END
+
+
+tamd
+
+	reset
+
+end
+
+mini sd   nstep 100 nprint 10 step 0.01
+
+mini abnr nstep 100 nprint 10 step 0.01
+
+tamd
+
+	bomlev -1
+	cluster select segid MA .and. resid 1:113 .or. -
+		(segid MA .and. resid 114 .and. ( type N .or. type HN ) ) end
+
+	cluster select segid MA .and. resid 135:139 .or. -
+		(segid MA .and. resid 134 .and. ( type C .or. type O ) ) end
+
+	tree setup
+	bomlev 0
+
+	tree print
+
+	tree check
+
+	open write unit 101 card name tamd.tree
+	tree write unit 101
+	close unit 101
+
+	open write unit 131 file name run_0/torsion_angle_md/tamd_dyn_00001.dcd
+
+	open write unit 130 card name tamd_loops.rst
+
+	coor rms
+
+	dyna start echeck 200 -
+		nstep 10 timestep 0.002 qref 20 tref 300.0 first 300.0 -
+		nsavc 2 nprint 10000 iprfrq 100000 nsavv 0 isvfrq 2000 -
+		iunrea -29 iunwri 130 iuncrd 131 iunvel -1 -
+		ntrfrq 5000 iasors 1
+end
+stop

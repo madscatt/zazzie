@@ -1,0 +1,1 @@
+Since the output files are different each time that TAMD is run, we are only testing for completion and for the proper number of frames in the output DCD file.  Thus, there are no files to compare the outputs of the tests to and this directory is empty.

@@ -1,0 +1,88 @@
+Date		Time		File		Method		Line	Level	Message
+2017-07-11 16:18:22,804 - module_utilities.py - setup_logging - 133 - DEBUG - in setup_logging
+2017-07-11 16:18:22,804 - module_utilities.py - setup_logging - 134 - INFO - Program started
+2017-07-11 16:18:22,804 - module_utilities.py - preamble - 95 - DEBUG - in preamble
+2017-07-11 16:18:22,804 - module_utilities.py - preamble - 98 - INFO - module_application : torsion_angle_md
+2017-07-11 16:18:22,804 - module_utilities.py - preamble - 99 - INFO - executed by user : skrueger on Tue Jul 11 16:18:22 2017
+2017-07-11 16:18:22,804 - module_utilities.py - preamble - 100 - INFO - current directory : /Users/skrueger/git_working_copies/zazzie/src/sassie/simulate/torsion_angle_md
+2017-07-11 16:18:22,810 - module_utilities.py - preamble - 101 - INFO - hostname : P641702.campus.nist.gov
+2017-07-11 16:18:22,810 - torsion_angle_md.py - main - 87 - DEBUG - in main
+2017-07-11 16:18:22,810 - torsion_angle_md.py - unpack_variables - 109 - DEBUG - in unpack_variables
+2017-07-11 16:18:22,811 - torsion_angle_md.py - unpack_variables - 133 - DEBUG - {'topfile': '/usr/local/bin/toppar/top_all27_prot_na.inp', 'charmmexe': '/usr/local/bin/charmm.exe', 'temperature': 300.0, 'poll_frequency': 10.0, 'dcdfreq': 2, 'app': 'torsion_angle_md', 'dna_segnames': '', 'parmfile': '/usr/local/bin/toppar/par_all27_prot_na.inp', 'rgforce': 0.0, 'keepout': 0, 'infile': 'hiv1_gag_ma.pdb', 'outfile': 'hiv1_gag_ma.dcd', 'pdbfile': 'hiv1_gag_ma.pdb', 'runname': 'run_0', 'rgvalue': 0.0, 'number_flexible_segments': 1, 'nsteps': 10, 'pretamd_min_steps': '100'}
+2017-07-11 16:18:22,811 - module_utilities.py - general_setup - 58 - DEBUG - in general_setup
+2017-07-11 16:18:22,811 - module_utilities.py - write_json_file - 22 - DEBUG - in write_json_file
+2017-07-11 16:18:22,811 - module_utilities.py - write_json_file - 24 - INFO - writing json files with input variables
+2017-07-11 16:18:22,811 - module_utilities.py - write_json_file - 28 - INFO - writing parameters to torsion_angle_md_20170711-161822.sassie_json
+2017-07-11 16:18:22,816 - module_utilities.py - write_json_file - 32 - INFO - backing up existing .last_sas.json file to .last_sas.json_backup
+2017-07-11 16:18:22,821 - module_utilities.py - write_json_file - 36 - INFO - backing up existing .last_sas_torsion_angle_md.json file to .last_sas_torsion_angle_md.json_backup
+2017-07-11 16:18:22,822 - module_utilities.py - write_json_file - 40 - INFO - writing parameters to .last_sas.json file
+2017-07-11 16:18:22,822 - module_utilities.py - write_json_file - 44 - INFO - writing parameters to .last_sas_torsion_angle_md.json file
+2017-07-11 16:18:22,823 - module_utilities.py - write_json_file - 46 - INFO - input variables: [{"topfile": "/usr/local/bin/toppar/top_all27_prot_na.inp", "charmmexe": "/usr/local/bin/charmm.exe", "temperature": 300.0, "poll_frequency": 10.0, "dcdfreq": 2, "app": "torsion_angle_md", "rgvalue": 0.0, "parmfile": "/usr/local/bin/toppar/par_all27_prot_na.inp", "rgforce": 0.0, "keepout": 0, "nsteps": 10, "outfile": "hiv1_gag_ma.dcd", "pdbfile": "hiv1_gag_ma.pdb", "pretamd_min_steps": "100", "dna_segnames": "", "number_flexible_segments": 1, "infile": "hiv1_gag_ma.pdb", "runname": "run_0"}]
+2017-07-11 16:18:22,823 - module_utilities.py - general_setup - 75 - INFO - setting runpath directory to : run_0/torsion_angle_md
+2017-07-11 16:18:22,823 - module_utilities.py - general_setup - 82 - INFO - creating directory : run_0/torsion_angle_md
+2017-07-11 16:18:22,823 - torsion_angle_md.py - initialization - 347 - DEBUG - in initialization
+2017-07-11 16:18:22,823 - torsion_angle_md.py - initialization - 354 - DEBUG - path = run_0/torsion_angle_md/
+2017-07-11 16:18:22,921 - torsion_angle_md.py - initialization - 376 - DEBUG - number_of_residues = 139
+2017-07-11 16:18:22,921 - torsion_angle_md.py - initialization - 378 - DEBUG - infile = hiv1_gag_ma.pdb
+2017-07-11 16:18:22,921 - torsion_angle_md.py - initialization - 380 - DEBUG - infiletype = pdb
+2017-07-11 16:18:23,018 - torsion_angle_md.py - initialization - 393 - DEBUG - number of frames = 1
+2017-07-11 16:18:23,019 - torsion_angle_md.py - get_segname_molecules - 241 - DEBUG - in get_segname_molecules
+2017-07-11 16:18:23,087 - module_utilities.py - print_gui - 148 - INFO - segnames = ['MA']
+2017-07-11 16:18:23,088 - torsion_angle_md.py - process_input_variables - 147 - DEBUG - in process_input_variables
+2017-07-11 16:18:23,088 - torsion_angle_md.py - process_input_variables - 149 - DEBUG - psegvariables: [['MA', '1', '114', '20', 'protein']]
+2017-07-11 16:18:23,088 - torsion_angle_md.py - process_input_variables - 205 - DEBUG - all_flexible_segnames = ['MA']
+2017-07-11 16:18:23,088 - torsion_angle_md.py - process_input_variables - 206 - DEBUG - all_numranges = [1]
+2017-07-11 16:18:23,088 - torsion_angle_md.py - process_input_variables - 207 - DEBUG - all_rlow = [[114]]
+2017-07-11 16:18:23,088 - torsion_angle_md.py - process_input_variables - 208 - DEBUG - all_rnum = [[20]]
+2017-07-11 16:18:23,088 - torsion_angle_md.py - process_input_variables - 209 - DEBUG - all_moltype = ['protein']
+2017-07-11 16:18:23,088 - module_utilities.py - print_gui - 148 - INFO - flexible_segment_variables: {'MA': [1, [114], [20], 'protein']}
+2017-07-11 16:18:23,088 - torsion_angle_md.py - process_input_variables - 220 - DEBUG - {'topfile': '/usr/local/bin/toppar/top_all27_prot_na.inp', 'charmmexe': '/usr/local/bin/charmm.exe', 'temperature': 300.0, 'poll_frequency': 10.0, 'dcdfreq': 2, 'app': 'torsion_angle_md', 'dna_segnames': '', 'parmfile': '/usr/local/bin/toppar/par_all27_prot_na.inp', 'rgforce': 0.0, 'keepout': 0, 'infile': 'hiv1_gag_ma.pdb', 'outfile': 'run_0/torsion_angle_md/hiv1_gag_ma.dcd', 'pdbfile': 'hiv1_gag_ma.pdb', 'runname': 'run_0', 'rgvalue': 0.0, 'number_flexible_segments': 1, 'nsteps': 10, 'pretamd_min_steps': '100'}
+2017-07-11 16:18:23,088 - torsion_angle_md.py - process_input_variables - 221 - DEBUG - {'residue': array([  1,   1,   1, ..., 139, 139, 139]), 'nf': 1, 'segname_molecules': [<sasmol.sasmol.SasMol object at 0x10a87b490>], 'm1': <sasmol.sasmol.SasMol object at 0x10a87b3d0>, 'infiletype': 'pdb', 'path': 'run_0/torsion_angle_md/', 'flexible_segment_variables': {'MA': [1, [114], [20], 'protein']}, 'segname_masks': array([[1, 1, 1, ..., 1, 1, 1]])}
+2017-07-11 16:18:23,089 - torsion_angle_md.py - fix_moltypes - 323 - DEBUG - in fix_moltypes
+2017-07-11 16:18:23,089 - module_utilities.py - print_gui - 148 - INFO - dna_segnames = ['']
+2017-07-11 16:18:23,089 - module_utilities.py - print_gui - 148 - INFO - segname: MA
+2017-07-11 16:18:23,090 - module_utilities.py - print_gui - 148 - INFO - natoms: 2207
+2017-07-11 16:18:23,090 - torsion_angle_md.py - initialization - 401 - DEBUG - {'topfile': '/usr/local/bin/toppar/top_all27_prot_na.inp', 'charmmexe': '/usr/local/bin/charmm.exe', 'temperature': 300.0, 'poll_frequency': 10.0, 'dcdfreq': 2, 'app': 'torsion_angle_md', 'dna_segnames': [''], 'parmfile': '/usr/local/bin/toppar/par_all27_prot_na.inp', 'rgforce': 0.0, 'keepout': 0, 'infile': 'hiv1_gag_ma.pdb', 'outfile': 'run_0/torsion_angle_md/hiv1_gag_ma.dcd', 'pdbfile': 'hiv1_gag_ma.pdb', 'runname': 'run_0', 'rgvalue': 0.0, 'number_flexible_segments': 1, 'nsteps': 10, 'pretamd_min_steps': '100'}
+2017-07-11 16:18:23,090 - torsion_angle_md.py - initialization - 402 - DEBUG - {'residue': array([  1,   1,   1, ..., 139, 139, 139]), 'nf': 1, 'segname_molecules': [<sasmol.sasmol.SasMol object at 0x10a87b490>], 'm1': <sasmol.sasmol.SasMol object at 0x10a87b3d0>, 'infiletype': 'pdb', 'path': 'run_0/torsion_angle_md/', 'flexible_segment_variables': {'MA': [1, [114], [20], 'protein']}, 'segname_masks': array([[1, 1, 1, ..., 1, 1, 1]])}
+2017-07-11 16:18:23,091 - torsion_angle_md.py - tamd - 461 - DEBUG - in tamd
+2017-07-11 16:18:23,091 - torsion_angle_md.py - tamd - 467 - DEBUG - {'topfile': '/usr/local/bin/toppar/top_all27_prot_na.inp', 'charmmexe': '/usr/local/bin/charmm.exe', 'temperature': 300.0, 'poll_frequency': 10.0, 'dcdfreq': 2, 'app': 'torsion_angle_md', 'dna_segnames': [''], 'parmfile': '/usr/local/bin/toppar/par_all27_prot_na.inp', 'rgforce': 0.0, 'keepout': 0, 'infile': 'hiv1_gag_ma.pdb', 'outfile': 'run_0/torsion_angle_md/hiv1_gag_ma.dcd', 'pdbfile': 'hiv1_gag_ma.pdb', 'runname': 'run_0', 'rgvalue': 0.0, 'number_flexible_segments': 1, 'nsteps': 10, 'pretamd_min_steps': '100'}
+2017-07-11 16:18:23,091 - torsion_angle_md.py - tamd - 468 - DEBUG - {'residue': array([  1,   1,   1, ..., 139, 139, 139]), 'nf': 1, 'segname_molecules': [<sasmol.sasmol.SasMol object at 0x10a87b490>], 'm1': <sasmol.sasmol.SasMol object at 0x10a87b3d0>, 'infiletype': 'pdb', 'path': 'run_0/torsion_angle_md/', 'flexible_segment_variables': {'MA': [1, [114], [20], 'protein']}, 'segname_masks': array([[1, 1, 1, ..., 1, 1, 1]])}
+2017-07-11 16:18:23,092 - module_utilities.py - print_gui - 148 - INFO - 
+============================================================ 
+
+2017-07-11 16:18:23,092 - module_utilities.py - print_gui - 148 - INFO - DATA FROM RUN: Tue Jul 11 20:18:23 2017 
+
+
+2017-07-11 16:18:23,092 - module_utilities.py - print_gui - 148 - INFO - 
+TAMD dynamics on frame 1 of 1
+2017-07-11 16:18:23,092 - module_utilities.py - print_gui - 148 - INFO - writing TAMD PDB file
+2017-07-11 16:18:23,093 - torsion_angle_md.py - update_segname_molecules - 300 - DEBUG - in update_segname_molecules
+2017-07-11 16:18:23,093 - torsion_angle_md.py - renumber_residues - 271 - DEBUG - in renumber_residues
+2017-07-11 16:18:23,120 - module_utilities.py - print_gui - 148 - INFO - writing TAMD input file
+2017-07-11 16:18:23,122 - module_utilities.py - print_gui - 148 - INFO - starting TAMD dynamics on frame 1 of 1
+2017-07-11 16:18:23,122 - module_utilities.py - print_gui - 148 - INFO - version 0.1 : 12/08/13 : jc : run_0/torsion_angle_md/hiv1_gag_ma.dcd run stated at : Tue Jul 11 16:18:23 2017
+2017-07-11 16:18:23,122 - torsion_angle_md.py - tamd - 511 - DEBUG - > nst = /usr/local/bin/charmm.exe < temp.inp >& junk.out &
+2017-07-11 16:18:23,129 - module_utilities.py - print_gui - 148 - INFO - p.pid = 48555
+2017-07-11 16:18:33,150 - module_utilities.py - print_gui - 148 - INFO - finished tamd run
+2017-07-11 16:18:33,150 - module_utilities.py - print_gui - 148 - INFO - ['                    NORMAL TERMINATION BY NORMAL STOP\n']
+2017-07-11 16:18:33,150 - module_utilities.py - print_gui - 148 - INFO - COMPLETED 1 of 1 : 100.0 % done
+
+2017-07-11 16:18:33,151 - module_utilities.py - print_gui - 148 - INFO - STATUS	1.0
+2017-07-11 16:18:33,155 - module_utilities.py - print_gui - 148 - INFO - output trajectory file: run_0/torsion_angle_md/tamd_dyn_00001.dcd
+2017-07-11 16:18:33,282 - module_utilities.py - print_gui - 148 - INFO - keeping only the final frame from this trajectory
+2017-07-11 16:18:33,289 - module_utilities.py - print_gui - 148 - INFO - 
+> finished dynamics all frames
+
+2017-07-11 16:18:33,289 - module_utilities.py - print_gui - 148 - INFO - writing final data to tamd directory
+2017-07-11 16:18:33,539 - torsion_angle_md.py - tamd - 619 - DEBUG - i = 0
+2017-07-11 16:18:33,540 - torsion_angle_md.py - tamd - 636 - DEBUG - rmcmd = rm -f run_0/torsion_angle_md/tamd_dyn_00001.dcd 
+2017-07-11 16:18:33,545 - module_utilities.py - print_gui - 148 - INFO - Total number of frames = 1
+
+
+2017-07-11 16:18:33,545 - module_utilities.py - print_gui - 148 - INFO - Structures saved to : ./run_0/torsion_angle_md/
+
+2017-07-11 16:18:33,546 - torsion_angle_md.py - epilogue - 655 - DEBUG - in epilogue
+2017-07-11 16:18:33,570 - module_utilities.py - clean_up - 157 - DEBUG - in clean_up
+2017-07-11 16:18:33,579 - module_utilities.py - print_gui - 148 - INFO - ============================================================ 
+
+2017-07-11 16:18:33,580 - module_utilities.py - print_gui - 148 - INFO - TAMD IS DONE
