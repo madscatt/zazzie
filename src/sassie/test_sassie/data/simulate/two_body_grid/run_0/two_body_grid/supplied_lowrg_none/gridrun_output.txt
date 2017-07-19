@@ -1,0 +1,2 @@
+# COM positions and angular values FOR ACCEPTED STRUCTURES
+# x	y	z	thetax	thetay	thetaz

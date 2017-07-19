@@ -1,0 +1,49 @@
+#Date: Wed Mar 29 18:18:54 2017
+
+#Files used: hiv1_gag.pdb (1)
+
+#Chemical formulas used: 1. H48C36O36, 2. H48C36O36
+
+#Solvent Components:
+#Component, molar conc, volume (A^3), Mw (kDA), x-ray SL, neutron SL (10^-12 cm), x-ray SLD, neutron SLD (10^10 cm^-2)
+#	H2O	 55.51	 29.9	 0.018	  2.820	 -0.168	  9.428	 -0.561
+
+#Complex concentration:  1.0 mg/ml
+
+#XRAY I(0):
+#Protein Mw, Molecule 1 Mw, Molecule 2 Mw, Complex Mw (kDa), I(0) (cm^-1)
+#  47.871	   1.057	   1.057	  49.984	  0.039
+
+#NEUTRONS:
+#Molecule 1 Match Point: 35.98 %D2O
+#Molecule 2 Match Point: 37.56 %D2O
+#Protein Match Point: 42.83 %D2O
+#Complex Match Point: 42.54 %D2O
+
+#Fraction of exchanged protein hydrogens: 0.95
+#Fraction of exchanged nucleic acid hydrogens: 1.00
+#Fraction of exchanged molecule 1 hydrogens: 0.95
+#Fraction of exchanged molecule 2 hydrogens: 0.45
+
+# frac D2O, Protein Mw, Molecule 1 Mw, Molecule 2 Mw, Complex Mw (kDa), I(0) (cm^-1), sqrtI(0)
+ 0.00	  47.871	   1.057	   1.057	  49.984	  0.026	  0.161
+ 0.05	  47.909	   1.057	   1.057	  50.023	  0.020	  0.142
+ 0.10	  47.948	   1.058	   1.057	  50.063	  0.015	  0.123
+ 0.15	  47.986	   1.058	   1.057	  50.102	  0.011	  0.104
+ 0.20	  48.025	   1.059	   1.057	  50.141	  0.007	  0.085
+ 0.25	  48.063	   1.060	   1.057	  50.180	  0.004	  0.066
+ 0.30	  48.101	   1.060	   1.057	  50.219	  0.002	  0.048
+ 0.35	  48.140	   1.061	   1.058	  50.258	  0.001	  0.029
+ 0.40	  48.178	   1.061	   1.058	  50.297	  0.000	  0.010
+ 0.45	  48.217	   1.062	   1.058	  50.336	  0.000	 -0.009
+ 0.50	  48.255	   1.062	   1.058	  50.375	  0.001	 -0.028
+ 0.55	  48.294	   1.063	   1.058	  50.414	  0.002	 -0.047
+ 0.60	  48.332	   1.064	   1.058	  50.454	  0.004	 -0.066
+ 0.65	  48.370	   1.064	   1.058	  50.493	  0.007	 -0.085
+ 0.70	  48.409	   1.065	   1.058	  50.532	  0.011	 -0.104
+ 0.75	  48.447	   1.065	   1.058	  50.571	  0.015	 -0.123
+ 0.80	  48.486	   1.066	   1.059	  50.610	  0.020	 -0.143
+ 0.85	  48.524	   1.066	   1.059	  50.649	  0.026	 -0.162
+ 0.90	  48.562	   1.067	   1.059	  50.688	  0.033	 -0.181
+ 0.95	  48.601	   1.068	   1.059	  50.727	  0.040	 -0.200
+ 1.00	  48.639	   1.068	   1.059	  50.766	  0.048	 -0.219

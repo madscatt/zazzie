@@ -10,6 +10,7 @@ import shutil
 #import align as align
 
 import sassie.tools.align.align as align
+#import align as align
 import sassie.interface.input_filter as input_filter
 import sassie.interface.align.align_filter as align_filter
 import multiprocessing
@@ -42,6 +43,8 @@ def user_variables(self, **kwargs):
     self.zflag = False
 #    self.zflag = True
     self.zcutoff = '-66.0' #If there are ANY atoms with a z-value less than the cutoff the frame will not be written to disk.
+
+    self.testflag = False
 
     ### END USER INPUT ###
     ### END USER INPUT ###
@@ -81,6 +84,7 @@ def test_variables(self, paths):
     self.zflag = False
     self.zcutoff = '0.0'
 
+    self.testflag = True
     self.precision = 3
 
 
@@ -116,7 +120,8 @@ def run_module(self, **kwargs):
 
     if(len(error) > 0):
 #        print 'error = ', error
-#        sys.exit()
+        if not(self.testflag):
+            sys.exit()
         return error
     try:
         if kwargs['file_check']:
@@ -126,7 +131,8 @@ def run_module(self, **kwargs):
 
     if(len(error) > 0):
 #        print 'error = ', error
-#        sys.exit()
+        if not(self.testflag):
+            sys.exit()
         return error
 
     try:

@@ -1,0 +1,209 @@
+Date		Time		File		Method		Line	Level	Message
+2017-06-15 14:33:50,062 - module_utilities.py - setup_logging - 133 - DEBUG - in setup_logging
+2017-06-15 14:33:50,067 - module_utilities.py - setup_logging - 134 - INFO - Program started
+2017-06-15 14:33:50,067 - module_utilities.py - preamble - 95 - DEBUG - in preamble
+2017-06-15 14:33:50,067 - module_utilities.py - preamble - 98 - INFO - module_application : complex_monte_carlo
+2017-06-15 14:33:50,067 - module_utilities.py - preamble - 99 - INFO - executed by user : skrueger on Thu Jun 15 14:33:50 2017
+2017-06-15 14:33:50,067 - module_utilities.py - preamble - 100 - INFO - current directory : /Users/skrueger/git_working_copies/zazzie/src/sassie/test_sassie/simulate/complex_monte_carlo
+2017-06-15 14:33:50,073 - module_utilities.py - preamble - 101 - INFO - hostname : P641702.campus.nist.gov
+2017-06-15 14:33:50,073 - complex_monte_carlo.py - main - 95 - DEBUG - in main
+2017-06-15 14:33:50,073 - complex_monte_carlo.py - unpack_variables - 119 - DEBUG - in unpack_variables
+2017-06-15 14:33:50,073 - complex_monte_carlo.py - unpack_variables - 144 - DEBUG - {'dcdfile': 'run_0.dcd', 'nsegments': 7, 'cflag': 0, 'app': 'complex_monte_carlo', 'highrg': 400.0, 'lowrg': 0.0, 'seed': [1, 321], 'zflag': 0, 'plotflag': 0, 'trials': 9, 'confile': '/Users/skrueger/git_working_copies/zazzie/src/sassie/test_sassie/simulate/complex_monte_carlo/../../data/other_common/complex_mc_constraints.txt', 'zcutoff': 0.0, 'segbasis': 'backbone', 'sseglow': [20, 20, 20, 20, 20, 20, 20], 'goback': 10, 'directedmc': 0.0, 'path': '', 'temp': 300.0, 'sseghigh': [30, 30, 30, 30, 30, 30, 30], 'flpsegname': 'HFQ1,HFQ2,HFQ3,HFQ4,HFQ5,HFQ6,RNA1', 'pdbfile': '/Users/skrueger/git_working_copies/zazzie/src/sassie/test_sassie/simulate/complex_monte_carlo/../../data/pdb_common/rna_protein_complex.pdb', 'runname': 'run_0', 'npsegments': 7}
+2017-06-15 14:33:50,074 - complex_monte_carlo.py - process_input_variables - 158 - DEBUG - in process_input_variables
+2017-06-15 14:33:50,074 - complex_monte_carlo.py - process_input_variables - 160 - DEBUG - psegvariables: [['1', '30', '67', '33', 'protein'], ['1', '30', '67', '33', 'protein'], ['1', '30', '67', '33', 'protein'], ['1', '30', '67', '33', 'protein'], ['1', '30', '67', '33', 'protein'], ['1', '30', '67', '33', 'protein'], ['1', '30', '128', '1', 'rna']]
+2017-06-15 14:33:50,074 - complex_monte_carlo.py - process_input_variables - 168 - DEBUG - len(psegvariables): 7
+2017-06-15 14:33:50,074 - complex_monte_carlo.py - process_input_variables - 169 - DEBUG - npsegments: 7
+2017-06-15 14:33:50,074 - complex_monte_carlo.py - process_input_variables - 238 - DEBUG - {'dcdfile': 'run_0.dcd', 'nsegments': 7, 'cflag': 0, 'app': 'complex_monte_carlo', 'highrg': 400.0, 'lowrg': 0.0, 'seed': [1, 321], 'zflag': 0, 'allsrnum': ['33', '33', '33', '33', '33', '33', '1'], 'plotflag': 0, 'trials': 9, 'allsrlow': ['67', '67', '67', '67', '67', '67', '128'], 'confile': '/Users/skrueger/git_working_copies/zazzie/src/sassie/test_sassie/simulate/complex_monte_carlo/../../data/other_common/complex_mc_constraints.txt', 'allsith': ['30', '30', '30', '30', '30', '30', '30'], 'zcutoff': 0.0, 'segbasis': 'backbone', 'sseglow': [20, 20, 20, 20, 20, 20, 20], 'goback': 10, 'directedmc': 0.0, 'path': '', 'allsnumranges': ['1', '1', '1', '1', '1', '1', '1'], 'allmoltype': ['protein', 'protein', 'protein', 'protein', 'protein', 'protein', 'rna'], 'temp': 300.0, 'sseghigh': [30, 30, 30, 30, 30, 30, 30], 'flpsegname': 'HFQ1,HFQ2,HFQ3,HFQ4,HFQ5,HFQ6,RNA1', 'pdbfile': '/Users/skrueger/git_working_copies/zazzie/src/sassie/test_sassie/simulate/complex_monte_carlo/../../data/pdb_common/rna_protein_complex.pdb', 'runname': 'run_0', 'npsegments': 7}
+2017-06-15 14:33:50,074 - complex_monte_carlo.py - process_input_variables - 239 - DEBUG - {'amoltype': ['protein', 'protein', 'protein', 'protein', 'protein', 'protein', 'rna'], 'arlow': [[67], [67], [67], [67], [67], [67], [128]], 'anumranges': [1, 1, 1, 1, 1, 1, 1], 'arnum': [[33], [33], [33], [33], [33], [33], [1]], 'flexible_segments': ['HFQ1', 'HFQ2', 'HFQ3', 'HFQ4', 'HFQ5', 'HFQ6', 'RNA1'], 'aith': [[30.0], [30.0], [30.0], [30.0], [30.0], [30.0], [30.0]], 'abasis': ['backbone']}
+2017-06-15 14:33:50,074 - module_utilities.py - general_setup - 58 - DEBUG - in general_setup
+2017-06-15 14:33:50,074 - module_utilities.py - write_json_file - 22 - DEBUG - in write_json_file
+2017-06-15 14:33:50,074 - module_utilities.py - write_json_file - 24 - INFO - writing json files with input variables
+2017-06-15 14:33:50,075 - module_utilities.py - write_json_file - 28 - INFO - writing parameters to complex_monte_carlo_20170615-143350.sassie_json
+2017-06-15 14:33:50,080 - module_utilities.py - write_json_file - 32 - INFO - backing up existing .last_sas.json file to .last_sas.json_backup
+2017-06-15 14:33:50,085 - module_utilities.py - write_json_file - 36 - INFO - backing up existing .last_sas_complex_monte_carlo.json file to .last_sas_complex_monte_carlo.json_backup
+2017-06-15 14:33:50,086 - module_utilities.py - write_json_file - 40 - INFO - writing parameters to .last_sas.json file
+2017-06-15 14:33:50,086 - module_utilities.py - write_json_file - 44 - INFO - writing parameters to .last_sas_complex_monte_carlo.json file
+2017-06-15 14:33:50,086 - module_utilities.py - write_json_file - 46 - INFO - input variables: [{"dcdfile": "run_0.dcd", "nsegments": 7, "cflag": 0, "app": "complex_monte_carlo", "highrg": 400.0, "flpsegname": "HFQ1,HFQ2,HFQ3,HFQ4,HFQ5,HFQ6,RNA1", "seed": [1, 321], "zflag": 0, "allsrnum": ["33", "33", "33", "33", "33", "33", "1"], "plotflag": 0, "trials": 9, "allsrlow": ["67", "67", "67", "67", "67", "67", "128"], "confile": "/Users/skrueger/git_working_copies/zazzie/src/sassie/test_sassie/simulate/complex_monte_carlo/../../data/other_common/complex_mc_constraints.txt", "allsith": ["30", "30", "30", "30", "30", "30", "30"], "zcutoff": 0.0, "segbasis": "backbone", "sseglow": [20, 20, 20, 20, 20, 20, 20], "goback": 10, "directedmc": 0.0, "path": "", "allsnumranges": ["1", "1", "1", "1", "1", "1", "1"], "allmoltype": ["protein", "protein", "protein", "protein", "protein", "protein", "rna"], "temp": 300.0, "sseghigh": [30, 30, 30, 30, 30, 30, 30], "lowrg": 0.0, "pdbfile": "/Users/skrueger/git_working_copies/zazzie/src/sassie/test_sassie/simulate/complex_monte_carlo/../../data/pdb_common/rna_protein_complex.pdb", "runname": "run_0", "npsegments": 7}]
+2017-06-15 14:33:50,087 - module_utilities.py - general_setup - 75 - INFO - setting runpath directory to : run_0/complex_monte_carlo
+2017-06-15 14:33:50,087 - module_utilities.py - general_setup - 82 - INFO - creating directory : run_0/complex_monte_carlo
+2017-06-15 14:33:50,087 - complex_monte_carlo.py - initialization - 793 - DEBUG - in initialization
+2017-06-15 14:33:50,087 - complex_monte_carlo.py - run_file_utilities - 333 - DEBUG - in run_file_utilities
+2017-06-15 14:33:50,877 - complex_monte_carlo.py - initialize_segments - 375 - DEBUG - in initialize_segments
+2017-06-15 14:33:50,882 - complex_monte_carlo.py - initialize_segments - 388 - DEBUG - found 7 segment names
+2017-06-15 14:33:50,882 - module_utilities.py - print_gui - 148 - INFO - found 7 segment names
+2017-06-15 14:33:50,882 - complex_monte_carlo.py - initialize_segments - 404 - DEBUG - basis = backbone
+
+2017-06-15 14:33:51,177 - complex_monte_carlo.py - initialize_segments - 431 - DEBUG - this_moltype: protein
+
+2017-06-15 14:33:51,972 - complex_monte_carlo.py - initialize_segments - 431 - DEBUG - this_moltype: protein
+
+2017-06-15 14:33:52,763 - complex_monte_carlo.py - initialize_segments - 431 - DEBUG - this_moltype: protein
+
+2017-06-15 14:33:53,545 - complex_monte_carlo.py - initialize_segments - 431 - DEBUG - this_moltype: protein
+
+2017-06-15 14:33:54,330 - complex_monte_carlo.py - initialize_segments - 431 - DEBUG - this_moltype: protein
+
+2017-06-15 14:33:55,113 - complex_monte_carlo.py - initialize_segments - 431 - DEBUG - this_moltype: protein
+
+2017-06-15 14:33:56,041 - complex_monte_carlo.py - initialize_segments - 431 - DEBUG - this_moltype: rna
+
+2017-06-15 14:33:58,704 - complex_monte_carlo.py - initialize_segments - 476 - DEBUG - first_last_resid = [[1, 102], [1, 102], [1, 102], [1, 102], [1, 102], [1, 102], [1, 284]]
+2017-06-15 14:33:58,704 - complex_monte_carlo.py - set_up_constraints - 613 - DEBUG - in set_up_constraints
+2017-06-15 14:33:58,704 - complex_monte_carlo.py - alignment_initialization - 274 - DEBUG - in alignment_initialization
+2017-06-15 14:33:58,704 - complex_monte_carlo.py - alignment_initialization - 308 - DEBUG - align filter = name[i] == "CA" and (segname[i] == "HFQ1") and (resid[i] >= 20 and resid[i] <= 30)
+
+2017-06-15 14:33:58,756 - complex_monte_carlo.py - alignment_initialization - 308 - DEBUG - align filter = name[i] == "CA" and (segname[i] == "HFQ2") and (resid[i] >= 20 and resid[i] <= 30)
+
+2017-06-15 14:33:58,808 - complex_monte_carlo.py - alignment_initialization - 308 - DEBUG - align filter = name[i] == "CA" and (segname[i] == "HFQ3") and (resid[i] >= 20 and resid[i] <= 30)
+
+2017-06-15 14:33:58,859 - complex_monte_carlo.py - alignment_initialization - 308 - DEBUG - align filter = name[i] == "CA" and (segname[i] == "HFQ4") and (resid[i] >= 20 and resid[i] <= 30)
+
+2017-06-15 14:33:58,911 - complex_monte_carlo.py - alignment_initialization - 308 - DEBUG - align filter = name[i] == "CA" and (segname[i] == "HFQ5") and (resid[i] >= 20 and resid[i] <= 30)
+
+2017-06-15 14:33:58,963 - complex_monte_carlo.py - alignment_initialization - 308 - DEBUG - align filter = name[i] == "CA" and (segname[i] == "HFQ6") and (resid[i] >= 20 and resid[i] <= 30)
+
+2017-06-15 14:33:59,014 - complex_monte_carlo.py - alignment_initialization - 308 - DEBUG - align filter = name[i] == "P" and (segname[i] == "RNA1") and (resid[i] >= 20 and resid[i] <= 30)
+
+2017-06-15 14:33:59,318 - module_utilities.py - print_gui - 148 - INFO - cutoff = 0.8
+2017-06-15 14:33:59,318 - complex_monte_carlo.py - set_up_dihedral_arrays - 539 - DEBUG - in set_up_dihedral_arrays
+2017-06-15 14:33:59,318 - complex_monte_carlo.py - set_up_dihedral_arrays - 573 - DEBUG - basis filter = name[i] == "CA" and segname[i] == "HFQ1"
+
+2017-06-15 14:33:59,350 - complex_monte_carlo.py - set_up_dihedral_arrays - 573 - DEBUG - basis filter = name[i] == "CA" and segname[i] == "HFQ2"
+
+2017-06-15 14:33:59,384 - complex_monte_carlo.py - set_up_dihedral_arrays - 573 - DEBUG - basis filter = name[i] == "CA" and segname[i] == "HFQ3"
+
+2017-06-15 14:33:59,416 - complex_monte_carlo.py - set_up_dihedral_arrays - 573 - DEBUG - basis filter = name[i] == "CA" and segname[i] == "HFQ4"
+
+2017-06-15 14:33:59,450 - complex_monte_carlo.py - set_up_dihedral_arrays - 573 - DEBUG - basis filter = name[i] == "CA" and segname[i] == "HFQ5"
+
+2017-06-15 14:33:59,484 - complex_monte_carlo.py - set_up_dihedral_arrays - 573 - DEBUG - basis filter = name[i] == "CA" and segname[i] == "HFQ6"
+
+2017-06-15 14:33:59,516 - complex_monte_carlo.py - set_up_dihedral_arrays - 573 - DEBUG - basis filter = name[i] == "O5'" and segname[i] == "RNA1"
+
+2017-06-15 14:33:59,696 - complex_monte_carlo.py - setup_flexible_residue_mask_arrays - 652 - DEBUG - in setup_flexible_residue_mask_arrays
+2017-06-15 14:33:59,696 - complex_monte_carlo.py - setup_flexible_residue_mask_arrays - 666 - DEBUG - avars.bnumranges: 1
+
+2017-06-15 14:33:59,696 - complex_monte_carlo.py - setup_flexible_residue_mask_arrays - 667 - DEBUG - avars.breslow: [67]
+
+2017-06-15 14:33:59,696 - complex_monte_carlo.py - setup_flexible_residue_mask_arrays - 668 - DEBUG - avars.bnumcont: [33]
+
+2017-06-15 14:33:59,696 - complex_monte_carlo.py - get_flexible_residues - 692 - DEBUG - in get_flexible_residues
+2017-06-15 14:33:59,696 - complex_monte_carlo.py - get_flexible_residues - 708 - DEBUG - flexible_residues = [67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99]
+2017-06-15 14:33:59,696 - module_utilities.py - print_gui - 148 - INFO - flexible_residues = [67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99]
+2017-06-15 14:33:59,923 - complex_monte_carlo.py - setup_flexible_residue_mask_arrays - 674 - DEBUG - segment_filter = segname[i] == "HFQ1"
+
+2017-06-15 14:33:59,923 - complex_monte_carlo.py - setup_flexible_residue_mask_arrays - 675 - DEBUG - error = []
+
+2017-06-15 14:33:59,989 - complex_monte_carlo.py - get_rotation_indices - 721 - DEBUG - getting rotation indices for molecule
+2017-06-15 14:33:59,989 - complex_monte_carlo.py - get_rotation_indices - 726 - DEBUG - avars.bmolecule_type = protein
+
+2017-06-15 14:33:59,991 - complex_monte_carlo.py - get_rotation_indices - 766 - DEBUG - done getting rotation indices
+2017-06-15 14:33:59,991 - complex_monte_carlo.py - setup_flexible_residue_mask_arrays - 666 - DEBUG - avars.bnumranges: 1
+
+2017-06-15 14:33:59,991 - complex_monte_carlo.py - setup_flexible_residue_mask_arrays - 667 - DEBUG - avars.breslow: [67]
+
+2017-06-15 14:33:59,991 - complex_monte_carlo.py - setup_flexible_residue_mask_arrays - 668 - DEBUG - avars.bnumcont: [33]
+
+2017-06-15 14:33:59,991 - complex_monte_carlo.py - get_flexible_residues - 692 - DEBUG - in get_flexible_residues
+2017-06-15 14:33:59,991 - complex_monte_carlo.py - get_flexible_residues - 708 - DEBUG - flexible_residues = [67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99]
+2017-06-15 14:33:59,991 - module_utilities.py - print_gui - 148 - INFO - flexible_residues = [67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99]
+2017-06-15 14:34:00,227 - complex_monte_carlo.py - setup_flexible_residue_mask_arrays - 674 - DEBUG - segment_filter = segname[i] == "HFQ2"
+
+2017-06-15 14:34:00,228 - complex_monte_carlo.py - setup_flexible_residue_mask_arrays - 675 - DEBUG - error = []
+
+2017-06-15 14:34:00,294 - complex_monte_carlo.py - get_rotation_indices - 721 - DEBUG - getting rotation indices for molecule
+2017-06-15 14:34:00,294 - complex_monte_carlo.py - get_rotation_indices - 726 - DEBUG - avars.bmolecule_type = protein
+
+2017-06-15 14:34:00,296 - complex_monte_carlo.py - get_rotation_indices - 766 - DEBUG - done getting rotation indices
+2017-06-15 14:34:00,296 - complex_monte_carlo.py - setup_flexible_residue_mask_arrays - 666 - DEBUG - avars.bnumranges: 1
+
+2017-06-15 14:34:00,296 - complex_monte_carlo.py - setup_flexible_residue_mask_arrays - 667 - DEBUG - avars.breslow: [67]
+
+2017-06-15 14:34:00,296 - complex_monte_carlo.py - setup_flexible_residue_mask_arrays - 668 - DEBUG - avars.bnumcont: [33]
+
+2017-06-15 14:34:00,296 - complex_monte_carlo.py - get_flexible_residues - 692 - DEBUG - in get_flexible_residues
+2017-06-15 14:34:00,296 - complex_monte_carlo.py - get_flexible_residues - 708 - DEBUG - flexible_residues = [67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99]
+2017-06-15 14:34:00,296 - module_utilities.py - print_gui - 148 - INFO - flexible_residues = [67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99]
+2017-06-15 14:34:00,530 - complex_monte_carlo.py - setup_flexible_residue_mask_arrays - 674 - DEBUG - segment_filter = segname[i] == "HFQ3"
+
+2017-06-15 14:34:00,530 - complex_monte_carlo.py - setup_flexible_residue_mask_arrays - 675 - DEBUG - error = []
+
+2017-06-15 14:34:00,596 - complex_monte_carlo.py - get_rotation_indices - 721 - DEBUG - getting rotation indices for molecule
+2017-06-15 14:34:00,596 - complex_monte_carlo.py - get_rotation_indices - 726 - DEBUG - avars.bmolecule_type = protein
+
+2017-06-15 14:34:00,598 - complex_monte_carlo.py - get_rotation_indices - 766 - DEBUG - done getting rotation indices
+2017-06-15 14:34:00,598 - complex_monte_carlo.py - setup_flexible_residue_mask_arrays - 666 - DEBUG - avars.bnumranges: 1
+
+2017-06-15 14:34:00,598 - complex_monte_carlo.py - setup_flexible_residue_mask_arrays - 667 - DEBUG - avars.breslow: [67]
+
+2017-06-15 14:34:00,598 - complex_monte_carlo.py - setup_flexible_residue_mask_arrays - 668 - DEBUG - avars.bnumcont: [33]
+
+2017-06-15 14:34:00,599 - complex_monte_carlo.py - get_flexible_residues - 692 - DEBUG - in get_flexible_residues
+2017-06-15 14:34:00,599 - complex_monte_carlo.py - get_flexible_residues - 708 - DEBUG - flexible_residues = [67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99]
+2017-06-15 14:34:00,599 - module_utilities.py - print_gui - 148 - INFO - flexible_residues = [67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99]
+2017-06-15 14:34:00,833 - complex_monte_carlo.py - setup_flexible_residue_mask_arrays - 674 - DEBUG - segment_filter = segname[i] == "HFQ4"
+
+2017-06-15 14:34:00,833 - complex_monte_carlo.py - setup_flexible_residue_mask_arrays - 675 - DEBUG - error = []
+
+2017-06-15 14:34:00,900 - complex_monte_carlo.py - get_rotation_indices - 721 - DEBUG - getting rotation indices for molecule
+2017-06-15 14:34:00,900 - complex_monte_carlo.py - get_rotation_indices - 726 - DEBUG - avars.bmolecule_type = protein
+
+2017-06-15 14:34:00,902 - complex_monte_carlo.py - get_rotation_indices - 766 - DEBUG - done getting rotation indices
+2017-06-15 14:34:00,902 - complex_monte_carlo.py - setup_flexible_residue_mask_arrays - 666 - DEBUG - avars.bnumranges: 1
+
+2017-06-15 14:34:00,902 - complex_monte_carlo.py - setup_flexible_residue_mask_arrays - 667 - DEBUG - avars.breslow: [67]
+
+2017-06-15 14:34:00,902 - complex_monte_carlo.py - setup_flexible_residue_mask_arrays - 668 - DEBUG - avars.bnumcont: [33]
+
+2017-06-15 14:34:00,902 - complex_monte_carlo.py - get_flexible_residues - 692 - DEBUG - in get_flexible_residues
+2017-06-15 14:34:00,902 - complex_monte_carlo.py - get_flexible_residues - 708 - DEBUG - flexible_residues = [67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99]
+2017-06-15 14:34:00,903 - module_utilities.py - print_gui - 148 - INFO - flexible_residues = [67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99]
+2017-06-15 14:34:01,139 - complex_monte_carlo.py - setup_flexible_residue_mask_arrays - 674 - DEBUG - segment_filter = segname[i] == "HFQ5"
+
+2017-06-15 14:34:01,139 - complex_monte_carlo.py - setup_flexible_residue_mask_arrays - 675 - DEBUG - error = []
+
+2017-06-15 14:34:01,204 - complex_monte_carlo.py - get_rotation_indices - 721 - DEBUG - getting rotation indices for molecule
+2017-06-15 14:34:01,204 - complex_monte_carlo.py - get_rotation_indices - 726 - DEBUG - avars.bmolecule_type = protein
+
+2017-06-15 14:34:01,206 - complex_monte_carlo.py - get_rotation_indices - 766 - DEBUG - done getting rotation indices
+2017-06-15 14:34:01,206 - complex_monte_carlo.py - setup_flexible_residue_mask_arrays - 666 - DEBUG - avars.bnumranges: 1
+
+2017-06-15 14:34:01,207 - complex_monte_carlo.py - setup_flexible_residue_mask_arrays - 667 - DEBUG - avars.breslow: [67]
+
+2017-06-15 14:34:01,207 - complex_monte_carlo.py - setup_flexible_residue_mask_arrays - 668 - DEBUG - avars.bnumcont: [33]
+
+2017-06-15 14:34:01,207 - complex_monte_carlo.py - get_flexible_residues - 692 - DEBUG - in get_flexible_residues
+2017-06-15 14:34:01,207 - complex_monte_carlo.py - get_flexible_residues - 708 - DEBUG - flexible_residues = [67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99]
+2017-06-15 14:34:01,207 - module_utilities.py - print_gui - 148 - INFO - flexible_residues = [67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99]
+2017-06-15 14:34:01,442 - complex_monte_carlo.py - setup_flexible_residue_mask_arrays - 674 - DEBUG - segment_filter = segname[i] == "HFQ6"
+
+2017-06-15 14:34:01,442 - complex_monte_carlo.py - setup_flexible_residue_mask_arrays - 675 - DEBUG - error = []
+
+2017-06-15 14:34:01,508 - complex_monte_carlo.py - get_rotation_indices - 721 - DEBUG - getting rotation indices for molecule
+2017-06-15 14:34:01,508 - complex_monte_carlo.py - get_rotation_indices - 726 - DEBUG - avars.bmolecule_type = protein
+
+2017-06-15 14:34:01,510 - complex_monte_carlo.py - get_rotation_indices - 766 - DEBUG - done getting rotation indices
+2017-06-15 14:34:01,510 - complex_monte_carlo.py - setup_flexible_residue_mask_arrays - 666 - DEBUG - avars.bnumranges: 1
+
+2017-06-15 14:34:01,510 - complex_monte_carlo.py - setup_flexible_residue_mask_arrays - 667 - DEBUG - avars.breslow: [128]
+
+2017-06-15 14:34:01,510 - complex_monte_carlo.py - setup_flexible_residue_mask_arrays - 668 - DEBUG - avars.bnumcont: [1]
+
+2017-06-15 14:34:01,510 - complex_monte_carlo.py - get_flexible_residues - 692 - DEBUG - in get_flexible_residues
+2017-06-15 14:34:01,510 - complex_monte_carlo.py - get_flexible_residues - 708 - DEBUG - flexible_residues = [128]
+2017-06-15 14:34:01,510 - module_utilities.py - print_gui - 148 - INFO - flexible_residues = [128]
+2017-06-15 14:34:01,748 - complex_monte_carlo.py - setup_flexible_residue_mask_arrays - 674 - DEBUG - segment_filter = segname[i] == "RNA1"
+
+2017-06-15 14:34:01,748 - complex_monte_carlo.py - setup_flexible_residue_mask_arrays - 675 - DEBUG - error = []
+
+2017-06-15 14:34:01,962 - complex_monte_carlo.py - get_rotation_indices - 721 - DEBUG - getting rotation indices for molecule
+2017-06-15 14:34:01,962 - complex_monte_carlo.py - get_rotation_indices - 726 - DEBUG - avars.bmolecule_type = rna
+
+2017-06-15 14:34:01,963 - complex_monte_carlo.py - get_rotation_indices - 766 - DEBUG - done getting rotation indices
+2017-06-15 14:34:01,963 - complex_monte_carlo.py - dihedralgenerate - 938 - DEBUG - in dihedralgenerate
+2017-06-15 14:34:01,963 - module_utilities.py - print_gui - 148 - INFO - 
+============================================================ 
+
+2017-06-15 14:34:01,963 - module_utilities.py - print_gui - 148 - INFO - DATA FROM RUN: Thu Jun 15 18:34:01 2017 
+
+

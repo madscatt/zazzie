@@ -33,7 +33,8 @@ def user_variables(self, **kwargs):
 #    self.maxpoints = '72'
     self.plotflag = '1'
 
-
+    self.testflag = False
+    
     #### end user input ####
     #### end user input ####
     #### end user input ####
@@ -62,6 +63,7 @@ def test_variables(self,paths):
     self.maxpoints = '16'
     self.plotflag = '0'
 
+    self.testflag = True
 
 def run_module(self, **kwargs):
     '''
@@ -85,7 +87,8 @@ def run_module(self, **kwargs):
     error, self.variables = input_filter.type_check_and_convert(svariables)
     if len(error) > 0:
         print 'error = ', error
-#        sys.exit()
+        if not(self.testflag):
+            sys.exit()
         return error
 
     try:
@@ -96,7 +99,8 @@ def run_module(self, **kwargs):
 
     if(len(error) > 0):
         print 'error = ', error
-#        sys.exit()
+        if not(self.testflag):
+            sys.exit()
         return error
 
     try:

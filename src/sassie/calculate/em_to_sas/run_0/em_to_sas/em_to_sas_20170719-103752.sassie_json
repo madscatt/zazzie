@@ -1,0 +1,1 @@
+[{"emdensityfile": "emd_1180.mrc", "plotflag": 1, "app": "em_to_sas", "qmax": 0.3, "npoints": 51, "emfiletype": 1, "pdbfile": "test.pdb", "runname": "run_0", "threshold": 1.4, "inputpath": "./", "sasfile": "test.iq"}]

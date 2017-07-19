@@ -52,6 +52,7 @@ def user_variables(self, **kwargs):
 #    self.sas_paths = os.path.join(self.path,'hiv1_gag_0','cryson')
 #    self.sas_paths = os.path.join(self.path,'hiv1_gag_0','crysol')
 
+    self.testflag = False
 
     ### END USER INPUT ###
     ### END USER INPUT ###
@@ -85,7 +86,7 @@ def test_variables(self, paths):
     self.sas_type = '0'
     self.sas_paths = os.path.join(other_data_path, 'hiv1_gag_0', 'sascalc', 'neutron_D2Op_100')+','+os.path.join(other_data_path, 'hiv1_gag_0', 'sascalc', 'neutron_D2Op_0')
 
-
+    self.testflag = True
     self.precision = 3
 
 
@@ -115,7 +116,8 @@ def run_module(self, **kwargs):
 
     if(len(error) > 0):
         print 'error = ', error
-#        sys.exit()
+        if not(self.testflag):
+            sys.exit()
         return error
 
     try:
@@ -128,7 +130,8 @@ def run_module(self, **kwargs):
 
     if(len(error) > 0):
         print 'error = ', error
-#        sys.exit()
+        if not(self.testflag):
+            sys.exit()
         return error
 
     try:

@@ -45,15 +45,18 @@ from numpy.distutils.core import Extension, setup
 
 all_packages = ['sassie', 'sassie.util','sassie.build', 
     'sassie.interface', 'sassie.interface.align', 'sassie.interface.extract_utilities','sassie.interface.data_interpolation',
+    'sassie.interface.chi_square_filter', 'sassie.interface.merge_utilities','sassie.interface.density_plot',
+    'sassie.interface.contrast_calculator','sassie.interface.monomer_monte_carlo','sassie.interface.energy_minimization',
     'sassie.tools', 'sassie.tools.align', 'sassie.tools.extract_utilities', 'sassie.tools.data_interpolation',
-    'sassie.tools.merge_utilities',
-    'sassie.interface', 'sassie.interface.chi_square_filter', 'sassie.interface.merge_utilities',
-    'sassie.analyze', 'sassie.analyze.chi_square_filter',
-    'sassie.calculate', 'sassie.calculate.sascalc',
-    'sassie.interface.sascalc', 
+    'sassie.tools.merge_utilities','sassie.tools.contrast_calculator', 
+    'sassie.analyze', 'sassie.analyze.chi_square_filter','sassie.analyze.density_plot',
+    'sassie.calculate', 'sassie.calculate.sascalc','sassie.calculate.em_to_sas',
+    'sassie.interface.sascalc','sassie.interface.complex_monte_carlo','sassie.interface.two_body_grid',
+    'sassie.interface.torsion_angle_md','sassie.interface.em_to_sas',
     'sassie.calculate.sascalc.sascalc_library',
     'sassie.simulate', 
-    'sassie.simulate.torsion_angle_monte_carlo',
+    'sassie.simulate.monomer_monte_carlo','sassie.simulate.complex_monte_carlo','sassie.simulate.energy_minimization',
+    'sassie.simulate.two_body_grid','sassie.simulate.torsion_angle_md','sassie.simulate.torsion_angle_monte_carlo',
     'sassie.simulate.torsion_angle_monte_carlo.monte_carlo_utilities',
     'sassie.simulate.torsion_angle_monte_carlo.monte_carlo_utilities.tamc_utilities',
     'sassie.simulate.torsion_angle_monte_carlo.monte_carlo_utilities.protein_backbone_torsion',
@@ -126,6 +129,13 @@ setup(name='sassie',
 
     ext_modules=[
         Extension('sassie.simulate.torsion_angle_monte_carlo.ooverlap',['src/sassie/simulate/torsion_angle_monte_carlo/extensions/ooverlap/ooverlap.c'],include_dirs=[numpy_include]),
+	Extension('sassie.simulate.monomer_monte_carlo.vdw_overlap',['src/sassie/simulate/monomer_monte_carlo/extensions/vdw_overlap/vdw_overlap.f'],include_dirs=[numpy_include]),
+	Extension('sassie.simulate.monomer_monte_carlo.pairs',['src/sassie/simulate/monomer_monte_carlo/extensions/pairs/pairs.f'],include_dirs=[numpy_include]),
+	Extension('sassie.simulate.monomer_monte_carlo.overlap',['src/sassie/simulate/monomer_monte_carlo/extensions/overlap/overlap.c']),
+	Extension('sassie.simulate.complex_monte_carlo.interres',['src/sassie/simulate/complex_monte_carlo/extensions/mol_overlap/interres.f']),
+	Extension('sassie.simulate.two_body_grid.foverlap',['src/sassie/simulate/two_body_grid/extensions/overlap/foverlap.f'],include_dirs=[numpy_include]),		        
+    Extension('sassie.analyze.cube',['src/sassie/analyze/extensions/cube/cube.c']),
+	Extension('sassie.analyze.renorm',['src/sassie/analyze/extensions/renorm/renorm.c']),
     Extension('sassie.simulate.torsion_angle_monte_carlo.dna_overlap',['src/sassie/simulate/torsion_angle_monte_carlo/extensions/dna_overlap/dna_overlap.f'])
         ]
 

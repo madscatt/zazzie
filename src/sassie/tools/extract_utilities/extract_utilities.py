@@ -103,7 +103,7 @@ class extract_utilities():
 
         self.initialization()
 
-        self.extract_utilities(input_variables, txtOutput)
+        self.extract_utilities()
 
         self.epilogue()
 
@@ -450,7 +450,7 @@ class extract_utilities():
                
         return
 
-    def extract_utilities(self,variables, txtOutput):
+    def extract_utilities(self):
 
         '''
         EXTRACT_UTILITIES is a module that allows one to extract coordinates and/or
@@ -508,7 +508,7 @@ class extract_utilities():
             report_string = 'STATUS\t' + str(fraction_done)
             pgui(report_string)
 
-            self.extract_coords(txtOutput)
+            self.extract_coords()
 
         if mvars.extract_sas:
 
@@ -518,7 +518,7 @@ class extract_utilities():
             report_string = 'STATUS\t' + str(fraction_done)
             pgui(report_string)
 
-            self.extract_sas_files(txtOutput)
+            self.extract_sas_files()
 
         fraction_done = 1.0
         report_string = 'STATUS\t' + str(fraction_done)
@@ -527,7 +527,7 @@ class extract_utilities():
         return
 
 
-    def extract_coords(self,txtOutput):
+    def extract_coords(self):
         '''
         method to extract requested coordinates
         '''
@@ -670,7 +670,7 @@ class extract_utilities():
         return
 
 
-    def extract_sas_files(self,txtOutput):
+    def extract_sas_files(self):
         '''
         method to extract requested SAS files
         '''

@@ -1,0 +1,6 @@
+# structure number (structure 1 = 1; not 0), Rg (accepted), trial number
+1	26.305628	1
+2	26.293282	2
+3	26.199783	3
+4	26.525796	7
+5	26.500762	8

@@ -39,6 +39,8 @@ def user_variables(self, **kwargs):
 #    self.sas_paths = os.path.join('./', 'merge_files_0','run_0','cryson')+','+os.path.join('./', 'merge_files_0','run_1','cryson')
 #    self.sas_paths = os.path.join('./', 'merge_files_0','run_0','crysol')+','+os.path.join('./', 'merge_files_0','run_1','crysol')
 
+    self.testflag = False
+
     ### END USER INPUT ###
     ### END USER INPUT ###
     ### END USER INPUT ###
@@ -70,6 +72,7 @@ def test_variables(self, paths):
     self.sas_type = '1'
     self.sas_paths = os.path.join(other_data_path, 'merge_files_0','run_0','xtal2sas')+','+os.path.join(other_data_path, 'merge_files_0','run_1','xtal2sas')
     
+    self.testflag = True
     self.precision = 3
 
 
@@ -98,7 +101,8 @@ def run_module(self, **kwargs):
 
     if(len(error) > 0):
         print 'error = ', error
-#        sys.exit()
+        if not(self.testflag):
+            sys.exit()
         return error
 
     try:
@@ -111,7 +115,8 @@ def run_module(self, **kwargs):
 
     if(len(error) > 0):
         print 'error = ', error
-#        sys.exit()
+        if not(self.testflag):
+            sys.exit()
         return error
 
     try:

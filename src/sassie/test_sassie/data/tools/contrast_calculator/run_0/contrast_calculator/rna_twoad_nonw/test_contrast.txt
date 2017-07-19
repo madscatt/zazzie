@@ -1,0 +1,48 @@
+#Date: Wed Mar 29 18:31:52 2017
+
+#Files used: rna_sequence.txt (1)
+
+#Chemical formulas used: 1. H48C36O36, 2. H48C36O36
+
+#Solvent Components:
+#Component, molar conc, volume (A^3), Mw (kDA), x-ray SL, neutron SL (10^-12 cm), x-ray SLD, neutron SLD (10^10 cm^-2)
+#	H2O	 55.51	 29.9	 0.018	  2.820	 -0.168	  9.428	 -0.561
+
+#XRAY Contrast (10^10 cm^-2):
+#NA, Molecule 1, Molecule 2, Complex
+#  6.172	  0.332	  2.106	  6.127
+
+#NEUTRON Contrast:
+#Molecule 1 Match Point: 35.98 %D2O
+#Molecule 2 Match Point: 37.56 %D2O
+#RNA Match Point: 63.42 %D2O
+#Complex Match Point: 63.17 %D2O
+
+#Fraction of exchanged protein hydrogens: 0.95
+#Fraction of exchanged nucleic acid hydrogens: 1.00
+#Fraction of exchanged molecule 1 hydrogens: 0.95
+#Fraction of exchanged molecule 2 hydrogens: 0.45
+
+#NEUTRON Contrast (10^10 cm^-2):
+# frac D2O, RNA, Molecule 1, Molecule 2, Complex
+ 0.00	  3.935	  2.245	  2.551	  3.921
+ 0.05	  3.625	  1.933	  2.212	  3.611
+ 0.10	  3.315	  1.622	  1.872	  3.301
+ 0.15	  3.005	  1.310	  1.533	  2.991
+ 0.20	  2.695	  0.998	  1.193	  2.680
+ 0.25	  2.385	  0.686	  0.853	  2.370
+ 0.30	  2.074	  0.374	  0.514	  2.060
+ 0.35	  1.764	  0.062	  0.174	  1.749
+ 0.40	  1.454	 -0.250	 -0.166	  1.439
+ 0.45	  1.144	 -0.562	 -0.505	  1.129
+ 0.50	  0.833	 -0.875	 -0.845	  0.818
+ 0.55	  0.523	 -1.187	 -1.184	  0.508
+ 0.60	  0.213	 -1.499	 -1.524	  0.197
+ 0.65	 -0.098	 -1.811	 -1.864	 -0.113
+ 0.70	 -0.408	 -2.124	 -2.203	 -0.424
+ 0.75	 -0.718	 -2.436	 -2.543	 -0.734
+ 0.80	 -1.029	 -2.748	 -2.883	 -1.045
+ 0.85	 -1.339	 -3.061	 -3.222	 -1.356
+ 0.90	 -1.650	 -3.373	 -3.562	 -1.666
+ 0.95	 -1.960	 -3.686	 -3.902	 -1.977
+ 1.00	 -2.271	 -3.998	 -4.241	 -2.288
