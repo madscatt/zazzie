@@ -1,0 +1,73 @@
+Date		Time		File		Method		Line	Level	Message
+2017-07-19 10:37:52,279 - module_utilities.py - setup_logging - 133 - DEBUG - in setup_logging
+2017-07-19 10:37:52,281 - module_utilities.py - setup_logging - 134 - INFO - Program started
+2017-07-19 10:37:52,281 - module_utilities.py - preamble - 95 - DEBUG - in preamble
+2017-07-19 10:37:52,281 - module_utilities.py - preamble - 98 - INFO - module_application : em_to_sas
+2017-07-19 10:37:52,281 - module_utilities.py - preamble - 99 - INFO - executed by user : skrueger on Wed Jul 19 10:37:52 2017
+2017-07-19 10:37:52,281 - module_utilities.py - preamble - 100 - INFO - current directory : /Users/skrueger/git_working_copies/zazzie/src/sassie/calculate/em_to_sas
+2017-07-19 10:37:52,287 - module_utilities.py - preamble - 101 - INFO - hostname : P641702.campus.nist.gov
+2017-07-19 10:37:52,287 - em_to_sas.py - main - 79 - DEBUG - in main
+2017-07-19 10:37:52,287 - em_to_sas.py - unpack_variables - 111 - DEBUG - in unpack_variables
+2017-07-19 10:37:52,287 - module_utilities.py - general_setup - 58 - DEBUG - in general_setup
+2017-07-19 10:37:52,287 - module_utilities.py - write_json_file - 22 - DEBUG - in write_json_file
+2017-07-19 10:37:52,288 - module_utilities.py - write_json_file - 24 - INFO - writing json files with input variables
+2017-07-19 10:37:52,288 - module_utilities.py - write_json_file - 28 - INFO - writing parameters to em_to_sas_20170719-103752.sassie_json
+2017-07-19 10:37:52,293 - module_utilities.py - write_json_file - 32 - INFO - backing up existing .last_sas.json file to .last_sas.json_backup
+2017-07-19 10:37:52,298 - module_utilities.py - write_json_file - 36 - INFO - backing up existing .last_sas_em_to_sas.json file to .last_sas_em_to_sas.json_backup
+2017-07-19 10:37:52,298 - module_utilities.py - write_json_file - 40 - INFO - writing parameters to .last_sas.json file
+2017-07-19 10:37:52,299 - module_utilities.py - write_json_file - 44 - INFO - writing parameters to .last_sas_em_to_sas.json file
+2017-07-19 10:37:52,299 - module_utilities.py - write_json_file - 46 - INFO - input variables: [{"emdensityfile": "emd_1180.mrc", "plotflag": 1, "app": "em_to_sas", "qmax": 0.3, "npoints": 51, "emfiletype": 1, "pdbfile": "test.pdb", "runname": "run_0", "threshold": 1.4, "inputpath": "./", "sasfile": "test.iq"}]
+2017-07-19 10:37:52,299 - module_utilities.py - general_setup - 75 - INFO - setting runpath directory to : run_0/em_to_sas
+2017-07-19 10:37:52,299 - module_utilities.py - general_setup - 82 - INFO - creating directory : run_0/em_to_sas
+2017-07-19 10:37:52,299 - em_to_sas.py - initialization - 441 - DEBUG - in initialization
+2017-07-19 10:37:52,299 - em_to_sas.py - em - 495 - DEBUG - in em
+2017-07-19 10:37:52,299 - em_to_sas.py - em - 501 - DEBUG - {'emdensityfile': 'emd_1180.mrc', 'plotflag': 1, 'app': 'em_to_sas', 'qmax': 0.3, 'threshold': 1.4, 'emfiletype': 1, 'pdbfile': 'test.pdb', 'runname': 'run_0', 'inputpath': './', 'sasfile': 'test.iq', 'npoints': 51}
+2017-07-19 10:37:52,300 - em_to_sas.py - em - 502 - DEBUG - {'empath': 'run_0/em_to_sas'}
+2017-07-19 10:37:52,300 - module_utilities.py - print_gui - 148 - INFO - runname = run_0
+2017-07-19 10:37:52,300 - module_utilities.py - print_gui - 148 - INFO - 
+============================================================ 
+
+2017-07-19 10:37:52,301 - module_utilities.py - print_gui - 148 - INFO - DATA FROM RUN: Wed Jul 19 14:37:52 2017 
+
+
+2017-07-19 10:37:52,301 - em_to_sas.py - read_mrcfile - 137 - DEBUG - in read_mrcfile
+2017-07-19 10:37:52,318 - module_utilities.py - print_gui - 148 - INFO - nc, nr, ns:   192  192  192
+2017-07-19 10:37:52,318 - module_utilities.py - print_gui - 148 - INFO - mode/type: 2
+2017-07-19 10:37:52,319 - module_utilities.py - print_gui - 148 - INFO - ncstart, nrstart, nsstart:   -96  -96  -96
+2017-07-19 10:37:52,319 - module_utilities.py - print_gui - 148 - INFO - xlen, ylen, zlen:  268.800 268.800 268.800
+2017-07-19 10:37:52,319 - module_utilities.py - print_gui - 148 - INFO - unit cell size (mx, my, mz):    192  192  192
+2017-07-19 10:37:52,319 - module_utilities.py - print_gui - 148 - INFO - cell angles:  90.0 90.0 90.0
+2017-07-19 10:37:52,319 - module_utilities.py - print_gui - 148 - INFO - mapc, mapr, maps:     2    1    3
+2017-07-19 10:37:52,320 - module_utilities.py - print_gui - 148 - INFO - maximum intensity: 2.382126
+2017-07-19 10:37:52,320 - module_utilities.py - print_gui - 148 - INFO - minimum intensity: -1.790702
+2017-07-19 10:37:52,320 - module_utilities.py - print_gui - 148 - INFO - amean: 0.064169
+2017-07-19 10:37:52,320 - module_utilities.py - print_gui - 148 - INFO - ispg: 1
+2017-07-19 10:37:52,320 - module_utilities.py - print_gui - 148 - INFO - nsymbt: 0
+2017-07-19 10:37:52,320 - module_utilities.py - print_gui - 148 - INFO - data_step (from header parameters):    0.714   0.714   0.714
+2017-07-19 10:37:52,320 - module_utilities.py - print_gui - 148 - INFO - angstroms/pixel resolution (from header parameters):    1.400   1.400   1.400
+2017-07-19 10:37:52,321 - module_utilities.py - print_gui - 148 - INFO - type_string = ('M', 'A', 'P', ' ')
+2017-07-19 10:37:52,321 - module_utilities.py - print_gui - 148 - INFO - xyz_origin: (0.0, 0.0, 0.0)
+2017-07-19 10:37:52,321 - module_utilities.py - print_gui - 148 - INFO - file type: mrc2000
+2017-07-19 10:37:52,321 - module_utilities.py - print_gui - 148 - INFO - data_origin:     0    0    0
+2017-07-19 10:37:52,321 - module_utilities.py - print_gui - 148 - INFO - fsize: 4
+2017-07-19 10:37:52,322 - module_utilities.py - print_gui - 148 - INFO - start: 1024
+2017-07-19 10:37:52,322 - module_utilities.py - print_gui - 148 - INFO - stop: 1028
+2017-07-19 10:37:59,274 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.5
+2017-07-19 10:37:59,274 - em_to_sas.py - write_inputfile - 392 - DEBUG - in write_inputfile
+2017-07-19 10:37:59,274 - em_to_sas.py - run_scat - 409 - DEBUG - in run_scat
+2017-07-19 10:37:59,274 - em_to_sas.py - run_scat - 415 - DEBUG - currcommand: /usr/local/bin/scat.exe < dum.inp
+2017-07-19 10:38:06,366 - module_utilities.py - print_gui - 148 - INFO - STATUS	1.0
+2017-07-19 10:38:06,372 - em_to_sas.py - em - 560 - DEBUG - prfile: test.pr
+2017-07-19 10:38:06,389 - module_utilities.py - print_gui - 148 - INFO - Data stored in directory: ./run_0/em_to_sas
+
+
+2017-07-19 10:38:06,389 - module_utilities.py - print_gui - 148 - INFO - 
+============================================================ 
+
+2017-07-19 10:38:07,658 - em_to_sas.py - epilogue - 592 - DEBUG - in epilogue
+2017-07-19 10:38:07,658 - em_to_sas.py - epilogue - 594 - DEBUG - pdbfile: test.pdb
+2017-07-19 10:38:07,658 - em_to_sas.py - epilogue - 596 - DEBUG - mvst: mv -f test.pr test.pdb dum.inp test.iq test.pdb.xyz run_0/em_to_sas
+2017-07-19 10:38:07,664 - module_utilities.py - clean_up - 157 - DEBUG - in clean_up
+2017-07-19 10:38:07,674 - module_utilities.py - print_gui - 148 - INFO - ============================================================ 
+
+2017-07-19 10:38:07,674 - module_utilities.py - print_gui - 148 - INFO - EM TO SAS IS DONE

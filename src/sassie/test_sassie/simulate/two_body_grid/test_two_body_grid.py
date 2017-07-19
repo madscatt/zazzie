@@ -60,8 +60,7 @@ class Test_Two_Body_Grid(MockerTestCase):
 
         Advanced input:
 
-        overlap basis atom (only CA is accepted)
-        overlap cutoff distance
+        overlap cutoff distance (CA basis)
         low Rg cutoff
         high Rg cutoff
         enable zcutoff flag (0=no, 1=yes)
@@ -114,9 +113,7 @@ class Test_Two_Body_Grid(MockerTestCase):
     trans:          int_arry    number of x,y,z, moves
     dtrans:         float_array dx,dy,dz step sizes (Angstroms)
     theta:          int_array   number of angular moves
-    dtheta:         float_array dx,dy,dz step sizes (degrees)
-    basis:          string      overlap basis atom (only CA is accepted)
-    cutoff:         float       overlap cutoff distance 
+    dtheta:         float_array dx,dy,dz step sizes (degrees) 
     lowrg           float       low Rg cutoff value                 
     highrg          float       high Rg cutoff value                
     zflag           integer     enable zcutoff flag (0=no, 1=yes)
@@ -132,6 +129,10 @@ class Test_Two_Body_Grid(MockerTestCase):
     reslow2         int_array   first amino acid residue per segment (molecule 2) 
     numcont2        int_array   number of contiguous amino acid residues per segment (molecule 2)
 
+    Inputs not tested:
+
+    basis:          string      overlap basis atom (only CA is accepted)
+    cutoff:         float       overlap cutoff distance (not a user input)
 
     Test tree:
 

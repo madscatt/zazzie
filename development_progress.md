@@ -23,7 +23,7 @@
 | SasDock             |              |      
 | SasCalc             |              |  
 | SLD MOL             |              |   
-| EM to SAS           |              |        
+| EM to SAS           |      x       |         x        
 | Chi-Square Filter   |      x       |         x
 | Density Plot        |      x       |         x
 | Capriqorn           |              |      
