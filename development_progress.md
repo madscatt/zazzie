@@ -28,7 +28,7 @@
 | Density Plot        |      x       |         x
 | Capriqorn           |              |      
 | SasCalc-PBC         |              |  
-| APBS                |              |  
+| APBS                |      x       |         x
 | Input Filter        |      x       |         x 
 
 
