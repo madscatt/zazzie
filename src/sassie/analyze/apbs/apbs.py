@@ -331,10 +331,13 @@ class apbs():
 #                    str(mvars.ph) + ' -v ' + avars.path + \
 #                        'junk.pdb junk.pqr >& pdb2pqr.out'
 #                print 'runstring = ', runstring
-                run_pdb2pqr='python ' + bin_path + '/pdb2pqr.py --ff=charmm --with-ph=' + \
+#                run_pdb2pqr = 'python ' + bin_path + '/pdb2pqr.py --ff=charmm --with-ph=' + \
+#                    str(mvars.ph) + ' -v ' + avars.path + \
+#                        'junk.pdb junk.pqr >& pdb2pqr.out'
+                run_pdb2pqr = bin_path + '/pdb2pqr.py --ff=charmm --with-ph=' + \
                     str(mvars.ph) + ' -v ' + avars.path + \
                         'junk.pdb junk.pqr >& pdb2pqr.out'
-
+                        
                 os.system(run_pdb2pqr)
 
                 pgui('starting apbs calculation number: %s' % (istr))
