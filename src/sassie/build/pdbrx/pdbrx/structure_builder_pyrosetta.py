@@ -1,8 +1,6 @@
-<<<<<<< HEAD
 #import rosetta
 import pyrosetta
 from pyrosetta import rosetta
-=======
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
@@ -36,7 +34,6 @@ import logging
 #rosetta.init()
 pyrosetta.init()
 
-from pyrosetta import rosetta
 from pyrosetta.rosetta.protocols.grafting import CCDEndsGraftMover
 from pyrosetta.rosetta.protocols.loops.loop_closure.ccd import CCDLoopClosureMover
 from pyrosetta.rosetta.protocols.loops.loop_mover.refine import LoopMover_Refine_CCD
