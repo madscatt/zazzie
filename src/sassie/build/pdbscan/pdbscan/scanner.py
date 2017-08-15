@@ -2302,7 +2302,7 @@ class SasMolScan(sasmol.SasMol):
         altloc = self.segname_info.altloc
 
         sim_ready = self.sim_ready
-
+        
         for segname in self.segnames():
 
             sim_ready[segname] = {}
@@ -2326,9 +2326,11 @@ class SasMolScan(sasmol.SasMol):
                                         sim_ready[segname]['single_conformer'])
 
             # We should warn people if start residue is not 1
-            first_resid = self.segname_info.sequence[segname][0][0]
-
-            sim_ready[segname]['start'] = (first_resid == 1)
+            if segname in self.segname_info.sequence:
+                first_resid = self.segname_info.sequence[segname][0][0]
+                sim_ready[segname]['start'] = (first_resid == 1)
+            else:
+                sim_ready[segname]['start'] = True
 
         return
 
