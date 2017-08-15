@@ -4,8 +4,8 @@ Driver method to run the SasCalc module
 
 import sys
 
-#import sassie.calculate.sascalc as sascalc
 import sassie.calculate.sascalc.sascalc as sascalc
+#import sascalc
 import sassie.interface.input_filter as input_filter
 #import sassie.interface.sascalc_filter as sascalc_filter
 import multiprocessing
@@ -16,13 +16,22 @@ svariables = {}
 #### user input ####
 #### user input ####
 
-runname = 'run_0'
-pdbfile = '../../../developer_files_for_testing/sascalc/hiv1_gag.pdb'
-dcdfile = '../../../developer_files_for_testing/sascalc/hiv1_gag_200_frames.dcd' 
+runname = 'run_0' #_monica'
+#pdbfile = 'new_lysozyme.pdb'
+#dcdfile = 'new_lysozyme.dcd'
+#dcdfile = 'new_lysozyme.pdb'
+pdbfile = 'min3.pdb'
+#dcdfile = 'c7.dcd'
+dcdfile = 'c7_3.dcd'
+#dcdfile = 'c7_2000.dcd'
+#pdbfile = 'new_nist_mab.pdb'
+#dcdfile = '10000_new_nist_mab.dcd'
+#pdbfile = 'small.pdb'
+#dcdfile = '4000.dcd'
 
 xon = 'neutron'
 #xon = 'xray'
-#xon = 'neutron_and_xray'
+xon = 'neutron_and_xray'
 
 number_contrast_points = "1"
 D2O_percentage_array = "100.0" #,0.0"
@@ -35,12 +44,12 @@ deuterated_basis_string_array = ["not (moltype protein)","moltype protein"]
 fraction_deuterated_array = "0.0,0.0"
 xray_number_contrast_points = "1"
 xray_D2O_percentage_array = "1.0"
-xray_I0_array = "1.0"
+xray_I0_array = "8.0"
 
 number_q_values='21'
 q_max='0.2'
 number_r_values='51'
-solvent_volume='18.0'
+solvent_volume='20.0'
 VDW_scaling_factor='0.77'
 #golden_vector_method_option='converge'
 golden_vector_method_option='fixed'
@@ -109,20 +118,17 @@ if len(error) > 0:
     print 'error = ', error
     sys.exit()
 else:
-#    error=sascalc_filter.check_sascalc(variables)
-    error=[]
+    #error=sascalc_filter.check_sascalc(variables)
     if(len(error) != 0):
         print 'error = ',error
         sys.exit()
 
 #import pprint; pprint.pprint(variables); exit()
 
-import time; start = time.time()
 txtQueue = multiprocessing.JoinableQueue()
 sascalc = sascalc.sascalc()
 sascalc.main(variables, txtQueue)
 this_text = txtQueue.get(True, timeout=0.1)
-print "time used: ",time.time()-start
 
 
 #print 'in GUI and txtOutput = ', this_text, '\n'

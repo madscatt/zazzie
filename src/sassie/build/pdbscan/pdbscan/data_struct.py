@@ -2,9 +2,7 @@
 """
 Common data structures to hold information extracted from PDB coordinates and
 headers
-"""
 
-'''
     SASSIE: Copyright (C) 2011 Joseph E. Curtis, Ph.D.
 
     This program is free software: you can redistribute it and/or modify
@@ -19,7 +17,9 @@ headers
 
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-'''
+"""
+
+import logging
 
 from itertools import groupby
 from operator import itemgetter
@@ -70,7 +70,7 @@ class Disulphide():
         """
         Return list of subdivisions involved in the bond
         """
-        return list(set([self.bound[0]['subdiv'], self.bound[1]['subdiv']]))
+        return list({self.bound[0]['subdiv'], self.bound[1]['subdiv']})
 
     def intra_subdiv(self):
         """
@@ -103,6 +103,8 @@ class Info():
         (chains or segments/segnames).
         """
 
+        self.logger = logging.getLogger(__name__)
+
         self.n_models = 1
         self.subdivs = []
 
@@ -128,7 +130,7 @@ class Info():
         self.missing_atoms = {}
 
         # Excess atom dictionary of the form:
-        # exess_atoms = {model_no:{subdiv: {resid:
+        # excess_atoms = {model_no:{subdiv: {resid:
         #                                          {'atoms':[atm1, atm2, ...],
         #                                           'resname': resname}
         #                 }}}
@@ -193,12 +195,12 @@ class Info():
 
             if subdiv:
 
-                missing = sum([len(x['atoms']) for x in model_missing[subdiv]])
+                n_missing = sum([len(x['atoms']) for x in model_missing[subdiv]])
             else:
                 missing = []
                 for sub in model_missing:
                     missing += [len(x['atoms']) for x in model_missing[sub]]
-                missing = sum(missing)
+                n_missing = sum(missing)
 
         else:
             n_missing = 0
@@ -228,8 +230,8 @@ class Info():
             else:
                 n_missing = 0
                 for sub in model_missing:
-                    # TODO: Make this a logging event
-                    print model_missing[sub]
+                    self.logger.info(
+                        'Missing hydrogens in ' + model_missing[sub])
                     n_missing += sum([x['n']
                                       for resid, x in model_missing[sub].items()])
 
@@ -508,9 +510,7 @@ class Info():
 
         return
 
-    def get_first_coor_resid(self, segname, model_no = 1):
-
-        guess = 0
+    def get_first_coor_resid(self, segname, model_no=1):
 
         missing_resids = self.missing_resids[model_no]
 
@@ -528,7 +528,6 @@ class Info():
                     guess = seq[ndx][0]
 
         return seq[ndx]
-
 
     def add_missing_resids(self, subdiv, resids, resnames, model_no=1):
         """
@@ -613,16 +612,16 @@ class Info():
 
     def add_altlocs(self, subdiv, resid, loc_ids):
         """
-        Add alternative location information to the dictionary holding the
+        Add several alternative locations to the dictionary holding the
         information for the entire model:
         altloc[subdiv][resid] = [loc_id1, ....]
 
-        @type subdiv :  string
-        @param subdiv:  Subdivision (chain/segname) label
-        @type resid  :  integer
-        @param resid :  Residue number
-        @type loc_id :  string
-        @param loc_id:  Alternative location label
+        @type subdiv  :  string
+        @param subdiv :  Subdivision (chain/segname) label
+        @type resid   :  integer
+        @param resid  :  Residue number
+        @type loc_ids :  list
+        @param loc_ids:  Alternative location labels
         """
 
         for loc in sorted(loc_ids):
@@ -733,11 +732,13 @@ class Info():
 
         known = False
 
-        try:
-            if (self.number_gaps[subdiv][resid1] == resid2):
-                known = True
-        except:
-            pass
+        if subdiv in self.number_gaps:
+
+            if resid1 in self.number_gaps[subdiv]:
+
+                if self.number_gaps[subdiv][resid1] == resid2:
+
+                    known = True
 
         return known
 
@@ -762,7 +763,7 @@ class Info():
         if subdiv not in sequence:
             sequence[subdiv] = [residue]
         else:
-            sequence[subdiv].insert(0,residue)
+            sequence[subdiv].insert(0, residue)
 
         return
 
@@ -778,14 +779,12 @@ class Info():
         @param residues:  list of (resid, resname) pairs
         """
 
-        #residues = zip(resids, resnames).reverse()
-
         for residue in reversed(residues):
             self.prepend_residue_to_sequence(subdiv, residue[0], residue[1])
 
         return
 
-    def initialize_missing_resids_subdiv(self, subdiv, model_no = 1):
+    def initialize_missing_resids_subdiv(self, subdiv, model_no=1):
 
         missing_resids = self.missing_resids
 
@@ -857,24 +856,29 @@ class Info():
         sequence = self.sequence
 
         if list(resids):
+
             sequence[subdiv] = zip(resids, resnames)
+
         else:
+
             sequence[subdiv] = [(None, x) for x in resnames]
 
         return
 
-    def sequence_to_fasta(self, subdiv, model_no = 1, missing_lower=False, for_matching = False):
+    def sequence_to_fasta(self, subdiv, model_no=1, missing_lower=False, for_matching=False):
         """
         Create a FASTA format sequence string form the sequence helf for the 
         selected subdiv(ision).
 
+        @type model_no :  int
+        @param model_no:  Model number
         @type subdiv  :  string
         @param subdiv :  Subdivision (chain or segname) label for first residue
         @type missing_lower   :  boolean
         @keyword missing_lower:  Should missing residues be presented in
                                  lowercase?
-        @type coord_only   :     boolean
-        @keyword coord_only:     Only the coordinate residues to be output
+        @type for_matching    :  boolean
+        @keyword for_matching :  Only the coordinate residues to be output
                                  (i.e. filter out missing residues - replace
                                  gaps with single '.')
         @rtype        :  string
@@ -912,11 +916,15 @@ class Info():
         Check if the sequence of the selected subdiv(ision) is complete - i.e. 
         all residues have both resid and resname.
 
-        @type subdiv  :  string
-        @param subdiv :  Subdivision (chain or segname) label for first residue
-        @rtype        :  boolean
-        @return       :  Do all residues in selected subdiv(ision) sequence 
-                         have both resid and resname?
+        @type subdiv   :  string
+        @param subdiv  :  Subdivision (chain or segname) label for first
+                          residue
+        @type model_no :  integer
+        @param model_no:  Number of the model from which the sequence should
+                          be derived
+        @rtype         :  boolean
+        @return        :  Do all residues in selected subdiv(ision) sequence
+                          have both resid and resname?
         """
 
         complete = True
@@ -933,7 +941,7 @@ class Info():
 
         return complete
 
-    def seqs_for_completion(self, subdiv, model_no = 1):
+    def seqs_for_completion(self, subdiv, model_no=1):
         """
         Return the sequence elements needed to model gaps - the sequence to
         fill in and the two residues flanking this at either end
@@ -972,44 +980,238 @@ class Info():
 
         out_fragments = []
 
+        if chosen_subdiv in self.number_gaps:
+
+            num_gap_starts = self.number_gaps[chosen_subdiv].keys()
+
+        else:
+
+            num_gap_starts = []
+
         for gap in seq_gaps:
 
             pre_flank = ''
             post_flank = ''
 
             start = gap[0]
-            if start - 1 in seq:
+            anchor = start - 1
 
-                pre_anchor = start -1
+            if anchor not in num_gap_starts:
 
-                for i in range(-2,0):
-                    resid = start + i
-                    if start + i in seq:
-                        pre_flank += utils.conv_aa3to1(seq[resid])
-            else:
-                pre_anchor = 0
+                if start - 1 in seq:
 
-            end = gap[-1]
-            if end + 1 in seq:
+                    pre_anchor = start - 1
 
-                post_anchor = end + 1
+                    for i in range(-2, 0):
+                        resid = start + i
+                        if start + i in seq:
+                            pre_flank += utils.conv_aa3to1(seq[resid])
+                else:
+                    pre_anchor = 0
 
-                for i in range(1,3):
-                    resid = end + i
-                    if end + i in seq:
-                        post_flank += utils.conv_aa3to1(seq[resid])
+                end = gap[-1]
+                if end + 1 in seq:
 
-            else:
-                post_anchor = 0
+                    post_anchor = end + 1
 
-            gap_seq = ''
+                    for i in range(1, 3):
+                        resid = end + i
+                        if end + i in seq:
+                            post_flank += utils.conv_aa3to1(seq[resid])
 
-            for resid in gap:
-                gap_seq += utils.conv_aa3to1(seq[resid])
+                else:
+                    post_anchor = 0
 
-            out_fragments.append([pre_anchor, post_anchor,pre_flank,gap_seq,post_flank])
+                gap_seq = ''
+
+                for resid in gap:
+                    gap_seq += utils.conv_aa3to1(seq[resid])
+
+                out_fragments.append(
+                    [pre_anchor, post_anchor, pre_flank, gap_seq, post_flank])
 
         return out_fragments
+
+    def subdiv_renumber_from_one(self, subdiv):
+
+        new_sequence = []
+
+        old_to_new_resid = {}
+
+        new_resid = 0
+
+        for old_resid, resname in self.sequence[subdiv]:
+
+            if resname:
+
+                new_resid += 1
+
+                new_sequence.append((new_resid, resname))
+
+                old_to_new_resid[old_resid] = new_resid
+
+        self.sequence[subdiv] = new_sequence
+
+        self.update_after_renumber(subdiv, old_to_new_resid)
+
+        return old_to_new_resid
+
+    def update_after_renumber(self, subdiv, resid_mapping):
+
+        self.number_gaps[subdiv] = {}
+
+        for model_no in self.missing_resids.keys():
+
+            if subdiv in self.missing_resids[model_no]:
+
+                new_missing = {}
+
+                for old_resid, resname in self.missing_resids[model_no][subdiv].iteritems():
+
+                    if resname:
+                        new_missing[resid_mapping[old_resid]] = resname
+
+                self.missing_resids[model_no][subdiv] = new_missing
+
+        for model_no in self.missing_atoms:
+
+            if subdiv in self.missing_atoms[model_no]:
+
+                new_missing = {}
+
+                for old_resid, res_info in self.missing_atoms[model_no][subdiv].iteritems():
+
+                    new_missing[resid_mapping[old_resid]] = res_info
+
+                self.missing_atoms[model_no][subdiv] = new_missing
+
+        for model_no in self.excess_atoms:
+
+            if subdiv in self.excess_atoms[model_no]:
+
+                new_excess = {}
+
+                for old_resid, res_info in self.excess_atoms[model_no][subdiv].iteritems():
+
+                    new_excess[resid_mapping[old_resid]] = res_info
+
+                self.excess_atoms[model_no][subdiv] = new_excess
+
+        for model_no in self.n_missing_hydrogens:
+
+            if subdiv in self.n_missing_hydrogens[model_no]:
+
+                new_missing = {}
+
+                for old_resid, res_info in self.n_missing_hydrogens[model_no][subdiv].iteritems():
+
+                    new_missing[resid_mapping[old_resid]] = res_info
+
+                self.n_missing_hydrogens[model_no][subdiv] = new_missing
+
+        for model_no in self.n_excess_hydrogens:
+
+            if subdiv in self.n_excess_hydrogens[model_no]:
+
+                new_excess = {}
+
+                for old_resid, res_info in self.n_excess_hydrogens[model_no][subdiv].iteritems():
+
+                    new_excess[resid_mapping[old_resid]] = res_info
+
+                self.n_excess_hydrogens[model_no][subdiv] = new_excess
+
+        for ndx in range(len(self.disulphides)):
+
+            if subdiv in self.disulphides[ndx].subdivs():
+
+                if self.disulphides[ndx].bound[0]['subdiv'] == subdiv:
+
+                    old_resid = self.disulphides[ndx].bound[0]['resid']
+
+                    self.disulphides[ndx].bound[0]['resid'] = resid_mapping[old_resid]
+
+                if self.disulphides[ndx].bound[1]['subdiv'] == subdiv:
+
+                    old_resid = self.disulphides[ndx].bound[1]['resid']
+
+                    self.disulphides[ndx].bound[1]['resid'] = resid_mapping[old_resid]
+
+        return
+
+    def purge_subdiv(self, subdiv):
+        """
+        Remove all references to specified subdiv
+
+        @type  subdiv:    string
+        @param subdiv:    Subdiv(ision) to remove
+        """
+
+        if subdiv in self.subdivs:
+
+            self.subdivs.remove(subdiv)
+
+        elif subdiv in self.subdiv_map:
+
+            del self.subdiv_map[subdiv]
+
+        if subdiv in self.sequence:
+            del self.sequence[subdiv]
+
+        for model_no in self.missing_resids.keys():
+
+            if subdiv in self.missing_resids[model_no]:
+
+                del self.missing_resids[model_no][subdiv]
+
+        if subdiv in self.number_gaps:
+
+            del self.number_gaps[subdiv]
+
+        for model_no in self.missing_atoms:
+
+            if subdiv in self.missing_atoms[model_no]:
+
+                del self.missing_atoms[model_no][subdiv]
+
+        for model_no in self.excess_atoms:
+
+            if subdiv in self.excess_atoms[model_no]:
+
+                del self.excess_atoms[model_no][subdiv]
+
+        for model_no in self.n_missing_hydrogens:
+
+            if subdiv in self.n_missing_hydrogens[model_no]:
+
+                del self.n_missing_hydrogens[model_no][subdiv]
+
+        for model_no in self.n_excess_hydrogens:
+
+            if subdiv in self.n_excess_hydrogens[model_no]:
+
+                del self.n_excess_hydrogens[model_no][subdiv]
+
+        if subdiv in self.heterogens:
+
+            del self.heterogens[subdiv]
+
+        if subdiv in self.altloc:
+            del self.altloc[subdiv]
+
+        for ndx in range(len(self.disulphides) - 1, -1, -1):
+
+            if subdiv in self.disulphides[ndx].subdivs():
+
+                del self.disulphides[ndx]
+
+        for biomol_no in self.biomt.keys():
+
+            if subdiv in self.biomt[biomol_no]['subdivs']:
+
+                self.biomt[biomol_no]['subdivs'].remove(subdiv)
+
+        return
 
 # Here be Monsters
 
@@ -1048,3 +1250,4 @@ class Info():
         self.missing_resids = missing
 
         return
+

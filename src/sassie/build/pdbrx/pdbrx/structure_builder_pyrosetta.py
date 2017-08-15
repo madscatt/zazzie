@@ -1,7 +1,34 @@
+<<<<<<< HEAD
 #import rosetta
 import pyrosetta
 from pyrosetta import rosetta
+=======
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+"""
+Build missing regions into proteins using pyRosetta
 
+    SASSIE: Copyright (C) 2011 Joseph E. Curtis, Ph.D.
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+"""
+
+import os
+import logging
+
+#import rosetta
 #args = '-chemical:exclude_patches VirtualDNAPhosphate'
 #args = '-add_orbitals'
 #rosetta.init(extra_options=args)
@@ -9,16 +36,18 @@ from pyrosetta import rosetta
 #rosetta.init()
 pyrosetta.init()
 
+from pyrosetta import rosetta
 from pyrosetta.rosetta.protocols.grafting import CCDEndsGraftMover
 from pyrosetta.rosetta.protocols.loops.loop_closure.ccd import CCDLoopClosureMover
 from pyrosetta.rosetta.protocols.loops.loop_mover.refine import LoopMover_Refine_CCD
 
-import salign
+from . import salign
 
-import os
-import logging
 
 class StructureBuilderPyRosetta():
+    """
+    Driver for use of pyRosetta to build missing regions in structures
+    """
 
     def __init__(self, scaffold_pdb, gap_descriptions, chain, protein_only = True):
 
@@ -192,7 +221,7 @@ class StructureBuilderPyRosetta():
                 flex_length_cter = 1
 
             elif loop_length > 12:
-                flex_len = int((loop_length/2) - 4)
+                flex_len = (loop_length//2) - 4
                 flex_length_nter = flex_len
                 flex_length_cter = flex_len
 
@@ -400,7 +429,7 @@ class StructureBuilderPyRosetta():
 
         for ii in range(loop_length, 0 , -1):
 
-            print "add residue " + str(ii)
+            logger.info("add residue " + str(ii))
 
             self.scaffold_pose.prepend_polymer_residue_before_seqpos(frag_pose.residue(ii),1,False)
             pdb_res = start_anchor - count
@@ -465,6 +494,11 @@ class StructureBuilderPyRosetta():
         return
 
     def model_all_loops(self):
+        '''
+        Loop through all loop definitions provided to class and add to model.
+
+        @return:
+        '''
 
         chain = self.chain
 
@@ -509,6 +543,15 @@ class StructureBuilderPyRosetta():
         return
 
     def complete_structure(self, output_path, filename):
+        '''
+        Model all loops into stucture and save to PDB.
+
+        @type output_path :  str
+        @param output_path:  Path where PDB will be saved
+        @type filename :  str
+        @param filename:  Filename to use for output PDB
+        @return:
+        '''
 
         logger = self.logger
 

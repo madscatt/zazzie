@@ -1,5 +1,6 @@
 # directories
 DIRSRC=src/
+DIRINC=include/
 DIRLIB=lib/
 
 ifndef _ARCH
@@ -7,15 +8,18 @@ ifndef _ARCH
     export _ARCH
 endif
 
+INCDIR:=-I./include/
 # compilers and flags
 ifeq ($(_ARCH), Darwin)
-    INCDIR=-I/usr/local/cuda/include
+    INCDIR+=-I/usr/local/cuda/include
     CC=g++
     NVCC=/usr/local/cuda/bin/nvcc
 endif
 ifeq ($(_ARCH), Linux)
-    INCDIR=-I/share/apps/local/cuda/include
+    INCDIR+=-I/share/apps/local/cuda/include
+    INCDIR+=-I/share/apps/local/include
     CC=/share/apps/local/bin/g++
+    CC=g++
     NVCC=/share/apps/local/cuda/bin/nvcc
 endif
 
@@ -29,39 +33,34 @@ CUDA_LIBNAME=cudaSascalc
 LIB=$(DIRLIB)lib$(LIBNAME).a
 CUDA_LIB=$(DIRLIB)lib$(CUDA_LIBNAME).a
 
-OBJS=SasCalc GV Debye cudaGV cudaDebye cudaDebyePBC
+OBJS=SasCalc ScVars ScResults GV cudaGV
 SOURCES=$(addsuffix .cpp,$(addprefix $(DIRSRC),$(OBJS)))
-HEADERS=$(SOURCES:.cpp=.h)
+HEADERS=$(addsuffix .h,$(addprefix $(DIRINC),$(OBJS)))
 OBJECTS=$(addsuffix .o,$(addprefix $(DIRLIB),$(OBJS)))
 
-CUDA_OBJS=cudaKernel_GV cudaKernel_Debye cudaKernel_DebyePBC wrapperCudaKernel
+CUDA_OBJS=cudaKernel_GV wrapperCudaKernel
 CUDA_SOURCES=$(addsuffix .cu,$(addprefix $(DIRSRC),$(CUDA_OBJS)))
-CUDA_HEADERS=$(CUDA_SOURCES:.cu=.h)
+CUDA_HEADERS=$(addsuffix .h,$(addprefix $(DIRINC),$(CUDA_OBJS)))
 CUDA_OBJECTS=$(addsuffix .o,$(addprefix $(DIRLIB),$(CUDA_OBJS)))
 
 # dependencies
-all: mklibdir $(LIB) $(CUDA_LIB) 
+all: $(LIB) $(CUDA_LIB) 
 
 .PHONY: cpu
-cpu: mklibdir $(LIB)
+cpu: $(LIB)
 $(LIB): $(OBJECTS)
 	ar rv $@ $^
 
-$(OBJECTS): $(DIRLIB)%.o: $(DIRSRC)%.cpp $(DIRSRC)%.h
+$(OBJECTS): $(DIRLIB)%.o: $(DIRSRC)%.cpp $(DIRINC)%.h
 	$(CC) -c $< -o $@ $(CCFLAGS) $(INCDIR)
 
 .PHONY: gpu
-gpu: mklibdir $(CUDA_LIB)
+gpu: $(CUDA_LIB)
 $(CUDA_LIB): $(CUDA_OBJECTS)
 	ar rv $@ $^
 
-$(CUDA_OBJECTS): $(DIRLIB)%.o: $(DIRSRC)%.cu $(DIRSRC)%.h
-	$(NVCC) -c $< -o $@ $(NVCCFLAGS)
-
-.PHONY: mklibdir
-mklibdir: $(DIRLIB)
-$(DIRLIB):
-	mkdir -p $(DIRLIB)
+$(CUDA_OBJECTS): $(DIRLIB)%.o: $(DIRSRC)%.cu $(DIRINC)%.h
+	$(NVCC) -c $< -o $@ $(NVCCFLAGS) $(INCDIR)
 
 .PHONY: clean
 clean:
