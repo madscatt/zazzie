@@ -2398,7 +2398,7 @@ class SasMolScan(sasmol.SasMol):
         altloc = self.segname_info.altloc
 
         sim_ready = self.sim_ready
-
+        
         for segname in self.segnames():
 
             sim_ready[segname] = {}

@@ -52,8 +52,9 @@
 # using numpy for linear algebra
 import numpy
 
-from rosetta import Pose, PyMOL_Mover
-from rosetta.numeric import xyzVector_double
+from pyrosetta import Pose
+from pyrosetta.rosetta.protocols.moves import PyMOLMover
+from pyrosetta.rosetta.numeric import xyzVector_double_t
  
 # other tools
 from extract_coords_pose import extract_coordinates_from_pose_1x3
@@ -164,7 +165,7 @@ def kabsch_alignment( pose1, pose2 , pose1sel = [], pose2sel =[] ):
     # first pose
     #ind = -1
     #dummy = rosetta.numeric.xyzVector()
-    dummy = xyzVector_double()
+    dummy = xyzVector_double_t()
     #for r in range(pose1.total_residue()):
     #    res = pose1.residue(r+1)
     #    for a in range(res.natoms()):

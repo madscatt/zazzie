@@ -12,7 +12,7 @@
 # @brief
 # @author Evan H. Baugh, Johns Hopkins University
 
-from rosetta import Pose
+from pyrosetta import Pose
 
 # returns the x, y, and z coordinates of a pose
 #     returns a 1x3 list with elements [x,y,z]
