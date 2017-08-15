@@ -1,0 +1,52 @@
+#Date: Wed Mar 29 18:51:51 2017
+
+#Files used: rna_sequence.txt (1)
+
+#Chemical formulas used: 1. H48C36O36, 2. H48C36O36
+
+#Solvent Components:
+#Component, molar conc, volume (A^3), Mw (kDA), x-ray SL, neutron SL (10^-12 cm), x-ray SLD, neutron SLD (10^10 cm^-2)
+#	H2O	 55.51	 29.9	 0.018	  2.820	 -0.168	  9.428	 -0.561
+#	Na1Cl1	  0.15	 29.3	 0.058	  7.896	  1.321	 26.958	  4.509
+#	K1Cl1	  0.05	 35.9	 0.075	 10.152	  1.325	 28.318	  3.695
+#Totals: x-ray SL, neutron SL (10^-12 cm), x-ray SLD, neutron SLD (10^10 cm^-2)
+#	157.636	 -9.020	  9.494	 -0.543
+
+#XRAY SLD (10^10 cm^-2):
+#NA, Complex, Solvent
+# 15.600	  9.759	 11.534	 15.555	  9.494
+
+#NEUTRON SLDs:
+#Molecule 1 Match Point: 35.84 %D2O
+#Molecule 2 Match Point: 37.44 %D2O
+#RNA Match Point: 63.40 %D2O
+#Complex Match Point: 63.14 %D2O
+
+#Fraction of exchanged protein hydrogens: 0.95
+#Fraction of exchanged nucleic acid hydrogens: 1.00
+#Fraction of exchanged molecule 1 hydrogens: 0.95
+#Fraction of exchanged molecule 2 hydrogens: 0.45
+
+#NEUTRON SLDs (10^10 cm^-2):
+# frac D2O, RNA, Molecule 1, Molecule 2, Complex, Solvent
+ 0.00	  3.374	  1.684	  1.990	  3.360	 -0.543
+ 0.05	  3.412	  1.720	  1.999	  3.398	 -0.197
+ 0.10	  3.450	  1.756	  2.007	  3.436	  0.150
+ 0.15	  3.488	  1.793	  2.016	  3.473	  0.497
+ 0.20	  3.526	  1.829	  2.024	  3.511	  0.844
+ 0.25	  3.564	  1.865	  2.032	  3.549	  1.191
+ 0.30	  3.602	  1.901	  2.041	  3.587	  1.537
+ 0.35	  3.639	  1.937	  2.049	  3.625	  1.884
+ 0.40	  3.677	  1.973	  2.058	  3.662	  2.231
+ 0.45	  3.715	  2.009	  2.066	  3.700	  2.578
+ 0.50	  3.753	  2.045	  2.075	  3.738	  2.925
+ 0.55	  3.791	  2.081	  2.083	  3.775	  3.271
+ 0.60	  3.828	  2.117	  2.092	  3.813	  3.618
+ 0.65	  3.866	  2.153	  2.100	  3.851	  3.965
+ 0.70	  3.904	  2.188	  2.109	  3.888	  4.312
+ 0.75	  3.942	  2.224	  2.117	  3.926	  4.659
+ 0.80	  3.979	  2.260	  2.125	  3.963	  5.005
+ 0.85	  4.017	  2.295	  2.134	  4.001	  5.352
+ 0.90	  4.054	  2.331	  2.142	  4.038	  5.699
+ 0.95	  4.092	  2.367	  2.151	  4.075	  6.046
+ 1.00	  4.130	  2.402	  2.159	  4.113	  6.393

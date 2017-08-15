@@ -5,8 +5,8 @@ import os
 ###     BEGIN SYSADMIN EDIT ###
 
 #__arch__ = "cluster"
-__arch__ = "mac"
-# __arch__ = "linux"
+#__arch__ = "mac"
+__arch__ = "linux"
 
 __cuda__ = False
 #__cuda__ = True
@@ -16,6 +16,8 @@ __gpu_memory__ = 4799
 
 # __level__ = 'WARNING'
 __level__ = 'DEBUG'
+
+
 
 ###     END SYSADMIN EDIT ###
 ###     END SYSADMIN EDIT ###

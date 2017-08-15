@@ -1,0 +1,147 @@
+Date		Time		File		Method		Line	Level	Message
+2017-06-27 13:18:34,684 - module_utilities.py - setup_logging - 133 - DEBUG - in setup_logging
+2017-06-27 13:18:34,689 - module_utilities.py - setup_logging - 134 - INFO - Program started
+2017-06-27 13:18:34,689 - module_utilities.py - preamble - 95 - DEBUG - in preamble
+2017-06-27 13:18:34,689 - module_utilities.py - preamble - 98 - INFO - module_application : two_body_grid
+2017-06-27 13:18:34,689 - module_utilities.py - preamble - 99 - INFO - executed by user : skrueger on Tue Jun 27 13:18:34 2017
+2017-06-27 13:18:34,689 - module_utilities.py - preamble - 100 - INFO - current directory : /Users/skrueger/git_working_copies/zazzie/src/sassie/simulate/two_body_grid
+2017-06-27 13:18:34,694 - module_utilities.py - preamble - 101 - INFO - hostname : P641702.campus.nist.gov
+2017-06-27 13:18:34,694 - two_body_grid.py - main - 80 - DEBUG - in main
+2017-06-27 13:18:34,694 - two_body_grid.py - unpack_variables - 112 - DEBUG - in unpack_variables
+2017-06-27 13:18:34,694 - two_body_grid.py - unpack_variables - 142 - DEBUG - {'cutoff': 3.0, 'reslow1': '', 'cflag': 0, 'reslow2': '', 'app': 'two_body_grid', 'highrg': 400.0, 'pos': [-20.0, -20.0, -20.0], 'lowrg': 0.0, 'zflag': 0, 'path': './', 'ofile': 'run_0.dcd', 'nsegments2': '', 'nsegments1': '', 'nexsegments1': 0, 'basis': 'CA', 'numcont1': '', 'numcont2': '', 'confile': 'two_body_grid_constraints.txt', 'zcutoff': -80.0, 'theta': [2, 2, 2], 'dtrans': [20.0, 20.0, 20.0], 'pdbmol1': 'iase1.pdb', 'pdbmol2': 'iase2.pdb', 'dtheta': [45.0, 45.0, 45.0], 'accpos': 0, 'nexsegments2': 0, 'runname': 'run_0', 'trans': [2, 2, 2]}
+2017-06-27 13:18:34,694 - module_utilities.py - general_setup - 58 - DEBUG - in general_setup
+2017-06-27 13:18:34,694 - module_utilities.py - write_json_file - 22 - DEBUG - in write_json_file
+2017-06-27 13:18:34,694 - module_utilities.py - write_json_file - 24 - INFO - writing json files with input variables
+2017-06-27 13:18:34,695 - module_utilities.py - write_json_file - 28 - INFO - writing parameters to two_body_grid_20170627-131834.sassie_json
+2017-06-27 13:18:34,698 - module_utilities.py - write_json_file - 32 - INFO - backing up existing .last_sas.json file to .last_sas.json_backup
+2017-06-27 13:18:34,701 - module_utilities.py - write_json_file - 36 - INFO - backing up existing .last_sas_two_body_grid.json file to .last_sas_two_body_grid.json_backup
+2017-06-27 13:18:34,702 - module_utilities.py - write_json_file - 40 - INFO - writing parameters to .last_sas.json file
+2017-06-27 13:18:34,702 - module_utilities.py - write_json_file - 44 - INFO - writing parameters to .last_sas_two_body_grid.json file
+2017-06-27 13:18:34,702 - module_utilities.py - write_json_file - 46 - INFO - input variables: [{"cutoff": 3.0, "reslow1": "", "cflag": 0, "reslow2": "", "app": "two_body_grid", "highrg": 400.0, "pos": [-20.0, -20.0, -20.0], "lowrg": 0.0, "zflag": 0, "accpos": 0, "ofile": "run_0.dcd", "nsegments2": "", "nsegments1": "", "nexsegments1": 0, "basis": "CA", "numcont1": "", "numcont2": "", "confile": "two_body_grid_constraints.txt", "zcutoff": -80.0, "theta": [2, 2, 2], "dtrans": [20.0, 20.0, 20.0], "pdbmol1": "iase1.pdb", "pdbmol2": "iase2.pdb", "dtheta": [45.0, 45.0, 45.0], "path": "./", "nexsegments2": 0, "runname": "run_0", "trans": [2, 2, 2]}]
+2017-06-27 13:18:34,702 - module_utilities.py - general_setup - 75 - INFO - setting runpath directory to : run_0/two_body_grid
+2017-06-27 13:18:34,703 - module_utilities.py - general_setup - 82 - INFO - creating directory : run_0/two_body_grid
+2017-06-27 13:18:34,703 - two_body_grid.py - initialization - 157 - DEBUG - in initialization
+2017-06-27 13:18:34,703 - two_body_grid.py - initialization - 178 - DEBUG - {'cutoff': 3.0, 'reslow1': '', 'cflag': 0, 'reslow2': '', 'app': 'two_body_grid', 'highrg': 400.0, 'pos': [-20.0, -20.0, -20.0], 'lowrg': 0.0, 'zflag': 0, 'path': './', 'ofile': 'run_0.dcd', 'nsegments2': '', 'nsegments1': '', 'nexsegments1': 0, 'basis': 'CA', 'numcont1': '', 'numcont2': '', 'confile': 'two_body_grid_constraints.txt', 'zcutoff': -80.0, 'theta': [2, 2, 2], 'dtrans': [20.0, 20.0, 20.0], 'pdbmol1': 'iase1.pdb', 'pdbmol2': 'iase2.pdb', 'dtheta': [45.0, 45.0, 45.0], 'accpos': 0, 'nexsegments2': 0, 'runname': 'run_0', 'trans': [2, 2, 2]}
+2017-06-27 13:18:34,703 - two_body_grid.py - initialization - 179 - DEBUG - {'genpaths': 'run_0/two_body_grid/'}
+2017-06-27 13:18:34,703 - two_body_grid.py - two_body_grid - 528 - DEBUG - in two_body_grid
+2017-06-27 13:18:36,277 - module_utilities.py - print_gui - 148 - INFO - 
+============================================================ 
+
+2017-06-27 13:18:36,282 - module_utilities.py - print_gui - 148 - INFO - DATA FROM RUN: Tue Jun 27 17:18:36 2017 
+
+
+2017-06-27 13:18:36,283 - two_body_grid.py - two_body_grid - 562 - DEBUG - mm1 = [array([-50.36299896, -65.6269989 ,   4.05100012]), array([ 29.98699951,  79.93699646,  93.22100067])]
+2017-06-27 13:18:36,284 - two_body_grid.py - two_body_grid - 563 - DEBUG - mm2 = [array([ -64.14299774,  -67.46900177, -105.41799927]), array([ -1.38100004,  65.65200043,   3.88899994])]
+2017-06-27 13:18:36,284 - two_body_grid.py - two_body_grid - 571 - DEBUG - segment_names_1 = ['']
+2017-06-27 13:18:36,284 - two_body_grid.py - two_body_grid - 572 - DEBUG - segment_names_2 = ['']
+2017-06-27 13:18:36,284 - two_body_grid.py - two_body_grid - 588 - DEBUG - basis1st = name[i] == 'CA'
+2017-06-27 13:18:36,284 - two_body_grid.py - two_body_grid - 605 - DEBUG - basis2st = name[i] == 'CA'
+2017-06-27 13:18:36,885 - module_utilities.py - print_gui - 148 - INFO - total mass1 = 78554.548311
+2017-06-27 13:18:36,885 - module_utilities.py - print_gui - 148 - INFO - total mass2 = 78184.102611
+2017-06-27 13:18:36,886 - module_utilities.py - print_gui - 148 - INFO - total mass3 = 156738.650922
+2017-06-27 13:18:36,886 - module_utilities.py - print_gui - 148 - INFO - mass 1 + mass 2 = 156738.650922
+2017-06-27 13:18:38,489 - module_utilities.py - print_gui - 148 - INFO - 
+TOTAL NUMBER OF TRIALS = 64
+2017-06-27 13:18:38,490 - module_utilities.py - print_gui - 148 - INFO - 
+MAXIUMUM FINAL DCD FILE SIZE (MB) = 16.2092285156
+2017-06-27 13:18:38,490 - module_utilities.py - print_gui - 148 - INFO - MAXIUMUM FINAL DCD FILE SIZE (GB) = 0.0158293247223
+2017-06-27 13:18:38,490 - module_utilities.py - print_gui - 148 - INFO - 
+
+STARTING GRID MOVES
+
+
+2017-06-27 13:18:38,490 - module_utilities.py - print_gui - 148 - INFO - 
+starting i = 1 of 2
+2017-06-27 13:18:38,490 - module_utilities.py - print_gui - 148 - INFO - ntrials = 0
+2017-06-27 13:18:38,490 - module_utilities.py - print_gui - 148 - INFO - naccepted = 0
+2017-06-27 13:18:38,491 - module_utilities.py - print_gui - 148 - INFO - nfail = 0
+
+2017-06-27 13:18:38,493 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.015625
+2017-06-27 13:18:38,535 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.03125
+2017-06-27 13:18:38,556 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.046875
+2017-06-27 13:18:38,576 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.0625
+2017-06-27 13:18:38,598 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.078125
+2017-06-27 13:18:38,618 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.09375
+2017-06-27 13:18:38,641 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.109375
+2017-06-27 13:18:38,661 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.125
+2017-06-27 13:18:38,682 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.140625
+2017-06-27 13:18:38,684 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.15625
+2017-06-27 13:18:38,705 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.171875
+2017-06-27 13:18:38,707 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.1875
+2017-06-27 13:18:38,711 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.203125
+2017-06-27 13:18:38,713 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.21875
+2017-06-27 13:18:38,717 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.234375
+2017-06-27 13:18:38,719 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.25
+2017-06-27 13:18:38,723 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.265625
+2017-06-27 13:18:38,743 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.28125
+2017-06-27 13:18:38,747 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.296875
+2017-06-27 13:18:38,767 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.3125
+2017-06-27 13:18:38,789 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.328125
+2017-06-27 13:18:38,809 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.34375
+2017-06-27 13:18:38,830 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.359375
+2017-06-27 13:18:38,852 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.375
+2017-06-27 13:18:38,873 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.390625
+2017-06-27 13:18:38,874 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.40625
+2017-06-27 13:18:38,876 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.421875
+2017-06-27 13:18:38,878 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.4375
+2017-06-27 13:18:38,880 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.453125
+2017-06-27 13:18:38,882 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.46875
+2017-06-27 13:18:38,884 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.484375
+2017-06-27 13:18:38,885 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.5
+2017-06-27 13:18:38,886 - module_utilities.py - print_gui - 148 - INFO - 
+starting i = 2 of 2
+2017-06-27 13:18:38,886 - module_utilities.py - print_gui - 148 - INFO - ntrials = 32
+2017-06-27 13:18:38,886 - module_utilities.py - print_gui - 148 - INFO - naccepted = 16
+2017-06-27 13:18:38,886 - module_utilities.py - print_gui - 148 - INFO - nfail = 16
+
+2017-06-27 13:18:38,886 - module_utilities.py - print_gui - 148 - INFO - 
+percent acceptance = 50.0
+
+2017-06-27 13:18:38,889 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.515625
+2017-06-27 13:18:38,909 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.53125
+2017-06-27 13:18:38,931 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.546875
+2017-06-27 13:18:38,933 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.5625
+2017-06-27 13:18:38,955 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.578125
+2017-06-27 13:18:38,975 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.59375
+2017-06-27 13:18:38,996 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.609375
+2017-06-27 13:18:39,016 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.625
+2017-06-27 13:18:39,020 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.640625
+2017-06-27 13:18:39,022 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.65625
+2017-06-27 13:18:39,042 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.671875
+2017-06-27 13:18:39,064 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.6875
+2017-06-27 13:18:39,086 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.703125
+2017-06-27 13:18:39,087 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.71875
+2017-06-27 13:18:39,089 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.734375
+2017-06-27 13:18:39,092 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.75
+2017-06-27 13:18:39,096 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.765625
+2017-06-27 13:18:39,116 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.78125
+2017-06-27 13:18:39,137 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.796875
+2017-06-27 13:18:39,138 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.8125
+2017-06-27 13:18:39,141 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.828125
+2017-06-27 13:18:39,162 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.84375
+2017-06-27 13:18:39,182 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.859375
+2017-06-27 13:18:39,202 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.875
+2017-06-27 13:18:39,224 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.890625
+2017-06-27 13:18:39,248 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.90625
+2017-06-27 13:18:39,250 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.921875
+2017-06-27 13:18:39,251 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.9375
+2017-06-27 13:18:39,254 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.953125
+2017-06-27 13:18:39,256 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.96875
+2017-06-27 13:18:39,258 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.984375
+2017-06-27 13:18:39,259 - module_utilities.py - print_gui - 148 - INFO - STATUS	1.0
+2017-06-27 13:18:39,259 - module_utilities.py - print_gui - 148 - INFO - STATUS	1.0
+2017-06-27 13:18:40,262 - module_utilities.py - print_gui - 148 - INFO - 
+percent acceptance = 50.0
+2017-06-27 13:18:40,262 - module_utilities.py - print_gui - 148 - INFO - 
+Configurations and statistics saved in ./run_0/two_body_grid/ directory
+
+
+2017-06-27 13:18:40,263 - module_utilities.py - print_gui - 148 - INFO - 
+============================================================ 
+
+2017-06-27 13:18:41,288 - two_body_grid.py - epilogue - 655 - DEBUG - in epilogue
+2017-06-27 13:18:41,288 - module_utilities.py - clean_up - 157 - DEBUG - in clean_up
+2017-06-27 13:18:41,294 - module_utilities.py - print_gui - 148 - INFO - 
+============================================================ 
+
+2017-06-27 13:18:41,295 - module_utilities.py - print_gui - 148 - INFO - TWO BODY GRID IS DONE

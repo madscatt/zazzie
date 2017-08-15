@@ -1,0 +1,43 @@
+#Date: Wed Mar 29 19:29:09 2017
+
+#Files used: skp_trimer.pdb (1), ompA.pdb (1)
+
+#Solvent Components:
+#Component, molar conc, volume (A^3), Mw (kDA), x-ray SL, neutron SL (10^-12 cm), x-ray SLD, neutron SLD (10^10 cm^-2)
+#	H2O	 55.51	 29.9	 0.018	  2.820	 -0.168	  9.428	 -0.561
+
+#XRAY Contrast (10^10 cm^-2):
+#Protein, Complex
+#  2.865	  2.865
+
+#NEUTRON Contrast:
+#Protein Match Point: 43.84 %D2O
+#60.0 %D Protein Match Point: 87.39 %D2O
+#Complex Match Point: 62.71 %D2O
+
+#Fraction of exchanged protein hydrogens: 0.95
+#Fraction of exchanged nucleic acid hydrogens: 1.00
+
+#NEUTRON Contrast (10^10 cm^-2):
+# frac D2O, Protein, 60.0 %D Protein, Complex
+ 0.00	  2.417	  5.062	  3.533
+ 0.05	  2.142	  4.773	  3.252
+ 0.10	  1.867	  4.484	  2.971
+ 0.15	  1.592	  4.195	  2.690
+ 0.20	  1.316	  3.906	  2.408
+ 0.25	  1.041	  3.616	  2.127
+ 0.30	  0.765	  3.327	  1.846
+ 0.35	  0.490	  3.038	  1.564
+ 0.40	  0.214	  2.748	  1.282
+ 0.45	 -0.062	  2.458	  1.000
+ 0.50	 -0.338	  2.169	  0.719
+ 0.55	 -0.614	  1.879	  0.437
+ 0.60	 -0.891	  1.589	  0.154
+ 0.65	 -1.167	  1.299	 -0.128
+ 0.70	 -1.443	  1.009	 -0.410
+ 0.75	 -1.720	  0.719	 -0.693
+ 0.80	 -1.997	  0.428	 -0.975
+ 0.85	 -2.274	  0.138	 -1.258
+ 0.90	 -2.551	 -0.152	 -1.541
+ 0.95	 -2.828	 -0.443	 -1.823
+ 1.00	 -3.105	 -0.733	 -2.106

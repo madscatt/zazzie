@@ -8,6 +8,14 @@ from __future__ import print_function
     This is free software, and you are welcome to redistribute it under certain
     conditions; see http://www.gnu.org/licenses/gpl-3.0.html for details.
 '''
+'''
+Python 2.7.12 |Anaconda 4.2.0 (64-bit)| (default, Jul  2 2016, 17:42:40)
+[GCC 4.4.7 20120313 (Red Hat 4.4.7-1)] on linux2
+
+sudo /share/apps/local/anacondaz/bin/conda install libgcc
+'''
+
+
 import os
 import sys
 import string

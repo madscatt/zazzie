@@ -1,0 +1,52 @@
+#Date: Wed Mar 29 18:43:14 2017
+
+#Files used: c36_dsDNA60_min.pdb (1)
+
+#Chemical formulas used: 1. H48C36O36, 2. H48C36O36
+
+#Solvent Components:
+#Component, molar conc, volume (A^3), Mw (kDA), x-ray SL, neutron SL (10^-12 cm), x-ray SLD, neutron SLD (10^10 cm^-2)
+#	H2O	 55.51	 29.9	 0.018	  2.820	 -0.168	  9.428	 -0.561
+#	Na1Cl1	  0.15	 29.3	 0.058	  7.896	  1.321	 26.958	  4.509
+#	K1Cl1	  0.05	 35.9	 0.075	 10.152	  1.325	 28.318	  3.695
+#Totals: x-ray SL, neutron SL (10^-12 cm), x-ray SLD, neutron SLD (10^10 cm^-2)
+#	157.636	 -9.020	  9.494	 -0.543
+
+#XRAY Contrast (10^10 cm^-2):
+#NA, Molecule 1, Molecule 2, Complex
+#  6.095	  0.265	  2.039	  5.828
+
+#NEUTRON Contrast:
+#Molecule 1 Match Point: 35.84 %D2O
+#Molecule 2 Match Point: 37.44 %D2O
+#DNA Match Point: 63.33 %D2O
+#Complex Match Point: 61.84 %D2O
+
+#Fraction of exchanged protein hydrogens: 0.95
+#Fraction of exchanged nucleic acid hydrogens: 1.00
+#Fraction of exchanged molecule 1 hydrogens: 0.95
+#Fraction of exchanged molecule 2 hydrogens: 0.45
+
+#NEUTRON Contrast (10^10 cm^-2):
+# frac D2O, DNA, Molecule 1, Molecule 2, Complex
+ 0.00	  3.953	  2.227	  2.533	  3.868
+ 0.05	  3.641	  1.917	  2.195	  3.555
+ 0.10	  3.329	  1.606	  1.857	  3.243
+ 0.15	  3.017	  1.296	  1.518	  2.930
+ 0.20	  2.705	  0.985	  1.180	  2.617
+ 0.25	  2.393	  0.674	  0.842	  2.305
+ 0.30	  2.081	  0.364	  0.503	  1.992
+ 0.35	  1.769	  0.053	  0.165	  1.679
+ 0.40	  1.457	 -0.258	 -0.173	  1.366
+ 0.45	  1.145	 -0.569	 -0.512	  1.054
+ 0.50	  0.832	 -0.880	 -0.850	  0.741
+ 0.55	  0.520	 -1.190	 -1.188	  0.428
+ 0.60	  0.208	 -1.501	 -1.527	  0.115
+ 0.65	 -0.104	 -1.812	 -1.865	 -0.198
+ 0.70	 -0.416	 -2.123	 -2.203	 -0.511
+ 0.75	 -0.729	 -2.434	 -2.542	 -0.823
+ 0.80	 -1.041	 -2.746	 -2.880	 -1.136
+ 0.85	 -1.353	 -3.057	 -3.218	 -1.449
+ 0.90	 -1.665	 -3.368	 -3.557	 -1.762
+ 0.95	 -1.978	 -3.679	 -3.895	 -2.075
+ 1.00	 -2.290	 -3.990	 -4.233	 -2.388

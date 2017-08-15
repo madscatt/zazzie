@@ -1,0 +1,64 @@
+Date		Time		File		Method		Line	Level	Message
+2016-11-04 11:29:11,272 - module_utilities.py - setup_logging - 133 - DEBUG - in setup_logging
+2016-11-04 11:29:11,273 - module_utilities.py - setup_logging - 134 - INFO - Program started
+2016-11-04 11:29:11,273 - module_utilities.py - preamble - 95 - DEBUG - in preamble
+2016-11-04 11:29:11,273 - module_utilities.py - preamble - 98 - INFO - module_application : sascalc
+2016-11-04 11:29:11,273 - module_utilities.py - preamble - 99 - INFO - executed by user : jobrunner on Fri Nov  4 11:29:11 2016
+2016-11-04 11:29:11,273 - module_utilities.py - preamble - 100 - INFO - current directory : /share/apps/genapp/sassie2/results/users/skrueger/demo
+2016-11-04 11:29:11,280 - module_utilities.py - preamble - 101 - INFO - hostname : compute-0-1.local
+2016-11-04 11:29:11,280 - sascalc.py - main - 63 - DEBUG - in main
+2016-11-04 11:29:11,280 - sascalc.py - unpack_variables - 83 - DEBUG - in unpack_variables
+2016-11-04 11:29:11,280 - sascalc.py - unpack_variables - 120 - DEBUG - {'dcdfile': u'/share/apps/genapp/sassie2/results/users/skrueger/demo/hiv1_gag_20_frames.dcd', 'deuterated_basis_string_array': [''], 'app': 'sascalc', 'number_exH_regions': 1, 'solvent_volume': 20.0, 'number_r_values': 51, 'number_q_values': 31, 'VDW_scaling_factor': 0.77, 'exH_basis_string_array': ['moltype protein'], 'xon': 'neutron', 'fraction_deuterated_array': [0.0], 'complex_amplitudes': False, 'I0_array': [1.0, 1.0], 'number_contrast_points': 2, 'q_max': 0.3, 'number_deuteration_regions': 0, 'fraction_exH_array': [0.95], 'number_golden_vectors': 35, 'golden_vector_method_option': 'fixed', 'pdbfile': u'/share/apps/genapp/sassie2/results/users/skrueger/demo/hiv1_gag.pdb', 'runname': u'run_0', 'D2O_percentage_array': [100.0, 0.0]}
+2016-11-04 11:29:11,281 - module_utilities.py - general_setup - 58 - DEBUG - in general_setup
+2016-11-04 11:29:11,281 - module_utilities.py - write_json_file - 22 - DEBUG - in write_json_file
+2016-11-04 11:29:11,281 - module_utilities.py - write_json_file - 24 - INFO - writing json files with input variables
+2016-11-04 11:29:11,282 - module_utilities.py - write_json_file - 28 - INFO - writing parameters to sascalc_20161104-112911.sassie_json
+2016-11-04 11:29:11,298 - module_utilities.py - write_json_file - 32 - INFO - backing up existing .last_sas.json file to .last_sas.json_backup
+2016-11-04 11:29:11,305 - module_utilities.py - write_json_file - 36 - INFO - backing up existing .last_sas_sascalc.json file to .last_sas_sascalc.json_backup
+2016-11-04 11:29:11,306 - module_utilities.py - write_json_file - 40 - INFO - writing parameters to .last_sas.json file
+2016-11-04 11:29:11,307 - module_utilities.py - write_json_file - 44 - INFO - writing parameters to .last_sas_sascalc.json file
+2016-11-04 11:29:11,308 - module_utilities.py - write_json_file - 46 - INFO - input variables: [{"dcdfile": "/share/apps/genapp/sassie2/results/users/skrueger/demo/hiv1_gag_20_frames.dcd", "deuterated_basis_string_array": [""], "app": "sascalc", "number_exH_regions": 1, "solvent_volume": 20.0, "number_r_values": 51, "number_q_values": 31, "VDW_scaling_factor": 0.77, "exH_basis_string_array": ["moltype protein"], "xon": "neutron", "fraction_deuterated_array": [0.0], "complex_amplitudes": false, "I0_array": [1.0, 1.0], "number_contrast_points": 2, "q_max": 0.3, "number_deuteration_regions": 0, "fraction_exH_array": [0.95], "number_golden_vectors": 35, "golden_vector_method_option": "fixed", "pdbfile": "/share/apps/genapp/sassie2/results/users/skrueger/demo/hiv1_gag.pdb", "runname": "run_0", "D2O_percentage_array": [100.0, 0.0]}]
+2016-11-04 11:29:11,308 - module_utilities.py - general_setup - 75 - INFO - setting runpath directory to : run_0/sascalc
+2016-11-04 11:29:11,310 - module_utilities.py - general_setup - 82 - INFO - creating directory : run_0/sascalc
+2016-11-04 11:29:11,310 - sascalc.py - initialization - 130 - DEBUG - in initialization
+2016-11-04 11:29:13,970 - sascalc.py - run - 222 - DEBUG - in SasCalc
+2016-11-04 11:29:13,970 - module_utilities.py - print_gui - 148 - INFO - 
+============================================================ 
+
+2016-11-04 11:29:13,971 - module_utilities.py - print_gui - 148 - INFO - DATA FROM RUN: Fri Nov  4 15:29:13 2016 
+
+
+2016-11-04 11:29:20,985 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.05
+2016-11-04 11:29:21,345 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.1
+2016-11-04 11:29:21,703 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.15
+2016-11-04 11:29:22,063 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.2
+2016-11-04 11:29:22,421 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.25
+2016-11-04 11:29:22,781 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.3
+2016-11-04 11:29:23,140 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.35
+2016-11-04 11:29:23,499 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.4
+2016-11-04 11:29:23,858 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.45
+2016-11-04 11:29:24,218 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.5
+2016-11-04 11:29:24,579 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.55
+2016-11-04 11:29:24,940 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.6
+2016-11-04 11:29:25,300 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.65
+2016-11-04 11:29:25,660 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.7
+2016-11-04 11:29:26,021 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.75
+2016-11-04 11:29:26,381 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.8
+2016-11-04 11:29:26,740 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.85
+2016-11-04 11:29:27,100 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.9
+2016-11-04 11:29:27,459 - module_utilities.py - print_gui - 148 - INFO - STATUS	0.95
+2016-11-04 11:29:27,821 - module_utilities.py - print_gui - 148 - INFO - STATUS	1.0
+2016-11-04 11:29:27,821 - module_utilities.py - print_gui - 148 - INFO - 
+Processed 20 DCD frame(s)
+
+2016-11-04 11:29:27,821 - module_utilities.py - print_gui - 148 - INFO - 
+Data stored in directory: run_0/sascalc/neutron_D2Op_100
+
+2016-11-04 11:29:27,821 - module_utilities.py - print_gui - 148 - INFO - 
+Data stored in directory: run_0/sascalc/neutron_D2Op_0
+
+2016-11-04 11:29:28,271 - sascalc.py - epilogue - 274 - DEBUG - in epilogue
+2016-11-04 11:29:28,271 - module_utilities.py - clean_up - 157 - DEBUG - in clean_up
+2016-11-04 11:29:28,292 - module_utilities.py - print_gui - 148 - INFO - 
+============================================================ 
+

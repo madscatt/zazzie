@@ -1,0 +1,49 @@
+#Date: Wed Mar 29 19:09:04 2017
+
+#Chemical formulas used: 1. H48C36O36, 2. H48C36O36
+
+#Solvent Components:
+#Component, molar conc, volume (A^3), Mw (kDA), x-ray SL, neutron SL (10^-12 cm), x-ray SLD, neutron SLD (10^10 cm^-2)
+#	H2O	 55.51	 29.9	 0.018	  2.820	 -0.168	  9.428	 -0.561
+#	Na1Cl1	  0.15	 29.3	 0.058	  7.896	  1.321	 26.958	  4.509
+#	K1Cl1	  0.05	 35.9	 0.075	 10.152	  1.325	 28.318	  3.695
+#Totals: x-ray SL, neutron SL (10^-12 cm), x-ray SLD, neutron SLD (10^10 cm^-2)
+#	157.636	 -9.020	  9.494	 -0.543
+
+#XRAY Contrast (10^10 cm^-2):
+#Molecule 1, Molecule 2, Complex
+#  0.265	  2.039	  1.152
+
+#NEUTRON Contrast:
+#Molecule 1 Match Point: 35.84 %D2O
+#Molecule 2 Match Point: 37.44 %D2O
+#Complex Match Point: 36.67 %D2O
+
+#Fraction of exchanged protein hydrogens: 0.95
+#Fraction of exchanged nucleic acid hydrogens: 1.00
+#Fraction of exchanged molecule 1 hydrogens: 0.95
+#Fraction of exchanged molecule 2 hydrogens: 0.45
+
+#NEUTRON Contrast (10^10 cm^-2):
+# frac D2O, Molecule 1, Molecule 2, Complex
+ 0.00	  2.227	  2.533	  2.380
+ 0.05	  1.917	  2.195	  2.056
+ 0.10	  1.606	  1.857	  1.731
+ 0.15	  1.296	  1.518	  1.407
+ 0.20	  0.985	  1.180	  1.082
+ 0.25	  0.674	  0.842	  0.758
+ 0.30	  0.364	  0.503	  0.433
+ 0.35	  0.053	  0.165	  0.109
+ 0.40	 -0.258	 -0.173	 -0.216
+ 0.45	 -0.569	 -0.512	 -0.540
+ 0.50	 -0.880	 -0.850	 -0.865
+ 0.55	 -1.190	 -1.188	 -1.189
+ 0.60	 -1.501	 -1.527	 -1.514
+ 0.65	 -1.812	 -1.865	 -1.839
+ 0.70	 -2.123	 -2.203	 -2.163
+ 0.75	 -2.434	 -2.542	 -2.488
+ 0.80	 -2.746	 -2.880	 -2.813
+ 0.85	 -3.057	 -3.218	 -3.137
+ 0.90	 -3.368	 -3.557	 -3.462
+ 0.95	 -3.679	 -3.895	 -3.787
+ 1.00	 -3.990	 -4.233	 -4.111

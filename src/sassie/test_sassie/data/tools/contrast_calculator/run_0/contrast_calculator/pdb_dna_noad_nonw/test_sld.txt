@@ -1,0 +1,42 @@
+#Date: Wed Mar 29 14:43:46 2017
+
+#Files used: c36_dsDNA60_min.pdb (1)
+
+#Solvent Components:
+#Component, molar conc, volume (A^3), Mw (kDA), x-ray SL, neutron SL (10^-12 cm), x-ray SLD, neutron SLD (10^10 cm^-2)
+#	H2O	 55.51	 29.9	 0.018	  2.820	 -0.168	  9.428	 -0.561
+
+#XRAY SLD (10^10 cm^-2):
+#NA, Complex, Solvent
+# 15.589	 15.589	  9.428
+
+#NEUTRON SLDs:
+#DNA Match Point: 63.35 %D2O
+#Complex Match Point: 63.35 %D2O
+
+#Fraction of exchanged protein hydrogens: 0.95
+#Fraction of exchanged nucleic acid hydrogens: 1.00
+
+#NEUTRON SLDs (10^10 cm^-2):
+# frac D2O, DNA, Complex, Solvent
+ 0.00	  3.409	  3.409	 -0.561
+ 0.05	  3.444	  3.444	 -0.213
+ 0.10	  3.479	  3.479	  0.135
+ 0.15	  3.514	  3.514	  0.483
+ 0.20	  3.549	  3.549	  0.831
+ 0.25	  3.584	  3.584	  1.179
+ 0.30	  3.618	  3.618	  1.527
+ 0.35	  3.653	  3.653	  1.875
+ 0.40	  3.688	  3.688	  2.223
+ 0.45	  3.722	  3.722	  2.571
+ 0.50	  3.757	  3.757	  2.920
+ 0.55	  3.792	  3.792	  3.268
+ 0.60	  3.826	  3.826	  3.616
+ 0.65	  3.861	  3.861	  3.964
+ 0.70	  3.895	  3.895	  4.312
+ 0.75	  3.930	  3.930	  4.660
+ 0.80	  3.965	  3.965	  5.008
+ 0.85	  3.999	  3.999	  5.356
+ 0.90	  4.034	  4.034	  5.704
+ 0.95	  4.068	  4.068	  6.052
+ 1.00	  4.102	  4.102	  6.400

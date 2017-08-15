@@ -1,0 +1,53 @@
+read
+	mol pqr junk.pqr
+end
+elec
+	mg-auto
+	dime 353 193 289
+	cglen	49.845699	33.602199	34.851701
+	fglen	38.117299	25.695799	26.651301
+	cgcent mol 1
+	fgcent mol 1
+	mol 1
+	lpbe
+	bcfl sdh
+	ion	1.000000	0.150000	1.620000
+	ion	-1.000000	0.150000	1.620000
+	pdie 2.0000
+	sdie 78.5400
+	srfm smol
+	chgm spl2
+	sdens 10.00
+	srad 1.40
+	swin 0.30
+	temp	300.000000
+	calcenergy total
+	calcforce no
+end
+elec
+	mg-auto
+	dime 353 193 289
+	cglen	49.845699	33.602199	34.851701
+	fglen	38.117299	25.695799	26.651301
+	cgcent mol 1
+	fgcent mol 1
+	mol 1
+	lpbe
+	bcfl sdh
+	ion	1.000000	0.150000	1.620000
+	ion	-1.000000	0.150000	1.620000
+	pdie 2.0000
+	sdie 2.0000
+	srfm smol
+	chgm spl2
+	sdens 10.00
+	srad 1.40
+	swin 0.30
+	temp	300.000000
+	calcenergy total
+	calcforce no
+end
+print elecEnergy 1 end
+print elecEnergy 2 end
+print elecEnergy 2 - 1 end
+quit

@@ -1,0 +1,53 @@
+#Date: Wed Mar 29 18:43:14 2017
+
+#Files used: c36_dsDNA60_min.pdb (1)
+
+#Chemical formulas used: 1. H48C36O36, 2. H48C36O36
+
+#Solvent Components:
+#Component, molar conc, volume (A^3), Mw (kDA), x-ray SL, neutron SL (10^-12 cm), x-ray SLD, neutron SLD (10^10 cm^-2)
+#	H2O	 55.51	 29.9	 0.018	  2.820	 -0.168	  9.428	 -0.561
+#	Na1Cl1	  0.15	 29.3	 0.058	  7.896	  1.321	 26.958	  4.509
+#	K1Cl1	  0.05	 35.9	 0.075	 10.152	  1.325	 28.318	  3.695
+#Totals: x-ray SL, neutron SL (10^-12 cm), x-ray SLD, neutron SLD (10^10 cm^-2)
+#	157.636	 -9.020	  9.494	 -0.543
+
+#Complex concentration:  1.0 mg/ml
+
+#XRAY I(0):
+#NA Mw, Molecule 1 Mw, Molecule 2 Mw, Complex Mw (kDa), I(0) (cm^-1)
+#  37.049	   1.057	   1.057	  39.162	  0.070
+
+#NEUTRONS:
+#Molecule 1 Match Point: 35.84 %D2O
+#Molecule 2 Match Point: 37.44 %D2O
+#DNA Match Point: 63.33 %D2O
+#Complex Match Point: 61.84 %D2O
+
+#Fraction of exchanged protein hydrogens: 0.95
+#Fraction of exchanged nucleic acid hydrogens: 1.00
+#Fraction of exchanged molecule 1 hydrogens: 0.95
+#Fraction of exchanged molecule 2 hydrogens: 0.45
+
+# frac D2O, DNA Mw, Molecule 1 Mw, Molecule 2 Mw, Complex Mw (kDa), I(0) (cm^-1), sqrtI(0)
+ 0.00	  37.049	   1.057	   1.057	  39.162	  0.031	  0.177
+ 0.05	  37.061	   1.057	   1.057	  39.175	  0.026	  0.162
+ 0.10	  37.073	   1.058	   1.057	  39.188	  0.022	  0.148
+ 0.15	  37.085	   1.058	   1.057	  39.200	  0.018	  0.134
+ 0.20	  37.097	   1.059	   1.057	  39.213	  0.014	  0.119
+ 0.25	  37.108	   1.060	   1.057	  39.225	  0.011	  0.105
+ 0.30	  37.120	   1.060	   1.057	  39.238	  0.008	  0.090
+ 0.35	  37.132	   1.061	   1.058	  39.251	  0.006	  0.076
+ 0.40	  37.144	   1.061	   1.058	  39.263	  0.004	  0.062
+ 0.45	  37.156	   1.062	   1.058	  39.276	  0.002	  0.047
+ 0.50	  37.168	   1.062	   1.058	  39.288	  0.001	  0.033
+ 0.55	  37.180	   1.063	   1.058	  39.301	  0.000	  0.018
+ 0.60	  37.192	   1.064	   1.058	  39.313	  0.000	  0.004
+ 0.65	  37.204	   1.064	   1.058	  39.326	  0.000	 -0.011
+ 0.70	  37.216	   1.065	   1.058	  39.339	  0.001	 -0.025
+ 0.75	  37.227	   1.065	   1.058	  39.351	  0.002	 -0.040
+ 0.80	  37.239	   1.066	   1.059	  39.364	  0.003	 -0.054
+ 0.85	  37.251	   1.066	   1.059	  39.376	  0.005	 -0.068
+ 0.90	  37.263	   1.067	   1.059	  39.389	  0.007	 -0.083
+ 0.95	  37.275	   1.068	   1.059	  39.402	  0.009	 -0.097
+ 1.00	  37.287	   1.068	   1.059	  39.414	  0.013	 -0.112
