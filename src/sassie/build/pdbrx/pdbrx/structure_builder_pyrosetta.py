@@ -1,14 +1,17 @@
-import rosetta
+#import rosetta
+import pyrosetta
+from pyrosetta import rosetta
 
 #args = '-chemical:exclude_patches VirtualDNAPhosphate'
 #args = '-add_orbitals'
 #rosetta.init(extra_options=args)
 
-rosetta.init()
+#rosetta.init()
+pyrosetta.init()
 
-from rosetta.protocols.grafting import CCDEndsGraftMover
-from rosetta.protocols.loops.loop_closure.ccd import CCDLoopClosureMover
-from rosetta.protocols.loops.loop_mover.refine import LoopMover_Refine_CCD
+from pyrosetta.rosetta.protocols.grafting import CCDEndsGraftMover
+from pyrosetta.rosetta.protocols.loops.loop_closure.ccd import CCDLoopClosureMover
+from pyrosetta.rosetta.protocols.loops.loop_mover.refine import LoopMover_Refine_CCD
 
 import salign
 
@@ -27,14 +30,15 @@ class StructureBuilderPyRosetta():
         self.res_type = 'fa_standard'
 
         # Load pose from input PDB file
-        self.scaffold_pose =  rosetta.pose_from_pdb(scaffold_pdb)
+        self.scaffold_pose =  pyrosetta.pose_from_pdb(scaffold_pdb)
 
         # Gap descriptions as list of lists:
         # [[pre_anchor, post_anchor, pre_flank, gap, post_flank], ...]
         self.gap_descriptions = gap_descriptions
         self.gap_descriptions.sort(key=lambda x:x[0],reverse=True)
 
-        self.Loops = rosetta.Loops()
+        #self.Loops = rosetta.Loops()
+        self.Loops = rosetta.protocols.loops.Loops()
 
         self.loop_list = []
 
@@ -107,7 +111,7 @@ class StructureBuilderPyRosetta():
 
         frag_range = range(1,overhang_len + 1)
 
-        frag_pose = rosetta.pose_from_sequence(seq_overhang,self.res_type, auto_termini=False)
+        frag_pose = pyrosetta.pose_from_sequence(seq_overhang,self.res_type, auto_termini=False)
 
         aligned_frag = salign.kabsch_alignment(self.scaffold_pose, frag_pose, scaffold_range, frag_range)
 
@@ -120,7 +124,7 @@ class StructureBuilderPyRosetta():
 
         self.scaffold_pose.pdb_info().obsolete(False)
 
-        loop = rosetta.Loop(start_res, start_res+2, start_res+1)
+        loop = rosetta.protocols.loops.Loop(start_res, start_res+2, start_res+1)
 
         return loop
 
@@ -201,7 +205,7 @@ class StructureBuilderPyRosetta():
             nter_overlap_length = len(pre_flank_seq)
             cter_overlap_length = len(post_flank_seq)
 
-            frag_pose = rosetta.pose_from_sequence(seq_overhang,self.res_type, auto_termini=False)
+            frag_pose = pyrosetta.pose_from_sequence(seq_overhang,self.res_type, auto_termini=False)
 
             mover = CCDEndsGraftMover(start_res, end_res, frag_pose, nter_overlap_length, cter_overlap_length)
 
@@ -223,7 +227,7 @@ class StructureBuilderPyRosetta():
             loop_begin = self.scaffold_pose.pdb_info().pdb2pose(chain, anchors[0]) + 1
             loop_end = self.scaffold_pose.pdb_info().pdb2pose(chain,anchors[1]) - 1
 
-            loop = rosetta.Loop(loop_begin,loop_end,(loop_begin + loop_end)/2)
+            loop = rosetta.protocols.loops.Loop(loop_begin,loop_end,(loop_begin + loop_end)/2)
 
         return loop
 
@@ -246,7 +250,7 @@ class StructureBuilderPyRosetta():
 
         frag_seq = pre_flank_seq + seq
 
-        frag_pose = rosetta.pose_from_sequence(frag_seq, 'fa_standard', auto_termini=False)
+        frag_pose = pyrosetta.pose_from_sequence(frag_seq, 'fa_standard', auto_termini=False)
 
         # PDB resid of anchor
         start_anchor = anchors[0]
@@ -315,9 +319,9 @@ class StructureBuilderPyRosetta():
         end_res = self.get_last_residue_id_chain(self.scaffold_pose, chain)
 
         if len(frag_range) == 1:
-            loop = rosetta.Loop(original_end ,end_res-1, (original_end + end_res)/2)
+            loop = rosetta.protocols.loops.Loop(original_end ,end_res-1, (original_end + end_res)/2)
         else:
-            loop = rosetta.Loop(original_end-1 ,end_res-1, (original_end + end_res)/2)
+            loop = rosetta.protocols.loops.Loop(original_end-1 ,end_res-1, (original_end + end_res)/2)
 
         return loop
 
@@ -347,7 +351,7 @@ class StructureBuilderPyRosetta():
 
         frag_seq = seq + post_flank_seq
 
-        frag_pose = rosetta.pose_from_sequence(frag_seq, 'fa_standard', auto_termini=False)
+        frag_pose = pyrosetta.pose_from_sequence(frag_seq, 'fa_standard', auto_termini=False)
         logger.info("Fragment built")
 
         # PDB resid of anchor
@@ -406,9 +410,9 @@ class StructureBuilderPyRosetta():
         self.scaffold_pose.pdb_info().obsolete(False)
 
         if len(frag_range) == 1:
-            loop = rosetta.Loop(1 ,original_term, (1 + original_term)/2)
+            loop = rosetta.protocols.loops.Loop(1 ,original_term, (1 + original_term)/2)
         else:
-            loop = rosetta.Loop(1 ,original_term + 1, (1 + original_term + 1)/2)
+            loop = rosetta.protocols.loops.Loop(1 ,original_term + 1, (1 + original_term + 1)/2)
 
         logger.info("Loops generated")
 
@@ -428,12 +432,12 @@ class StructureBuilderPyRosetta():
 
         logger.info("Prepare refinement")
 
-        rosetta.add_single_cutpoint_variant(self.scaffold_pose, loop)
-        rosetta.set_single_loop_fold_tree(self.scaffold_pose, loop)
+        rosetta.protocols.loops.add_single_cutpoint_variant(self.scaffold_pose, loop)
+        rosetta.protocols.loops.set_single_loop_fold_tree(self.scaffold_pose, loop)
 
         loops.add_loop(loop)
 
-        move_map = rosetta.move_map_from_loop(self.scaffold_pose,loop,False)
+        move_map = rosetta.protocols.loops.move_map_from_loop(self.scaffold_pose,loop,False)
 
         logger.info("Preparation complete")
 
