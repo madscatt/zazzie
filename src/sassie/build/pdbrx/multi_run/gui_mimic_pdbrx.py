@@ -22,17 +22,24 @@ def user_variables(self, **kwargs):
     ### BEGIN USER INPUT ###
     ### BEGIN USER INPUT ###
 
-    svariables = {}
-
     runname = 'run_0'
     pdbfile = 'testing/data/5E3L.pdb'
-    topfile = os.path.join(sasconfig.__bin_path__,
+    topfile = os.path.join(sasconfig.__bin_path__, \
                            'toppar', 'top_all27_prot_na.inp')
     use_defaults = False
 
     #### end user input ####
     #### end user input ####
     #### end user input ####
+
+    if runname in kwargs:
+        runname = kwargs['runname']
+
+    if pdbfile in kwargs:
+        pdbfile = kwargs['pdbfile']
+
+    if use_defaults in kwargs:
+        use_defaults = kwargs['use_defaults']
 
     # logging.basicConfig()
 
@@ -43,9 +50,6 @@ def run_module(self, **kwargs):
     method is defined outside the class so that it can be used 
     by other programs such as test_module and test_module_filter
     '''
-
-    if 'multirun' in kwargs:
-        multirun = kwargs['multirun']    
 
     svariables = {}
 
@@ -94,12 +98,11 @@ class gui_mimic_pdbrx():
     def __init__(self, test, kwargs):
 
         if not test:
-            user_variables(self)
+            user_variables(self, kwargs)
         else:
             test_variables(self, paths)
 
-        run_module(self, kwargs)
-
+        run_module(self)
 
 if __name__ == '__main__':
 
@@ -107,5 +110,5 @@ if __name__ == '__main__':
     paths = None
 
     start = time.time()
-    run_gui = gui_mimic_pdbrx(test, multirun=False)
+    run_gui = gui_mimic_pdbrx(test)
     print "time used: ", time.time() - start
