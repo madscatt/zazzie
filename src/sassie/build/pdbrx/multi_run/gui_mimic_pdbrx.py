@@ -12,7 +12,7 @@ import sassie.interface.input_filter as input_filter
 #import sassie.interface.pdbrx_filter as pdbrx_filter
 import multiprocessing
 
-#import logging
+import logging
 
 sys.path.append('./')
 
@@ -22,26 +22,27 @@ def user_variables(self, **kwargs):
     ### BEGIN USER INPUT ###
     ### BEGIN USER INPUT ###
 
-    runname = 'run_0'
-    pdbfile = 'testing/data/5E3L.pdb'
-    topfile = os.path.join(sasconfig.__bin_path__, \
+    self.runname = 'run_0'
+    self.pdbfile = 'testing/data/5E3L.pdb'
+    self.topfile = os.path.join(sasconfig.__bin_path__, \
                            'toppar', 'top_all27_prot_na.inp')
-    use_defaults = False
+    self.use_defaults = False
 
     #### end user input ####
     #### end user input ####
     #### end user input ####
 
-    if runname in kwargs:
-        runname = kwargs['runname']
+    try:
+        if kwargs['runname']:
+            self.runname = kwargs['runname']
+        if kwargs['pdbfile']:
+            self.pdbfile = kwargs['pdbfile']
+        if kwargs['use_defaults']:
+            self.use_defaults = kwargs['use_defaults']
 
-    if pdbfile in kwargs:
-        pdbfile = kwargs['pdbfile']
+    except:
+        pass
 
-    if use_defaults in kwargs:
-        use_defaults = kwargs['use_defaults']
-
-    # logging.basicConfig()
 
 def run_module(self, **kwargs):
     '''
@@ -53,10 +54,10 @@ def run_module(self, **kwargs):
 
     svariables = {}
 
-    svariables['runname'] = (runname, 'string')
-    svariables['pdbfile'] = (pdbfile, 'string')
-    svariables['topfile'] = (topfile, 'string')
-    svariables['defaults'] = (use_defaults, 'boolean')
+    svariables['runname'] = (self.runname, 'string')
+    svariables['pdbfile'] = (self.pdbfile, 'string')
+    svariables['topfile'] = (self.topfile, 'string')
+    svariables['defaults'] = (self.use_defaults, 'boolean')
 
     error, self.variables = input_filter.type_check_and_convert(svariables)
 
@@ -83,8 +84,9 @@ def run_module(self, **kwargs):
 
     txtQueue = multiprocessing.JoinableQueue()
 
+    logging.basicConfig()
     scan = pdb_rx.PDBRx()
-    scan.main(variables, txtQueue)
+    scan.main(self.variables, txtQueue)
 
     this_text = txtQueue.get(True, timeout=0.1)
 
@@ -95,10 +97,10 @@ class gui_mimic_pdbrx():
     '''
     module = 'pdbrx'
 
-    def __init__(self, test, kwargs):
+    def __init__(self, test, **kwargs):
 
         if not test:
-            user_variables(self, kwargs)
+            user_variables(self, **kwargs)
         else:
             test_variables(self, paths)
 

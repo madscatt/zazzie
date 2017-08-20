@@ -27,6 +27,7 @@ import sassie.build.pdbrx.pdbrx as pdbrx
 
 import os
 import sys
+import time
 
 if sasconfig.__level__ == "DEBUG": DEBUG = True
 	
@@ -56,7 +57,9 @@ class PDBRx():
         self.run_utils.general_setup(self)
         
         self.run_scan()
-        
+       
+        self.epilogue()
+
         return
         
     def unpack_variables(self,variables):
@@ -73,8 +76,6 @@ class PDBRx():
         # TODO: Think about topology file
         
         return
-
-
 
     def run_scan(self):
 
@@ -127,11 +128,14 @@ class PDBRx():
 
             scaffold_builder.user_system_selection()
 
-        if not os.path.isdir('./tmp_struct'):
-            os.mkdir('./tmp_struct')
+        
+        tmp_struct_path = self.runpath + os.sep + 'tmp_struct'
+        if not os.path.isdir(tmp_struct_path):
+            os.mkdir(tmp_struct_path)
 
         pgui('Start structure completion')
-        structure_builder = pdbrx.structure_builder.StructureBuilder(scaffold_builder.scaffold_model, './tmp_struct')
+        structure_builder = pdbrx.structure_builder.StructureBuilder(scaffold_builder.scaffold_model,
+                                                 tmp_struct_path)
 
         completed_mol = structure_builder.complete_structure()
 
@@ -143,3 +147,19 @@ class PDBRx():
 
         psfgen.run_psfgen()
 
+
+    def epilogue(self):
+        '''
+        method to print out simulation results and to move results
+        to appropriate places.
+        '''
+
+        log = self.log
+        log.debug('in epilogue')
+        pgui = self.run_utils.print_gui
+
+        self.run_utils.clean_up(log)
+
+        #pgui('\n%s IS DONE\n' % app)
+        #pgui("\n"+"="*60+" \n")
+        time.sleep(0.1)
