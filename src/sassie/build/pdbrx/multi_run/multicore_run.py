@@ -4,10 +4,10 @@ import multiprocessing
 
 import traceback
 import time
+import math
 import sys
 sys.path.append('./')
 import gui_mimic_pdbrx
-
 
 class Process(multiprocessing.Process):
     def __init__(self, *args, **kwargs):
@@ -81,48 +81,7 @@ def main(all_pdb_files_directory, completed_pdb_files_directory, failed_pdb_file
     if(not os.path.exists(failed_pdb_files_directory)):
         os.system('mkdir ' + failed_pdb_files_directory)
 
-    start = []
-    end = []
-
-    remainder = number_of_files % number_of_cores
-    divisor = number_of_files / number_of_cores
-    print 'divisor = ', divisor
-    print 'remainder = ', remainder
-
-    '''
-number of pdb files found =  7
-divisor =  2
-remainder =  1
-start =  [0, 3, 6]
-end =  [2, 5, 6]
-	'''
-    '''
-number of pdb files found =  2
-divisor =  2
-remainder =  0
-start =  [0]
-end =  [-1]
-        '''
-
-    if number_of_files == 1:
-        start.append(0)
-        end.append(0)
-    elif number_of_files == 2:
-        start.append(0)
-        end.append(1)
-    else:
-        for i in xrange(number_of_cores):
-            if i < number_of_cores - 1:
-                this_start = i * (divisor + 1)
-                start.append(this_start)
-                end.append(this_start + divisor)
-            else:
-                this_start = i * (divisor + 1)
-                start.append(this_start)
-                end.append(this_start + remainder - 1)
-
-    print 'start = ', start
-    print 'end = ', end
+    start, end, number = get_ranges(ncpus, nfiles)
 
     all_jobs = []
     q = multiprocessing.Queue()
@@ -141,6 +100,60 @@ end =  [-1]
     return
 
 
+def get_ranges(ncpus, nfiles):
+
+    if nfiles < ncpus:
+        nbatches = 0
+        nfiles_per_batch = nfiles
+    else:
+        nbatches = int(math.floor(float(nfiles) / float(ncpus)))
+        nfiles_per_batch = ncpus
+
+    #nfiles_per_batch = nfiles / nbatches
+
+    if nbatches != 1 :
+        remainder = nfiles % ncpus
+    else:
+        remainder = 0
+
+    remainder = nfiles % ncpus
+
+    print 'ncpus = ', ncpus
+    print 'nfiles = ', nfiles
+    print 'nbatches = ', nbatches
+    print 'nfiles_per_batch = ', nfiles_per_batch
+    print 'remainder = ', remainder
+
+    first = [] ; last = [] ; number = []
+
+    for i in xrange(nbatches):
+        this_first = i * nfiles_per_batch
+        first.append(this_first)
+        this_last = this_first + nfiles_per_batch - 1
+        last.append(this_last)
+        number.append(this_last - this_first + 1)
+        print 'i = ', i, ' : first = ', this_first, ' : last = ', this_last, ' : number = ', number[-1]
+
+    if nbatches > 1: 
+        final_first = this_last + 1
+        final_last = final_first + remainder - 1
+        final_number = final_last - final_first + 1
+        print 'final : first = ', final_first, ' : last = ', final_last, ' : number = ', final_number
+
+    else:
+        final_first = 0
+        final_last = remainder - 1
+        final_number = remainder
+        print 'final : first = ', final_first, ' : last = ', final_last, ' : number = ', final_number
+
+    if final_number > 0:
+        first.append(final_first)
+        last.append(final_last)
+        number.append(final_number)
+
+    return first, last, number
+
+
 if __name__ == '__main__':
 
     number_of_cores = 3
@@ -151,3 +164,4 @@ if __name__ == '__main__':
 
     main(all_pdb_files_directory, completed_pdb_files_directory,
          failed_pdb_files_directory, number_of_cores)
+
