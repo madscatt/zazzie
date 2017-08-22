@@ -666,7 +666,17 @@ class Test_Input_Filter(MockerTestCase):
         '''
         check if path has write permission
         '''
-        self.pdbfile = os.path.join(module_data_path,'no_write_permission')
+
+        ''' make a directory '''
+        os.system('mkdir empty_folder1')
+        ''' see if you can write to the directory '''
+#        print os.access('empty_folder1', os.W_OK)
+        ''' make the directory un-writable'''
+        os.system('chmod a-w empty_folder1')
+        ''' see if you can write to the directory '''
+#        print os.access('empty_folder', os.W_OK)
+
+        self.pdbfile = os.path.join('./','empty_folder1')
         self.run_filter()
             
         existvalue, readvalue, writevalue = input_filter.check_permissions(self.pdbfile)
@@ -675,6 +685,11 @@ class Test_Input_Filter(MockerTestCase):
         ''' check for file error '''
         expected_writevalue = False
         assert_equals(writevalue, expected_writevalue)
+
+        ''' make the directory writable'''
+        os.system('chmod a+w empty_folder1')
+        ''' remove the directory '''
+        os.system('rm -Rf empty_folder1')
                                          
     '''Testing certify_pdb_pdb'''
 
