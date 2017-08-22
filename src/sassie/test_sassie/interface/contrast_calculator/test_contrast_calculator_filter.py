@@ -353,14 +353,32 @@ class Test_Contrast_Calculator_Filter(MockerTestCase):
         '''
         test if directory has write permission
         '''
-        self.inpath = os.path.join(module_data_path, 'no_write_permission')
+
+        ''' make a directory '''
+        os.system('mkdir empty_folder1')
+        ''' see if you can write to the directory '''
+#        print os.access('empty_folder1', os.W_OK)
+        ''' make the directory un-writeable'''
+        os.system('chmod a-w empty_folder1')
+        ''' see if you can write to the directory '''
+#        print os.access('empty_folder', os.W_OK)
+
+        self.inpath = os.path.join('./', 'empty_folder1')
         return_error = gui_mimic_contrast_calculator.run_module(
             self, file_check=True)
+#        print 'return_error: ', return_error
 
         ''' check for path error '''
-        expected_error = ['Permission error in input file path ' + self.inpath +
-                          ':  [code = TrueTrueFalse]', 'Write permission not allowed.']
+        expected_error = ['Permission error in input file path ' +
+                          self.inpath + ':  [code = TrueTrueFalse]', 'Write permission not allowed.']
+#        print 'expected_error: ', expected_error
         assert_equals(return_error, expected_error)
+
+        ''' make the directory writeable'''
+        os.system('chmod a+w empty_folder1')
+        ''' remove the directory '''
+        os.system('rm -Rf empty_folder1')        
+
         
     def test_16(self):
         '''
