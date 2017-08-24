@@ -230,7 +230,7 @@ class energy_minimization():
         reference PDB file
         input PDB or DCD file
         number of minimization steps
-        path and name of topology file
+        path and name of parameter file (default file is for CHARMM27 forcefield)
         input PSF file
         output (DCD) file
         number of CPUs
@@ -239,7 +239,6 @@ class energy_minimization():
         number of MD steps (if md = 1 or 2)
         solvent dielectric constant
         temperature (K)
-        frequency to save individual DCD files
         flag to use external input file (True or False)
         external input file name
         velocity restart file name
@@ -248,7 +247,8 @@ class energy_minimization():
 
         Advanced input:
 
-        name of user-supplied CHARMM parameter file
+        frequency to save individual DCD files
+        name(s) of CHARMM parameter file(s) that take the place of the default parameter file (input is processed at GenApp level)
 
         
         OUTPUT:

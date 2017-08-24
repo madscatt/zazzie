@@ -56,7 +56,7 @@ class Test_Energy_Minimization(MockerTestCase):
         reference PDB file
         input PDB or DCD file
         number of minimization steps
-        path and name of topology file
+        path and name of parameter file (default file is for CHARMM27 forcefield)
         input PSF file
         output (DCD) file
         number of CPUs
@@ -65,7 +65,6 @@ class Test_Energy_Minimization(MockerTestCase):
         number of MD steps (if md = 1 or 2)
         solvent dielectric constant
         temperature (K)
-        frequency to save individual DCD files
         flag to use external input file (True or False)
         external input file name
         velocity restart file name
@@ -74,7 +73,8 @@ class Test_Energy_Minimization(MockerTestCase):
 
         Advanced input:
 
-        name of user-supplied CHARMM parameter file
+        frequency to save individual DCD files
+        name(s) of CHARMM parameter file(s) that take the place of the default parameter file (input is processed at GenApp level)
 
         
         OUTPUT:
@@ -131,7 +131,7 @@ class Test_Energy_Minimization(MockerTestCase):
 
     path                            string      input path (not in variables)
     infiletype                      string      input file type (pdb or dcd)    #determined by file name suffix
-    charmm_parameter_file           string      name of user-supplied CHARMM parameter file
+    charmm_parameter_file           string      user-supplied CHARMM parameter file(s) that replace default parameter file (check done at GenApp level)
 
     Test tree:
 
