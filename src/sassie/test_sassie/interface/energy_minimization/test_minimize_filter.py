@@ -46,7 +46,7 @@ class Test_Energy_Minimization_Filter(MockerTestCase):
     pdbfile:                        string      input (reference) pdb file name
     outfile:                        string      output dcd file name
     nsteps:                         integer     number of minimization steps
-    parmfile:                       string      path and name of topology file
+    parmfile:                       string      path and name of parameter file (default file is for CHARMM27 forcefield)
     psffile: 		                string      psf file name
     ncpu	:                           integer     number of cpus to use
     keepout:                        integer     keep output files (0==no, 1==yes)
@@ -64,7 +64,7 @@ class Test_Energy_Minimization_Filter(MockerTestCase):
     external_input_file             string      external input file name
     velocity_restart_file           string      velocity restart file name
     extended_system_restart_file    string      extended system restart file name
-    charmm_parameter_file           string      name of user-supplied CHARMM parameter file
+    charmm_parameter_file           string      user-supplied CHARMM parameter file(s) that replace default parameter file (check done at GenApp level)
 
     Use cases tested:
 
