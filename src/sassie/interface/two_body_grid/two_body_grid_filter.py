@@ -67,8 +67,8 @@ def check_input_values(variables, **kwargs):
                 error.append('write permission not allowed')
             return error
 
-    pdbfile1=path+'/'+pdbmol1
-    pdbfile2=path+'/'+pdbmol2
+    pdbfile1=pdbmol1
+    pdbfile2=pdbmol2
 
     print 'pdbfile1: ', pdbfile1
 
