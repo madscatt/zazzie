@@ -239,7 +239,7 @@ class Test_Two_Body_Grid_Filter(MockerTestCase):
         return_error = gui_mimic_two_body_grid.run_module(self, test_filter=True)
 
         ''' check for file error '''
-        pdbfile1=self.path+'/'+self.pdbmol1
+        pdbfile1=self.pdbmol1
         expected_error = ['file : '+pdbfile1+' does not exist']
         assert_equals(return_error, expected_error)
 
@@ -251,7 +251,7 @@ class Test_Two_Body_Grid_Filter(MockerTestCase):
         return_error = gui_mimic_two_body_grid.run_module(self, test_filter=True)
 
         ''' check for file error '''
-        pdbfile1=self.path+'/'+self.pdbmol1
+        pdbfile1=self.pdbmol1
         expected_error = ['input pdb file, ' +
                           pdbfile1[3:] + ', is not a valid pdb file']
         assert_equals(return_error, expected_error)
@@ -265,7 +265,7 @@ class Test_Two_Body_Grid_Filter(MockerTestCase):
         return_error = gui_mimic_two_body_grid.run_module(self, test_filter=True)
 
         ''' check for file error '''
-        pdbfile2=self.path+'/'+self.pdbmol2
+        pdbfile2=self.pdbmol2
         expected_error = ['file : '+pdbfile2+' does not exist']
         assert_equals(return_error, expected_error)
 
@@ -277,7 +277,7 @@ class Test_Two_Body_Grid_Filter(MockerTestCase):
         return_error = gui_mimic_two_body_grid.run_module(self, test_filter=True)
 
         ''' check for file error '''
-        pdbfile2=self.path+'/'+self.pdbmol2
+        pdbfile2=self.pdbmol2
         expected_error = ['input pdb file, ' +
                           pdbfile2[3:] + ', is not a valid pdb file']
         assert_equals(return_error, expected_error)
