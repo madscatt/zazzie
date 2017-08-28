@@ -31,11 +31,6 @@ def check_prody(variables,**kwargs):
     advanced_usage = variables['advanced_usage'][0]
     advanced_usage_cmd = variables['advanced_usage_cmd'][0]
 
-#    xon = variables['xon'][0]
-#    if xon not in ['neutron','xray','neutron_and_xray']:
-#        error.append("Either neutron or xray input need to be checked")
-#        return error
-
 
     error=[]
     error = input_filter.check_name(runname)
@@ -45,15 +40,18 @@ def check_prody(variables,**kwargs):
 
     error=input_filter.check_file_exists(pdbfile)
     if(len(error) != 0):
-        error.append('input pdb file, '+pdbfile+', does not exist')
+#        error.append('input pdb file, '+pdbfile+', does not exist')        ##check_file_exists returns its own error
         return error
     ev,value=input_filter.check_pdb_dcd(pdbfile,'pdb')
+    #ev == 0 not tested since file exists check is performed above
     if(ev == 0):
         error.append('check input pdb file: '+pdbfile)
         return error
     if(value == 0):
         error.append( 'input pdb file, '+pdbfile+', is not a valid pdb file')
         return error
+
+    #NOT tested.  A PDB file with no frames is not a valid PDB file, so test fails above and doesn't get to this point.
     try:
         m1 = sasmol.SasMol(0)
         m1.read_pdb(pdbfile)
@@ -76,10 +74,10 @@ def check_prody(variables,**kwargs):
         error.append('number of frames to traverse per mode needs to be greater than zero')
         return error
     elif rmsd_conformations_samp <= 0:        
-        error.append('averaged sampled RMSD needs to be greater than zero')
+        error.append('average sampled RMSD for normal mode trajectory needs to be greater than zero')
         return error
-    elif rmsd_conformations_samp <= 0:        
-        error.append('averaged sampled RMSD for normal mode trajectory needs to be greater than zero')
+    elif rmsd_traverse <= 0:        
+        error.append('maximum sampled RMSD for traverse mode trajectory needs to be greater than zero')
         return error
 
     # advanced options
