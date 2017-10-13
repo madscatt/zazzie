@@ -103,6 +103,8 @@ class PDBScan():
         pgui = self.run_utils.print_gui
         log = self.log
 
+        pgui('STATUS\t0.1')
+
         log.debug('in run_scan')
     
         pgui('-'*50)
@@ -112,17 +114,22 @@ class PDBScan():
         mol = pdbscan.SasMolScan()
         mol.read_pdb(mvars.pdbfile)
 
+        pgui('STATUS\t0.2')
+
         pgui('Initiating scan')
         mol.run_scan()
         mol.copy_biomt_segments()
+
+        pgui('STATUS\t0.6')
 
         short_report, long_report = report.generate_reports(mol)
 
         self.report_to_user(short_report)
 
+        pgui('STATUS\t0.9')
+
         mkd_filepath = self.generate_full_report(long_report)
         html_filepath = pdbscan_utils.convert_mkd_html(mkd_filepath)
 
+        pgui('STATUS\t1.0')
 
-        
-        

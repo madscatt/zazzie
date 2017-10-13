@@ -19,6 +19,7 @@
 import logging
 
 import sassie.util.sasconfig as sasconfig
+import sassie.util.communication as communication
 import sassie.util.module_utilities as module_utilities
 
 import sassie.build.pdbscan.pdbscan as pdbscan
@@ -42,8 +43,18 @@ class PDBRx():
     def __init__(self, parent = None):
         pass
     
-    def main(self, input_variables, txtOutput):
-        
+    def main(self, input_variables, txtOutput, **kwargs):
+      
+      
+        try: 
+            if kwargs:
+                self.json_variables = {}
+                self.json_variables['_uuid'] = kwargs['_uuid']
+                self.json_variables['_tcphost'] = kwargs['_tcphost']
+                self.json_variables['_tcpport'] = kwargs['_tcpport']
+        except:
+            self.json_variables = False 
+             
         self.mvars = module_variables()
         
         self.run_utils = module_utilities.run_utils(app,txtOutput)
@@ -72,9 +83,39 @@ class PDBRx():
         mvars.pdbfile = variables['pdbfile'][0]
         mvars.topfile = variables['topfile'][0]
         mvars.use_defaults = variables['defaults'][0]
+        mvars.gui = variables['gui'][0]
 
         # TODO: Think about topology file
         
+        return
+
+    def ask_question(self, report):
+
+        my_question = '''
+{
+    "id" : "q1"
+    ,"title" : "are you sure?"
+    ,"text" : "<p>header text.</p><hr>"
+    ,"fields" : [
+        {
+            "id" : "l1"
+            ,"type" : "label"
+            ,"label" : "<center>this is label text</center>"
+        }
+        ,{
+            "id" : "t1"
+            ,"type" : "text"
+            ,"label" : "tell me your name:"
+        }
+        ,{
+            "id" : "cb1"
+            ,"type" : "checkbox"
+            ,"label" : "are you sure about the speed of light?"
+        }
+    ]
+}
+'''.strip()
+        answer = communication.tcpquestion(self.json_variables, my_question );
         return
 
     def run_scan(self):
@@ -109,9 +150,16 @@ class PDBRx():
             pgui('Preprocessing starts here')
             preprocessor = pdbrx.preprocessor.PreProcessor(mol=mol,default_subs=True)
 
+            if mvars.gui == 'sassie-web':
+                pgui("asking question to sassie-web")
+                self.ask_question(report.generate_simulation_prep_report(mol))
+
+            sys.exit(0)
+                 
             for line in report.generate_simulation_prep_report(mol):
 
                 pgui(line)
+
 
             preprocessor.user_edit_options()
 

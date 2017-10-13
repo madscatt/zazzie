@@ -189,10 +189,10 @@ def generate_simulation_prep_report(mol):
     rep.append('### Proposed segment simulation readiness\n')
 
     rep.append('Each proposed segment has been checked to see if it is ready for ')
-    rep.append('simulation through MD (in CHARMM) or SASSIE dihedral MC.\n')
+    rep.append('simulation through MD (in CHARMM) or SASSIE TAMC.\n')
 
     widths = [7, 11, 6, 6, 6]
-    header = ['Segname', 'Single Conformer', 'CHARMM', 'MC', 'MD']
+    header = ['Segname', 'Single Conformer', 'CHARMM', 'TAMC', 'MD']
     just = ['c', 'c', 'c', 'c', 'c']
     contents = []
 
