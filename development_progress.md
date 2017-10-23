@@ -22,7 +22,7 @@
 | Torsion Angle MC    |      x       |        
 | SasDock             |              |      
 | SasCalc             |              |  
-| SLD MOL             |              |   
+| SLD MOL             |      x       |         x
 | EM to SAS           |      x       |         x        
 | Chi-Square Filter   |      x       |         x
 | Density Plot        |      x       |         x

@@ -1,0 +1,240 @@
+
+--------------------------
+PDB2PQR - a Python-based structural conversion utility
+--------------------------
+Please cite your use of PDB2PQR as:
+  Dolinsky TJ, Nielsen JE, McCammon JA, Baker NA.
+  PDB2PQR: an automated pipeline for the setup, execution,
+  and analysis of Poisson-Boltzmann electrostatics calculations.
+  Nucleic Acids Research 32 W665-W667 (2004).
+
+Beginning PDB2PQR...
+
+Parsed Amino Acid definition file.
+Created protein object -
+	Number of residues in protein: 10
+	Number of atoms in protein   : 148
+Setting the termini... 
+Done.
+Checking for missing heavy atoms... 
+	Extra atom HG1 in SER C 4! - Deleted this atom.
+No heavy atoms found missing - Done.
+Updating SS bridges...
+	CYS C 6 is a free cysteine
+Done.
+Checking if we must debump any residues... 
+Done.
+Running propka and applying at pH 5.50... constructing protein "junk"
+constructing chain C (atoms: configurations)
+ALA   1 -  OK ( 5:  1)
+GLY   2 -  OK ( 4:  1)
+THR   3 -  OK ( 7:  1)
+SER   4 -  OK ( 6:  1)
+ARG   5 -  OK (11:  1)
+CYS   6 -  OK ( 6:  1)
+TRP   7 -  OK (14:  1)
+GLU   8 -  OK ( 9:  1)
+ASP   9 -  OK ( 8:  1)
+MET  10 -  OK ( 9:  1)
+N+    1 -  OK ( 1:  1)
+C-   10 -  OK ( 2:  1)
+configurations:  M0CA
+created version "Nov30"
+
+ Detecting coupled residues
+   Maximum pKa difference:     2.00 pKa units
+   Minimum interaction energy: 0.50 pKa units
+   Maximum free energy diff.:  1.00 pKa units
+   Minimum swap pKa shift:     1.00 pKa units
+   pH:                         variable 
+   Reference:                  neutral
+   Min pKa:                    0.00
+   Max pKa:                    10.00
+
+GLY   2 C ALA   1 C 0.0
+ALA   1 C GLY   2 C 0.0
+THR   3 C ALA   1 C 0.0
+ALA   1 C THR   3 C 0.0
+THR   3 C GLY   2 C 0.0
+GLY   2 C THR   3 C 0.0
+SER   4 C ALA   1 C 0.0
+ALA   1 C SER   4 C 0.0
+SER   4 C GLY   2 C 0.0
+GLY   2 C SER   4 C 0.0
+SER   4 C THR   3 C 0.0
+THR   3 C SER   4 C 0.0
+ARG   5 C ALA   1 C 0.0
+ALA   1 C ARG   5 C 0.0
+ARG   5 C GLY   2 C 0.0
+GLY   2 C ARG   5 C 0.0
+ARG   5 C THR   3 C 0.0
+THR   3 C ARG   5 C 0.0
+ARG   5 C SER   4 C 0.0
+SER   4 C ARG   5 C 0.0
+CYS   6 C ALA   1 C 0.0
+ALA   1 C CYS   6 C 0.0
+CYS   6 C GLY   2 C 0.0
+GLY   2 C CYS   6 C 0.0
+CYS   6 C THR   3 C 0.0
+THR   3 C CYS   6 C 0.0
+CYS   6 C SER   4 C 0.0
+SER   4 C CYS   6 C 0.0
+CYS   6 C ARG   5 C 0.0
+ARG   5 C CYS   6 C 0.0
+TRP   7 C ALA   1 C 0.0
+ALA   1 C TRP   7 C 0.0
+TRP   7 C GLY   2 C 0.0
+GLY   2 C TRP   7 C 0.0
+TRP   7 C THR   3 C 0.0
+THR   3 C TRP   7 C 0.0
+TRP   7 C SER   4 C 0.0
+SER   4 C TRP   7 C 0.0
+TRP   7 C ARG   5 C 0.0
+ARG   5 C TRP   7 C 0.0
+TRP   7 C CYS   6 C 0.0
+CYS   6 C TRP   7 C 0.0
+GLU   8 C ALA   1 C 0.0
+ALA   1 C GLU   8 C 0.0
+GLU   8 C GLY   2 C 0.0
+GLY   2 C GLU   8 C 0.0
+GLU   8 C THR   3 C 0.0
+THR   3 C GLU   8 C 0.0
+GLU   8 C SER   4 C 0.0
+SER   4 C GLU   8 C 0.0
+GLU   8 C ARG   5 C 0.0
+ARG   5 C GLU   8 C 0.0
+GLU   8 C CYS   6 C 0.0
+CYS   6 C GLU   8 C 0.0
+GLU   8 C TRP   7 C 0.0
+TRP   7 C GLU   8 C 0.0
+ASP   9 C ALA   1 C 0.0
+ALA   1 C ASP   9 C 0.0
+ASP   9 C GLY   2 C 0.0
+GLY   2 C ASP   9 C 0.0
+ASP   9 C THR   3 C 0.0
+THR   3 C ASP   9 C 0.0
+ASP   9 C SER   4 C 0.0
+SER   4 C ASP   9 C 0.0
+ASP   9 C ARG   5 C 0.0
+ARG   5 C ASP   9 C 0.0
+ASP   9 C CYS   6 C 0.0
+CYS   6 C ASP   9 C 0.0
+ASP   9 C TRP   7 C 0.0
+TRP   7 C ASP   9 C 0.0
+ASP   9 C GLU   8 C 0.0
+GLU   8 C ASP   9 C 0.0
+MET  10 C ALA   1 C 0.0
+ALA   1 C MET  10 C 0.0
+MET  10 C GLY   2 C 0.0
+GLY   2 C MET  10 C 0.0
+MET  10 C THR   3 C 0.0
+THR   3 C MET  10 C 0.0
+MET  10 C SER   4 C 0.0
+SER   4 C MET  10 C 0.0
+MET  10 C ARG   5 C 0.0
+ARG   5 C MET  10 C 0.0
+MET  10 C CYS   6 C 0.0
+CYS   6 C MET  10 C 0.0
+MET  10 C TRP   7 C 0.0
+TRP   7 C MET  10 C 0.0
+MET  10 C GLU   8 C 0.0
+GLU   8 C MET  10 C 0.0
+MET  10 C ASP   9 C 0.0
+ASP   9 C MET  10 C 0.0
+N+    1 C ALA   1 C 0.0
+ALA   1 C N+    1 C 0.0
+N+    1 C GLY   2 C 0.0
+GLY   2 C N+    1 C 0.0
+N+    1 C THR   3 C 0.0
+THR   3 C N+    1 C 0.0
+N+    1 C SER   4 C 0.0
+SER   4 C N+    1 C 0.0
+N+    1 C ARG   5 C 0.0
+ARG   5 C N+    1 C 0.0
+N+    1 C CYS   6 C 0.0
+CYS   6 C N+    1 C 0.0
+N+    1 C TRP   7 C 0.0
+TRP   7 C N+    1 C 0.0
+N+    1 C GLU   8 C 0.0
+GLU   8 C N+    1 C 0.0
+N+    1 C ASP   9 C 0.0
+ASP   9 C N+    1 C 0.0
+N+    1 C MET  10 C 0.0
+MET  10 C N+    1 C 0.0
+C-   10 C ALA   1 C 0.0
+ALA   1 C C-   10 C 0.0
+C-   10 C GLY   2 C 0.0
+GLY   2 C C-   10 C 0.0
+C-   10 C THR   3 C 0.0
+THR   3 C C-   10 C 0.0
+C-   10 C SER   4 C 0.0
+SER   4 C C-   10 C 0.0
+C-   10 C ARG   5 C 0.0
+ARG   5 C C-   10 C 0.0
+C-   10 C CYS   6 C 0.0
+CYS   6 C C-   10 C 0.0
+C-   10 C TRP   7 C 0.0
+TRP   7 C C-   10 C 0.0
+C-   10 C GLU   8 C 0.0
+GLU   8 C C-   10 C 0.0
+C-   10 C ASP   9 C -0.727051456883
+ASP   9 C C-   10 C 0.727051456883
+C-   10 C MET  10 C 0.0
+MET  10 C C-   10 C 0.0
+C-   10 C N+    1 C 0.0
+N+    1 C C-   10 C 0.0
+---------  -----   ------   ---------------------    --------------    --------------    --------------
+                            DESOLVATION  EFFECTS       SIDECHAIN          BACKBONE        COULOMBIC
+ RESIDUE    pKa    BURIED     REGULAR      RE        HYDROGEN BOND     HYDROGEN BOND      INTERACTION
+---------  -----   ------   ---------   ---------    --------------    --------------    --------------
+
+ASP   9 C   4.70*    0 %    0.18   43   0.00    0    0.73 C-   10 C    0.00 XXX   0 X    0.00 XXX   0 X
+
+GLU   8 C   4.57     0 %    0.07   48   0.00    0    0.00 XXX   0 X    0.00 XXX   0 X    0.00 XXX   0 X
+
+C-   10 C   2.59*    0 %    0.11   34   0.00    0   -0.73 ASP   9 C    0.00 XXX   0 X    0.00 XXX   0 X
+
+CYS   6 C   8.55     0 %    0.22   62   0.00    0    0.00 XXX   0 X   -0.67 TRP   7 C    0.00 XXX   0 X
+
+ARG   5 C  12.42     0 %   -0.08   51   0.00    0    0.00 XXX   0 X    0.00 XXX   0 X    0.00 XXX   0 X
+
+N+    1 C   7.96     0 %   -0.04   18   0.00    0    0.00 XXX   0 X    0.00 XXX   0 X    0.00 XXX   0 X
+
+--------------------------------------------------------------------------------------------------------
+  Residues that are found to be 'coupled', i.e. titrates together, has been marked by '*' in the above
+  section. Please rerun PropKa with the --display-coupled-residues option for detailed information.
+--------------------------------------------------------------------------------------------------------
+SUMMARY OF THIS PREDICTION
+     RESIDUE    pKa   pKmodel   ligand atom-type
+   ASP   9 C    4.70      3.80
+   GLU   8 C    4.57      4.50
+   C-   10 C    2.59      3.20
+   CYS   6 C    8.55      9.00
+   ARG   5 C   12.42     12.50
+   N+    1 C    7.96      8.00
+
+writing pkafile junk.propka
+Done.
+Adding hydrogens to the protein...
+ Added 1 hydrogen atoms.
+Checking if we must debump any residues... 
+	SER C 4 HG is too close to ARG C 5 H
+	Starting to debump SER C 4...
+	Debumping cutoffs: 2.0 for heavy atoms, 1.5 for hydrogens.
+	Using dihedral angle number 1 to debump the residue.
+	No conflicts found at angle 20.05.
+	Debumping Successful!
+
+Done.
+Initializing full optimization...
+Done.
+Optimization progress:
+  Detecting potential hydrogen bonds:
+	0% |                    | 100%
+	    ********************
+  Optimizing hydrogen bonds:
+	0% |                    | 100%
+	    ********************
+Applying the forcefield to the protein...Done.
+Total time taken: 0.46 seconds
+
