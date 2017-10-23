@@ -1,0 +1,4 @@
+
+#BEST FILE = run_0/sld_mol/sldfile_00001.txt : CHI-SQUARED = 36182.5047
+
+#WORST FILE = run_0/sld_mol/sldfile_00002.txt : CHI-SQUARED = 164886.6625
