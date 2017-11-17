@@ -3,12 +3,14 @@
 *~
 *.DS_Store
 **/.DS_Store
+.DS_Store
 .last_sas*
+*.sassie_json
+*.sassie_log
 
 #data stuff
 *.npy
 *.npz
-*.dat
 # Byte-compiled / optimized / DLL files
 
 __pycache__/
