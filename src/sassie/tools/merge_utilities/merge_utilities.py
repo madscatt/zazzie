@@ -464,8 +464,24 @@ class merge_utilities():
         pgui("\n%s \n" % (st))
         pgui("DATA FROM RUN: %s \n\n" % (ttxt))
 
-        avars.output_log_file = open(avars.output_path + 'merge.log', 'w')
+#       merge.log needs to go into sascalc directory so directories below sascalc can be selected in sassie-web
+        if mvars.sas_type == 0:
+            merge_log_path = avars.output_path+'/sascalc/'
+            direxist = os.path.exists(merge_log_path)
+            if(direxist == 0):
+                try:
+                    result = os.system('mkdir -p ' + merge_log_path)
+                except:
+                    message = 'can not create project directory: ' + merge_
+                    log_path
+                    message += '\nstopping here\n'
+                    pgui(message)
+                    sys.exit(1)
+            avars.output_log_file = open(merge_log_path + 'merge.log', 'w')
+        else:        
+            avars.output_log_file = open(avars.output_path + 'merge.log', 'w')
         avars.output_log_file.write("DATA FROM RUN: %s \n\n" % (ttxt))
+
 
         if(mvars.merge_option == 0 or mvars.merge_option == 2):
 
