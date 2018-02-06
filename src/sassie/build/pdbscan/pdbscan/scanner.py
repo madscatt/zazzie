@@ -256,8 +256,10 @@ class SasMolScan(sasmol.SasMol):
                     1) or (not broken[i][-1] + 1 == broken[i + 1][0]):
                 self.correct_resid_subdivision(broken[i], subdiv_type)
             else:
-                resid1 = self.resid()[n_broken[i][0]]
-                resid2 = self.resid()[n_broken[i + 1][0]]
+                #resid1 = self.resid()[n_broken[i][0]]
+                resid1 = self.resid()[broken[i][0]]
+                #resid2 = self.resid()[n_broken[i + 1][0]]
+                resid2 = self.resid()[broken[i + 1][0]]
                 raise Exception(
                     'Residues around residues {0:d} and {1:d} have multiply defined {2:s}s '.format(
                         resid1, resid2, subdiv_type))
