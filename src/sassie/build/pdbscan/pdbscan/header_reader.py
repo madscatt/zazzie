@@ -747,23 +747,16 @@ class PdbHeader:
                 elif content[0:31] in ['APPLY THE FOLLOWING TO CHAINS: ',
                                        '                   AND CHAINS: ']:
 
-                    try:
-                    #for chain in content[31:].split(','):
-                        content = content.split(":")[1]
+                	content = content.split(":")[1]
                         content = content.replace(' ', '')
                         for chain in content.split(','):
-                        #if chain != ' ':
                             if not chain.isspace() and len(chain) > 0:
-                            #biomt[bm_no]['subdivs'].append(chain.strip())
-                                biomt[bm_no]['subdivs'].append(chain)
-                                logging.warning('biomt[bm_no] ' +
+                            	biomt[bm_no]['subdivs'].append(chain.strip())
+                                logging.debug('biomt[bm_no] ' +
                                           biomt[bm_no]['subdivs'][-1])
                             else:
-                                logging.warning('chain == empty_space = ' +
+                                logging.debug('chain == empty_space = ' +
                                                 chain)
-
-                    except:
-                        pass
 
                 elif content.startswith('  BIOMT'):
 
