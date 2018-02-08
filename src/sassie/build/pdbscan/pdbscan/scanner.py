@@ -246,6 +246,8 @@ class SasMolScan(sasmol.SasMol):
                              'segname'
         """
 
+        logger = self.logger
+
         n_broken = len(broken)
 
         for i in range(n_broken):
@@ -260,7 +262,8 @@ class SasMolScan(sasmol.SasMol):
                 resid1 = self.resid()[broken[i][0]]
                 #resid2 = self.resid()[n_broken[i + 1][0]]
                 resid2 = self.resid()[broken[i + 1][0]]
-                raise Exception(
+                logger.warning(
+                #raise Exception(
                     'Residues around residues {0:d} and {1:d} have multiply defined {2:s}s '.format(
                         resid1, resid2, subdiv_type))
 
