@@ -279,6 +279,8 @@ class SasMolScan(sasmol.SasMol):
                              'segname'.
         """
 
+        logger = self.logger
+
         resids = self.resid()
 
         # Get the resid for the residue being corrected
@@ -312,9 +314,12 @@ class SasMolScan(sasmol.SasMol):
             # Other cases can get complicated - lets just throw up our hands
             # (at least for now)
             subdiv_list = '/'.join(set(subdivs[ndxs[0]:ndxs[-1]]))
-            raise Exception(
+            logger.warning(
                 'Multiple {0:s}s ({1:s}) assigned within residue {2:d}'.format(
                     subdiv_type, subdiv_list, resid))
+            #raise Exception(
+            #    'Multiple {0:s}s ({1:s}) assigned within residue {2:d}'.format(
+            #        subdiv_type, subdiv_list, resid))
 
         return
 
