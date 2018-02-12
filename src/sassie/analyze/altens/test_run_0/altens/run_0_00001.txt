@@ -1,0 +1,14 @@
+#Altens Information:
+1. PDB input file = 1D3Z_mod1_new.pdb
+2. RDC input file = RDC_D_K63.txt
+3. residue list file = reslist.txt
+4. Monte Carlo analysis = True
+5. Calculated RDC file = run_0_calc_rdc_00001.txt
+6. Correlation ftn of RDC(calc) and RDC(exp) = 0.98825
+7. R factor of calculated RDC = 0.09653
+8. Alignment tensor 
+ 12.64335 -0.55663  -2.20691
+ -0.55663 -3.95808  18.08288
+ -2.20691 18.08288  -8.68527
+9. Eigenvalues: Sxx, Syy, Szz = 10.38909, 14.21417, -24.60326
+10. Euler angles: alpha, beta, gamma = 93.02235, 138.78611, 41.44151

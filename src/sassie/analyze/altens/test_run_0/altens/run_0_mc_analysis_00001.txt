@@ -1,0 +1,9 @@
+========== Monte Carlo error Report ============
+1. Number of generated parameters = 500
+2. Sxx = 10.37311 +- 0.23243
+3. Syy = 14.26547 +- 0.29934
+4. Szz = -24.63858 +- 0.32153
+5. alpha = 93.02709 +- 0.66003
+6. beta = 138.75428 +- 0.49435
+7. gamma = 41.45983 +- 3.62721
+8. asymmetry parameter = 0.15798 +- 0.01552
