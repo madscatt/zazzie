@@ -257,6 +257,8 @@ class Chain_Info_Reconciler():
                 coordinates don't match
         """
 
+        logger = self.logger
+
         coor_info = self.coor_info
         head_info = self.head_info
 
@@ -286,8 +288,22 @@ class Chain_Info_Reconciler():
 
                 coord_missing[chain] = head_missing[chain]
 
-                self.resname_missing_resids_coor(head_missing[chain].keys(), head_missing[
+                try:
+                    self.resname_missing_resids_coor(head_missing[chain].keys(), head_missing[
                                                  chain], coor_info.sequence[chain])
+                except:
+                    logger.warning('chain = ' + chain + '\tresidues_same = ' +
+                                   str(residues_same))
+                    #logger.warning('head_missing[chain] = ' + 
+                    #               head_missing[chain])
+                    import json
+                    str_json = json.dumps(head_missing[chain])
+                    logger.warning('head_missing[chain] = ' + 
+                                  str_json) 
+                    logger.warning('coor_info.sequence[chain] = ' +
+                                   str(coor_info.sequence[chain]).strip('[]'))
+                    import sys
+                    sys.exit()
 
                 for resid, resname in head_missing[chain].iteritems():
 

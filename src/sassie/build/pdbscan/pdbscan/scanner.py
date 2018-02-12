@@ -246,6 +246,8 @@ class SasMolScan(sasmol.SasMol):
                              'segname'
         """
 
+        logger = self.logger
+
         n_broken = len(broken)
 
         for i in range(n_broken):
@@ -256,9 +258,12 @@ class SasMolScan(sasmol.SasMol):
                     1) or (not broken[i][-1] + 1 == broken[i + 1][0]):
                 self.correct_resid_subdivision(broken[i], subdiv_type)
             else:
-                resid1 = self.resid()[n_broken[i][0]]
-                resid2 = self.resid()[n_broken[i + 1][0]]
-                raise Exception(
+                #resid1 = self.resid()[n_broken[i][0]]
+                resid1 = self.resid()[broken[i][0]]
+                #resid2 = self.resid()[n_broken[i + 1][0]]
+                resid2 = self.resid()[broken[i + 1][0]]
+                logger.warning(
+                #raise Exception(
                     'Residues around residues {0:d} and {1:d} have multiply defined {2:s}s '.format(
                         resid1, resid2, subdiv_type))
 
@@ -276,6 +281,8 @@ class SasMolScan(sasmol.SasMol):
         @param subdiv_type:  Type of subdivision to correct - 'chain' or
                              'segname'.
         """
+
+        logger = self.logger
 
         resids = self.resid()
 
@@ -310,9 +317,12 @@ class SasMolScan(sasmol.SasMol):
             # Other cases can get complicated - lets just throw up our hands
             # (at least for now)
             subdiv_list = '/'.join(set(subdivs[ndxs[0]:ndxs[-1]]))
-            raise Exception(
+            logger.warning(
                 'Multiple {0:s}s ({1:s}) assigned within residue {2:d}'.format(
                     subdiv_type, subdiv_list, resid))
+            #raise Exception(
+            #    'Multiple {0:s}s ({1:s}) assigned within residue {2:d}'.format(
+            #        subdiv_type, subdiv_list, resid))
 
         return
 

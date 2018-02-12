@@ -269,13 +269,17 @@ class PdbHeader:
         disulphides and n_models.
         """
 
+        logger = self.logger 
+
         pdb_recs = self.pdb_recs
 
         has_header_info = sum(len(v) for v in pdb_recs.itervalues())
 
         if has_header_info:
+            logger.debug('has header information')
 
             if pdb_recs['NUMMDL']:
+                logger.debug('has NUMMDL information')
                 self.logger.info('Multiple models (' +
                                  str(pdb_recs['NUMMDL'][0]['no_models']) +
                                  ') detected in the file.')
@@ -283,29 +287,39 @@ class PdbHeader:
                     pdb_recs['NUMMDL'][0]['no_models'])
 
             if pdb_recs['TITLE']:
+                logger.debug('has TITLE information')
                 self.reference_info.title = process_runon_line(
                     pdb_recs['TITLE'], 'text')
 
             # SEQRES records contain full sequence information
             self.process_seqres()
+            logger.debug('processed seqres information')
 
             # Remarks contain quality metrics, BIOMT and missing residue/atom
             # information
+            logger.debug('getting read to process remarks information')
             self.parse_remarks()
+            logger.debug('processed remarks information')
 
             # Citation information
             self.parse_jrnl()
+            logger.debug('processed jrnl information')
 
             if pdb_recs['SSBOND']:
                 self.process_disulphides()
+                logger.debug('processed ssbond information')
 
             # Information about non-standard residues
             self.process_header_het()
+            logger.debug('processed het information')
 
             self.process_compnd()
+            logger.debug('processed compnd information')
 
             self.read_valid_header = True
             self.has_seq_info = self.check_header_seq()
+            logger.debug('read_valid_header = ' +
+                           str(self.read_valid_header))
 
         else:
             raise NoHeaderReadError("No header has been read into object")
@@ -341,11 +355,21 @@ class PdbHeader:
 
         """
 
+        logger = self.logger
+
         if self.pdb_recs['REMARK']:
+            logger.debug('getting ready to get quality metrics')
             self.get_quality_metrics()
+            logger.debug('done with get quality metrics')
+            logger.debug('getting ready to process biomolecule')
             self.process_biomolecule()
+            logger.debug('done with process biomolecule')
+            logger.debug('getting ready to process missing res')
             self.process_missing_res()
+            logger.debug('done with process missing res')
+            logger.debug('getting ready to process missing atoms')
             self.process_missing_atoms()
+            logger.debug('done with process missing atoms')
 
         else:
             self.logger.info('No REMARK lines found in header:')
@@ -649,16 +673,24 @@ class PdbHeader:
         trans = list of np.array(3)
         """
 
+        logger = self.logger
+
+        logger.debug("calling chain_info")
         biomt = self.chain_info.biomt
+        logger.debug("returned from chain_info")
 
         # REMARK 300 section is a free text description of any biomolecules
-        # We extract a list of the numberical biomolecule labels described
+        # We extract a list of the numerical biomolecule labels described
+        logger.debug("calling parse_biomol_300")
         biomol_300 = self._parse_biomol_300()
+        logger.debug("returned from parse_biomol_300")
 
         # REMARK 350 section contains the transforms for each biomolecule and
         # information on how the description was arrived at.
         # Transformation read in from BIOMT records
+        logger.debug("calling parse_biomol_350")
         self._parse_biomol_350()
+        logger.debug("returned from parse_biomol_350")
 
         if len(biomol_300) != len(biomt.keys()):
             self.logger.warning(
@@ -676,18 +708,25 @@ class PdbHeader:
         labels which we expect to find specified in the REMARK 350 records.
         """
 
+        logger = self.logger
+
         biomol_300 = []
         remarks300 = [x for x in self.pdb_recs['REMARK'] if x['num'] == 300]
 
         # REMARK 300 section is a free text description of any biomolecules
         # described in REMARK 350 records
         # We just want the biomolecule ID numbers to be described
+        logger.debug('looping over remarks300')
         for remark in remarks300:
 
             if remark['text'].startswith('BIOMOLECULE:'):
-
-                for biomol_no in remark['text'][13:].split(','):
-                    biomol_300.append(int(biomol_no))
+                try:
+                    for biomol_no in remark['text'][13:].split(','):
+                        biomol_300.append(int(biomol_no))
+                except:
+        		logger.warning('Did not find the number of chains in REMARK 300')
+        		logger.warning('Set the number of chains to 1: please confirm this case')
+                        biomol_300.append(1)
 
         return biomol_300
 
@@ -709,6 +748,8 @@ class PdbHeader:
         rot = list of np.array((3,3))
         trans = list of np.array(3)
         """
+
+        logger = self.logger 
 
         chain_info = self.chain_info
         biomt = self.chain_info.biomt
@@ -745,10 +786,16 @@ class PdbHeader:
                 elif content[0:31] in ['APPLY THE FOLLOWING TO CHAINS: ',
                                        '                   AND CHAINS: ']:
 
-                    for chain in content[31:].split(','):
-
-                        if chain != ' ':
-                            biomt[bm_no]['subdivs'].append(chain.strip())
+                	content = content.split(":")[1]
+                        content = content.replace(' ', '')
+                        for chain in content.split(','):
+                            if not chain.isspace() and len(chain) > 0:
+                            	biomt[bm_no]['subdivs'].append(chain.strip())
+                                logging.debug('biomt[bm_no] ' +
+                                          biomt[bm_no]['subdivs'][-1])
+                            else:
+                                logging.debug('chain == empty_space = ' +
+                                                chain)
 
                 elif content.startswith('  BIOMT'):
 

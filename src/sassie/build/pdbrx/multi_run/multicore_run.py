@@ -9,27 +9,38 @@ import sys
 sys.path.append('./')
 import gui_mimic_pdbrx
 
-class Process(multiprocessing.Process):
-    def __init__(self, *args, **kwargs):
-        multiprocessing.Process.__init__(self, *args, **kwargs)
-        self._pconn, self._cconn = multiprocessing.Pipe()
-        self._exception = None
+def find_and_move_json_log(this_file, this_runname, failed_pdb_files_directory):
 
-    def run(self):
-        try:
-            multiprocessing.Process.run(self)
-            self._cconn.send(None)
-        except Exception as e:
-            tb = traceback.format_exc()
-            self._cconn.send((e, tb))
-            # raise e  # You can still rise this exception if you need to
+    all_json_files = glob.glob('*_json')
+    all_log_files = glob.glob('*_log')
 
-    @property
-    def exception(self):
-        if self._pconn.poll():
-            self._exception = self._pconn.recv()
-        return self._exception
+    for this_json in all_json_files:
+        result = open(this_json).readlines()
+        print 'this_json = ', this_json
+        print 'result = ', result
+        for line in result:
+            if this_file in line:
+                mvst = 'mv -f ' + this_json + ' ' + failed_pdb_files_directory + \
+                os.sep + this_runname + os.sep + 'pdbrx' + os.sep
+                print mvst
+                print mvst
+                print mvst
+                os.system(mvst)
+                break 
 
+    for this_log in all_log_files:
+        result = open(this_log).readlines()
+        for line in result:
+            if this_file in line:
+                mvst = 'mv -f ' + this_log + ' ' + failed_pdb_files_directory + \
+                os.sep + this_runname + os.sep + 'pdbrx' + os.sep
+                print mvst
+                print mvst
+                print mvst
+                os.system(mvst)
+                break 
+
+    return
 
 def run_pdbrx(start, end, all_pdb_files, completed_pdb_files_directory, failed_pdb_files_directory):
 
@@ -55,6 +66,11 @@ def run_pdbrx(start, end, all_pdb_files, completed_pdb_files_directory, failed_p
         except:
             os.system('mv -f ' + this_runname + ' ' +
                       failed_pdb_files_directory)
+           
+            find_and_move_json_log(this_file, this_runname, failed_pdb_files_directory) 
+
+
+        time.sleep(1)
 
         # print 'cp ' + this_file + ' ' + completed_pdb_files_directory + os.sep + tail + '_' + str(start)
         #os.system('cp ' + this_file + ' ' + completed_pdb_files_directory + os.sep + tail + '_' + str(start))
@@ -81,7 +97,15 @@ def main(all_pdb_files_directory, completed_pdb_files_directory, failed_pdb_file
     if(not os.path.exists(failed_pdb_files_directory)):
         os.system('mkdir ' + failed_pdb_files_directory)
 
-    start, end, number = get_ranges(ncpus, nfiles)
+    start, end, number = get_ranges(number_of_cores, number_of_files)
+
+    print '='*50
+    print 'start = ', start
+    print 'end = ', end
+    print 'number = ', number
+    print '='*50
+
+    #sys.exit()
 
     all_jobs = []
     q = multiprocessing.Queue()
@@ -92,6 +116,8 @@ def main(all_pdb_files_directory, completed_pdb_files_directory, failed_pdb_file
             this_process = multiprocessing.Process(target=run_pdbrx, args=(
                 start[i], end[i], all_pdb_files, completed_pdb_files_directory, failed_pdb_files_directory))
             this_process.start()
+            time.sleep(1)
+
         except Exception as error:
             print 'error = ', error
 
@@ -156,7 +182,7 @@ def get_ranges(ncpus, nfiles):
 
 if __name__ == '__main__':
 
-    number_of_cores = 3
+    number_of_cores = 64
 
     all_pdb_files_directory = 'nr_pdb_files'
     completed_pdb_files_directory = 'completed_pdb_files'
