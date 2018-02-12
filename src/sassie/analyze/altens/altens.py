@@ -55,9 +55,11 @@ class altens():
         pass
 
     def main(self, input_variables, txtOutput):
+
         '''
         main method to manage simulation
         '''
+
         self.mvars = module_variables()
 
         self.run_utils = module_utilities.run_utils(app, txtOutput)
@@ -87,11 +89,34 @@ class altens():
         self.log.debug('in unpack_variables')
 
         mvars.runname = variables['runname'][0]
-        
+        mvars.pdbfile = variables['pdbfile'][0]
+
+        '''
+       Current version reads a pdb file of single frame.
+       We will use dcd file to treat Ensemble of configurations if David Fushiman is ready.
+       mvars.dcdfile = variables['dcdfile'][0]
+        '''
+
         mvars.rdc_input_file = variables['rdc_input_file'][0]
-        mvars.nh_vector_coordinate_file = variables['nh_vector_coordinate_file'][0]
-        mvars.active_residue_list_file = variables['active_residue_list_file'][0]
-        mvars.number_of_monte_carlo_steps = variables['number_of_monte_carlo_steps'][0]
+#        mvars.nh_vector_coordinate_file = variables['nh_vector_coordinate_file'][0]
+
+        mvars.residue_list_file = variables['residue_list_file'][0]
+
+        '''
+       elif: residue_list will be generated from residue list from input pdb except the N terminal: 
+       Note Residue numbering in list file starts from 1 
+        '''
+        mvars.mcon = variables['mcon'][0]
+
+        ''' 
+        method to MC run for error analysis
+        '''
+
+        if mvars.mcon:
+            mvars.number_of_monte_carlo_steps = variables['number_of_monte_carlo_steps'][0]
+            mvars.seed = variables['seed'][0]
+
+#        print "mvars.seed = ", mvars.seed
 
         self.log.debug(vars(mvars))
 
@@ -124,7 +149,7 @@ class altens():
         pgui("DATA FROM RUN: %s \n\n" %(time.ctime()))
         #pgui('>>> starting Altens\n')
 
-        altens_util.altens_core(self, use_input_files = True)
+        altens_util.altens_core(self,app)
 
         return
 
