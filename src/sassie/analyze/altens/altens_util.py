@@ -114,7 +114,7 @@ def read_in_data(self):
 
     ''' set up random seed '''
 
-    if mvars.mcon:
+    if mvars.use_monte_carlo_flag:
         if mvars.seed[0] == 1:
             from numpy.random import RandomState
             mvars.seed_object = RandomState(mvars.seed[1])
@@ -588,7 +588,7 @@ def altens_core(self,app):
     fout.write("1. PDB input file = %s\n"%mvars.pdbfile)
     fout.write("2. RDC input file = %s\n"%mvars.rdc_input_file)
     fout.write("3. residue list file = %s\n"%mvars.residue_list_file)
-    fout.write("4. Monte Carlo analysis = %s\n"%mvars.mcon)
+    fout.write("4. Monte Carlo analysis = %s\n"%mvars.use_monte_carlo_flag)
     fout.write("5. Calculated RDC file = %s\n"%output_rdc)
     fout.write("6. Correlation ftn of RDC(calc) and RDC(exp) = %.5f\n"%corr[0][1])
     fout.write("7. R factor of calculated RDC = %.5f\n"%r)
@@ -601,7 +601,7 @@ def altens_core(self,app):
 
     fout.close()
 
-    if mvars.mcon:
+    if mvars.use_monte_carlo_flag:
         pgui("Monte-Carlo analysis")
         mc_test(self,app,prin_param,prin_angle)
 
@@ -630,7 +630,7 @@ def altens_core(self,app):
               x = column_1 (label: Experimental RDC) 
               y = column_2 (label: Calculated RDC) 
               Add linear regression
-    if mcon: 
+    if use_monte_carlo_flag: 
     Figure 4. Histogram of simulated alpha,beta,gamma, sxx, syy, szz
               use run_0_mc_trajectory_00001.txt
               #step Sxx Syy Szz alpha beta gamma 

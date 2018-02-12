@@ -106,13 +106,13 @@ class altens():
        elif: residue_list will be generated from residue list from input pdb except the N terminal: 
        Note Residue numbering in list file starts from 1 
         '''
-        mvars.mcon = variables['mcon'][0]
+        mvars.use_monte_carlo_flag = variables['use_monte_carlo_flag'][0]
 
         ''' 
         method to MC run for error analysis
         '''
 
-        if mvars.mcon:
+        if mvars.use_monte_carlo_flag:
             mvars.number_of_monte_carlo_steps = variables['number_of_monte_carlo_steps'][0]
             mvars.seed = variables['seed'][0]
 
