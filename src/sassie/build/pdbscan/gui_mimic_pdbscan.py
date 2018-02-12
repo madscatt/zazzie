@@ -19,6 +19,12 @@ pdbfile='testing/data/3MWY.pdb'
 pdbfile='testing/data/5712.pdb'
 pdbfile='testing/data/286.pdb'
 pdbfile='testing/data/609.pdb'
+pdbfile='testing/data/324.pdb'
+pdbfile='testing/data/0.pdb'
+pdbfile='testing/data/1984.pdb'
+pdbfile='testing/data/7361.pdb'
+pdbfile='testing/data/732.pdb'
+pdbfile='testing/data/8068.pdb'
 #pdbfile='testing/data/5E3L.pdb'
 
 #### end user input ####
