@@ -1313,8 +1313,6 @@ class SasMolScan(sasmol.SasMol):
                 sections.append(sections[-1] + 1)
             last_seen = r
 
-        print str(sections)
-
         # subsections = matched sections with subdivs (chains/segnames)
         sub_secs = zip(subdivs, sections)
 
@@ -2326,6 +2324,11 @@ class SasMolScan(sasmol.SasMol):
             sim_ready[segname]['md'] = (seg_md_valid[segname] and
                                         sim_ready[segname]['chain'] and
                                         sim_ready[segname]['single_conformer'])
+
+            # We should warn people if start residue is not 1
+            first_resid = self.segname_info.sequence[segname][0][0]
+
+            sim_ready[segname]['start'] = (first_resid == 1)
 
         return
 
