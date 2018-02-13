@@ -283,8 +283,6 @@ class Chain_Info_Reconciler():
             
                 coord_missing[chain] = head_missing[chain]
                 
-                self.resname_missing_resids_coor(head_missing[chain].keys(), head_missing[chain], coor_info.sequence[chain])
-                
                 for resid, resname in head_missing[chain].iteritems():
                     
                     coord_seq = coor_info.sequence[chain]
