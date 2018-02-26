@@ -660,15 +660,17 @@ class PreProcessor(object):
                 accepted_segmentation = True
 
         accepted_sequences = False
+     
+        if self.ui_type == 'sassie_web': 
       
-        self.logger.info('SHOULD QUIT HERE') 
-        self.logger.info('SHOULD QUIT HERE') 
-        self.logger.info('SHOULD QUIT HERE') 
-        import sys ; sys.exit()
+            self.logger.info('SHOULD QUIT HERE') 
+            self.logger.info('SHOULD QUIT HERE') 
+            self.logger.info('SHOULD QUIT HERE') 
+            import sys ; sys.exit()
          
-        self.logger.info('SHOULD NOT BE HERE') 
-        self.logger.info('SHOULD NOT BE HERE') 
-        self.logger.info('SHOULD NOT BE HERE') 
+            self.logger.info('SHOULD NOT BE HERE') 
+            self.logger.info('SHOULD NOT BE HERE') 
+            self.logger.info('SHOULD NOT BE HERE') 
 
         seq_segnames = mol.segname_info.sequence.keys()
 
