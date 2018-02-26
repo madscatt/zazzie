@@ -57,6 +57,12 @@ class PreProcessor(object):
         @type ui_type    :  str
         @keyword ui_type :  Choice of UI type
         """
+       
+        if 'logger' in kwargs:
+            self.logger = kwargs['logger']
+        else:
+            #TODO: the following has not been verified to work
+            self.logger = logging.getLogger(__name__)
 
         if 'mol' in kwargs:
             self.mol = kwargs['mol']
@@ -67,6 +73,7 @@ class PreProcessor(object):
         if 'ui' in kwargs:
             self.ui_type = kwargs['ui']
         else:
+            # TODO: Not strictly needed as it is now passed from gui_mimic
             self.ui_type = 'terminal'
 
         if 'default_subs' in kwargs:
@@ -74,7 +81,9 @@ class PreProcessor(object):
         else:
             self.default_subs = False
 
-        self.logger = logging.getLogger(__name__)
+        self.logger.info('ui_type = ' + self.ui_type)
+        self.logger.info('ui_type = ' + self.ui_type)
+        self.logger.info('ui_type = ' + self.ui_type)
 
         return
 
@@ -109,6 +118,10 @@ class PreProcessor(object):
 
         else:
 
+            self.logger.info('SHOULD NOT GET HERE')
+            self.logger.info('SHOULD NOT GET HERE')
+            self.logger.info('SHOULD NOT GET HERE')
+            self.logger.info('SHOULD NOT GET HERE')
             # TODO: something for a real GUI
             ui_output = []
 
@@ -602,7 +615,7 @@ class PreProcessor(object):
 
         return residue_descriptions
 
-    def terminal_edit_options(self):
+    def handle_edit_options(self):
         """
         Present user with options to edit segmentation, sequence and BIOMT from
         the commandline.
@@ -614,13 +627,24 @@ class PreProcessor(object):
 
         accepted_segmentation = False
 
-        print(
-            "Do you wish to edit the system segmentation? (answer [y]es/[n]o)")
+        if self.ui_type == 'terminal':
+            print(
+                "Do you wish to edit the system segmentation? (answer [y]es/[n]o)")
+
+        elif self.ui_type == 'sassie_web':
+            ### need to get a yes/no answer from sassie-web
+            ###  for now I will just set it to no
+            choice = 'no'
 
         while not accepted_segmentation:
 
-            choice = input().lower()
-
+            if self.ui_type == 'terminal':
+                choice = input().lower()
+            elif self.ui_type == 'sassie_web':
+                choice = 'no'
+                self.logger.info('CHOICE = ' + choice)
+                self.logger.info('CHOICE = ' + choice)
+                self.logger.info('CHOICE = ' + choice)
             if choice in ['y', 'yes']:
 
                 segname_starts = self.get_user_segmentation()
@@ -636,6 +660,15 @@ class PreProcessor(object):
                 accepted_segmentation = True
 
         accepted_sequences = False
+      
+        self.logger.info('SHOULD QUIT HERE') 
+        self.logger.info('SHOULD QUIT HERE') 
+        self.logger.info('SHOULD QUIT HERE') 
+        import sys ; sys.exit()
+         
+        self.logger.info('SHOULD NOT BE HERE') 
+        self.logger.info('SHOULD NOT BE HERE') 
+        self.logger.info('SHOULD NOT BE HERE') 
 
         seq_segnames = mol.segname_info.sequence.keys()
 
@@ -733,12 +766,12 @@ class PreProcessor(object):
         @return:
         """
 
-        if self.ui_type == 'terminal':
+        if self.ui_type == 'terminal' or self.ui_type == 'sassie_web':
 
-            self.terminal_edit_options()
+            self.handle_edit_options()
 
         else:
-
+            import sys; sys.exit()
             pass
 
         return

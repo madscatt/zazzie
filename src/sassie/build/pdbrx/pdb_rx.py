@@ -94,8 +94,8 @@ class PDBRx():
         my_question = '''
 {
     "id" : "q1"
-    ,"title" : "are you sure?"
-    ,"text" : "<p>header text.</p><hr>"
+    ,"title" : "Segment Report"
+    ,"text" : "<p>This summaries the segment and chain information for each residue in your PDB file</p><hr>"
     ,"fields" : [
         {
             "id" : "l1"
@@ -148,18 +148,12 @@ class PDBRx():
         if not mvars.use_defaults:
 
             pgui('Preprocessing starts here')
-            preprocessor = pdbrx.preprocessor.PreProcessor(mol=mol,default_subs=True)
+            #preprocessor = pdbrx.preprocessor.PreProcessor(mol=mol,default_subs=True,ui=mvars.gui)
+            preprocessor = pdbrx.preprocessor.PreProcessor(mol=mol,default_subs=True,ui=mvars.gui,logger=log)
 
-            if mvars.gui == 'sassie-web':
-                pgui("asking question to sassie-web")
-                self.ask_question(report.generate_simulation_prep_report(mol))
-
-            sys.exit(0)
-                 
             for line in report.generate_simulation_prep_report(mol):
 
                 pgui(line)
-
 
             preprocessor.user_edit_options()
 
