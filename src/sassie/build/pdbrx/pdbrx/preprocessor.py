@@ -35,6 +35,7 @@ import sassie.build.pdbscan.pdbscan.pdbscan_utils as utils
 from . import cmdline_segname_editor as cmd_segname_edit
 from . import cmdline_transform_editor
 
+from . import sassie_web_segname_editor as sassie_web_segname_editor
 
 # make Python 2.x input behave as in Python 3
 try:
@@ -76,6 +77,11 @@ class PreProcessor(object):
             # TODO: Not strictly needed as it is now passed from gui_mimic
             self.ui_type = 'terminal'
 
+        if 'json' in kwargs:
+            self.json = kwargs['json']
+        else:
+            self.json = False
+
         if 'default_subs' in kwargs:
             self.default_subs = kwargs['default_subs']
         else:
@@ -109,14 +115,16 @@ class PreProcessor(object):
 
         mol = self.mol
 
-        resid_descriptions = self.create_residue_descriptions()
+        self.resid_descriptions = self.create_residue_descriptions()
 
         if self.ui_type == 'terminal':
 
             ui_output = cmd_segname_edit.SegnameEditor(
-                mol.segnames(), resid_descriptions, max_row=20).get_segment_starts()
+                mol.segnames(), self.resid_descriptions, max_row=20).get_segment_starts()
 
         else:
+            ui_output = sassie_web_segname_editor.SegnameEditor(
+                mol.segnames(), self.resid_descriptions, self.json).get_segment_starts()
 
             self.logger.info('SHOULD NOT GET HERE')
             self.logger.info('SHOULD NOT GET HERE')
@@ -624,8 +632,13 @@ class PreProcessor(object):
         """
 
         mol = self.mol
+        self.resid_descriptions = self.create_residue_descriptions()
 
         accepted_segmentation = False
+
+        self.logger.info('UI_TYPE = ' + self.ui_type)
+        self.logger.info('UI_TYPE = ' + self.ui_type)
+        self.logger.info('UI_TYPE = ' + self.ui_type)
 
         if self.ui_type == 'terminal':
             print(
@@ -634,14 +647,43 @@ class PreProcessor(object):
         elif self.ui_type == 'sassie_web':
             ### need to get a yes/no answer from sassie-web
             ###  for now I will just set it to no
-            choice = 'no'
+            self.logger.info('GETTING READY TO CHAT WITH SASSIE WEB') 
+            self.logger.info('GETTING READY TO CHAT WITH SASSIE WEB') 
+            self.logger.info('GETTING READY TO CHAT WITH SASSIE WEB') 
+            
+            se = sassie_web_segname_editor.SegnameEditor(\
+                mol.segnames(), self.resid_descriptions, self.json)
+            
+         
+            self.logger.info('TYPE SE.ANSWER = ' + str(type(se.answer)))
+            self.logger.info('TYPE SE.ANSWER = ' + str(type(se.answer)))
+            self.logger.info('TYPE SE.ANSWER = ' + str(type(se.answer)))
+           
+            #for k, v in se.answer.iteritems(): 
+            #    self.logger.info('se.answer[' + k +'] = ' + v)
+            #    self.logger.info('se.answer[' + k +'] = ' + v)
+            #    self.logger.info('se.answer[' + k +'] = ' + v)
+             
+            choice = json.dumps(se.answer['_response'])
+            
+            self.logger.info('SASSIE_WEB CHOICE = ' + choice) 
+            self.logger.info('SASSIE_WEB CHOICE = ' + choice) 
+            self.logger.info('SASSIE_WEB CHOICE = ' + choice) 
+
+            if choice == 'yes':
+                choice = 'no'
+
+            self.logger.info('SASSIE_WEB CHOICE = ' + choice) 
+            self.logger.info('SASSIE_WEB CHOICE = ' + choice) 
+            self.logger.info('SASSIE_WEB CHOICE = ' + choice) 
+
+            accepted_segmentation = True
 
         while not accepted_segmentation:
 
             if self.ui_type == 'terminal':
                 choice = input().lower()
             elif self.ui_type == 'sassie_web':
-                choice = 'no'
                 self.logger.info('CHOICE = ' + choice)
                 self.logger.info('CHOICE = ' + choice)
                 self.logger.info('CHOICE = ' + choice)
@@ -660,8 +702,12 @@ class PreProcessor(object):
                 accepted_segmentation = True
 
         accepted_sequences = False
+        accepted_sequences = True
      
         if self.ui_type == 'sassie_web': 
+     
+     
+             
       
             self.logger.info('SHOULD QUIT HERE') 
             self.logger.info('SHOULD QUIT HERE') 
@@ -737,6 +783,7 @@ class PreProcessor(object):
             print("There are no existing biological unit transforms")
 
         choice_made = False
+        choice_made = True
 
         while not choice_made:
             print(

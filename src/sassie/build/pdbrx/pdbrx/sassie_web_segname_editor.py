@@ -28,6 +28,8 @@ import sys
 from StringIO import StringIO
 import numpy as np
 
+import sassie.util.communication as communication
+
 
 class SegnameEditor():
     """
@@ -35,7 +37,7 @@ class SegnameEditor():
     SasMol objects
     """
 
-    def __init__(self, segnames, resid_descriptions):
+    def __init__(self, segnames, resid_descriptions, json_variables):
         """
         Setup the curses environment and display to show residue infromation and
         editing instructions to the user
@@ -52,10 +54,45 @@ class SegnameEditor():
 
         self.segnames = segnames
         self.resid_descriptions = resid_descriptions
+        self.json_variables = json_variables
 
         # Get initial locations of segment name changes in description list
         self.starting_breaks = np.where(
             self.resid_descriptions[:-1, 0] != self.resid_descriptions[1:, 0])[0]
+
+	self.answer = self.ask_question_edit_segmentation()
+
+        return 
+
+    def ask_question_edit_segmentation(self):
+
+        my_question = '''
+{
+    "id" : "q1"
+    ,"title" : "Segment Edit Query"
+    ,"text" : "<p>Do you want to edit the system segment definitions?</p><hr>"
+    ,"fields" : [
+                   {
+                   "type"    : "listbox",
+                   "id"      : "segment_edit_list_box",
+                   "label"    : "select yes or no",
+                   "fontfamily" :"monospace",
+                   "values"  : [
+                                "yes",
+                                "no"
+                               ],
+                   "return" : [
+                                "yes",
+                                "no"
+                              ]
+                   } 
+    ]
+}
+'''.strip()
+
+        answer = communication.tcpquestion(self.json_variables, my_question);
+
+        return answer
 
 
         '''

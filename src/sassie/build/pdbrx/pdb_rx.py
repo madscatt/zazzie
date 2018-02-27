@@ -45,7 +45,6 @@ class PDBRx():
     
     def main(self, input_variables, txtOutput, **kwargs):
       
-      
         try: 
             if kwargs:
                 self.json_variables = {}
@@ -149,7 +148,7 @@ class PDBRx():
 
             pgui('Preprocessing starts here')
             #preprocessor = pdbrx.preprocessor.PreProcessor(mol=mol,default_subs=True,ui=mvars.gui)
-            preprocessor = pdbrx.preprocessor.PreProcessor(mol=mol,default_subs=True,ui=mvars.gui,logger=log)
+            preprocessor = pdbrx.preprocessor.PreProcessor(mol=mol,default_subs=True,ui=mvars.gui,logger=log, json=self.json_variables)
 
             for line in report.generate_simulation_prep_report(mol):
 
