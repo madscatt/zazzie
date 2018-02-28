@@ -623,7 +623,10 @@ class PreProcessor(object):
 
         return residue_descriptions
 
-    def handle_edit_options(self):
+
+
+    def handle_sassie_web_edit_options(self):
+
         """
         Present user with options to edit segmentation, sequence and BIOMT from
         the commandline.
@@ -640,53 +643,35 @@ class PreProcessor(object):
         self.logger.info('UI_TYPE = ' + self.ui_type)
         self.logger.info('UI_TYPE = ' + self.ui_type)
 
-        if self.ui_type == 'terminal':
-            print(
-                "Do you wish to edit the system segmentation? (answer [y]es/[n]o)")
-
-        elif self.ui_type == 'sassie_web':
-            ### need to get a yes/no answer from sassie-web
-            ###  for now I will just set it to no
-            self.logger.info('GETTING READY TO CHAT WITH SASSIE WEB') 
-            self.logger.info('GETTING READY TO CHAT WITH SASSIE WEB') 
-            self.logger.info('GETTING READY TO CHAT WITH SASSIE WEB') 
+        self.logger.info('GETTING READY TO CHAT WITH SASSIE WEB') 
+        self.logger.info('GETTING READY TO CHAT WITH SASSIE WEB') 
+        self.logger.info('GETTING READY TO CHAT WITH SASSIE WEB') 
             
-            se = sassie_web_segname_editor.SegnameEditor(\
+        se = sassie_web_segname_editor.SegnameEditor(\
                 mol.segnames(), self.resid_descriptions, self.json)
             
          
-            self.logger.info('TYPE SE.ANSWER = ' + str(type(se.answer)))
-            self.logger.info('TYPE SE.ANSWER = ' + str(type(se.answer)))
-            self.logger.info('TYPE SE.ANSWER = ' + str(type(se.answer)))
+        self.logger.info('TYPE SE.ANSWER = ' + str(type(se.answer)))
+        self.logger.info('TYPE SE.ANSWER = ' + str(type(se.answer)))
+        self.logger.info('TYPE SE.ANSWER = ' + str(type(se.answer)))
            
-            #for k, v in se.answer.iteritems(): 
-            #    self.logger.info('se.answer[' + k +'] = ' + v)
-            #    self.logger.info('se.answer[' + k +'] = ' + v)
-            #    self.logger.info('se.answer[' + k +'] = ' + v)
-             
-            choice = json.dumps(se.answer['_response'])
+        choice = json.dumps(se.answer['_response'])
             
-            self.logger.info('SASSIE_WEB CHOICE = ' + choice) 
-            self.logger.info('SASSIE_WEB CHOICE = ' + choice) 
-            self.logger.info('SASSIE_WEB CHOICE = ' + choice) 
+        self.logger.info('SASSIE_WEB CHOICE = ' + choice) 
+        self.logger.info('SASSIE_WEB CHOICE = ' + choice) 
+        self.logger.info('SASSIE_WEB CHOICE = ' + choice) 
 
-            if choice == 'yes':
-                choice = 'no'
+        if choice == 'yes':
+            choice = 'no'
 
-            self.logger.info('SASSIE_WEB CHOICE = ' + choice) 
-            self.logger.info('SASSIE_WEB CHOICE = ' + choice) 
-            self.logger.info('SASSIE_WEB CHOICE = ' + choice) 
+        self.logger.info('SASSIE_WEB CHOICE = ' + choice) 
+        self.logger.info('SASSIE_WEB CHOICE = ' + choice) 
+        self.logger.info('SASSIE_WEB CHOICE = ' + choice) 
 
-            accepted_segmentation = True
+        accepted_segmentation = True
 
         while not accepted_segmentation:
 
-            if self.ui_type == 'terminal':
-                choice = input().lower()
-            elif self.ui_type == 'sassie_web':
-                self.logger.info('CHOICE = ' + choice)
-                self.logger.info('CHOICE = ' + choice)
-                self.logger.info('CHOICE = ' + choice)
             if choice in ['y', 'yes']:
 
                 segname_starts = self.get_user_segmentation()
@@ -704,20 +689,6 @@ class PreProcessor(object):
         accepted_sequences = False
         accepted_sequences = True
      
-        if self.ui_type == 'sassie_web': 
-     
-     
-             
-      
-            self.logger.info('SHOULD QUIT HERE') 
-            self.logger.info('SHOULD QUIT HERE') 
-            self.logger.info('SHOULD QUIT HERE') 
-            import sys ; sys.exit()
-         
-            self.logger.info('SHOULD NOT BE HERE') 
-            self.logger.info('SHOULD NOT BE HERE') 
-            self.logger.info('SHOULD NOT BE HERE') 
-
         seq_segnames = mol.segname_info.sequence.keys()
 
         while not accepted_sequences:
@@ -808,6 +779,131 @@ class PreProcessor(object):
 
         return
 
+    def handle_terminal_edit_options(self):
+        """
+        Present user with options to edit segmentation, sequence and BIOMT from
+        the commandline.
+
+        @return:
+        """
+
+        mol = self.mol
+        self.resid_descriptions = self.create_residue_descriptions()
+
+        accepted_segmentation = False
+
+        print(
+                "Do you wish to edit the system segmentation? (answer [y]es/[n]o)")
+
+        while not accepted_segmentation:
+
+            choice = input().lower()
+
+            if choice in ['y', 'yes']:
+
+                segname_starts = self.get_user_segmentation()
+
+                if segname_starts:
+                    self.redefine_segments(segname_starts)
+                    mol.check_segname_simulation_preparedness()
+
+                accepted_segmentation = True
+
+            elif choice in ['n', 'no']:
+
+                accepted_segmentation = True
+
+        accepted_sequences = False
+     
+        seq_segnames = mol.segname_info.sequence.keys()
+
+        while not accepted_sequences:
+
+            print("Current sequences (lowercase indicates residues not in coordinates): ")
+
+            for segname in seq_segnames:
+                seq = mol.segname_info.sequence_to_fasta(
+                    segname, missing_lower=True)
+                print(segname + ':')
+                print(seq)
+
+            print("Do you want to edit any sequences? (answer [y]es/[n]o)")
+            choice = input().lower()
+
+            if choice in ['y', 'yes']:
+
+                if len(seq_segnames) > 1:
+
+                    print("Which segment do you wish to provide a sequence for?")
+                    segname = input().strip()
+
+                else:
+                    segname = seq_segnames[0]
+
+                if segname in seq_segnames:
+
+                    moltype = self.get_segment_moltype(segname)
+                    fasta_sequence = self.get_user_fasta_sequence(
+                        segname, moltype)
+
+                    if fasta_sequence:
+
+                        success = self.complete_sequence_fasta(
+                            segname, fasta_sequence)
+
+                        if not success:
+
+                            print(
+                                "FASTA did not match existing sequence description")
+
+                    else:
+
+                        print("Invalid FASTA sequence")
+
+                else:
+
+                    print("Invalid segname selected")
+
+            elif choice in ['n', 'no']:
+
+                accepted_sequences = True
+
+        if mol.segname_info.biomt:
+
+            print("Current biological unit transforms: ")
+
+            import sassie.build.pdbscan.pdbscan.report as report
+            for line in report.create_biomt_summary(mol.segname_info.biomt):
+
+                print(line)
+        else:
+            print("There are no existing biological unit transforms")
+
+        choice_made = False
+
+        while not choice_made:
+            print(
+                "Do you want to add a new biological unit transform? (answer [y]es/[n]o)")
+            choice = input().lower()
+
+            if choice in ['y', 'yes']:
+
+                self.get_biological_unit_transform()
+                choice_made = True
+
+                if mol.segname_info.biomt:
+
+                    print("Updated biological unit transforms: ")
+
+                    for line in report.create_biomt_summary(mol.segname_info.biomt):
+
+                        print(line)
+
+            elif choice in ['n', 'no']:
+                choice_made = True
+
+        return
+
     def user_edit_options(self):
         """
         Get user input from terminal or other source. ONLY TERMINAL CURRENTLY
@@ -815,12 +911,12 @@ class PreProcessor(object):
         @return:
         """
 
-        if self.ui_type == 'terminal' or self.ui_type == 'sassie_web':
+        if self.ui_type == 'terminal':
 
-            self.handle_edit_options()
+            self.handle_terminal_edit_options()
 
-        else:
-            import sys; sys.exit()
-            pass
+        elif self.ui_type == 'sassie_web':
+
+            self.handle_sassie_web_edit_options()
 
         return

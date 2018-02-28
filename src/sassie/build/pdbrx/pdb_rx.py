@@ -45,6 +45,8 @@ class PDBRx():
     
     def main(self, input_variables, txtOutput, **kwargs):
       
+        self.json_variables = False 
+        
         try: 
             if kwargs:
                 self.json_variables = {}
@@ -52,7 +54,7 @@ class PDBRx():
                 self.json_variables['_tcphost'] = kwargs['_tcphost']
                 self.json_variables['_tcpport'] = kwargs['_tcpport']
         except:
-            self.json_variables = False 
+            pass
              
         self.mvars = module_variables()
         

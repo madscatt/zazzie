@@ -24,7 +24,7 @@ pdbfile = 'testing/data/small.pdb'
 topfile = os.path.join(sasconfig.__bin_path__,'toppar','top_all27_prot_na.inp')
 use_defaults = False
 gui = 'terminal'
-gui = 'sassie_web'
+#gui = 'sassie_web'
 
 #### end user input ####
 #### end user input ####
