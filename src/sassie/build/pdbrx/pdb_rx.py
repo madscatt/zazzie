@@ -90,35 +90,6 @@ class PDBRx():
         
         return
 
-    def ask_question(self, report):
-
-        my_question = '''
-{
-    "id" : "q1"
-    ,"title" : "Segment Report"
-    ,"text" : "<p>This summaries the segment and chain information for each residue in your PDB file</p><hr>"
-    ,"fields" : [
-        {
-            "id" : "l1"
-            ,"type" : "label"
-            ,"label" : "<center>this is label text</center>"
-        }
-        ,{
-            "id" : "t1"
-            ,"type" : "text"
-            ,"label" : "tell me your name:"
-        }
-        ,{
-            "id" : "cb1"
-            ,"type" : "checkbox"
-            ,"label" : "are you sure about the speed of light?"
-        }
-    ]
-}
-'''.strip()
-        answer = communication.tcpquestion(self.json_variables, my_question );
-        return
-
     def run_scan(self):
 
         mvars = self.mvars
@@ -152,11 +123,13 @@ class PDBRx():
             #preprocessor = pdbrx.preprocessor.PreProcessor(mol=mol,default_subs=True,ui=mvars.gui)
             preprocessor = pdbrx.preprocessor.PreProcessor(mol=mol,default_subs=True,ui=mvars.gui,logger=log, json=self.json_variables)
 
-            for line in report.generate_simulation_prep_report(mol):
+            pdbscan_report = report.generate_simulation_prep_report(mol)
+
+            for line in pdbscan_report:
 
                 pgui(line)
 
-            preprocessor.user_edit_options()
+            preprocessor.user_edit_options(pdbscan_report)
 
         pgui('Build scaffold structure')
 

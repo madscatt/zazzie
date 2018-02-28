@@ -124,7 +124,7 @@ class PreProcessor(object):
 
         else:
             ui_output = sassie_web_segname_editor.SegnameEditor(
-                mol.segnames(), self.resid_descriptions, self.json).get_segment_starts()
+                mol.segnames(), self.resid_descriptions, self.json, self.logger).get_segment_starts()
 
             self.logger.info('SHOULD NOT GET HERE')
             self.logger.info('SHOULD NOT GET HERE')
@@ -623,9 +623,7 @@ class PreProcessor(object):
 
         return residue_descriptions
 
-
-
-    def handle_sassie_web_edit_options(self):
+    def handle_sassie_web_edit_options(self, pdbscan_report):
 
         """
         Present user with options to edit segmentation, sequence and BIOMT from
@@ -647,15 +645,10 @@ class PreProcessor(object):
         self.logger.info('GETTING READY TO CHAT WITH SASSIE WEB') 
         self.logger.info('GETTING READY TO CHAT WITH SASSIE WEB') 
             
-        se = sassie_web_segname_editor.SegnameEditor(\
-                mol.segnames(), self.resid_descriptions, self.json)
-            
-         
-        self.logger.info('TYPE SE.ANSWER = ' + str(type(se.answer)))
-        self.logger.info('TYPE SE.ANSWER = ' + str(type(se.answer)))
-        self.logger.info('TYPE SE.ANSWER = ' + str(type(se.answer)))
-           
-        choice = json.dumps(se.answer['_response'])
+        sassie_query_object  = sassie_web_segname_editor.SegnameEditor(\
+                mol.segnames(), self.resid_descriptions, self.json, pdbscan_report, self.logger)
+        
+        choice = sassie_query_object.answer["_response"]["button"]
             
         self.logger.info('SASSIE_WEB CHOICE = ' + choice) 
         self.logger.info('SASSIE_WEB CHOICE = ' + choice) 
@@ -702,7 +695,7 @@ class PreProcessor(object):
                 print(seq)
 
             print("Do you want to edit any sequences? (answer [y]es/[n]o)")
-            choice = input().lower()
+        #    choice = input().lower()
 
             if choice in ['y', 'yes']:
 
@@ -759,7 +752,7 @@ class PreProcessor(object):
         while not choice_made:
             print(
                 "Do you want to add a new biological unit transform? (answer [y]es/[n]o)")
-            choice = input().lower()
+        #    choice = input().lower()
 
             if choice in ['y', 'yes']:
 
@@ -904,7 +897,7 @@ class PreProcessor(object):
 
         return
 
-    def user_edit_options(self):
+    def user_edit_options(self, pdbscan_report):
         """
         Get user input from terminal or other source. ONLY TERMINAL CURRENTLY
 
@@ -917,6 +910,10 @@ class PreProcessor(object):
 
         elif self.ui_type == 'sassie_web':
 
-            self.handle_sassie_web_edit_options()
+            self.handle_sassie_web_edit_options(pdbscan_report)
+            self.logger.info('I SHOULD QUIT HERE')
+            self.logger.info('I SHOULD QUIT HERE')
+            self.logger.info('I SHOULD QUIT HERE')
+            import sys ; sys.exit()
 
         return
