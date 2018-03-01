@@ -30,10 +30,62 @@ import numpy as np
 
 import sassie.util.communication as communication
 
+class FastaEditor():
+    """
+    Interface to for input/ouput of questions related to sequence
+    """
+    
+    def __init__(self, json_variables, sequence_report, log):
+        """
+        Setup the display to show sequence infromation and
+        editing instructions to the user
+        @type json_variables : list
+        @type json_variables : string
+        @type log : logger
+        
+        """
+
+        self.json_variables = json_variables
+        self.log = log
+
+	self.answer = self.ask_question_edit_sequence(sequence_report)
+
+        return 
+    
+    def ask_question_edit_sequence(self, sequence_report):
+
+        timeout = 3600
+
+        pdbscan_dict = {} 
+        pdbscan_dict["id"] =  "text_2"
+        pdbscan_dict["type"] = "textarea"
+        pdbscan_dict["default"] = sequence_report
+        pdbscan_dict["rows"] = len(sequence_report) + 6
+        pdbscan_dict["rows"] = sequence_report.count('\n') + 4
+        pdbscan_dict["cols"] = 180
+        pdbscan_dict["fontfamily"] = "monospace"
+
+        label_dict = {}
+        label_dict["id"] = "label_2"
+        label_dict["type"] = "label"
+        label_dict["label"] = "<p><hr><br>Do you wish to edit sequences?<br><br>"
+
+        my_question = {}
+        my_question["id"] = "q2"
+        my_question["title"] = "PDBScan Sequence Report"
+        my_question["text"] = "<p>Review system seguence report below</p><br><hr><br>"
+        my_question["buttons"] = ["yes", "no"]
+        my_question["fields"] = [ pdbscan_dict, label_dict ]
+
+        self.log.info(json.dumps(pdbscan_dict))
+
+        answer = communication.tcpquestion(self.json_variables, my_question, timeout)
+        
+        return answer
 
 class SegnameEditor():
     """
-    Curses interface to allow users to split, join and rename segments in
+    Interface to allow users to split, join and rename segments in
     SasMol objects
     """
 
@@ -61,58 +113,38 @@ class SegnameEditor():
         self.starting_breaks = np.where(
             self.resid_descriptions[:-1, 0] != self.resid_descriptions[1:, 0])[0]
 
-	#self.answer = self.ask_question_edit_segmentation(pdbscan_report)
-	self.answer = self.ask_question_edit_segmentation_dict(pdbscan_report)
+	self.answer = self.ask_question_edit_segmentation(pdbscan_report)
 
         return 
     
-    def ask_question_edit_segmentation_dict(self, pdbscan_report):
+    def ask_question_edit_segmentation(self, pdbscan_report):
+
+        timeout = 3600
 
         pdbscan_dict = {} 
         pdbscan_dict["id"] =  "text_1"
-        pdbscan_dict["type"] = "text"
-        pdbscan_dict["label"] = pdbscan_report
+        pdbscan_dict["type"] = "textarea"
+        pdbscan_dict["default"] = '\n'.join(pdbscan_report)
+        #pdbscan_dict["label"] = "PDBScan Segment Report"
+        pdbscan_dict["rows"] = len(pdbscan_report) + 6
+        pdbscan_dict["cols"] = 180
+        pdbscan_dict["fontfamily"] = "monospace"
+
+        label_dict = {}
+        label_dict["id"] = "label_1"
+        label_dict["type"] = "label"
+        label_dict["label"] = "<p><hr><br>Do you wish to edit the segment definitions?<br><br>"
 
         my_question = {}
         my_question["id"] = "q1"
-        my_question["title"] = "title"
-        my_question["title"] = "title"
-        my_question["text"] = "<p>Do you want to edit the system segment definitions?</p><hr>"
+        my_question["title"] = "PDBScan Seqment Report"
+        my_question["text"] = "<p>Review system segment report below</p><br><hr><br>"
         my_question["buttons"] = ["yes", "no"]
-        my_question["fields"] = [ pdbscan_dict ]
-
-        #string_my_question = ''.join('{} : {}'.format(key, val) for key, val in my_question.items())
-        #my_question = json.loads(string_my_question)
+        my_question["fields"] = [ pdbscan_dict, label_dict ]
 
         self.log.info(json.dumps(pdbscan_dict))
 
-        answer = communication.tcpquestion(self.json_variables, my_question);
-        
-        return answer
-
-    def ask_question_edit_segmentation(self, pdbscan_report):
-
-        my_question = '''
-{
-    "id" : "q1"
-    ,"title" : "Segment Edit Query"
-    ,"text" : "<p>Do you want to edit the system segment definitions?</p><hr>"
-    ,"buttons"  : [
-                    "yes"
-                    ,"no"
-                   ]
-    ,"fields" : [
-                   {
-                   "type"    : "label"
-                   ,"id"      : "segment_edit_list_box"
-                   ,"label"    : "select yes or no"
-                   ,"fontfamily" :"monospace"
-                   } 
-    ]
-}
-'''.strip()
-
-        answer = communication.tcpquestion(self.json_variables, my_question);
+        answer = communication.tcpquestion(self.json_variables, my_question, timeout);
         
         return answer
 

@@ -35,7 +35,7 @@ import sassie.build.pdbscan.pdbscan.pdbscan_utils as utils
 from . import cmdline_segname_editor as cmd_segname_edit
 from . import cmdline_transform_editor
 
-from . import sassie_web_segname_editor as sassie_web_segname_editor
+from . import sassie_web_editor as sassie_web_editor
 
 # make Python 2.x input behave as in Python 3
 try:
@@ -123,7 +123,7 @@ class PreProcessor(object):
                 mol.segnames(), self.resid_descriptions, max_row=20).get_segment_starts()
 
         else:
-            ui_output = sassie_web_segname_editor.SegnameEditor(
+            ui_output = sassie_web_editor.SegnameEditor(
                 mol.segnames(), self.resid_descriptions, self.json, self.logger).get_segment_starts()
 
             self.logger.info('SHOULD NOT GET HERE')
@@ -623,6 +623,18 @@ class PreProcessor(object):
 
         return residue_descriptions
 
+    def create_sequence_report(self, mol, seq_segnames): 
+
+        sequence_report = 'Current residue sequences for each segment (uppercase letters have coordinates while lowercase letters do not have coordinates): \n\n'
+
+        for segname in seq_segnames:
+            seq = mol.segname_info.sequence_to_fasta(
+                    segname, missing_lower=True)
+            sequence_report += 'segname ' + segname + ':\n'
+            sequence_report += seq + '\n\n'
+
+        return sequence_report 
+
     def handle_sassie_web_edit_options(self, pdbscan_report):
 
         """
@@ -638,30 +650,17 @@ class PreProcessor(object):
         accepted_segmentation = False
 
         self.logger.info('UI_TYPE = ' + self.ui_type)
-        self.logger.info('UI_TYPE = ' + self.ui_type)
-        self.logger.info('UI_TYPE = ' + self.ui_type)
-
-        self.logger.info('GETTING READY TO CHAT WITH SASSIE WEB') 
-        self.logger.info('GETTING READY TO CHAT WITH SASSIE WEB') 
-        self.logger.info('GETTING READY TO CHAT WITH SASSIE WEB') 
             
-        sassie_query_object  = sassie_web_segname_editor.SegnameEditor(\
+        sassie_query_object  = sassie_web_editor.SegnameEditor(\
                 mol.segnames(), self.resid_descriptions, self.json, pdbscan_report, self.logger)
         
         choice = sassie_query_object.answer["_response"]["button"]
             
-        self.logger.info('SASSIE_WEB CHOICE = ' + choice) 
-        self.logger.info('SASSIE_WEB CHOICE = ' + choice) 
-        self.logger.info('SASSIE_WEB CHOICE = ' + choice) 
-
         if choice == 'yes':
             choice = 'no'
 
-        self.logger.info('SASSIE_WEB CHOICE = ' + choice) 
-        self.logger.info('SASSIE_WEB CHOICE = ' + choice) 
-        self.logger.info('SASSIE_WEB CHOICE = ' + choice) 
-
-        accepted_segmentation = True
+        if choice == 'no':
+            accepted_segmentation = True
 
         while not accepted_segmentation:
 
@@ -680,29 +679,38 @@ class PreProcessor(object):
                 accepted_segmentation = True
 
         accepted_sequences = False
-        accepted_sequences = True
-     
+       
         seq_segnames = mol.segname_info.sequence.keys()
+
+        sequence_report = self.create_sequence_report(mol, seq_segnames) 
+        sassie_query_object = sassie_web_editor.FastaEditor(self.json, sequence_report, self.logger) 
+
+        choice = sassie_query_object.answer["_response"]["button"]
+
+        self.logger.info('SEQUENCE EDIT CHOICE = ' + choice)
+        
+        if choice == "no":
+            accepted_sequences = True
 
         while not accepted_sequences:
 
-            print("Current sequences (lowercase indicates residues not in coordinates): ")
+            sequence_report = self.create_sequence_report(mol, seq_segnames) 
+            sassie_query_object = sassie_web_editor.FastaEditor(self.json, sequence_report, self.logger) 
 
-            for segname in seq_segnames:
-                seq = mol.segname_info.sequence_to_fasta(
-                    segname, missing_lower=True)
-                print(segname + ':')
-                print(seq)
+            choice = sassie_query_object.answer["_response"]["button"]
 
-            print("Do you want to edit any sequences? (answer [y]es/[n]o)")
-        #    choice = input().lower()
+            self.logger.info('SEQUENCE CHOICE = ' + choice)
+
+#            print("Do you want to edit any sequences? (answer [y]es/[n]o)")
+
+            choice = "no"
 
             if choice in ['y', 'yes']:
 
                 if len(seq_segnames) > 1:
 
                     print("Which segment do you wish to provide a sequence for?")
-                    segname = input().strip()
+            #        segname = input().strip()
 
                 else:
                     segname = seq_segnames[0]

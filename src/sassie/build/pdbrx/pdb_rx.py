@@ -119,12 +119,13 @@ class PDBRx():
 
         if not mvars.use_defaults:
 
-            pgui('Preprocessing starts here')
+            pgui('Preprocessing')
             #preprocessor = pdbrx.preprocessor.PreProcessor(mol=mol,default_subs=True,ui=mvars.gui)
             preprocessor = pdbrx.preprocessor.PreProcessor(mol=mol,default_subs=True,ui=mvars.gui,logger=log, json=self.json_variables)
 
             pdbscan_report = report.generate_simulation_prep_report(mol)
 
+            pgui('Printing pdbscan_report')
             for line in pdbscan_report:
 
                 pgui(line)
