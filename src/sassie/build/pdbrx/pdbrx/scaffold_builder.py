@@ -441,7 +441,7 @@ class ScaffoldBuilder():
 
     def get_segnames_altlocs_selected(self):
         '''
-        Return list of segnames fro segments containing altlocs from those
+        Return list of segnames from segments containing altlocs from those
         selected for final model.
 
         @return:
