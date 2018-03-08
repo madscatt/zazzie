@@ -121,7 +121,8 @@ class PDBRx():
 
             pgui('Preprocessing')
             #preprocessor = pdbrx.preprocessor.PreProcessor(mol=mol,default_subs=True,ui=mvars.gui)
-            preprocessor = pdbrx.preprocessor.PreProcessor(mol=mol,default_subs=True,ui=mvars.gui,logger=log, json=self.json_variables)
+            #preprocessor = pdbrx.preprocessor.PreProcessor(mol=mol,default_subs=True,ui=mvars.gui,logger=log, json=self.json_variables)
+            preprocessor = pdbrx.preprocessor.user_input(mvars, log, pgui, mol, self.json_variables)
 
             pdbscan_report = report.generate_simulation_prep_report(mol)
 
