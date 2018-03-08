@@ -22,15 +22,17 @@ step in PDB Rx
 
 from __future__ import print_function
 
-import logging
-import re
 import json
-from textwrap import TextWrapper
 
-import yaml
-import numpy as np
-import sassie.build.pdbscan.pdbscan.data_struct as data_struct
 import sassie.build.pdbscan.pdbscan.pdbscan_utils as utils
+
+#import sassie.build.pdbrx.pdbrx.segname_utils as segname_utils
+#import sassie.build.pdbrx.pdbrx.fasta_utils as fasta_utils
+#import sassie.build.pdbrx.pdbrx.biomt_utils as biomt_utils
+
+from . import segname_utils as segname_utils
+from . import fasta_utils as fasta_utils
+from . import biomt_utils as biomt_utils
 
 from . import cmdline_segname_editor as cmd_segname_edit
 from . import cmdline_transform_editor
@@ -42,7 +44,6 @@ try:
     input = raw_input
 except NameError:
     pass
-
 
 class PreProcessor(object):
     """
@@ -61,9 +62,6 @@ class PreProcessor(object):
        
         if 'logger' in kwargs:
             self.logger = kwargs['logger']
-        else:
-            #TODO: the following has not been verified to work
-            self.logger = logging.getLogger(__name__)
 
         if 'mol' in kwargs:
             self.mol = kwargs['mol']
@@ -103,7 +101,7 @@ class PreProcessor(object):
 
         mol = self.mol
 
-        self.resid_descriptions = self.create_residue_descriptions()
+        self.resid_descriptions = segname_utils.create_residue_descriptions(mol)
 
         if self.ui_type == 'terminal':
 
@@ -123,7 +121,7 @@ class PreProcessor(object):
 
         if ui_output:
             segname_starts = json.loads(
-                ui_output, object_hook=self.convert_segname_start)
+                ui_output, object_hook=segname_utils.convert_segname_start)
         else:
             segname_starts = {}
 
@@ -151,7 +149,7 @@ class PreProcessor(object):
 
             fasta_file = utils.get_command_line_filepath(prompt)
 
-            ordered_names, sequences = self.parse_fasta_file(fasta_file)
+            ordered_names, sequences = fasta_utils.parse_fasta_file(fasta_file)
 
             if len(ordered_names) == 1:
                 chosen = ordered_names[0]
@@ -159,7 +157,7 @@ class PreProcessor(object):
 
                 print('Choose sequence to use: \n')
 
-                rep, options = self.list_fasta_sequences(
+                rep, options = fasta_utils.list_fasta_sequences(
                     sequences, ordered_names)
 
                 for line in rep:
@@ -176,9 +174,9 @@ class PreProcessor(object):
 
                 chosen = ordered_names[user_input]
 
-            fasta_sequence = self.reformat_fasta(sequences[chosen])
+            fasta_sequence = fasta_utils.reformat_fasta(sequences[chosen])
 
-            valid_fasta = self.validate_fasta(fasta_sequence, moltype)
+            valid_fasta = fasta_utils.validate_fasta(fasta_sequence, moltype)
 
         else:
 
@@ -206,7 +204,7 @@ class PreProcessor(object):
 
             ui_output = []
 
-        user_biomt = self.biomt_json2data(ui_output)
+        user_biomt = biomt_utils.biomt_json2data(ui_output)
 
         if user_biomt:
 
@@ -230,7 +228,7 @@ class PreProcessor(object):
         """
 
         mol = self.mol
-        self.resid_descriptions = self.create_residue_descriptions()
+        self.resid_descriptions = segname_utils.create_residue_descriptions(mol)
 
         accepted_segmentation = False
 
@@ -374,7 +372,7 @@ class PreProcessor(object):
         """
 
         mol = self.mol
-        self.resid_descriptions = self.create_residue_descriptions()
+        self.resid_descriptions = segname_utils.create_residue_descriptions(mol)
 
         accepted_segmentation = False
 
@@ -390,7 +388,7 @@ class PreProcessor(object):
                 segname_starts = self.get_user_segmentation()
 
                 if segname_starts:
-                    self.redefine_segments(segname_starts)
+                    segname_utils.redefine_segments(mol, segname_starts)
                     mol.check_segname_simulation_preparedness()
 
                 accepted_segmentation = True
@@ -428,13 +426,13 @@ class PreProcessor(object):
 
                 if segname in seq_segnames:
 
-                    moltype = self.get_segment_moltype(segname)
+                    moltype = segname_utils.get_segment_moltype(mol, segname)
                     fasta_sequence = self.get_user_fasta_sequence(
                         segname, moltype)
 
                     if fasta_sequence:
 
-                        success = self.complete_sequence_fasta(
+                        success = fasta_utils.complete_sequence_fasta(mol, 
                             segname, fasta_sequence)
 
                         if not success:
