@@ -84,7 +84,7 @@ class PDBRx():
         mvars.pdbfile = variables['pdbfile'][0]
         mvars.topfile = variables['topfile'][0]
         mvars.use_defaults = variables['defaults'][0]
-        mvars.gui = variables['gui'][0]
+        mvars.user_interface = variables['user_interface'][0]
 
         # TODO: Think about topology file
         
@@ -119,19 +119,16 @@ class PDBRx():
 
         if not mvars.use_defaults:
 
-            pgui('Preprocessing')
-            #preprocessor = pdbrx.preprocessor.PreProcessor(mol=mol,default_subs=True,ui=mvars.gui)
-            #preprocessor = pdbrx.preprocessor.PreProcessor(mol=mol,default_subs=True,ui=mvars.gui,logger=log, json=self.json_variables)
-            preprocessor = pdbrx.preprocessor.user_input(mvars, log, pgui, mol, self.json_variables)
-
             pdbscan_report = report.generate_simulation_prep_report(mol)
 
-            pgui('Printing pdbscan_report')
+            pgui('pdbscan_report')
             for line in pdbscan_report:
 
                 pgui(line)
 
-            preprocessor.user_edit_options(pdbscan_report)
+            pgui('running preprocessor for user input')
+
+            preprocessor = pdbrx.preprocessor.user_input(self, mol, pdbscan_report)
 
         pgui('Build scaffold structure')
 
