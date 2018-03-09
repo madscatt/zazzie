@@ -62,22 +62,6 @@ def handle_terminal_user_input(other_self, mol):
 
 ### segment terminal input processing methods
 
-def get_user_segmentation(other_self, mol):
-    """
-    Get new segmentation from user
-    @rtype :  dictionary
-    @return:  Keys = atom index of start of segment,
-                  Value = segname
-    """
-
-    ui_output = cmd_segname_edit.SegnameEditor(
-                mol.segnames(), other_self.resid_descriptions, max_row=20).get_segment_starts()
-
-    segname_starts = json.loads(
-                ui_output, object_hook = segname_utils.convert_segname_start)
-
-    return segname_starts
-
 def process_segment_input(other_self, mol):
 
     accepted_segmentation = False
@@ -91,7 +75,11 @@ def process_segment_input(other_self, mol):
 
         if choice in ['y', 'yes']:
 
-            segname_starts = get_user_segmentation(other_self, mol)
+            ui_output = cmd_segname_edit.SegnameEditor(
+                mol.segnames(), other_self.resid_descriptions, max_row=20).get_segment_starts()
+
+            segname_starts = json.loads(
+                ui_output, object_hook = segname_utils.convert_segname_start)
 
             if segname_starts:
                 segname_utils.redefine_segments(mol, segname_starts)
