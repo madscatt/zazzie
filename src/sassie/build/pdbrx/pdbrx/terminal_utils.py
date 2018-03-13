@@ -75,8 +75,14 @@ def process_segment_input(other_self, mol):
 
         if choice in ['y', 'yes']:
 
-            ui_output = cmd_segname_edit.SegnameEditor(
-                mol.segnames(), other_self.resid_descriptions, max_row=20).get_segment_starts()
+            #ui_output = cmd_segname_edit.SegnameEditor(
+            #    mol.segnames(), other_self.resid_descriptions, max_row=20).get_segment_starts()
+            #ui_output = cmd_segname_edit.SegnameEditor(
+            #    other_self, mol, max_row=20).get_segment_starts()
+            dum = cmd_segname_edit.SegnameEditor(
+                other_self, mol, max_row=20)
+
+            ui_output = segname_utils.get_segment_starts(other_self)
 
             segname_starts = json.loads(
                 ui_output, object_hook = segname_utils.convert_segname_start)

@@ -19,8 +19,194 @@ Methods to process segment based information
 
 """
 
+import json
 import numpy
 import sassie.build.pdbscan.pdbscan.data_struct as data_struct
+
+def split_segnames(other_self, mol, ndx, new_segname):
+    """
+    Split an existing segment and name the newly created segment.
+
+    @type ndx :  int
+    @param ndx:  Index of the residue selected for segment break (in list
+                     of residue descritions)
+    @type new_segname :  str
+    @param new_segname:  Name to be applied to the newly created segment
+    @return:
+    """
+
+    resid_desc = self.resid_descriptions
+
+    last_ndx = len(other_self.resid_descriptions) - 1
+
+    current_segname = other_self.resid_descriptions[ndx][0]
+
+    if ndx != 0:
+        previous_segname = other_self.resid_descriptions[ndx - 1][0]
+    else:
+        previous_segname = ''
+
+    if previous_segname == current_segname:
+
+        updated_data = []
+
+        for i in range(len(other_self.resid_descriptions)):
+
+            line = other_self.resid_descriptions[i]
+
+            if i >= ndx and other_self.resid_descriptions[i][0] == current_segname:
+                line[0] = new_segname
+
+            updated_data.append(line)
+
+        other_self.resid_descriptions = numpy.array(updated_data)
+
+        mol.segnames.append(new_segname)
+
+    return
+
+def rename_segment(other_self, mol, ndx, new_segname):
+    """
+    Change the name of selected segment (the one including the selected
+        residue).
+
+    @type ndx :  int
+    @param ndx:  Index of the user selected residue
+    @type new_segname :  str
+    @param new_segname:  New name for segment
+    @return:
+    """
+
+    target_segname = other_self.resid_descriptions[ndx][0]
+
+    updated_data = []
+
+    for line in other_self.resid_descriptions:
+        if line[0] == target_segname:
+            line[0] = new_segname
+        updated_data.append(line)
+
+    other_self.resid_descriptions = numpy.array(updated_data)
+
+    temp_segnames = [x if (x != target_segname)
+                         else new_segname for x in mol.segnames()]
+
+    mol.setSegnames(temp_segnames)
+
+    return
+
+def join_segnames(other_self, mol, ndx):
+    """
+    Join segment containing ndx-th residue to the previous segment.
+
+    @type ndx:          integer
+    @param ndx:         Index of the residue that starts segment to join
+                            previous segment
+    @return:            Updated array of lines containing: segnames, indices,
+                            resids, resnames, chains, moltypes
+    """
+
+    last_ndx = len(other_self.resid_descriptions) - 1
+
+    current_segname = other_self.resid_descriptions[ndx][0]
+    current_moltype = other_self.resid_descriptions[ndx][-1]
+
+    if ndx != 0:
+
+        previous_segname = other_self.resid_descriptions[ndx - 1][0]
+        previous_moltype = other_self.resid_descriptions[ndx - 1][-1]
+
+        moltype_match = (previous_moltype == current_moltype)
+        resid_match = (other_self.resid_descriptions[ndx - 1][2] < other_self.resid_descriptions[ndx][2])
+
+    else:
+        previous_segname = ''
+        # No previous segment, so joining makes no sense
+        moltype_match = False
+        resid_match = False
+
+    segname_mismatch = (previous_segname != current_segname)
+
+    acceptable_join = moltype_match and resid_match and segname_mismatch
+
+    error = ''
+
+    if acceptable_join:
+
+        updated_data = []
+
+        for i in range(len(other_self.resid_descriptions)):
+
+            line = other_self.resid_descriptions[i]
+
+            if i >= ndx and other_self.resid_descriptions[i][0] == current_segname:
+                line[0] = previous_segname
+
+            updated_data.append(line)
+
+        other_self.resid_descriptions = numpy.array(updated_data)
+
+        mol.segnames.remove(current_segname)
+
+    else:
+
+        if not segname_mismatch:
+            error = 'Segments with the same name cannot be joined'
+        elif not resid_match:
+            error = 'Joined segment must start with higher resid'
+        else:
+            error = 'Joined segments must have same moltype'
+
+    return error
+
+def get_segment_starts(other_self):
+    """
+    Get indicies where the resid descriptions change segment name.
+
+    @return:
+    """
+
+    new_breaks = numpy.where(other_self.resid_descriptions[:-1, 0] != other_self.resid_descriptions[1:, 0])[0]
+
+    if (new_breaks != other_self.starting_breaks).any():
+
+        new_breaks += 1
+        new_breaks = numpy.append([0], new_breaks)
+
+        start_segnames = {}
+
+        # Note residue descriptions give last atom in that residue
+        # account for that here
+        for start_ndx in new_breaks:
+            if start_ndx == 0:
+                sasmol_index = 0
+            else:
+                sasmol_index = int(other_self.resid_descriptions[start_ndx - 1][1]) + 1
+
+            start_segnames[sasmol_index] = other_self.resid_descriptions[start_ndx][0]
+
+    else:
+        start_segnames = {}
+
+    return json.dumps(start_segnames)
+
+def valid_segname(segname, segnames):
+    """
+    Check that the input segment name is valid to use for a new segment,
+    i.e is 4 characters long or less and not an existing segment name.
+
+    @type segname :  str
+    @param segname:  Proposed segment name
+    @rtype :  bool
+    @return:  Is the input segname valid
+    """
+
+    valid = False
+
+    if len(segname) <= 4 and segname not in segnames:
+        valid = True
+
+    return valid
 
 def convert_segname_start(data):
     """

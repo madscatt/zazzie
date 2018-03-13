@@ -22,6 +22,8 @@ Command line editor of segment divides in SasMol objects
 
 from __future__ import division  # You don't need this in Python3
 
+from . import segname_utils as segname_utils
+
 import curses
 import curses.wrapper
 
@@ -38,7 +40,7 @@ class SegnameEditor():
     SasMol objects
     """
 
-    def __init__(self, segnames, resid_descriptions, max_row=10):
+    def __init__(self, other_self, mol, max_row=10):
         """
         Setup the curses environment and display to show residue infromation and
         editing instructions to the user
@@ -53,14 +55,11 @@ class SegnameEditor():
         @param max_row:  Maximum number of rows to be displayed in terminal
         """
 
-        self.segnames = segnames
-        self.resid_descriptions = resid_descriptions
-
         # Get initial locations of segment name changes in description list
-        self.starting_breaks = np.where(
-            self.resid_descriptions[:-1, 0] != self.resid_descriptions[1:, 0])[0]
+        other_self.starting_breaks = np.where(
+            other_self.resid_descriptions[:-1, 0] != other_self.resid_descriptions[1:, 0])[0]
 
-        self.display_lines = self.create_display_lines()
+        self.display_lines = self.create_display_lines(other_self)
 
         self.screen = None
 
@@ -82,7 +81,7 @@ class SegnameEditor():
         self.page = 1
 
         self.screen_setup()
-        curses.wrapper(self.curses_loop)
+        curses.wrapper(self.curses_loop, other_self, mol)
         self.curses_stop()
 
         return
@@ -209,7 +208,8 @@ class SegnameEditor():
 
         return
 
-    def curses_loop(self, stdscr):
+    #def curses_loop(stdscr, self, other_self, mol):
+    def curses_loop(self, stdscr, other_self, mol):
         """
         Main loop to obtain and interpret user input
 
@@ -277,8 +277,8 @@ class SegnameEditor():
                     max_row + 4, 3, "                                                         ")
                 self.screen.refresh()
 
-                if self.valid_segname(new_segname):
-                    self.split_segnames(ndx, new_segname)
+                if segname_utils.valid_segname(new_segname, mol.segnames()):
+                    segname_utils.split_segnames(other_self, mol, ndx, new_segname)
                     self.display_lines = self.create_display_lines()
                     self.box.refresh()
 
@@ -286,7 +286,7 @@ class SegnameEditor():
 
                 ndx = self.position - 1
 
-                error = self.join_segnames(ndx)
+                error = segname_utils.join_segnames(other_self, mol, ndx)
 
                 if error:
                     self.screen.addstr(max_row + 4, 3, error)
@@ -297,7 +297,7 @@ class SegnameEditor():
             elif x in [ord('r'), ord('R')]:
 
                 ndx = self.position - 1
-                current_segment = self.resid_descriptions[ndx][0]
+                current_segment = other_self.resid_descriptions[ndx][0]
 
                 curses.echo()
                 self.screen.addstr(
@@ -309,9 +309,9 @@ class SegnameEditor():
                     max_row + 4, 3, "                                                         ")
                 self.screen.refresh()
 
-                if self.valid_segname(new_segname):
-                    self.rename_segment(ndx, new_segname)
-                    self.display_lines = self.create_display_lines()
+                if segname_utils.valid_segname(new_segname, mol.segnames()):
+                    segname_utils.rename_segment(other_self, mol, ndx, new_segname)
+                    self.display_lines = self.create_display_lines(other_self)
                     self.box.refresh()
 
             elif x in [ord('a'), ord('A')]:
@@ -319,32 +319,14 @@ class SegnameEditor():
 
         return
 
-    def valid_segname(self, segname):
-        """
-        Check that the input segment name is valid to use for a new segment,
-        i.e is 4 characters long or less and not an existing segment name.
-
-        @type segname :  str
-        @param segname:  Proposed segment name
-        @rtype :  bool
-        @return:  Is the input segname valid
-        """
-
-        valid = False
-
-        if len(segname) <= 4 and segname not in self.segnames:
-            valid = True
-
-        return valid
-
-    def create_display_lines(self):
+    def create_display_lines(self, other_self):
         """
         Format residue information for display
 
         @return:
         """
 
-        input_data = self.resid_descriptions
+        input_data = other_self.resid_descriptions
 
         menu_input = []
 
@@ -353,175 +335,6 @@ class SegnameEditor():
                 row[0], row[2], row[3], row[4], row[5]))
 
         return menu_input
-
-    def split_segnames(self, ndx, new_segname):
-        """
-        Split an existing segment and name the newly created segment.
-
-        @type ndx :  int
-        @param ndx:  Index of the residue selected for segment break (in list
-                     of residue descritions)
-        @type new_segname :  str
-        @param new_segname:  Name to be applied to the newly created segment
-        @return:
-        """
-
-        resid_desc = self.resid_descriptions
-
-        last_ndx = len(resid_desc) - 1
-
-        current_segname = resid_desc[ndx][0]
-
-        if ndx != 0:
-            previous_segname = resid_desc[ndx - 1][0]
-        else:
-            previous_segname = ''
-
-        if previous_segname == current_segname:
-
-            updated_data = []
-
-            for i in range(len(resid_desc)):
-
-                line = self.resid_descriptions[i]
-
-                if i >= ndx and self.resid_descriptions[i][0] == current_segname:
-                    line[0] = new_segname
-
-                updated_data.append(line)
-
-            self.resid_descriptions = np.array(updated_data)
-
-            self.segnames.append(new_segname)
-
-        return
-
-    def rename_segment(self, ndx, new_segname):
-        """
-        Change the name of selected segment (the one including the selected
-        residue).
-
-        @type ndx :  int
-        @param ndx:  Index of the user selected residue
-        @type new_segname :  str
-        @param new_segname:  New name for segment
-        @return:
-        """
-
-        target_segname = self.resid_descriptions[ndx][0]
-
-        updated_data = []
-
-        for line in self.resid_descriptions:
-            if line[0] == target_segname:
-                line[0] = new_segname
-            updated_data.append(line)
-
-        self.resid_descriptions = np.array(updated_data)
-
-        self.segnames = [x if (x != target_segname)
-                         else new_segname for x in self.segnames]
-
-        return
-
-    def join_segnames(self, ndx):
-        """
-        Join segment containing ndx-th residue to the previous segment.
-
-        @type ndx:          integer
-        @param ndx:         Index of the residue that starts segment to join
-                            previous segment
-        @return:            Updated array of lines containing: segnames, indices,
-                            resids, resnames, chains, moltypes
-        """
-
-        resid_desc = self.resid_descriptions
-
-        last_ndx = len(resid_desc) - 1
-
-        current_segname = resid_desc[ndx][0]
-        current_moltype = resid_desc[ndx][-1]
-
-        if ndx != 0:
-
-            previous_segname = resid_desc[ndx - 1][0]
-            previous_moltype = resid_desc[ndx - 1][-1]
-
-            moltype_match = (previous_moltype == current_moltype)
-            resid_match = (resid_desc[ndx - 1][2] < resid_desc[ndx][2])
-
-        else:
-            previous_segname = ''
-            # No previous segment, so joining makes no sense
-            moltype_match = False
-            resid_match = False
-
-        segname_mismatch = (previous_segname != current_segname)
-
-        acceptable_join = moltype_match and resid_match and segname_mismatch
-
-        error = ''
-
-        if acceptable_join:
-
-            updated_data = []
-
-            for i in range(len(resid_desc)):
-
-                line = resid_desc[i]
-
-                if i >= ndx and resid_desc[i][0] == current_segname:
-                    line[0] = previous_segname
-
-                updated_data.append(line)
-
-            self.resid_descriptions = np.array(updated_data)
-
-            self.segnames.remove(current_segname)
-
-        else:
-
-            if not segname_mismatch:
-                error = 'Segments with the same name cannot be joined'
-            elif not resid_match:
-                error = 'Joined segment must start with higher resid'
-            else:
-                error = 'Joined segments must have same moltype'
-
-        return error
-
-    def get_segment_starts(self):
-        """
-        Get indicies where the resid descriptions change segment name.
-
-        @return:
-        """
-
-        resid_desc = self.resid_descriptions
-
-        new_breaks = np.where(resid_desc[:-1, 0] != resid_desc[1:, 0])[0]
-
-        if (new_breaks != self.starting_breaks).any():
-
-            new_breaks += 1
-            new_breaks = np.append([0], new_breaks)
-
-            start_segnames = {}
-
-            # Note residue descriptions give last atom in that residue
-            # account for that here
-            for start_ndx in new_breaks:
-                if start_ndx == 0:
-                    sasmol_index = 0
-                else:
-                    sasmol_index = int(resid_desc[start_ndx - 1][1]) + 1
-
-                start_segnames[sasmol_index] = resid_desc[start_ndx][0]
-
-        else:
-            start_segnames = {}
-
-        return json.dumps(start_segnames)
 
 
 def get_input_variables_json(input_json):
@@ -574,8 +387,11 @@ def main():
     segnames, resid_descriptions, max_row = get_input_variables_json(
         input_json)
 
+    #edited_segments = SegnameEditor(
+    #    segnames, resid_descriptions, max_row).get_segment_starts()
+    
     edited_segments = SegnameEditor(
-        segnames, resid_descriptions, max_row).get_segment_starts()
+        other_self).get_segment_starts()
 
     print json.dumps({'segname_starts': edited_segments})
 
