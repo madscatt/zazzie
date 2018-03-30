@@ -35,7 +35,7 @@ def split_segnames(other_self, mol, ndx, new_segname):
     @return:
     """
 
-    resid_desc = self.resid_descriptions
+    resid_desc = other_self.resid_descriptions
 
     last_ndx = len(other_self.resid_descriptions) - 1
 
