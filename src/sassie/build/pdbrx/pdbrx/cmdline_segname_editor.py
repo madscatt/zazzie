@@ -279,7 +279,7 @@ class SegnameEditor():
 
                 if segname_utils.valid_segname(new_segname, mol.segnames()):
                     segname_utils.split_segnames(other_self, mol, ndx, new_segname)
-                    self.display_lines = self.create_display_lines()
+                    self.display_lines = self.create_display_lines(other_self)
                     self.box.refresh()
 
             elif x in [ord('j'), ord('J')]:
@@ -291,7 +291,7 @@ class SegnameEditor():
                 if error:
                     self.screen.addstr(max_row + 4, 3, error)
 
-                self.display_lines = self.create_display_lines()
+                self.display_lines = self.create_display_lines(other_self)
                 self.box.refresh()
 
             elif x in [ord('r'), ord('R')]:

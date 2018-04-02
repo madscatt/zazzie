@@ -72,7 +72,7 @@ class FastaEditor():
 
         my_question = {}
         my_question["id"] = "q2"
-        my_question["title"] = "PDBScan Sequence Report"
+        my_question["title"] = "PDB Scan Sequence Report"
         my_question["text"] = "<p>Review system seguence report below</p><br><hr><br>"
         my_question["buttons"] = ["yes", "no"]
         my_question["fields"] = [ pdbscan_dict, label_dict ]
@@ -125,7 +125,7 @@ class SegnameEditor():
         pdbscan_dict["id"] =  "text_1"
         pdbscan_dict["type"] = "textarea"
         pdbscan_dict["default"] = '\n'.join(pdbscan_report)
-        #pdbscan_dict["label"] = "PDBScan Segment Report"
+        #pdbscan_dict["label"] = "PDB Scan Segment Report"
         pdbscan_dict["rows"] = len(pdbscan_report) + 6
         pdbscan_dict["cols"] = 180
         pdbscan_dict["fontfamily"] = "monospace"
@@ -137,7 +137,7 @@ class SegnameEditor():
 
         my_question = {}
         my_question["id"] = "q1"
-        my_question["title"] = "PDBScan Seqment Report"
+        my_question["title"] = "PDB Scan Seqment Report"
         my_question["text"] = "<p>Review system segment report below</p><br><hr><br>"
         my_question["buttons"] = ["yes", "no"]
         my_question["fields"] = [ pdbscan_dict, label_dict ]
@@ -148,269 +148,57 @@ class SegnameEditor():
         
         return answer
 
-    def valid_segname(self, segname):
-        """
-        Check that the input segment name is valid to use for a new segment,
-        i.e is 4 characters long or less and not an existing segment name.
+    def create_segment_data(self):
 
-        @type segname :  str
-        @param segname:  Proposed segment name
-        @rtype :  bool
-        @return:  Is the input segname valid
-        """
+        my_values = []
+        my_returns = []
 
-        valid = False
+        i = 0
 
-        if len(segname) <= 4 and segname not in self.segnames:
-            valid = True
+        for row in self.resid_descriptions:
+            my_values.append('{0:7s} {1:>6} {2:>10s} {3:>6s} {4:>12s}'.format(
+                            row[0], row[2], row[3], row[4], row[5]))
+            my_returns.append(i)
+            i += 1
 
-        return valid
+        return my_values, my_returns
 
-    def create_display_lines(self):
-        """
-        Format residue information for display
+    def display_and_query_segments_loop(self, mol, pdbscan_report):
 
-        @return:
-        """
+        #TODO: HERE
 
-        input_data = self.resid_descriptions
+        timeout = 3600
 
-        menu_input = []
+        listbox_dict = {}
+        listbox_dict["id"] = "segment_list_box"
+        listbox_dict["type"] = "listbox"
+        listbox_dict["fontfamily"] = "monospace"
 
-        for row in input_data:
-            menu_input.append('{0:7s} {1:>6} {2:7s} {3:5s} {4:8s}'.format(
-                row[0], row[2], row[3], row[4], row[5]))
+        my_values, my_returns = self.create_segment_data()
 
-        return menu_input
+# {0:7s} {1:>6} {2:>10s} {3:>7s} {4:8s}
 
-    def split_segnames(self, ndx, new_segname):
-        """
-        Split an existing segment and name the newly created segment.
+        h_list = ['Segname', 'Resid', 'Resname', 'Chain', 'Moltype']
+        header = '{0:<7s} {1:>7s} {2:>10s}   {3:<8s} {4:<8s}'.format(h_list[0], h_list[1], h_list[2], h_list[3], h_list[4])
 
-        @type ndx :  int
-        @param ndx:  Index of the residue selected for segment break (in list
-                     of residue descritions)
-        @type new_segname :  str
-        @param new_segname:  Name to be applied to the newly created segment
-        @return:
-        """
+        listbox_dict["values"] = my_values
+        listbox_dict["returns"] = my_returns
+        listbox_dict["size"] = 10 
+        listbox_dict["help"] = "select a row and choose an option below"
+        listbox_dict["header"] = header                          
+        listbox_dict["fontsize"] = "0.93em"
 
-        resid_desc = self.resid_descriptions
+        my_question = {}
+        my_question["id"] = "q1"
+        my_question["title"] = "PDB Rx Seqment Editor"
+        my_question["text"] = "<p>Edit Segments Definitions Below</p><br><hr><br>"
+        my_question["buttons"] = ["split", "join", "rename", "accept"]
+        my_question["fields"] = [listbox_dict ]
 
-        last_ndx = len(resid_desc) - 1
+        self.log.info(json.dumps(listbox_dict))
 
-        current_segname = resid_desc[ndx][0]
-
-        if ndx != 0:
-            previous_segname = resid_desc[ndx - 1][0]
-        else:
-            previous_segname = ''
-
-        if previous_segname == current_segname:
-
-            updated_data = []
-
-            for i in range(len(resid_desc)):
-
-                line = self.resid_descriptions[i]
-
-                if i >= ndx and self.resid_descriptions[i][0] == current_segname:
-                    line[0] = new_segname
-
-                updated_data.append(line)
-
-            self.resid_descriptions = np.array(updated_data)
-
-            self.segnames.append(new_segname)
-
-        return
-
-    def rename_segment(self, ndx, new_segname):
-        """
-        Change the name of selected segment (the one including the selected
-        residue).
-
-        @type ndx :  int
-        @param ndx:  Index of the user selected residue
-        @type new_segname :  str
-        @param new_segname:  New name for segment
-        @return:
-        """
-
-        target_segname = self.resid_descriptions[ndx][0]
-
-        updated_data = []
-
-        for line in self.resid_descriptions:
-            if line[0] == target_segname:
-                line[0] = new_segname
-            updated_data.append(line)
-
-        self.resid_descriptions = np.array(updated_data)
-
-        self.segnames = [x if (x != target_segname)
-                         else new_segname for x in self.segnames]
-
-        return
-
-    def join_segnames(self, ndx):
-        """
-        Join segment containing ndx-th residue to the previous segment.
-
-        @type ndx:          integer
-        @param ndx:         Index of the residue that starts segment to join
-                            previous segment
-        @return:            Updated array of lines containing: segnames, indices,
-                            resids, resnames, chains, moltypes
-        """
-
-        resid_desc = self.resid_descriptions
-
-        last_ndx = len(resid_desc) - 1
-
-        current_segname = resid_desc[ndx][0]
-        current_moltype = resid_desc[ndx][-1]
-
-        if ndx != 0:
-
-            previous_segname = resid_desc[ndx - 1][0]
-            previous_moltype = resid_desc[ndx - 1][-1]
-
-            moltype_match = (previous_moltype == current_moltype)
-            resid_match = (resid_desc[ndx - 1][2] < resid_desc[ndx][2])
-
-        else:
-            previous_segname = ''
-            # No previous segment, so joining makes no sense
-            moltype_match = False
-            resid_match = False
-
-        segname_mismatch = (previous_segname != current_segname)
-
-        acceptable_join = moltype_match and resid_match and segname_mismatch
-
-        error = ''
-
-        if acceptable_join:
-
-            updated_data = []
-
-            for i in range(len(resid_desc)):
-
-                line = resid_desc[i]
-
-                if i >= ndx and resid_desc[i][0] == current_segname:
-                    line[0] = previous_segname
-
-                updated_data.append(line)
-
-            self.resid_descriptions = np.array(updated_data)
-
-            self.segnames.remove(current_segname)
-
-        else:
-
-            if not segname_mismatch:
-                error = 'Segments with the same name cannot be joined'
-            elif not resid_match:
-                error = 'Joined segment must start with higher resid'
-            else:
-                error = 'Joined segments must have same moltype'
-
-        return error
-
-    def get_segment_starts(self):
-        """
-        Get indicies where the resid descriptions change segment name.
-
-        @return:
-        """
-
-        resid_desc = self.resid_descriptions
-
-        new_breaks = np.where(resid_desc[:-1, 0] != resid_desc[1:, 0])[0]
-
-        if (new_breaks != self.starting_breaks).any():
-
-            new_breaks += 1
-            new_breaks = np.append([0], new_breaks)
-
-            start_segnames = {}
-
-            # Note residue descriptions give last atom in that residue
-            # account for that here
-            for start_ndx in new_breaks:
-                if start_ndx == 0:
-                    sasmol_index = 0
-                else:
-                    sasmol_index = int(resid_desc[start_ndx - 1][1]) + 1
-
-                start_segnames[sasmol_index] = resid_desc[start_ndx][0]
-
-        else:
-            start_segnames = {}
-
-        return json.dumps(start_segnames)
-
-
-def get_input_variables_json(input_json):
-    """
-    Parse input JSON to produce list segnames, residue descritions and
-    expected maximum number of screen rows.
-
-    @type input_json :
-    @param input_json:
-    @rtype :  list, list, int
-    @return:  List of segment names.
-              List of tuples describing segname,
-              first atomic index, resid, resname, chain
-              and moltype for each residue.
-              Maximum number of screen lines
-    """
-
-    json_stingio = StringIO(input_json)
-    json_variables = json.load(json_stingio)
-
-    segnames = json_variables['segnames']
-
-    resid_descriptions = json_variables['resid_descriptions']
-
-    dtypes = np.dtype('a10, int, int, a10, a10, a10')
-
-    for index, info in enumerate(resid_descriptions):
-        resid_descriptions[index] = tuple(info)
-
-    resid_descriptions = np.array(resid_descriptions, dtypes)
-
-    if 'max_row' in json_variables:
-        max_row = json_variables['max_row']
-    else:
-        max_row = 10
-
-    return segnames, resid_descriptions, max_row
-
-
-def main():
-    """
-    Read JSON definition of segments, residues annd screen size from argv.
-    Run segmentation editing and provide updated segmentation information as
-    output JSON.
-
-    @return:
-    """
-
-    input_json = StringIO(sys.argv[1])
-    segnames, resid_descriptions, max_row = get_input_variables_json(
-        input_json)
-
-    edited_segments = SegnameEditor(
-        segnames, resid_descriptions, max_row).get_segment_starts()
-
-    print json.dumps({'segname_starts': edited_segments})
-
-    return
-
-
-if __name__ == "__main__":
-    # execute only if run as a script
-    main()
+        answer = communication.tcpquestion(self.json_variables, my_question, timeout);
+        
+        return answer
+   
+    

@@ -41,6 +41,7 @@ def split_segnames(other_self, mol, ndx, new_segname):
 
     current_segname = other_self.resid_descriptions[ndx][0]
 
+
     if ndx != 0:
         previous_segname = other_self.resid_descriptions[ndx - 1][0]
     else:
@@ -61,7 +62,7 @@ def split_segnames(other_self, mol, ndx, new_segname):
 
         other_self.resid_descriptions = numpy.array(updated_data)
 
-        mol.segnames.append(new_segname)
+        mol.segnames().append(new_segname)
 
     return
 
@@ -88,10 +89,23 @@ def rename_segment(other_self, mol, ndx, new_segname):
 
     other_self.resid_descriptions = numpy.array(updated_data)
 
+    dumfile = open('dum.txt', 'w')
+    dumfile.write('#ORIGINAL : \n')
+    dumfile.write('type(mol.segnames()) \n' + str(type(mol.segnames()))+ '\n')
+    for value in mol.segnames():
+        dumfile.write(value + "\n")
+
     temp_segnames = [x if (x != target_segname)
                          else new_segname for x in mol.segnames()]
 
     mol.setSegnames(temp_segnames)
+
+    dumfile.write('#FINAL : \n')
+    dumfile.write('type(mol.segnames()) \n' + str(type(mol.segnames())) + '\n')
+    for value in mol.segnames():
+        dumfile.write(value + "\n")
+
+    dumfile.close()
 
     return
 

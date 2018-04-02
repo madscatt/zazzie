@@ -90,6 +90,13 @@ def process_segment_input(other_self, mol):
             if segname_starts:
                 segname_utils.redefine_segments(mol, segname_starts)
 
+            dumfile = open('dum.txt', 'a')
+            dumfile.write('# BEFORE PREPAREDNESS\n')
+            dumfile.write('type(mol.segnames()) \n' + str(type(mol.segnames())) + '\n')
+            for value in mol.segnames():
+                dumfile.write(value + '\n')
+            dumfile.close()
+
             mol.check_segname_simulation_preparedness()
 
             accepted_segmentation = True

@@ -67,48 +67,34 @@ def handle_sassie_web_user_input(other_self, mol, pdbscan_report):
     mvars = other_self.mvars
     log = other_self.log
 
-    process_segment_input(other_self, mol)
+    process_segment_input(other_self, mol, pdbscan_report)
 
-def process_segment_input(other_self, mol):
+def process_segment_input(other_self, mol, pdbscan_report):
 
     mvars = other_self.mvars
     log = other_self.log
 
-    accepted_segmentation = False
-
     log.info('UI_TYPE = ' + mvars.user_interface)
             
     sassie_query_object  = sassie_web_editor.SegnameEditor(\
-                mol.segnames(), other_self.resid_descriptions, other_self.json, pdbscan_report, log)
+                mol.segnames(), other_self.resid_descriptions, other_self.json_variables, pdbscan_report, log)
         
     choice = sassie_query_object.answer["_response"]["button"]
-            
-    if choice == 'yes':
-        choice = 'no'
 
-    if choice == 'no':
-        accepted_segmentation = True
+    if choice == "yes":
 
-    while not accepted_segmentation:
+            sassie_query_object.display_and_query_segments_loop(mol, pdbscan_report)
 
-        if choice in ['y', 'yes']:
+            #segname_starts = get_user_segmentation()
 
-            segname_starts = get_user_segmentation()
+            #if segname_starts:
+            #    segname_utils.redefine_segments(mol, segname_starts)
+            #    mol.check_segname_simulation_preparedness()
 
-            if segname_starts:
-                segname_utils.redefine_segments(mol, segname_starts)
-                mol.check_segname_simulation_preparedness()
-
-            accepted_segmentation = True
-
-        elif choice in ['n', 'no']:
-
-            accepted_segmentation = True
-
-        accepted_sequences = False
+    accepted_sequences = False
        
-        seq_segnames = mol.segname_info.sequence.keys()
+    seq_segnames = mol.segname_info.sequence.keys()
 
-        sequence_report = segname_utils.create_sequence_report(mol, seq_segnames) 
+    sequence_report = segname_utils.create_sequence_report(mol, seq_segnames) 
 
     return
