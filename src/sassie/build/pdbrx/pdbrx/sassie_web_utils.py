@@ -34,26 +34,6 @@ from . import biomt_utils as biomt_utils
 
 from . import sassie_web_editor as sassie_web_editor
 
-def get_user_segmentation(other_self, mol):
-    """
-    Get new segmentation from user
-    @rtype :  dictionary
-    @return:  Keys = atom index of start of segment,
-                  Value = segname
-    """
-
-    #ui_output = sassie_web_editor.SegnameEditor(
-    #        mol.segnames(), other_self.resid_descriptions, json, logger).get_segment_starts()
-
-    ui_output = False
-    
-    if ui_output:
-        segname_starts = json.loads(
-                ui_output, object_hook = segname_utils.convert_segname_start)
-    else:
-        segname_starts = {}
-
-    return segname_starts
 
 def handle_sassie_web_user_input(other_self, mol, pdbscan_report):
 
@@ -71,13 +51,17 @@ def handle_sassie_web_user_input(other_self, mol, pdbscan_report):
 
     process_sequence_input(other_self, mol)
 
+    process_biomt_input(other_self, mol)
+
+    return
+
 
 def process_segment_input(other_self, mol, pdbscan_report):
 
     mvars = other_self.mvars
     log = other_self.log
 
-    log.info('UI_TYPE = ' + mvars.user_interface)
+    log.info('processing_segment_input_sassie-web')
             
     sassie_query_object  = sassie_web_editor.SegnameEditor(\
                 mol.segnames(), other_self.resid_descriptions, other_self.json_variables, pdbscan_report, log)
@@ -118,9 +102,8 @@ def process_sequence_input(other_self, mol):
     mvars = other_self.mvars
     log = other_self.log
 
+    log.info('processing_sequence_input_sassie-web')
        
-    log.info('UI_TYPE = ' + mvars.user_interface)
-
     seq_segnames = mol.segname_info.sequence.keys()
     sequence_report = fasta_utils.create_sequence_report(mol, seq_segnames)
             
@@ -151,5 +134,52 @@ def process_sequence_input(other_self, mol):
 #    seq_segnames = mol.segname_info.sequence.keys()
 #
 #    sequence_report = segname_utils.create_sequence_report(mol, seq_segnames) 
+
+    return
+
+def process_biomt_input(other_self, mol):
+
+    mvars = other_self.mvars
+    log = other_self.log
+
+    log.info('processing_biomt_input_sassie-web')
+
+
+    if mol.segname_info.biomt:
+        print("Current biological unit transforms: ")
+
+        import sassie.build.pdbscan.pdbscan.report as report
+        for line in report.create_biomt_summary(mol.segname_info.biomt):
+
+            print(line)
+    else:
+        print("There are no existing biological unit transforms")
+
+
+
+#    sequence_report = fasta_utils.create_sequence_report(mol, seq_segnames)
+            
+    #sassie_query_object  = sassie_web_editor.FastaEditor(\
+#                other_self.json_variables, sequence_report, log)
+        
+    #choice = sassie_query_object.answer["_response"]["button"]
+
+    #if choice == "yes":
+#
+#        in_loop = True
+#
+#        while in_loop:
+#
+
+#            sassie_query_object.display_and_query_sequence_loop(mol, sequence_report)
+
+#            sequence_choice = sassie_query_object.answer["_response"]["button"]
+
+#            if sequence_choice == "done":
+#                in_loop = False
+
+#            elif sequence_choice == "submit":
+#                pass
+#
 
     return

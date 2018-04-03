@@ -35,7 +35,6 @@ try:
 except NameError:
     pass
 
-
 def check_array_input(input_txt, dimensions):
     '''
     Check that input text can be converted into an array.
