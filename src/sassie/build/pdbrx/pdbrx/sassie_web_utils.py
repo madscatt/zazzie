@@ -69,6 +69,9 @@ def handle_sassie_web_user_input(other_self, mol, pdbscan_report):
 
     process_segment_input(other_self, mol, pdbscan_report)
 
+    process_sequence_input(other_self, mol)
+
+
 def process_segment_input(other_self, mol, pdbscan_report):
 
     mvars = other_self.mvars
@@ -83,18 +86,70 @@ def process_segment_input(other_self, mol, pdbscan_report):
 
     if choice == "yes":
 
+        in_loop = True
+
+        while in_loop:
+
             sassie_query_object.display_and_query_segments_loop(mol, pdbscan_report)
 
-            #segname_starts = get_user_segmentation()
+            segment_choice = sassie_query_object.answer["_response"]["button"]
 
-            #if segname_starts:
-            #    segname_utils.redefine_segments(mol, segname_starts)
-            #    mol.check_segname_simulation_preparedness()
+            if segment_choice == "accept":
+                in_loop = False
 
-    accepted_sequences = False
+            elif segment_choice == "split":
+                pass
+
+            elif segment_choice == "join":
+                pass
+
+            elif segment_choice == "rename":
+                pass
+
+        #segname_starts = get_user_segmentation()
+
+        #if segname_starts:
+        #    segname_utils.redefine_segments(mol, segname_starts)
+        #    mol.check_segname_simulation_preparedness()
+
+
+def process_sequence_input(other_self, mol):
+
+    mvars = other_self.mvars
+    log = other_self.log
+
        
-    seq_segnames = mol.segname_info.sequence.keys()
+    log.info('UI_TYPE = ' + mvars.user_interface)
 
-    sequence_report = segname_utils.create_sequence_report(mol, seq_segnames) 
+    seq_segnames = mol.segname_info.sequence.keys()
+    sequence_report = fasta_utils.create_sequence_report(mol, seq_segnames)
+            
+    sassie_query_object  = sassie_web_editor.FastaEditor(\
+                other_self.json_variables, sequence_report, log)
+        
+    choice = sassie_query_object.answer["_response"]["button"]
+
+    if choice == "yes":
+
+        in_loop = True
+
+        while in_loop:
+
+            #seq_segnames = mol.segname_info.sequence.keys()
+            #sequence_report = fasta_utils.create_sequence_report(mol, seq_segnames)
+
+            sassie_query_object.display_and_query_sequence_loop(mol, sequence_report)
+
+            sequence_choice = sassie_query_object.answer["_response"]["button"]
+
+            if sequence_choice == "done":
+                in_loop = False
+
+            elif sequence_choice == "submit":
+                pass
+
+#    seq_segnames = mol.segname_info.sequence.keys()
+#
+#    sequence_report = segname_utils.create_sequence_report(mol, seq_segnames) 
 
     return

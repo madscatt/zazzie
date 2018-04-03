@@ -23,6 +23,19 @@ import re
 from textwrap import TextWrapper
 import sassie.build.pdbscan.pdbscan.pdbscan_utils as utils
 
+def create_sequence_report(mol, seq_segnames):
+
+        sequence_report = 'Current residue sequences for each segment (uppercase letters have coordinates while lowercase letters do not have coordinates): \n\n'
+
+        for segname in seq_segnames:
+            seq = mol.segname_info.sequence_to_fasta(
+                    segname, missing_lower=True)
+            sequence_report += 'segname ' + segname + ':\n'
+            sequence_report += seq + '\n\n'
+
+        return sequence_report
+
+
 def parse_fasta_file(filename):
     """
     Parse FASTA files. Adapted from:
