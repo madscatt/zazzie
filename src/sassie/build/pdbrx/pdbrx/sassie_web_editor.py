@@ -28,10 +28,282 @@ from StringIO import StringIO
 import numpy 
 
 import sassie.util.communication as communication
+import sassie.build.pdbscan.pdbscan.report as pdbscan_report
+
+class BiomtEditor():
+        """
+        Interface to for input/ouput of questions related to biomt entries
+        """
+    
+        def __init__(self, json_variables, mol, log):
+                """
+                Setup the environment and display to show residue infromation and
+                editing instructions to the user
+
+                """
+
+                self.json_variables = json_variables
+                self.log = log
+
+                self.answer = self.ask_question_edit_biomt(mol)
+   
+                return 
+    
+        def ask_question_edit_biomt(self, mol):
+
+                timeout = 3600
+
+                if mol.segname_info.biomt:
+                        text_string = "Current biological unit transforms: \n"
+                        for line in pdbscan_report.create_biomt_summary(mol.segname_info.biomt):
+                                text_string += line + '\n'
+                else:
+                        text_string = "There are no existing biological unit transforms\n"
+
+                pdbscan_dict = {}
+                pdbscan_dict["id"] =  "text_2"
+                pdbscan_dict["type"] = "textarea"
+                pdbscan_dict["default"] = text_string
+                pdbscan_dict["rows"] = text_string.count('\n') + 4
+                pdbscan_dict["cols"] = 80
+                pdbscan_dict["fontfamily"] = "monospace"
+        
+                label_dict = {}
+                label_dict["id"] = "label_2"
+                label_dict["type"] = "label"
+                label_dict["label"] = "<p><hr><br>Do you wish to add or edit biomt records?<br><br>"
+        
+                my_question = {}
+                my_question["id"] = "q2"
+                my_question["title"] = "PDB Scan Biomt Report"
+                my_question["text"] = "<p>Review system biomt report below</p><br><hr><br>"
+                my_question["buttons"] = ["yes", "no"]
+                my_question["fields"] = [ label_dict, pdbscan_dict ]
+        
+                self.log.info(json.dumps(pdbscan_dict))
+        
+                answer = communication.tcpquestion(self.json_variables, my_question, timeout)
+
+                return answer        
+    
+        def display_and_query_biomt_loop(self, mol):
+
+            timeout = 3600
+
+            listbox_dict = {}
+            listbox_dict["id"] = "biomt_listbox"
+            listbox_dict["type"] = "listbox"
+            listbox_dict["fontfamily"] = "monospace"
+
+#        my_values, my_returns = self.create_sequence_data()
+
+            my_values = mol.segnames()
+            #my_returns = [i for i in range(len(my_values))]
+
+            listbox_dict["values"] = my_values
+            #listbox_dict["returns"] = my_returns
+            listbox_dict["size"] = 10 
+            listbox_dict["help"] = "select row(s) and choose an option below: command-click for non-adjacent rows (Mac) or control-click (Windows)"
+            listbox_dict["header"] = "choose segment(s) you wish to assign a new biomt record\n click 'done' if you are finished\n\n"
+            listbox_dict["fontsize"] = "0.93em"
+            listbox_dict["multiple"] = "true"
+
+            my_question = {}
+            my_question["id"] = "q1"
+            my_question["title"] = "PDB Rx Biomt Editor"
+            my_question["text"] = "<p>Choose Segment(s) for New Biomt Record</p><br><hr><br>"
+            my_question["buttons"] = ["done"]
+            my_question["fields"] = [listbox_dict]
+
+            self.answer = communication.tcpquestion(self.json_variables, my_question, timeout);
+
+            return 
+
+        def select_segnames(self, segnames, log):
+            '''
+            Prompt user for a selection fo segment names to apply BIOMT to.
+        
+            @type segnames :  list
+            @param segnames:  Valid segnames contained in structure
+            @return:
+            '''
+       
+            log.info("IN SELECT_SEGNAMES\n") 
+
+            seg_list = ', '.join(segnames)
+        
+            print("Select list of segments for the transformation to be applied to "
+                "using Python list notation e.g. ['A','B'])")
+            print("Available segments are: " + seg_list)
+        
+            selected = ''
+        
+            while not selected:
+        
+                try:
+                   # selected = eval(input())
+                    if not set(selected).issubset(set(segnames)):
+                        print('All values in list must be available segments')
+                        selected = ''
+                except:
+                   # print('Invalid input, try again')
+                    selected = ''
+        
+            return list(selected)
+
+        def edit_transform(self, biomt_rec):
+            '''
+            Allow user editing of input BIOMT data
+
+            @type biomt_rec : dict
+            @param biomt_rec: Description of unit transforms to create biological unit
+            @return:
+            '''
+
+            #print_biomt(biomt_rec)
+
+            rec_no = 0
+            no_entries = len(biomt_rec.rot)
+        
+            if no_entries > 1:
+                pass        
+            #    while rec_no == 0:
+#
+            #        print("\nSelect record to edit")
+            #        txt = input()
+#                    try:
+#                        rec_no = int(txt)
+#                        if rec_no <= 0 or rec_no >= no_entries:
+#                            print('Invalid record selected')
+#                            rec_no = 0
+#                    except:
+#                        print('Invalid record selected')
+#                        rec_no = 0
+#
+#                input_txt = ''
+#                valid_transform = False
+#        
+#                while not valid_transform and input_txt not in ['x', 'X']:
+#        
+#                    valid_transform, rot, trans = get_user_transform()
+#        
+#                    if valid_transform:
+#                        biomt_rec['rot'][rec_no] = rot
+#                        biomt_rec['trans'][rec_no] = trans
+#                    else:
+#                        print('Transform not edited, to return to other options '
+#                            'press "X", any other key to try again.')
+#                        input_txt = sys.stdin.read(1)
+#        
+#            else:
+#        
+#                print('Only the identity tranformation exists, add a new transform')
+        
+            return
+
+        def add_transform(self, biomt_rec):
+            '''
+            Get BIOMT transformations from user and add to record
+
+            @type biomt_rec : dict
+            @param biomt_rec: Description of unit transforms to create biological unit
+            @return:
+            '''
+
+            input_txt = ''
+            valid_transform = False
+
+            #while not valid_transform and input_txt not in ['x', 'X']:
+##
+#                valid_transform, rot, trans = get_user_transform()
+#
+#                if valid_transform:
+#                    biomt_rec['rot'].append(rot)
+#                    biomt_rec['trans'].append(trans)
+#                else:
+#                    print('No transform added, to return to other '
+#                        'options press "X", any other key to try again.')
+#                    input_txt = sys.stdin.read(1)
+
+            return
+
+
+        def get_user_transform(self):
+                '''
+                Get BIOMT style rotation matrix and translation vector from user.
+
+                @return:
+                '''
+
+                flag = True
+                rot = None
+                trans = None
+
+                print("Enter rotation matrix (3 x 3, using Python list notation "
+                        "i.e.: [[1,0,0],[0,1,0],[0,0,1]]):")
+#                rot_user = eval(input())
+                check_rot, rot = biomt_utils.check_rotation(rot_user)
+
+                if not check_rot:
+                        flag = False
+                        print("Rotation must be a 3 x 3 array of numeric values")
+
+                else:
+                
+                        print("Enter translation vector (3 x 1, using Python list notation "
+                        "i.e.: [1,0,0]):")
+#                        trans_user = eval(input())
+#                        check_trans, trans = biomt_utils.check_translation(trans_user)
+
+                        if not check_trans:
+                            flag = False
+                            print("Error: Translation must be a 3 x 1 array of numeric values")
+
+                if ((rot == np.identity(3)).all()) and ((trans == np.array([0.0, 0.0, 0.0])).all()):
+                        print("A second identity transform will not be added")
+                        flag = False
+
+                return flag, rot, trans
+
+
+        def user_biomt(self, segnames_json):
+                '''
+                Get user to edit BIOMT information from sassie-web 
+
+                @type  segnames_json:  file
+                @param segnames_json:  Valid segment names in JSON format
+                @return:
+                '''
+
+                #segnames = yaml.safe_load(segnames_json)
+
+                #selected_segnames = select_segnames(segnames)
+
+                #biomt_rec = init_biomt(selected_segnames)
+
+                print('An identity transform already exists, enter a new transform:')
+                self.add_transform(biomt_rec)
+
+                input_txt = ''
+
+                while input_txt not in ['q', 'Q']:
+
+                #print('Press "E" to edit an existing transform, '
+                #        '"A" to add a new transform or '
+                #        '"Q" to accept current BIOMT and quit')
+                #input_txt = sys.stdin.read(1)
+
+                    if input_txt in ['e', 'E']:
+                        self.edit_transform(biomt_rec)
+                    elif input_txt in ['a', 'A']:
+                        self.add_transform(biomt_rec)
+
+                return json.dumps(prepare_biomt_json(biomt_rec))
+
 
 class FastaEditor():
     """
-    Interface to for input/ouput of questions related to sequence
+    Interface to for input/ouput of questions related to sequences
     """
     
     def __init__(self, json_variables, sequence_report, log):
@@ -80,7 +352,7 @@ class FastaEditor():
         my_question = {}
         my_question["id"] = "q2"
         my_question["title"] = "PDB Scan Sequence Report"
-        my_question["text"] = "<p>Review system seguence report below</p><br><hr><br>"
+        my_question["text"] = "<p>Review system sequence report below</p><br><hr><br>"
         my_question["buttons"] = ["yes", "no"]
         my_question["fields"] = [ pdbscan_dict, label_dict ]
 
@@ -162,11 +434,11 @@ class SegnameEditor():
         self.starting_breaks = numpy.where(
             self.resid_descriptions[:-1, 0] != self.resid_descriptions[1:, 0])[0]
 
-	self.answer = self.ask_question_edit_segmentation(pdbscan_report)
+	self.answer = self.ask_question_edit_segmentation(pdbscan_report, log)
 
         return 
     
-    def ask_question_edit_segmentation(self, pdbscan_report):
+    def ask_question_edit_segmentation(self, pdbscan_report, log):
 
         timeout = 3600
 
@@ -192,7 +464,10 @@ class SegnameEditor():
 
         self.log.info(json.dumps(pdbscan_dict))
 
+
+        log.info("SENDING QUESTION VIA TCP\n")
         answer = communication.tcpquestion(self.json_variables, my_question, timeout);
+        log.info("DONE SENDING QUESTION VIA TCP\n")
         
         return answer
 

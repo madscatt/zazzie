@@ -22,6 +22,41 @@ Methods to process information for biomt data
 import yaml
 import numpy
 
+def check_rotation(input_rot):
+    '''
+    Check that input rotation matrix is valid (i.e. text can be converted to
+    a 3*3 array)
+
+    @type input_rot :  str
+    @param input_rot:  Text format rotation matrix
+    @rtype :  bool, np.array
+    @return:  Input validity flag
+              Text converted to array
+    '''
+
+    flag, matrix = check_array_input(input_rot, (3, 3))
+
+    return flag, matrix
+
+
+def check_translation(input_trans):
+    '''
+    Check that input translation vector is valid (i.e. text can be converted to
+    a 3*1 array)
+
+    @type input_trans :  str
+    @param input_trans:  Text format translation vector
+    @rtype :  bool, np.array
+    @return:  Input validity flag
+              Text converted to array
+    '''
+
+    flag, matrix = check_array_input(input_trans, (3,))
+
+    return flag, matrix
+
+
+
 def check_biological_unit(biomt_unit):
     """
     Check biological unit transform from user is valid
