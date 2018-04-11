@@ -168,6 +168,10 @@ def process_biomt_input(other_self, mol):
 
                 log.info("selected_segnames = " + ''.join(selected_segnames))
 
+                sassie_query_object.process_biomt_matrix(other_self, mol)
+
+                
+
 #                log.info("type(sassie_query_object) = " + str(type(sassie_query_object)))
 #                log.info("type(sassie_query_object.answer) = " + str(type(sassie_query_object.answer)))
 
@@ -188,7 +192,9 @@ def process_biomt_input(other_self, mol):
 #                        log.info("key, value = " + k + "\t" + v + "\n")
 
                 choice = sassie_query_object.answer["_response"]["button"]
-                if choice == "done":
+                if choice == "skip":
+                    in_loop = False
+                if choice == "submit":
                     in_loop = False
 
     #            biomt_rec = init_biomt(selected_segnames)

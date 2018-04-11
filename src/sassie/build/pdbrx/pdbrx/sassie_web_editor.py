@@ -104,7 +104,7 @@ class BiomtEditor():
             #listbox_dict["returns"] = my_returns
             listbox_dict["size"] = 10 
             listbox_dict["help"] = "select row(s) and choose an option below: command-click for non-adjacent rows (Mac) or control-click (Windows)"
-            listbox_dict["header"] = "choose segment(s) you wish to assign a new biomt record\n click 'done' if you are finished\n\n"
+            listbox_dict["header"] = "choose segment(s) you wish to assign a new biomt record\n click 'submit' if you are finished or 'skip' to exit without altering existing biomt record(s)\n\n"
             listbox_dict["fontsize"] = "0.93em"
             listbox_dict["multiple"] = "true"
 
@@ -112,44 +112,142 @@ class BiomtEditor():
             my_question["id"] = "q1"
             my_question["title"] = "PDB Rx Biomt Editor"
             my_question["text"] = "<p>Choose Segment(s) for New Biomt Record</p><br><hr><br>"
-            my_question["buttons"] = ["done"]
+            my_question["buttons"] = ["submit", "skip"]
             my_question["fields"] = [listbox_dict]
 
             self.answer = communication.tcpquestion(self.json_variables, my_question, timeout);
 
             return 
 
-        def select_segnames(self, segnames, log):
-            '''
-            Prompt user for a selection fo segment names to apply BIOMT to.
-        
-            @type segnames :  list
-            @param segnames:  Valid segnames contained in structure
-            @return:
-            '''
-       
-            log.info("IN SELECT_SEGNAMES\n") 
 
-            seg_list = ', '.join(segnames)
-        
-            print("Select list of segments for the transformation to be applied to "
-                "using Python list notation e.g. ['A','B'])")
-            print("Available segments are: " + seg_list)
-        
-            selected = ''
-        
-            while not selected:
-        
-                try:
-                   # selected = eval(input())
-                    if not set(selected).issubset(set(segnames)):
-                        print('All values in list must be available segments')
-                        selected = ''
-                except:
-                   # print('Invalid input, try again')
-                    selected = ''
-        
-            return list(selected)
+        def process_biomt_matrix(self, other_self, mol):
+
+            timeout = 3600
+
+            mvars = other_self.mvars
+            log = other_self.log
+
+            log.info('processing_biomt_matrix_input_sassie-web')
+
+            label_1_dict = {}
+            label_1_dict["id"] = "label_1"
+            label_1_dict["type"] = "label"
+            label_1_dict["label"] = "enter elements of rotation matrix"
+
+            a11_dict = {}
+            a11_dict["id"] = "a11"
+            a11_dict["type"] = "text"
+            a11_dict["help"] = "enter value"
+            a11_dict["norow"] = "true"
+            a11_dict["label"] = "a11"
+            a11_dict["default"] = "1"
+
+            a12_dict = {}
+            a12_dict["id"] = "a12"
+            a12_dict["type"] = "text"
+            a12_dict["help"] = "enter value"
+            a12_dict["norow"] = "true"
+            a12_dict["label"] = "a12"
+            a12_dict["default"] = "0"
+
+            a13_dict = {}
+            a13_dict["id"] = "a13"
+            a13_dict["type"] = "text"
+            a13_dict["help"] = "enter value"
+            a13_dict["norow"] = "false"
+            a13_dict["label"] = "a13"
+            a13_dict["default"] = "0"
+
+            a21_dict = {}
+            a21_dict["id"] = "a21"
+            a21_dict["type"] = "text"
+            a21_dict["help"] = "enter value"
+            a21_dict["norow"] = "true"
+            a21_dict["label"] = "a21"
+            a21_dict["default"] = "0"
+
+            a22_dict = {}
+            a22_dict["id"] = "a22"
+            a22_dict["type"] = "text"
+            a22_dict["help"] = "enter value"
+            a22_dict["norow"] = "true"
+            a22_dict["label"] = "a22"
+            a22_dict["default"] = "1"
+
+            a23_dict = {}
+            a23_dict["id"] = "a23"
+            a23_dict["type"] = "text"
+            a23_dict["help"] = "enter value"
+            a23_dict["norow"] = "false"
+            a23_dict["label"] = "a23"
+            a23_dict["default"] = "0"
+
+            a31_dict = {}
+            a31_dict["id"] = "a31"
+            a31_dict["type"] = "text"
+            a31_dict["help"] = "enter value"
+            a31_dict["norow"] = "true"
+            a31_dict["label"] = "a31"
+            a31_dict["default"] = "0"
+
+            a32_dict = {}
+            a32_dict["id"] = "a32"
+            a32_dict["type"] = "text"
+            a32_dict["help"] = "enter value"
+            a32_dict["norow"] = "true"
+            a32_dict["label"] = "a32"
+            a32_dict["default"] = "0"
+
+            a33_dict = {}
+            a33_dict["id"] = "a33"
+            a33_dict["type"] = "text"
+            a33_dict["help"] = "enter value"
+            a33_dict["norow"] = "false"
+            a33_dict["label"] = "a33"
+            a33_dict["default"] = "1"
+
+            label_2_dict = {}
+            label_2_dict["id"] = "label_2"
+            label_2_dict["type"] = "label"
+            label_2_dict["label"] = "enter elements of translation vector"
+
+            t1_dict = {}
+            t1_dict["id"] = "t1"
+            t1_dict["type"] = "text"
+            t1_dict["help"] = "enter value"
+            t1_dict["norow"] = "true"
+            t1_dict["label"] = "t1"
+            t1_dict["default"] = "0"
+
+            t2_dict = {}
+            t2_dict["id"] = "t2"
+            t2_dict["type"] = "text"
+            t2_dict["help"] = "enter value"
+            t2_dict["norow"] = "true"
+            t2_dict["label"] = "t2"
+            t2_dict["default"] = "0"
+
+            t3_dict = {}
+            t3_dict["id"] = "t3"
+            t3_dict["type"] = "text"
+            t3_dict["help"] = "enter value"
+            t3_dict["norow"] = "false"
+            t3_dict["label"] = "t3"
+            t3_dict["default"] = "0"
+
+            my_question = {}
+            my_question["id"] = "q2"
+            my_question["title"] = "PDB Rx Biomt Editor"
+            my_question["text"] = "<p>Enter values for Biomt Matrix</p><br><hr><br>"
+            my_question["buttons"] = ["submit"]
+            my_question["fields"] = [label_1_dict, a11_dict, a12_dict, a13_dict, 
+                                     a21_dict, a22_dict, a23_dict,
+                                     a31_dict, a32_dict, a33_dict,
+                                     label_2_dict, t1_dict, t2_dict, t3_dict]
+
+            self.answer = communication.tcpquestion(self.json_variables, my_question, timeout);
+
+            return
 
         def edit_transform(self, biomt_rec):
             '''
