@@ -58,7 +58,7 @@ class PDBRx():
              
         self.mvars = module_variables()
         
-        self.run_utils = module_utilities.run_utils(app,txtOutput)
+        self.run_utils = module_utilities.run_utils(app, txtOutput)
 
         self.run_utils.setup_logging(self)
         
@@ -97,15 +97,20 @@ class PDBRx():
         log = self.log
 
         log.debug('in run_scan')
-    
-        pgui('-'*50)
-        pgui('PDB Rx')
-        pgui('-'*50)
+   
 
+        pgui("\n"+"="*60+" \n")
+        pgui("DATA FROM RUN: %s \n\n" %(time.asctime( time.gmtime( time.time() ) ) ))
+ 
         mol = pdbscan.SasMolScan()
         mol.read_pdb(mvars.pdbfile)
 
-        pgui('Initiating scan')
+
+        pgui('Initiating PDB scan')
+
+        fraction_done = 0.01
+        pgui('STATUS\t'+str(fraction_done))
+
         mol.run_scan()
 
         # if mvars.use_defaults and not mol.any_charmm_ready_segments():
@@ -117,20 +122,21 @@ class PDBRx():
 
         mol.copy_biomt_segments()
 
+        fraction_done = 0.25
+        pgui('STATUS\t'+str(fraction_done))
+
         if not mvars.use_defaults:
 
             pdbscan_report = report.generate_simulation_prep_report(mol)
 
-            pgui('pdbscan_report')
-            for line in pdbscan_report:
-
-                pgui(line)
-
-            pgui('running preprocessor for user input')
+            pgui('processing user input for segment(s), sequence(s) and biomt record(s)')
 
             preprocessor = pdbrx.preprocessor.user_input(self, mol, pdbscan_report)
 
-        pgui('Build scaffold structure')
+        fraction_done = 0.5
+        pgui('STATUS\t'+str(fraction_done))
+        
+        pgui('building scaffold structure')
 
         scaffold_builder = pdbrx.scaffold_builder.ScaffoldBuilder(mol=mol,
                                                                   default_subs=True)
@@ -148,9 +154,14 @@ class PDBRx():
         if not os.path.isdir(tmp_struct_path):
             os.mkdir(tmp_struct_path)
 
-        pgui('Start structure completion')
+        pgui('building structure')
+
         structure_builder = pdbrx.structure_builder.StructureBuilder(scaffold_builder.scaffold_model,
                                                  tmp_struct_path)
+
+        fraction_done = 0.5
+        pgui('STATUS\t'+str(fraction_done))
+        
 
         completed_mol = structure_builder.complete_structure()
 
@@ -161,7 +172,10 @@ class PDBRx():
         psfgen = pdbrx.apply_psfgen.PsfgenDriver(completed_mol, segname_info, mvars.topfile, self.runpath, out_prefix)
 
         psfgen.run_psfgen()
-
+        
+        fraction_done = 0.9
+        pgui('STATUS\t'+str(fraction_done))
+        pgui("\n"+"="*60+" \n")
 
     def epilogue(self):
         '''
@@ -175,6 +189,9 @@ class PDBRx():
 
         self.run_utils.clean_up(log)
 
-        #pgui('\n%s IS DONE\n' % app)
-        #pgui("\n"+"="*60+" \n")
+        fraction_done = 1.0
+        pgui('STATUS\t'+str(fraction_done))
+
+        pgui('\n%s IS DONE\n' % app)
+        pgui("\n"+"="*60+" \n")
         time.sleep(0.1)

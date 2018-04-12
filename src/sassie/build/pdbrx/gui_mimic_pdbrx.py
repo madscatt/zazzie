@@ -24,6 +24,8 @@ pdbfile = 'testing/data/small.pdb'
 topfile = os.path.join(sasconfig.__bin_path__,'toppar','top_all27_prot_na.inp')
 use_defaults = False
 user_interface = 'terminal'
+gui = 'terminal' ## legacy for terminal app
+#user_interface = 'sassie_web'
 #gui = 'sassie_web'
 
 #### end user input ####
@@ -37,6 +39,7 @@ svariables['pdbfile'] = (pdbfile,'string')
 svariables['topfile'] = (topfile,'string')
 svariables['defaults'] = (use_defaults,'boolean')
 svariables['user_interface'] = (user_interface,'string')
+svariables['gui'] = (gui,'string')
 
 error,variables = input_filter.type_check_and_convert(svariables)
 if(len(error)>0):
