@@ -89,23 +89,45 @@ def rename_segment(other_self, mol, ndx, new_segname):
 
     other_self.resid_descriptions = numpy.array(updated_data)
 
-    dumfile = open('dum.txt', 'w')
-    dumfile.write('#ORIGINAL : \n')
-    dumfile.write('type(mol.segnames()) \n' + str(type(mol.segnames()))+ '\n')
-    for value in mol.segnames():
-        dumfile.write(value + "\n")
+    #dumfile = open('dum.txt', 'w')
+    #dumfile.write('#ORIGINAL : \n')
+    #dumfile.write('type(mol.segnames()) \n' + str(type(mol.segnames()))+ '\n')
+    #for value in mol.segnames():
+    #    dumfile.write(value + "\n")
 
     temp_segnames = [x if (x != target_segname)
                          else new_segname for x in mol.segnames()]
 
     mol.setSegnames(temp_segnames)
 
-    dumfile.write('#FINAL : \n')
-    dumfile.write('type(mol.segnames()) \n' + str(type(mol.segnames())) + '\n')
-    for value in mol.segnames():
-        dumfile.write(value + "\n")
+    #dumfile.write('#FINAL : \n')
+    #dumfile.write('type(mol.segnames()) \n' + str(type(mol.segnames())) + '\n')
+    #dumfile.write('#mol.segnames() : \n')
+    #for value in mol.segnames():
+    #    dumfile.write(value + "\n")
 
-    dumfile.close()
+    #dumfile.close()
+
+    ## assign new segname for each residue if changed (DEBUGGING)
+    ## assign new segname for each residue if changed (DEBUGGING)
+    ## assign new segname for each residue if changed (DEBUGGING)
+
+    temp_segname = []
+
+    for this_segname in mol.segname():
+
+        if this_segname not in mol.segnames():
+            temp_segname.append(new_segname)      
+        else:
+            temp_segname.append(this_segname)      
+
+    mol.setSegname(temp_segname)
+
+    #dumfile.write('#mol.segname() : \n')
+    #for value in mol.segname():
+    #    dumfile.write(value + "\n")
+#
+#/    dumfile.close()
 
     return
 

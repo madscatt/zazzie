@@ -90,12 +90,16 @@ def process_segment_input(other_self, mol):
             if segname_starts:
                 segname_utils.redefine_segments(mol, segname_starts)
 
-            dumfile = open('dum.txt', 'a')
-            dumfile.write('# BEFORE PREPAREDNESS\n')
-            dumfile.write('type(mol.segnames()) \n' + str(type(mol.segnames())) + '\n')
-            for value in mol.segnames():
-                dumfile.write(value + '\n')
-            dumfile.close()
+            #dumfile = open('dum.txt', 'a')
+            #dumfile.write('# BEFORE PREPAREDNESS\n')
+            #dumfile.write('type(mol.segnames()) \n' + str(type(mol.segnames())) + '\n')
+            #dumfile.write('# mol.segnames()\n')
+            #for value in mol.segnames():
+            #    dumfile.write(value + '\n')
+            #dumfile.write('# mol.segname()\n')
+            #for value in mol.segname():
+            #    dumfile.write(value + '\n')
+            #dumfile.close()
 
             mol.check_segname_simulation_preparedness()
 
@@ -166,8 +170,18 @@ def get_user_fasta_sequence(other_self, segname, moltype):
 def process_sequence_input(other_self, mol):
 
     accepted_sequences = False
-     
+    
+    mol.extract_sequence_info(subdiv_type='segname')
+ 
     seq_segnames = mol.segname_info.sequence.keys()
+
+    st = ','.join(seq_segnames)
+    dumfile = open('dum.txt', 'a')
+    dumfile.write("#SEQ SEGNAMES\n")
+    dumfile.write("st = " + st + "\n")
+
+    dumfile.close()
+
 
     while not accepted_sequences:
 
@@ -195,7 +209,7 @@ def process_sequence_input(other_self, mol):
             if segname in seq_segnames:
 
                 moltype = segname_utils.get_segment_moltype(mol, segname)
-                fasta_sequence = self.get_user_fasta_sequence(other_self,
+                fasta_sequence = get_user_fasta_sequence(other_self,
                         segname, moltype)
 
                 if fasta_sequence:

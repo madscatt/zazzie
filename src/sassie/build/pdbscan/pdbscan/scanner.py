@@ -26,6 +26,7 @@ CHARMM forcefield.
 '''
 
 import os
+import sys
 import numpy as np
 import logging
 import copy
@@ -2342,6 +2343,13 @@ class SasMolScan(sasmol.SasMol):
                   compatible.
         """
 
+        #st_segnames = ','.join(self.segname())
+
+        #dumfile = open('dum.txt', 'a')
+        #dumfile.write('#in check_residues_charmm_ready\n')
+        #dumfile.write('#self.segname() = ' + st_segnames + ' \n')
+        #dumfile.close()
+
         segnames = self.segname()
         charmm_ready = self.charmm
 
@@ -2408,8 +2416,22 @@ class SasMolScan(sasmol.SasMol):
         altloc = self.segname_info.altloc
 
         sim_ready = self.sim_ready
-        
+     
+        st_segnames = ','.join(self.segnames())
+
+        st_seg_charmm_valid = ','.join(seg_charmm_valid)
+ 
+        #dumfile = open('dum.txt', 'a') 
+        #dumfile.write('#in scanner\n')
+        #dumfile.write('#self.segnames() = ' + st_segnames + ' \n')
+        #dumfile.write('#seg_charmm_valid = ' + st_seg_charmm_valid + ' \n')
+       
         for segname in self.segnames():
+
+        #    dumfile.write('#segname = ' + segname + ' \n')
+        #    dumfile.write('#type(self.segnames()) = ' + str(type(self.segnames())) + ' \n')
+        #    dumfile.write('#type(segname) = ' + str(type(segname)) + ' \n' + segname)
+        #    dumfile.flush()
 
             sim_ready[segname] = {}
 
@@ -2439,6 +2461,9 @@ class SasMolScan(sasmol.SasMol):
                 first_resid = 0
 
             sim_ready[segname]['start'] = (first_resid == 1)
+
+
+#        dumfile.close()
 
         return
 

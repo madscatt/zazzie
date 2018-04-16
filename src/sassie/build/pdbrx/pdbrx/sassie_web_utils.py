@@ -47,9 +47,9 @@ def handle_sassie_web_user_input(other_self, mol, pdbscan_report):
     mvars = other_self.mvars
     log = other_self.log
 
-#    process_segment_input(other_self, mol, pdbscan_report)
+    process_segment_input(other_self, mol, pdbscan_report)
 
-#    process_sequence_input(other_self, mol)
+    process_sequence_input(other_self, mol)
 
     process_biomt_input(other_self, mol)
 

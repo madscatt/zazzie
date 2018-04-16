@@ -818,6 +818,14 @@ class PreProcessor(object):
      
         seq_segnames = mol.segname_info.sequence.keys()
 
+
+        st = ','.join(seq_segnames)
+        dumfile = open('dum.txt', 'a')
+        dumfile.write("#SEQ SEGNAMES\n")
+        dumfile.write("st = " + st + "\n")
+
+        dumfile.close()
+
         while not accepted_sequences:
 
             print("Current sequences (lowercase indicates residues not in coordinates): ")

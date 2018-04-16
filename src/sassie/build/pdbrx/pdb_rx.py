@@ -97,7 +97,6 @@ class PDBRx():
         log = self.log
 
         log.debug('in run_scan')
-   
 
         pgui("\n"+"="*60+" \n")
         pgui("DATA FROM RUN: %s \n\n" %(time.asctime( time.gmtime( time.time() ) ) ))
@@ -105,8 +104,7 @@ class PDBRx():
         mol = pdbscan.SasMolScan()
         mol.read_pdb(mvars.pdbfile)
 
-
-        pgui('Initiating PDB scan')
+        pgui('Initiating PDB scan\n')
 
         fraction_done = 0.01
         pgui('STATUS\t'+str(fraction_done))
@@ -129,14 +127,14 @@ class PDBRx():
 
             pdbscan_report = report.generate_simulation_prep_report(mol)
 
-            pgui('processing user input for segment(s), sequence(s) and biomt record(s)')
+            pgui('processing user input for segment(s), sequence(s) and biomt record(s)\n')
 
             preprocessor = pdbrx.preprocessor.user_input(self, mol, pdbscan_report)
 
         fraction_done = 0.5
         pgui('STATUS\t'+str(fraction_done))
         
-        pgui('building scaffold structure')
+        pgui('building scaffold structure\n')
 
         scaffold_builder = pdbrx.scaffold_builder.ScaffoldBuilder(mol=mol,
                                                                   default_subs=True)
@@ -154,7 +152,7 @@ class PDBRx():
         if not os.path.isdir(tmp_struct_path):
             os.mkdir(tmp_struct_path)
 
-        pgui('building structure')
+        pgui('building structure\n')
 
         structure_builder = pdbrx.structure_builder.StructureBuilder(scaffold_builder.scaffold_model,
                                                  tmp_struct_path)
@@ -172,7 +170,11 @@ class PDBRx():
         psfgen = pdbrx.apply_psfgen.PsfgenDriver(completed_mol, segname_info, mvars.topfile, self.runpath, out_prefix)
 
         psfgen.run_psfgen()
-        
+       
+        pgui('\nfinal structure saved as:: ' + out_prefix + '.pdb\n')
+        pgui('\npsf saved as:' + out_prefix + '.psf\n')
+        pgui('\nxplor formatted psf saved as: ' + out_prefix + '_xplor.psf\n\n')
+ 
         fraction_done = 0.9
         pgui('STATUS\t'+str(fraction_done))
         pgui("\n"+"="*60+" \n")
@@ -192,6 +194,4 @@ class PDBRx():
         fraction_done = 1.0
         pgui('STATUS\t'+str(fraction_done))
 
-        pgui('\n%s IS DONE\n' % app)
-        pgui("\n"+"="*60+" \n")
         time.sleep(0.1)
