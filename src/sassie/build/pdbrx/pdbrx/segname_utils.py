@@ -182,7 +182,7 @@ def join_segnames(other_self, mol, ndx):
 
         other_self.resid_descriptions = numpy.array(updated_data)
 
-        mol.segnames.remove(current_segname)
+        mol.segnames().remove(current_segname)
 
     else:
 
