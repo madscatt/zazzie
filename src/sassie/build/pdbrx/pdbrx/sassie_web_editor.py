@@ -562,7 +562,6 @@ class SegnameEditor():
 
         self.log.info(json.dumps(pdbscan_dict))
 
-
         log.info("SENDING QUESTION VIA TCP\n")
         answer = communication.tcpquestion(self.json_variables, my_question, timeout);
         log.info("DONE SENDING QUESTION VIA TCP\n")
@@ -599,7 +598,7 @@ class SegnameEditor():
         header = '{0:<7s} {1:>7s} {2:>10s}   {3:<8s} {4:<8s}'.format(h_list[0], h_list[1], h_list[2], h_list[3], h_list[4])
 
         listbox_dict["values"] = my_values
-        listbox_dict["returns"] = my_returns
+#        listbox_dict["returns"] = my_returns
         listbox_dict["size"] = 10 
         listbox_dict["help"] = "select a row and choose an option below"
         listbox_dict["header"] = header                          
@@ -610,12 +609,35 @@ class SegnameEditor():
         my_question["title"] = "PDB Rx Seqment Editor"
         my_question["text"] = "<p>Edit Segments Definitions Below</p><br><hr><br>"
         my_question["buttons"] = ["split", "join", "rename", "accept"]
-        my_question["fields"] = [listbox_dict ]
+        my_question["fields"] = [listbox_dict]
 
         self.log.info(json.dumps(listbox_dict))
 
         self.answer = communication.tcpquestion(self.json_variables, my_question, timeout);
         
         return 
+   
+    def query_new_segname(self):
+
+        timeout = 3600
+
+        segname_dict = {}
+        segname_dict["id"] = "new_segname"
+        segname_dict["type"] = "text"
+        segname_dict["help"] = "enter new segname : 1 to 4 characters only"
+        segname_dict["norow"] = "true"
+        segname_dict["label"] = "new segname"
+        segname_dict["default"] = "A"
+
+        my_question = {}
+        my_question["id"] = "q1"
+        my_question["title"] = "PDB Rx Seqment Editor"
+        my_question["text"] = "<p>Enter New Segname Below</p><br><hr><br>"
+        my_question["buttons"] = ["accept"]
+        my_question["fields"] = [segname_dict]
+
+        answer = communication.tcpquestion(self.json_variables, my_question, timeout);
+        
+        return answer
    
     

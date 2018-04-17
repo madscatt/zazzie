@@ -49,9 +49,12 @@ def handle_sassie_web_user_input(other_self, mol, pdbscan_report):
 
     process_segment_input(other_self, mol, pdbscan_report)
 
-    process_sequence_input(other_self, mol)
+    import sys
+    sys.exit()
 
-    process_biomt_input(other_self, mol)
+    #process_sequence_input(other_self, mol)
+
+    #process_biomt_input(other_self, mol)
 
     return
 
@@ -88,7 +91,54 @@ def process_segment_input(other_self, mol, pdbscan_report):
                 pass
 
             elif segment_choice == "rename":
-                pass
+
+                new_segname_query = sassie_query_object.query_new_segname()
+
+                log.info("type(new_segname_query) = " + str(type(new_segname_query)))
+
+                for k,v in new_segname_query.iteritems():
+                    if isinstance(v, dict):
+                        try:
+                            for k2,v2 in v.iteritems():
+                                 log.info("key2, value2 = " + k2 + "\t" + v2 + "\n")
+                                 log.info("type(key2), type(value2) = " + str(type(k2)) + "\t" + str(type(v2)) + "\n")
+                        except:
+                            log.info("type(key2), type(value2) = " + str(type(k2)) + "\t" + str(type(v2)) + "\n")
+                            if isinstance(v2,list):
+                                st = ''.join(v2)
+                                log.info("list = " + st)
+
+                    else: 
+                        log.info("key, value = " + k + "\t" + v + "\n")
+
+                new_segname = new_segname_query["_response"]["new_segname"]
+
+                log.info("new segname = " + new_segname)
+
+
+                log.info("type(sassie_query_object) = " + str(type(sassie_query_object)))
+                log.info("type(sassie_query_object.answer) = " + str(type(sassie_query_object.answer)))
+
+                for k,v in sassie_query_object.answer.iteritems():
+                    if isinstance(v, dict):
+                        try:
+                            for k2,v2 in v.iteritems():
+                                 log.info("key2, value2 = " + k2 + "\t" + v2 + "\n")
+                                 log.info("type(key2), type(value2) = " + str(type(k2)) + "\t" + str(type(v2)) + "\n")
+                        except:
+                            log.info("type(key2), type(value2) = " + str(type(k2)) + "\t" + str(type(v2)) + "\n")
+                            if isinstance(v2,list):
+                                st = ''.join(v2)
+                                log.info("list = " + st)
+                             
+                    else: 
+                        log.info("key, value = " + k + "\t" + v + "\n")
+
+
+                ndx = int(sassie_query_object.answer["_response"]["segment_list_box"])
+
+                if segname_utils.valid_segname(new_segname, mol.segnames()):
+                    segname_utils.rename_segment(other_self, mol, ndx, new_segname)
 
         #segname_starts = get_user_segmentation()
 
