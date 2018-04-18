@@ -508,7 +508,7 @@ class SegnameEditor():
     SasMol objects
     """
 
-    def __init__(self, segnames, resid_descriptions, json_variables, pdbscan_report, log):
+    def __init__(self, other_self, segnames, pdbscan_report, log):
         """
         Setup the environment and display to show residue infromation and
         editing instructions to the user
@@ -524,13 +524,12 @@ class SegnameEditor():
         """
 
         self.segnames = segnames
-        self.resid_descriptions = resid_descriptions
-        self.json_variables = json_variables
+        self.json_variables = other_self.json_variables
         self.log = log
 
         # Get initial locations of segment name changes in description list
         self.starting_breaks = numpy.where(
-            self.resid_descriptions[:-1, 0] != self.resid_descriptions[1:, 0])[0]
+            other_self.resid_descriptions[:-1, 0] != other_self.resid_descriptions[1:, 0])[0]
 
 	self.answer = self.ask_question_edit_segmentation(pdbscan_report, log)
 
@@ -568,14 +567,14 @@ class SegnameEditor():
         
         return answer
 
-    def create_segment_data(self):
+    def create_segment_data(self, other_self):
 
         my_values = []
         my_returns = []
 
         i = 0
 
-        for row in self.resid_descriptions:
+        for row in other_self.resid_descriptions:
             my_values.append('{0:7s} {1:>6} {2:>10s} {3:>6s} {4:>12s}'.format(
                             row[0], row[2], row[3], row[4], row[5]))
             my_returns.append(i)
@@ -583,7 +582,7 @@ class SegnameEditor():
 
         return my_values, my_returns
 
-    def display_and_query_segments_loop(self, mol, pdbscan_report):
+    def display_and_query_segments_loop(self, other_self, mol, pdbscan_report):
 
         timeout = 3600
 
@@ -592,7 +591,7 @@ class SegnameEditor():
         listbox_dict["type"] = "listbox"
         listbox_dict["fontfamily"] = "monospace"
 
-        my_values, my_returns = self.create_segment_data()
+        my_values, my_returns = self.create_segment_data(other_self)
 
         h_list = ['Segname', 'Resid', 'Resname', 'Chain', 'Moltype']
         header = '{0:<7s} {1:>7s} {2:>10s}   {3:<8s} {4:<8s}'.format(h_list[0], h_list[1], h_list[2], h_list[3], h_list[4])
