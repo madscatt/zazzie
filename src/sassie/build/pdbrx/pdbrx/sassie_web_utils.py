@@ -49,10 +49,7 @@ def handle_sassie_web_user_input(other_self, mol, pdbscan_report):
 
     process_segment_input(other_self, mol, pdbscan_report)
 
-    import sys
-    sys.exit()
-
-    #process_sequence_input(other_self, mol)
+    process_sequence_input(other_self, mol)
 
     #process_biomt_input(other_self, mol)
 

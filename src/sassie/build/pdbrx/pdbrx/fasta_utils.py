@@ -243,6 +243,8 @@ def complete_sequence_fasta(mol, segname, new_fasta):
         else:
 
             position = 0
+            #### NOT TESTED
+            first_resid = first_coor_resid
 
         # Deal with residues between the start and finish of the
         # input coordinates
