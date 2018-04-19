@@ -483,7 +483,7 @@ class FastaEditor():
 
         lrfile_dict = {}
         lrfile_dict["id"] = "sequence_lrfile"
-        lrfile_dict["type"] = "lrfile"
+        lrfile_dict["type"] = "file"
         lrfile_dict["label"] = "select a file to upload"
         lrfile_dict["help"] = "select a fasta file to use"
 
@@ -496,6 +496,7 @@ class FastaEditor():
         my_question["buttons"] = ["submit", "done"]
         my_question["fields"] = [listbox_dict, lrfile_dict]
 
+        self.log.info(json.dumps(listbox_dict))
         self.log.info(json.dumps(lrfile_dict))
 
         self.answer = communication.tcpquestion(self.json_variables, my_question, timeout);
