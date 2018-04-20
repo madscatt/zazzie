@@ -104,7 +104,8 @@ class PdbHeader:
                         'Unable to parse PDB header: {0:s}'.format(pdbfile))
                 else:
                     raise ValueError(
-                        'Unable to parse PDB header: {0:s}'.format(sasmol.pdbname))
+                        #'Unable to parse PDB header: {0:s}'.format(sasmol.pdbname))
+                        'Unable to parse PDB header: {0:s}'.format("sasmol.pdbname"))
 
         return
 
@@ -276,10 +277,11 @@ class PdbHeader:
         has_header_info = sum(len(v) for v in pdb_recs.itervalues())
 
         if has_header_info:
-            logger.debug('has header information')
+            logger.info('has header information')
+            print('has header information')
 
             if pdb_recs['NUMMDL']:
-                logger.debug('has NUMMDL information')
+                logger.info('has NUMMDL information')
                 self.logger.info('Multiple models (' +
                                  str(pdb_recs['NUMMDL'][0]['no_models']) +
                                  ') detected in the file.')
@@ -287,38 +289,50 @@ class PdbHeader:
                     pdb_recs['NUMMDL'][0]['no_models'])
 
             if pdb_recs['TITLE']:
-                logger.debug('has TITLE information')
+                logger.info('has TITLE information')
                 self.reference_info.title = process_runon_line(
                     pdb_recs['TITLE'], 'text')
 
             # SEQRES records contain full sequence information
+            
             self.process_seqres()
-            logger.debug('processed seqres information')
+            logger.info('processed seqres information')
+            print('processed seqres information')
 
             # Remarks contain quality metrics, BIOMT and missing residue/atom
             # information
-            logger.debug('getting read to process remarks information')
+            logger.info('getting read to process remarks information')
+            print('getting read to process remarks information')
             self.parse_remarks()
-            logger.debug('processed remarks information')
+            logger.info('processed remarks information')
+            print('processed remarks information')
 
             # Citation information
-            self.parse_jrnl()
-            logger.debug('processed jrnl information')
+            try:
+                self.parse_jrnl()
+                logger.info('processed jrnl information')
+                print('processed jrnl information')
+            except:
+                logger.info('unable to process jrnl information')
+                print('unable to process jrnl information')
 
             if pdb_recs['SSBOND']:
                 self.process_disulphides()
-                logger.debug('processed ssbond information')
+                logger.info('processed ssbond information')
+                print('processed ssbond information')
 
             # Information about non-standard residues
             self.process_header_het()
-            logger.debug('processed het information')
+            logger.info('processed het information')
+            print('processed het information')
 
             self.process_compnd()
-            logger.debug('processed compnd information')
+            logger.info('processed compnd information')
+            print('processed compnd information')
 
             self.read_valid_header = True
             self.has_seq_info = self.check_header_seq()
-            logger.debug('read_valid_header = ' +
+            print('read_valid_header = ' +
                            str(self.read_valid_header))
 
         else:
