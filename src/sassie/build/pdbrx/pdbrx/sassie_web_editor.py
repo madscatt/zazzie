@@ -503,6 +503,82 @@ class FastaEditor():
 
         return 
 
+class SegnameChoice():
+    """
+    Interface to allow users to split, join and rename segments in
+    SasMol objects
+    """
+
+    def __init__(self, other_self, segname_list, prep_report, log):
+        """
+        Setup the environment and display to show final segment 
+        selection instructions to the user
+
+        """
+        self.log = log
+        self.json_variables = other_self.json_variables
+
+	self.answer = self.select_segnames(segname_list, prep_report)
+
+        return 
+   
+    def select_segnames(self, segname_list, prep_report):
+  
+        timeout = 3600
+
+        prep_dict = {} 
+        prep_dict["id"] =  "text_1"
+        prep_dict["type"] = "textarea"
+        prep_dict["default"] = '\n'.join(prep_report)
+        prep_dict["rows"] = len(prep_report) + 6
+        prep_dict["cols"] = 180
+        prep_dict["fontfamily"] = "monospace"
+
+        label_dict = {}
+        label_dict["id"] = "label_1"
+        label_dict["type"] = "label"
+        label_dict["label"] = "<p><hr><br>Choose Segments<br><br>"
+
+        listbox_dict = {}
+        listbox_dict["id"] = "segname_listbox"
+        listbox_dict["type"] = "listbox"
+        listbox_dict["fontfamily"] = "monospace"
+
+        listbox_dict["values"] = segname_list
+        listbox_dict["size"] = 10
+        listbox_dict["help"] = "select row(s) and choose an option below: command-click for non-adjacent rows (Mac) or control-click (Windows)"
+        listbox_dict["header"] = "choose segment(s) you wish to use in your final model\n click 'submit' when you are finished \n\n"
+        listbox_dict["fontsize"] = "0.93em"
+        listbox_dict["multiple"] = "true"
+
+        my_question = {}
+        my_question["id"] = "q1"
+        my_question["title"] = "PDB Rx Final Seqment Choice "
+        my_question["text"] = "<p>Review system segment report below</p><br><hr><br>"
+        my_question["buttons"] = ["submit"]
+        my_question["fields"] = [ prep_dict, label_dict, listbox_dict ]
+
+        self.log.info(json.dumps(prep_dict))
+
+        answer = communication.tcpquestion(self.json_variables, my_question, timeout);
+        
+        return answer
+
+    def create_segment_data(self, other_self):
+
+        my_values = []
+        my_returns = []
+
+        i = 0
+
+        for row in other_self.resid_descriptions:
+            my_values.append('{0:7s} {1:>6} {2:>10s} {3:>6s} {4:>12s}'.format(
+                            row[0], row[2], row[3], row[4], row[5]))
+
+  
+
+        return answer 
+
 class SegnameEditor():
     """
     Interface to allow users to split, join and rename segments in

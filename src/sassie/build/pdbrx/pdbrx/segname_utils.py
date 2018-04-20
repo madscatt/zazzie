@@ -23,6 +23,28 @@ import json
 import numpy
 import sassie.build.pdbscan.pdbscan.data_struct as data_struct
 
+def check_segment_status(mol, segnames_to_check):
+    """
+    Determine if the segments listed in self.selected_segnames
+    are passed as ready for CHARMM parameterization
+
+    @rtype :  boolean
+    @return:  Are all segnames composed of CHARMM compatible residues only
+    """
+
+    sim_ready_checks = mol.sim_ready
+
+    accepted_segnames = []
+
+    for segname in segnames_to_check:
+
+        checks = sim_ready_checks[segname]
+        if checks['charmm']:
+            accepted_segnames.append(segname)
+
+    return accepted_segnames == segnames_to_check
+
+
 def split_segnames(other_self, mol, ndx, new_segname):
     """
     Split an existing segment and name the newly created segment.

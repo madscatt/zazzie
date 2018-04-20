@@ -47,14 +47,64 @@ def handle_sassie_web_user_input(other_self, mol, pdbscan_report):
     mvars = other_self.mvars
     log = other_self.log
 
-    #process_segment_input(other_self, mol, pdbscan_report)
+    process_segment_input(other_self, mol, pdbscan_report)
 
     process_sequence_input(other_self, mol)
 
-    #process_biomt_input(other_self, mol)
+    process_biomt_input(other_self, mol)
 
     return
 
+def final_segment_selection(other_self, mol, prep_report):
+
+    mvars = other_self.mvars
+    log = other_self.log
+
+    log.info('processing_final_segment_selection_sassie-web')
+
+    segname_list = mol.segnames()
+
+    choice_made = False
+
+    while not choice_made:
+
+        if len(segname_list) > 1:
+
+            sassie_query_object  = sassie_web_editor.SegnameChoice(\
+                other_self, segname_list, prep_report, log)            
+
+            selected_segnames_ndx = map(int, sassie_query_object.answer["_response"]["segname_listbox"])
+
+            log.info("selected_segnames_ndx = " + ''.join(str(x) for x in selected_segnames_ndx))
+            selected_segnames = []
+            for i in xrange(len(segname_list)):
+                if i in selected_segnames_ndx:
+                    selected_segnames.append(segname_list[i])
+
+            log.info("selected_segnames = " + ''.join(selected_segnames))
+
+        else:
+
+            selected_segnames = [segname_list[0]]
+
+        if selected_segnames:
+
+            if not segname_utils.check_segment_status(mol, selected_segnames):
+                pass
+                # TODO: This is just a stub - needs filling out
+                #self.process_non_ff(selected_segnames)
+
+                #if segname_check_segment_status(mol, selected_segnames):
+                #    choice_made = True
+
+            else:
+                choice_made = True
+
+        else:
+            ###TODO: evaluate whether to tell user to select at least one segment??
+            print("No segnames selected")
+
+    return selected_segnames
 
 def process_segment_input(other_self, mol, pdbscan_report):
 
