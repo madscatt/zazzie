@@ -605,7 +605,7 @@ class SegnameEditor():
         self.log = log
 
         # Get initial locations of segment name changes in description list
-        self.starting_breaks = numpy.where(
+        other_self.starting_breaks = numpy.where(
             other_self.resid_descriptions[:-1, 0] != other_self.resid_descriptions[1:, 0])[0]
 
 	self.answer = self.ask_question_edit_segmentation(pdbscan_report, log)

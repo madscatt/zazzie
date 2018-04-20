@@ -127,6 +127,7 @@ def process_segment_input(other_self, mol, pdbscan_report):
 
             sassie_query_object.display_and_query_segments_loop(other_self, mol, pdbscan_report)
 
+
             segment_choice = sassie_query_object.answer["_response"]["button"]
 
             if segment_choice == "accept":
@@ -147,18 +148,13 @@ def process_segment_input(other_self, mol, pdbscan_report):
 
                 if segname_utils.valid_segname(new_segname, mol.segnames()):
                     segname_utils.split_segnames(other_self, mol, ndx, new_segname)
-                    ###TODO: following line is not working or tested 
-                    segname_starts = segname_utils.get_segment_starts(other_self, sassie_query_object)
-
+                
             elif segment_choice == "join":
                 log.info("in segment choice = join\n")
 
                 ndx = int(sassie_query_object.answer["_response"]["segment_list_box"])
 
                 error = segname_utils.join_segnames(other_self, mol, ndx)
-
-                ###TODO: following line is not working or tested 
-                segname_starts = segname_utils.get_segment_starts(other_self, sassie_query_object)
 
                 #for k,v in new_segname_query.iteritems():
                 #    if isinstance(v, dict):
@@ -190,9 +186,6 @@ def process_segment_input(other_self, mol, pdbscan_report):
                 if segname_utils.valid_segname(new_segname, mol.segnames()):
                     segname_utils.rename_segment(other_self, mol, ndx, new_segname)
                    
-                    ###TODO: following line is not working or tested 
-                    segname_starts = segname_utils.get_segment_starts(other_self, sassie_query_object)
-
                     ###TODO: need to update the new segname so that fasta is updated; the
                     ### following does NOT work
 
@@ -203,7 +196,11 @@ def process_segment_input(other_self, mol, pdbscan_report):
                     log.info("new_segname = " + new_segname + "\n")
                     log.info("ndx = " + str(ndx) + "\n")
 
-        #segname_starts = get_user_segmentation()
+        ###TODO: where should these two calls go??
+        ui_output = segname_utils.get_segment_starts(other_self)
+
+        segname_starts = json.loads(
+                ui_output, object_hook = segname_utils.convert_segname_start) 
 
         if segname_starts:
             segname_utils.redefine_segments(mol, segname_starts)

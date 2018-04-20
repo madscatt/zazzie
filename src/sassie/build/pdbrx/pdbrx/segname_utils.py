@@ -218,9 +218,7 @@ def join_segnames(other_self, mol, ndx):
     return error
 
 
-###TODO: added original_self here; not tested or working ALSO not tested in terminal!
-
-def get_segment_starts(other_self, original_self):
+def get_segment_starts(other_self):
     """
     Get indicies where the resid descriptions change segment name.
 
@@ -229,7 +227,8 @@ def get_segment_starts(other_self, original_self):
 
     new_breaks = numpy.where(other_self.resid_descriptions[:-1, 0] != other_self.resid_descriptions[1:, 0])[0]
 
-    if (new_breaks != original_self.starting_breaks).any():
+    #if (new_breaks != original_self.starting_breaks).any():
+    if (new_breaks != other_self.starting_breaks).any():
 
         new_breaks += 1
         new_breaks = numpy.append([0], new_breaks)
