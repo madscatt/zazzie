@@ -24,6 +24,7 @@ import json
 import yaml
 
 import sassie.build.pdbscan.pdbscan.pdbscan_utils as pdbscan_utils
+import sassie.build.pdbscan.pdbscan.data_struct as data_struct
 
 #import sassie.build.pdbrx.pdbrx.segname_utils as segname_utils
 #import sassie.build.pdbrx.pdbrx.fasta_utils as fasta_utils
@@ -138,6 +139,7 @@ def process_segment_input(other_self, mol, pdbscan_report):
                 new_segname_query = sassie_query_object.query_new_segname()
 
                 new_segname = new_segname_query["_response"]["new_segname"]
+                new_segname.encode('ascii','ignore')
 
                 log.info("new segname = " + new_segname)
 
@@ -145,6 +147,8 @@ def process_segment_input(other_self, mol, pdbscan_report):
 
                 if segname_utils.valid_segname(new_segname, mol.segnames()):
                     segname_utils.split_segnames(other_self, mol, ndx, new_segname)
+                    ###TODO: following line is not working or tested 
+                    segname_starts = segname_utils.get_segment_starts(other_self, sassie_query_object)
 
             elif segment_choice == "join":
                 log.info("in segment choice = join\n")
@@ -152,6 +156,9 @@ def process_segment_input(other_self, mol, pdbscan_report):
                 ndx = int(sassie_query_object.answer["_response"]["segment_list_box"])
 
                 error = segname_utils.join_segnames(other_self, mol, ndx)
+
+                ###TODO: following line is not working or tested 
+                segname_starts = segname_utils.get_segment_starts(other_self, sassie_query_object)
 
                 #for k,v in new_segname_query.iteritems():
                 #    if isinstance(v, dict):
@@ -174,6 +181,7 @@ def process_segment_input(other_self, mol, pdbscan_report):
                 new_segname_query = sassie_query_object.query_new_segname()
 
                 new_segname = new_segname_query["_response"]["new_segname"]
+                new_segname.encode('ascii','ignore')
 
                 log.info("new segname = " + new_segname)
 
@@ -181,6 +189,15 @@ def process_segment_input(other_self, mol, pdbscan_report):
 
                 if segname_utils.valid_segname(new_segname, mol.segnames()):
                     segname_utils.rename_segment(other_self, mol, ndx, new_segname)
+                   
+                    ###TODO: following line is not working or tested 
+                    segname_starts = segname_utils.get_segment_starts(other_self, sassie_query_object)
+
+                    ###TODO: need to update the new segname so that fasta is updated; the
+                    ### following does NOT work
+
+                    #mol.segname_info = data_struct.Info(scan_type='segname')
+
                 else:
                     log.info("valid segname = False\n")
                     log.info("new_segname = " + new_segname + "\n")
@@ -188,10 +205,11 @@ def process_segment_input(other_self, mol, pdbscan_report):
 
         #segname_starts = get_user_segmentation()
 
-        #if segname_starts:
-        #    segname_utils.redefine_segments(mol, segname_starts)
-        #    mol.check_segname_simulation_preparedness()
+        if segname_starts:
+            segname_utils.redefine_segments(mol, segname_starts)
+            mol.check_segname_simulation_preparedness()
 
+    return
 
 def process_sequence_input(other_self, mol):
 
