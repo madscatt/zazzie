@@ -127,7 +127,6 @@ def process_segment_input(other_self, mol, pdbscan_report):
 
             sassie_query_object.display_and_query_segments_loop(other_self, mol, pdbscan_report)
 
-
             segment_choice = sassie_query_object.answer["_response"]["button"]
 
             if segment_choice == "accept":
@@ -140,7 +139,7 @@ def process_segment_input(other_self, mol, pdbscan_report):
                 new_segname_query = sassie_query_object.query_new_segname()
 
                 new_segname = new_segname_query["_response"]["new_segname"]
-                new_segname.encode('ascii','ignore')
+                new_segname = new_segname.encode('ascii','ignore')
 
                 log.info("new segname = " + new_segname)
 
@@ -177,34 +176,33 @@ def process_segment_input(other_self, mol, pdbscan_report):
                 new_segname_query = sassie_query_object.query_new_segname()
 
                 new_segname = new_segname_query["_response"]["new_segname"]
-                new_segname.encode('ascii','ignore')
+                new_segname = new_segname.encode('ascii','ignore')
 
                 log.info("new segname = " + new_segname)
-
+                
                 ndx = int(sassie_query_object.answer["_response"]["segment_list_box"])
 
                 if segname_utils.valid_segname(new_segname, mol.segnames()):
                     segname_utils.rename_segment(other_self, mol, ndx, new_segname)
                    
-                    ###TODO: need to update the new segname so that fasta is updated; the
-                    ### following does NOT work
-
-                    #mol.segname_info = data_struct.Info(scan_type='segname')
-
                 else:
                     log.info("valid segname = False\n")
+                    log.info("valid segname = False\n")
+                    log.info("new_segname = " + new_segname + "\n")
                     log.info("new_segname = " + new_segname + "\n")
                     log.info("ndx = " + str(ndx) + "\n")
+                    log.info("ndx = " + str(ndx) + "\n")
 
-        ###TODO: where should these two calls go??
         ui_output = segname_utils.get_segment_starts(other_self)
 
         segname_starts = json.loads(
                 ui_output, object_hook = segname_utils.convert_segname_start) 
 
         if segname_starts:
+            log.info("segname_starts has changed: updating segment information")
             segname_utils.redefine_segments(mol, segname_starts)
-            mol.check_segname_simulation_preparedness()
+
+        mol.check_segname_simulation_preparedness()
 
     return
 
@@ -214,7 +212,8 @@ def process_sequence_input(other_self, mol):
     log = other_self.log
 
     log.info('processing_sequence_input_sassie-web')
-       
+
+    mol.extract_sequence_info(subdiv_type='segname')       
     seq_segnames = mol.segname_info.sequence.keys()
     sequence_report = fasta_utils.create_sequence_report(mol, seq_segnames)
             
