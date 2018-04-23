@@ -306,7 +306,7 @@ def process_biomt_input(other_self, mol):
 
         if choice in ['y', 'yes']:
 
-            self.get_biological_unit_transform()
+            get_biological_unit_transform(other_self, mol)
             choice_made = True
 
             if mol.segname_info.biomt:
