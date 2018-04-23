@@ -241,10 +241,16 @@ def process_sequence_input(other_self, mol):
             elif sequence_choice == "submit":
            
                 ###TODO: catch if submit is selected WITHOUT selecting a file to upload or use!!!
- 
-                sequence_segname_index = int(sassie_query_object.answer["_response"]["sequence_listbox"])
+                ###TODO: this should be handled by genapp
 
-                log.info("sequence_segname_index = " + str(sequence_segname_index))
+                try: 
+                    sequence_segname_index = int(sassie_query_object.answer["_response"]["sequence_listbox"])
+                    log.info("sequence_segname_index = " + str(sequence_segname_index))
+                except:
+                    log.info("user did not select a segment")
+                    error = "please choose a segment for each file you wish to upload"
+                    sassie_query_object.display_error(error)
+
 
                 sequence_filename = sassie_query_object.answer["sequence_lrfile"]
     
@@ -252,44 +258,33 @@ def process_sequence_input(other_self, mol):
 
                 ordered_names, sequences = fasta_utils.parse_fasta_file(sequence_filename[0])
 
-                if len(ordered_names) == 1:
-                    chosen = ordered_names[0]
-                else:
-                    pass
-                    ###TODO: add user input to pick a single sequence from list
+                try:
 
-                fasta_sequence = fasta_utils.reformat_fasta(sequences[chosen])
-                moltype = segname_utils.get_segment_moltype(mol, seq_segnames[sequence_segname_index])
-                log.info("moltype = " + str(moltype))
-                valid_fasta = fasta_utils.validate_fasta(fasta_sequence, moltype)
+                    if len(ordered_names) == 1:
+                        chosen = ordered_names[0]
+                    else:
+                        chosen = ordered_names[0]
+                        ###TODO: add user input to pick a single sequence from list
+                    fasta_sequence = fasta_utils.reformat_fasta(sequences[chosen])
+                    moltype = segname_utils.get_segment_moltype(mol, seq_segnames[sequence_segname_index])
+                    log.info("moltype = " + str(moltype))
+                    valid_fasta = fasta_utils.validate_fasta(fasta_sequence, moltype)
 
-                if not valid_fasta:
-                    ###TODO: deal with failure case
-                    pass
+                except:
+                    log.info("unable to parse and validate input fasta file")
+                    error = "unable to parse and validate input fasta file"
+                    sassie_query_object.display_error(error)
+
+
                 else:
                     success = fasta_utils.complete_sequence_fasta(mol, seq_segnames[sequence_segname_index],\
                                     fasta_sequence)
 
                     if not success:
-                        log.info("Fasta seuqnce did not match sequence from chosen segment")
-
-                #for k,v in sassie_query_object.answer.iteritems():
-                #    if isinstance(v, dict):
-                #        try:
-                #            for k2,v2 in v.iteritems():
-                #                 log.info("key2, value2 = " + k2 + "\t" + v2 + "\n")
-                #                 log.info("type(key2), type(value2) = " + str(type(k2)) + "\t" + str(type(v2)) + "\n")
-                #        except:
-                #            log.info("type(key2), type(value2) = " + str(type(k2)) + "\t" + str(type(v2)) + "\n")
-                #            if isinstance(v2,list):
-                #                st = ''.join(v2)
-                #                log.info("list = " + st)
-#
-#                    else: 
-#                        log.info("key, value = " + k + "\t" + v + "\n")
-#
-#
-
+                        log.info("Fasta sequence did not match sequence from chosen segment")
+                        error = "Fasta sequence did not match sequence from chosen segment"
+                        sassie_query_object.display_error(error)
+    
 #    seq_segnames = mol.segname_info.sequence.keys()
 #
 #    sequence_report = segname_utils.create_sequence_report(mol, seq_segnames) 
