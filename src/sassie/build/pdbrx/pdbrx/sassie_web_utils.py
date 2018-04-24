@@ -366,13 +366,13 @@ def build_biomt_data(sassie_query_object, log):
     check_rot, rot = biomt_utils.check_rotation(rot_user)
     if not check_rot:
         flag = False
-        error = 'Rotation must be a 3 x 3 array of numeric values'
+        error = 'Rotation Matrix must be a 3 x 3 array of numeric values'
         sassie_query_object.display_error(error)    
 
     check_trans, trans = biomt_utils.check_translation(trans_user)
     if not check_trans:
         flag = False
-        error = 'Error: Translation must be a 3 x 1 array of numeric values'
+        error = 'Error: Translation Vector must be a 3 x 1 array of numeric values'
         sassie_query_object.display_error(error)    
 
     if ((rot == numpy.identity(3)).all()) and ((trans == numpy.array([0.0, 0.0, 0.0])).all()):
@@ -418,19 +418,13 @@ def process_biomt_input(other_self, mol):
                         selected_segnames.append(segnames[i])
 
                 log.info("biomt: selected_segnames = " + ','.join(selected_segnames))
-                log.info("biomt: selected_segnames = " + ','.join(selected_segnames))
-                log.info("biomt: selected_segnames = " + ','.join(selected_segnames))
+
+                biomt_rec = biomt_utils.init_biomt(selected_segnames)
 
                 flag = False
                 while not flag:
                     sassie_query_object.process_biomt_matrix(other_self, mol)
                     flag, rot, trans = build_biomt_data(sassie_query_object, log)
-                    if flag:
-                        log.info('biomt: build_biomt worked okay')
-                        log.info('biomt: build_biomt worked okay')
-                        log.info('biomt: build_biomt worked okay')
-
-
 
                 choice = sassie_query_object.answer["_response"]["button"]
                 if choice == "submit":

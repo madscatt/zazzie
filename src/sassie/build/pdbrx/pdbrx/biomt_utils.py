@@ -23,6 +23,29 @@ import yaml
 import numpy
 
 
+def init_biomt(subdivs):
+    '''
+    Create a blank BIOMT record to be applied to the chosen subdivisions
+    (chains or segments).
+
+    @type subdivs :  list
+    @param subdivs:  Segment or chain identifiers
+    @rtype :  dict
+    @return:  Description of blank BIOMT
+    '''
+
+    biomt_rec = {
+        'subdivs': subdivs,
+        'auth_bio_unit': '',
+        'soft_bio_unit': '',
+        'rot': [],
+        'trans': []
+    }
+
+    biomt_rec['rot'].append(numpy.identity(3))
+    biomt_rec['trans'].append(numpy.array([0.0, 0.0, 0.0]))
+
+    return biomt_rec
 
 def check_array_input(input_txt, dimensions):
     '''
