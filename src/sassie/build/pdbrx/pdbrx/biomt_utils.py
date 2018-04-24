@@ -22,6 +22,34 @@ Methods to process information for biomt data
 import yaml
 import numpy
 
+
+
+def check_array_input(input_txt, dimensions):
+    '''
+    Check that input text can be converted into an array.
+
+    @type input_txt :  str
+    @param input_txt:  Text supposedly containing an array
+    @type dimensions :  tuple
+    @param dimensions:  Expected dimensions of array
+    @rtype :  bool, np.array
+    @return:  Input validity flag
+              Text converted to array
+    '''
+
+    flag = True
+
+    try:
+        matrix = numpy.array(input_txt)
+        matrix = 1.0 * matrix
+        if matrix.shape != dimensions:
+            flag = False
+
+    except TypeError:
+        matrix = None
+
+    return flag, matrix
+
 def check_rotation(input_rot):
     '''
     Check that input rotation matrix is valid (i.e. text can be converted to

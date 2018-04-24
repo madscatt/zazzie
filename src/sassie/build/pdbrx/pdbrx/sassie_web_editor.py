@@ -49,6 +49,30 @@ class BiomtEditor():
    
                 return 
     
+        def display_error(self, error):
+
+            timeout = 3600
+
+            error_dict = {} 
+            error_dict["id"] =  "text_2"
+            error_dict["type"] = "textarea"
+            error_dict["default"] = error
+            error_dict["rows"] = len(error) + 6
+            error_dict["rows"] = error.count('\n') + 4
+            error_dict["cols"] = 180
+            error_dict["fontfamily"] = "monospace"
+
+            my_question = {}
+            my_question["id"] = "q1"
+            my_question["title"] = "PDB Rx Error"
+            my_question["text"] = "<p>Error Encountered: </p><br><hr><br>"
+            my_question["buttons"] = ["continue"]
+            my_question["fields"] = [error_dict]
+
+            answer = communication.tcpquestion(self.json_variables, my_question, timeout);
+        
+            return 
+
         def ask_question_edit_biomt(self, mol):
 
                 timeout = 3600
@@ -459,7 +483,6 @@ class FastaEditor():
         answer = communication.tcpquestion(self.json_variables, my_question, timeout)
         
         return answer
-
 
     def display_error(self, error):
 

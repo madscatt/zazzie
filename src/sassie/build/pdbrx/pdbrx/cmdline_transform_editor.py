@@ -334,14 +334,14 @@ def user_biomt(segnames_json):
 
     while input_txt not in ['q', 'Q']:
 
-        print('Press "E" to edit an existing transform, '
-              '"A" to add a new transform or '
+        #print('Press "E" to edit an existing transform, '
+        print('Press "A" to add a new transform or '
               '"Q" to accept current BIOMT and quit')
         input_txt = sys.stdin.read(1)
 
-        if input_txt in ['e', 'E']:
-            edit_transform(biomt_rec)
-        elif input_txt in ['a', 'A']:
+        #if input_txt in ['e', 'E']:
+        #    edit_transform(biomt_rec)
+        if input_txt in ['a', 'A']:
             add_transform(biomt_rec)
 
     return json.dumps(prepare_biomt_json(biomt_rec))
