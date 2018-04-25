@@ -49,9 +49,9 @@ def handle_sassie_web_user_input(other_self, mol, pdbscan_report):
     mvars = other_self.mvars
     log = other_self.log
 
-    #process_segment_input(other_self, mol, pdbscan_report)
+    process_segment_input(other_self, mol, pdbscan_report)
 
-    #process_sequence_input(other_self, mol)
+    process_sequence_input(other_self, mol)
 
     process_biomt_input(other_self, mol)
 
@@ -395,17 +395,24 @@ def process_biomt_input(other_self, mol):
         
     choice = sassie_query_object.answer["_response"]["button"]
 
+    ##TODO: why the gynamistics with the segnames: code borrowed from DWW
+
+    #segnames_json = json.dumps(mol.segnames())
+
+    #segnames = yaml.safe_load(segnames_json)
+
+    #selected_segnames = select_segnames(segnames)
+
     if choice == "yes":
 
         in_loop = True
 
         while in_loop:
 
-                segnames_json = json.dumps(mol.segnames())
 
                 #ui_output = cmdline_transform_editor.user_biomt(segnames_json)
 
-                segnames = yaml.safe_load(segnames_json)
+#                segnames = yaml.safe_load(segnames_json)
 
                 sassie_query_object.display_and_query_biomt_loop(mol)
 
@@ -413,52 +420,38 @@ def process_biomt_input(other_self, mol):
 
                 log.info("biomt: selected_segnames_ndx = " + ','.join(str(x) for x in selected_segnames_ndx))
                 selected_segnames = []
-                for i in xrange(len(segnames)):
+                for i in xrange(len(mol.segnames())):
                     if i in selected_segnames_ndx:
-                        selected_segnames.append(segnames[i])
+                        selected_segnames.append(mol.segnames()[i])
 
                 log.info("biomt: selected_segnames = " + ','.join(selected_segnames))
 
                 biomt_rec = biomt_utils.init_biomt(selected_segnames)
+                #biomt_utils.add_transform(biomt_rec)
 
                 flag = False
                 while not flag:
                     sassie_query_object.process_biomt_matrix(other_self, mol)
                     flag, rot, trans = build_biomt_data(sassie_query_object, log)
+                    biomt_rec['rot'].append(rot)
+                    biomt_rec['trans'].append(trans)
+
+                ui_output = json.dumps(biomt_utils.prepare_biomt_json(biomt_rec))
+
+                user_biomt = biomt_utils.biomt_json2data(ui_output)
+
+                if user_biomt:
+
+                        biomol_nos = mol.segname_info.biomt.keys()
+                        biomol_no = sorted(biomol_nos)[-1] + 1
+
+                        mol.segname_info.biomt[biomol_no] = user_biomt
+
+                else:
+                    pass
 
                 choice = sassie_query_object.answer["_response"]["button"]
                 if choice == "submit":
                     in_loop = False
-
-    #            biomt_rec = init_biomt(selected_segnames)
-
-#   #             print('An identity transform already exists, enter a new transform:')
-    #            sassie_query_object.add_transform(biomt_rec)
-#
-#                sassie_query_object.display_and_query_biomt_loop(mol, sequence_report)
-#
-#                biomt_choice = sassie_query_object.answer["_response"]["button"]
-#
-#                if biomt_choice == "done":
-#                        in_loop = False
-#
-#                elif biomt_choice == "edit":
-#                        sassie_query_object.edit_transform(biomt_rec)
-#
-#                elif biomt_choice == "add":
-#                        sassie_query_object.add_transform(biomt_rec)
-
-#TODO: HERE
-
-       # return json.dumps(prepare_biomt_json(biomt_rec))
-       
-         #user_biomt = self.biomt_json2data(ui_output)
-#
-#                if user_biomt:
-#
-#                        biomol_nos = mol.segname_info.biomt.keys()
-#                        biomol_no = sorted(biomol_nos)[-1] + 1
-#
-#                mol.segname_info.biomt[biomol_no] = user_biomt
 
     return

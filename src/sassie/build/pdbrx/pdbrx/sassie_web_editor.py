@@ -30,6 +30,24 @@ import numpy
 import sassie.util.communication as communication
 import sassie.build.pdbscan.pdbscan.report as pdbscan_report
 
+class BiomtChoice():
+    """
+    Interface to allow users to choose final biomt options
+    """
+
+    def __init__(self, other_self, biomt_list, biomol_report, log):
+        """
+        Setup the environment and display to show final biomt 
+        selection instructions to the user
+
+        """
+        self.log = log
+        self.json_variables = other_self.json_variables
+
+	self.answer = self.select_biomt(biomt_list, biomol_report)
+
+        return 
+   
 class BiomtEditor():
         """
         Interface to for input/ouput of questions related to biomt entries

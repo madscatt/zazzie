@@ -711,6 +711,7 @@ class ScaffoldBuilder():
             if self.mol.segname_info.biomt:
 
                 biomt_list = self.mol.segname_info.biomt.keys()
+                self.selected_biomt = sassie_web_utils.BiomtChoice(other_self, biomt_list, biomol_report, log)
 
                 if len(biomt_list) > 1:
 
