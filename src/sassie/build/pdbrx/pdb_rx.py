@@ -103,6 +103,9 @@ class PDBRx():
  
         mol = pdbscan.SasMolScan()
         mol.read_pdb(mvars.pdbfile)
+        ###TODO: evaluate whether this should be assigned or not to enable an error
+        ###      condition in pdbscan
+        #mol.setPdbname(pdbfile)
 
         pgui('Initiating PDB scan\n')
 
@@ -137,7 +140,8 @@ class PDBRx():
         pgui('building scaffold structure\n')
 
         scaffold_builder = pdbrx.scaffold_builder.ScaffoldBuilder(mol=mol,
-                                                                  default_subs=True)
+                                                                  default_subs=True,
+                                                                  ui=mvars.user_interface)
 
         if mvars.use_defaults:
 
@@ -145,7 +149,7 @@ class PDBRx():
 
         else:
 
-            scaffold_builder.user_system_selection()
+            scaffold_builder.user_system_selection(self)
 
         
         tmp_struct_path = self.runpath + os.sep + 'tmp_struct'
@@ -157,7 +161,7 @@ class PDBRx():
         structure_builder = pdbrx.structure_builder.StructureBuilder(scaffold_builder.scaffold_model,
                                                  tmp_struct_path)
 
-        fraction_done = 0.5
+        fraction_done = 0.75
         pgui('STATUS\t'+str(fraction_done))
         
 

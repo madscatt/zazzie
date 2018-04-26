@@ -30,6 +30,24 @@ import numpy
 import sassie.util.communication as communication
 import sassie.build.pdbscan.pdbscan.report as pdbscan_report
 
+class BiomtChoice():
+    """
+    Interface to allow users to choose final biomt options
+    """
+
+    def __init__(self, other_self, biomt_list, biomol_report, log):
+        """
+        Setup the environment and display to show final biomt 
+        selection instructions to the user
+
+        """
+        self.log = log
+        self.json_variables = other_self.json_variables
+
+	self.answer = self.select_biomt(biomt_list, biomol_report)
+
+        return 
+   
 class BiomtEditor():
         """
         Interface to for input/ouput of questions related to biomt entries
@@ -49,6 +67,30 @@ class BiomtEditor():
    
                 return 
     
+        def display_error(self, error):
+
+            timeout = 3600
+
+            error_dict = {} 
+            error_dict["id"] =  "text_2"
+            error_dict["type"] = "textarea"
+            error_dict["default"] = error
+            error_dict["rows"] = len(error) + 6
+            error_dict["rows"] = error.count('\n') + 4
+            error_dict["cols"] = 180
+            error_dict["fontfamily"] = "monospace"
+
+            my_question = {}
+            my_question["id"] = "q1"
+            my_question["title"] = "PDB Rx Error"
+            my_question["text"] = "<p>Error Encountered: </p><br><hr><br>"
+            my_question["buttons"] = ["continue"]
+            my_question["fields"] = [error_dict]
+
+            answer = communication.tcpquestion(self.json_variables, my_question, timeout);
+        
+            return 
+
         def ask_question_edit_biomt(self, mol):
 
                 timeout = 3600
@@ -460,6 +502,30 @@ class FastaEditor():
         
         return answer
 
+    def display_error(self, error):
+
+        timeout = 3600
+
+        error_dict = {} 
+        error_dict["id"] =  "text_2"
+        error_dict["type"] = "textarea"
+        error_dict["default"] = error
+        error_dict["rows"] = len(error) + 6
+        error_dict["rows"] = error.count('\n') + 4
+        error_dict["cols"] = 180
+        error_dict["fontfamily"] = "monospace"
+
+        my_question = {}
+        my_question["id"] = "q1"
+        my_question["title"] = "PDB Rx Error"
+        my_question["text"] = "<p>Error Encountered: </p><br><hr><br>"
+        my_question["buttons"] = ["continue"]
+        my_question["fields"] = [error_dict]
+
+        answer = communication.tcpquestion(self.json_variables, my_question, timeout);
+        
+        return 
+
     def display_and_query_sequence_loop(self, mol, sequence_report):
 
         timeout = 3600
@@ -483,7 +549,7 @@ class FastaEditor():
 
         lrfile_dict = {}
         lrfile_dict["id"] = "sequence_lrfile"
-        lrfile_dict["type"] = "lrfile"
+        lrfile_dict["type"] = "file"
         lrfile_dict["label"] = "select a file to upload"
         lrfile_dict["help"] = "select a fasta file to use"
 
@@ -496,11 +562,88 @@ class FastaEditor():
         my_question["buttons"] = ["submit", "done"]
         my_question["fields"] = [listbox_dict, lrfile_dict]
 
+        self.log.info(json.dumps(listbox_dict))
         self.log.info(json.dumps(lrfile_dict))
 
         self.answer = communication.tcpquestion(self.json_variables, my_question, timeout);
 
         return 
+
+class SegnameChoice():
+    """
+    Interface to allow users to split, join and rename segments in
+    SasMol objects
+    """
+
+    def __init__(self, other_self, segname_list, prep_report, log):
+        """
+        Setup the environment and display to show final segment 
+        selection instructions to the user
+
+        """
+        self.log = log
+        self.json_variables = other_self.json_variables
+
+	self.answer = self.select_segnames(segname_list, prep_report)
+
+        return 
+   
+    def select_segnames(self, segname_list, prep_report):
+  
+        timeout = 3600
+
+        prep_dict = {} 
+        prep_dict["id"] =  "text_1"
+        prep_dict["type"] = "textarea"
+        prep_dict["default"] = '\n'.join(prep_report)
+        prep_dict["rows"] = len(prep_report) + 6
+        prep_dict["cols"] = 180
+        prep_dict["fontfamily"] = "monospace"
+
+        label_dict = {}
+        label_dict["id"] = "label_1"
+        label_dict["type"] = "label"
+        label_dict["label"] = "<p><hr><br>Choose Segments<br><br>"
+
+        listbox_dict = {}
+        listbox_dict["id"] = "segname_listbox"
+        listbox_dict["type"] = "listbox"
+        listbox_dict["fontfamily"] = "monospace"
+
+        listbox_dict["values"] = segname_list
+        listbox_dict["size"] = 10
+        listbox_dict["help"] = "select row(s) and choose an option below: command-click for non-adjacent rows (Mac) or control-click (Windows)"
+        listbox_dict["header"] = "choose segment(s) you wish to use in your final model\n click 'submit' when you are finished \n\n"
+        listbox_dict["fontsize"] = "0.93em"
+        listbox_dict["multiple"] = "true"
+
+        my_question = {}
+        my_question["id"] = "q1"
+        my_question["title"] = "PDB Rx Final Seqment Choice "
+        my_question["text"] = "<p>Review system segment report below</p><br><hr><br>"
+        my_question["buttons"] = ["submit"]
+        my_question["fields"] = [ prep_dict, label_dict, listbox_dict ]
+
+        self.log.info(json.dumps(prep_dict))
+
+        answer = communication.tcpquestion(self.json_variables, my_question, timeout);
+        
+        return answer
+
+    def create_segment_data(self, other_self):
+
+        my_values = []
+        my_returns = []
+
+        i = 0
+
+        for row in other_self.resid_descriptions:
+            my_values.append('{0:7s} {1:>6} {2:>10s} {3:>6s} {4:>12s}'.format(
+                            row[0], row[2], row[3], row[4], row[5]))
+
+  
+
+        return answer 
 
 class SegnameEditor():
     """
@@ -528,7 +671,7 @@ class SegnameEditor():
         self.log = log
 
         # Get initial locations of segment name changes in description list
-        self.starting_breaks = numpy.where(
+        other_self.starting_breaks = numpy.where(
             other_self.resid_descriptions[:-1, 0] != other_self.resid_descriptions[1:, 0])[0]
 
 	self.answer = self.ask_question_edit_segmentation(pdbscan_report, log)

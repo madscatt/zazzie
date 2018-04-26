@@ -21,6 +21,127 @@ Methods to process information for biomt data
 
 import yaml
 import numpy
+from copy import deepcopy
+
+def check_biological_unit(self, biomt_unit):
+    """
+    Check biological unit transform from user is valid
+
+    @return:
+    """
+
+    valid = True
+
+    recs = set(['subdivs', 'auth_bio_unit',
+                'soft_bio_unit', 'rot', 'trans'])
+
+    if recs == set(biomt_unit.keys()):
+        pass
+
+    else:
+
+        valid = False
+
+    return valid
+
+def biomt_json2data(json_biomt_rec):
+    """
+    Convert JSON format BIOMT records into numpy arrays for use in
+    coordinate transforms
+
+    @type json_biomt_rec :  str
+    @param json_biomt_rec:  BIOMT records in JSON format
+    @rtype :
+    @return:
+    """
+
+    biomt_rec = yaml.safe_load(json_biomt_rec)
+    valid = check_biological_unit(biomt_rec)
+
+    if valid:
+
+        for i in range(len(biomt_rec['rot'])):
+            biomt_rec['rot'][i] = numpy.array(biomt_rec['rot'][i])
+            biomt_rec['trans'][i] = numpy.array(biomt_rec['trans'][i])
+
+    else:
+
+        biomt_rec = None
+
+    return biomt_rec
+
+
+
+
+def prepare_biomt_json(biomt_rec):
+    '''
+    Convert BIOMT information into JSOn for output
+
+    @type biomt_rec : dict
+    @param biomt_rec: Description of unit transforms to create biological unit
+    @return:
+    '''
+
+    json_rec = deepcopy(biomt_rec)
+
+    rot = json_rec['rot']
+    trans = json_rec['trans']
+
+    for i in range(len(rot)):
+        rot[i] = rot[i].tolist()
+        trans[i] = trans[i].tolist()
+
+    return json_rec
+
+def init_biomt(subdivs):
+    '''
+    Create a blank BIOMT record to be applied to the chosen subdivisions
+    (chains or segments).
+
+    @type subdivs :  list
+    @param subdivs:  Segment or chain identifiers
+    @rtype :  dict
+    @return:  Description of blank BIOMT
+    '''
+
+    biomt_rec = {
+        'subdivs': subdivs,
+        'auth_bio_unit': '',
+        'soft_bio_unit': '',
+        'rot': [],
+        'trans': []
+    }
+
+    biomt_rec['rot'].append(numpy.identity(3))
+    biomt_rec['trans'].append(numpy.array([0.0, 0.0, 0.0]))
+
+    return biomt_rec
+
+def check_array_input(input_txt, dimensions):
+    '''
+    Check that input text can be converted into an array.
+
+    @type input_txt :  str
+    @param input_txt:  Text supposedly containing an array
+    @type dimensions :  tuple
+    @param dimensions:  Expected dimensions of array
+    @rtype :  bool, np.array
+    @return:  Input validity flag
+              Text converted to array
+    '''
+
+    flag = True
+
+    try:
+        matrix = numpy.array(input_txt)
+        matrix = 1.0 * matrix
+        if matrix.shape != dimensions:
+            flag = False
+
+    except TypeError:
+        matrix = None
+
+    return flag, matrix
 
 def check_rotation(input_rot):
     '''

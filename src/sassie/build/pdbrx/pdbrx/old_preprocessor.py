@@ -672,6 +672,7 @@ class PreProcessor(object):
                     self.redefine_segments(segname_starts)
                     mol.check_segname_simulation_preparedness()
 
+                mol.segname_info = data_struct.Info(scan_type='segname')
                 accepted_segmentation = True
 
             elif choice in ['n', 'no']:
@@ -817,7 +818,6 @@ class PreProcessor(object):
         accepted_sequences = False
      
         seq_segnames = mol.segname_info.sequence.keys()
-
 
         st = ','.join(seq_segnames)
         dumfile = open('dum.txt', 'a')

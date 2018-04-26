@@ -34,7 +34,8 @@ from . import segname_utils as segname_utils
 from . import fasta_utils as fasta_utils
 from . import biomt_utils as biomt_utils
 
-from . import cmdline_segname_editor as cmd_segname_edit
+#from . import cmdline_segname_editor as cmd_segname_edit
+from . import cmdline_segname_editor as cmdline_segname_editor
 from . import cmdline_transform_editor
 
 # make Python 2.x input behave as in Python 3
@@ -79,13 +80,33 @@ def process_segment_input(other_self, mol):
             #    mol.segnames(), other_self.resid_descriptions, max_row=20).get_segment_starts()
             #ui_output = cmd_segname_edit.SegnameEditor(
             #    other_self, mol, max_row=20).get_segment_starts()
-            dum = cmd_segname_edit.SegnameEditor(
-                other_self, mol, max_row=20)
+            #dum = cmd_segname_edit.SegnameEditor(
+            cmdline_segname_editor.SegnameEditor(other_self, mol, max_row=20)
 
             ui_output = segname_utils.get_segment_starts(other_self)
 
             segname_starts = json.loads(
                 ui_output, object_hook = segname_utils.convert_segname_start)
+
+            ###TODO: debug this mess
+
+            print('type(ui_output) = ', str(type(ui_output)))
+            print('ui_output = ', ui_output)
+
+            print('type(segname_starts) = ', str(type(segname_starts)))
+
+            try:
+                for k,v in segname.starts.iteritems():
+                    print('k,v = ' + str(k) + '\t' + str(v) + '\n')
+            except:
+                try:
+                    for k2,v2 in v.starts.iteritems():
+                        print('k2,v2 = ' + str(k2) + '\t' + str(v2) + '\n')
+                except:
+                    print("wow: could not print segname starts dict\n")
+                    print('type(segname_starts) = ', str(type(segname_starts)))
+                    print('len(segname_starts) = ', str(len(segname_starts)))
+                    print('segname_starts = ', ''.join(str(len(segname_starts))))
 
             if segname_starts:
                 segname_utils.redefine_segments(mol, segname_starts)
@@ -285,7 +306,7 @@ def process_biomt_input(other_self, mol):
 
         if choice in ['y', 'yes']:
 
-            self.get_biological_unit_transform()
+            get_biological_unit_transform(other_self, mol)
             choice_made = True
 
             if mol.segname_info.biomt:
