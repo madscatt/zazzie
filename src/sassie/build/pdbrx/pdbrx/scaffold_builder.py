@@ -29,6 +29,7 @@ from . import segment_choice
 from . import biomt_choice
 from . import altloc_choice
 from . import sassie_web_utils as sassie_web_utils
+from . import sassie_web_editor as sassie_web_editor
 
 import sasmol.sasmol as sasmol
 import numpy as np
@@ -711,15 +712,17 @@ class ScaffoldBuilder():
             if self.mol.segname_info.biomt:
 
                 biomt_list = self.mol.segname_info.biomt.keys()
-                self.selected_biomt = sassie_web_utils.BiomtChoice(other_self, biomt_list, biomol_report, log)
-
+                ###TODO: at this point the program runs BUT the results are wrong
+                ###TODO:  so the call to the GUI is commented below
+                #sassie_query_object = sassie_web_editor.BiomtChoice(other_self, biomt_list, biomol_report)
                 if len(biomt_list) > 1:
 
-                    ###TODO: need to implement this choice
-                    #sel_biomt = biomt_choice.select_biomt(
-                    #    biomt_list, biomol_report)
-                    #self.selected_biomt = [int(x) for x in sel_biomt]
-                    ###TODO: temporary hack! remove the following line
+                    ###TODO: at this point the program runs BUT the results are wrong
+                    ###TODO:  so the call to the GUI is commented below
+                    #temp = map(int, sassie_query_object.answer["_response"]["biomt_listbox"])
+                    #self.selected_biomt = [x+1 for x in temp]
+                    ###TODO: at this point the program runs BUT the results are wrong
+                    ###TODO:  so the following line is a temporary override
                     self.selected_biomt = [biomt_list[0]]
 
                 else:

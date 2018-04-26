@@ -35,19 +35,61 @@ class BiomtChoice():
     Interface to allow users to choose final biomt options
     """
 
-    def __init__(self, other_self, biomt_list, biomol_report, log):
+    def __init__(self, other_self, biomt_list, biomol_report):
         """
         Setup the environment and display to show final biomt 
         selection instructions to the user
 
         """
-        self.log = log
+        #self.log = log
         self.json_variables = other_self.json_variables
 
 	self.answer = self.select_biomt(biomt_list, biomol_report)
 
         return 
-   
+
+    def select_biomt(self, available_biomt, biomol_report):
+
+        timeout = 3600
+
+        biomt_list = [str(x) for x in available_biomt]
+
+
+        text_string = "Current biological unit transforms: \n"
+        for line in biomol_report:
+            text_string += line + '\n'
+
+        report_dict = {}
+        report_dict["id"] =  "text_1"
+        report_dict["type"] = "textarea"
+        report_dict["default"] = text_string
+        report_dict["rows"] = text_string.count('\n') + 4
+        report_dict["cols"] = 80
+        report_dict["fontfamily"] = "monospace"
+
+        listbox_dict = {}
+        listbox_dict["id"] = "biomt_listbox"
+        listbox_dict["type"] = "listbox"
+        listbox_dict["fontfamily"] = "monospace"
+
+        listbox_dict["values"] = biomt_list
+        listbox_dict["size"] = 10
+        listbox_dict["help"] = "select row(s) option below: command-click for non-adjacent rows (Mac) or control-click (Windows)"
+        listbox_dict["header"] = "choose biomts(s) you wish to use and click 'submit'"
+        listbox_dict["fontsize"] = "0.93em"
+        listbox_dict["multiple"] = "true"
+
+        my_question = {}
+        my_question["id"] = "q1"
+        my_question["title"] = "PDB Rx Biomt Selection"
+        my_question["text"] = "<p>Choose Biomts to Apply to Model</p><br><hr><br>"
+        my_question["buttons"] = ["submit"]
+        my_question["fields"] = [report_dict, listbox_dict]
+
+        answer = communication.tcpquestion(self.json_variables, my_question, timeout)
+
+        return answer
+ 
 class BiomtEditor():
         """
         Interface to for input/ouput of questions related to biomt entries
@@ -85,6 +127,7 @@ class BiomtEditor():
             my_question["title"] = "PDB Rx Error"
             my_question["text"] = "<p>Error Encountered: </p><br><hr><br>"
             my_question["buttons"] = ["continue"]
+            my_question["icon"] = ["warning.png"]
             my_question["fields"] = [error_dict]
 
             answer = communication.tcpquestion(self.json_variables, my_question, timeout);
@@ -519,6 +562,7 @@ class FastaEditor():
         my_question["id"] = "q1"
         my_question["title"] = "PDB Rx Error"
         my_question["text"] = "<p>Error Encountered: </p><br><hr><br>"
+        my_question["icon"] = ["warning.png"]
         my_question["buttons"] = ["continue"]
         my_question["fields"] = [error_dict]
 
@@ -546,12 +590,14 @@ class FastaEditor():
         listbox_dict["help"] = "select a row and choose an option below"
         listbox_dict["header"] = "choose a segment you wish to replace sequence with fasta file data\n and click 'submit' to upload file or 'done' if you are finished\n\n"
         listbox_dict["fontsize"] = "0.93em"
+        listbox_dict["required"] = "true"
 
         lrfile_dict = {}
         lrfile_dict["id"] = "sequence_lrfile"
         lrfile_dict["type"] = "file"
         lrfile_dict["label"] = "select a file to upload"
         lrfile_dict["help"] = "select a fasta file to use"
+        lrfile_dict["required"] = "true"
 
 #        my_values, my_returns = self.create_segment_data()
 
@@ -559,7 +605,17 @@ class FastaEditor():
         my_question["id"] = "q1"
         my_question["title"] = "PDB Rx Sequence Editor"
         my_question["text"] = "<p>Choose Fasta Sequence File Upload Optons Below</p><br><hr><br>"
-        my_question["buttons"] = ["submit", "done"]
+        button_1 = {}
+        button_1["id"] = "submit"
+        button_1["label"] = "submit"
+       
+        button_2 = {}
+        button_2["id"] = "done"
+        button_2["label"] = "done"
+        button_2["skiprequired"] = "true"
+
+      #  my_question["buttons"] = ["submit", "done"]
+        my_question["buttons"] = [button_1, button_2]
         my_question["fields"] = [listbox_dict, lrfile_dict]
 
         self.log.info(json.dumps(listbox_dict))
