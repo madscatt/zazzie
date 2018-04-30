@@ -2160,7 +2160,13 @@ class SasMolScan(sasmol.SasMol):
         chain_info = self.chain_info
         segname_info = self.segname_info
 
-        seg_chain_map = np.array(zip(segnames, chains))
+        #seg_chain_map = np.array(zip(segnames, chains))
+
+        ###TODO: added by dww 4/30/2018
+
+        seg_chain_map = np.empty(len(chains), dtype='O')
+        tmp = zip(segnames, chains)
+        seg_chain_map[:] = tmp
 
         # Get indexes where segname-chain combination changes
         seg_chain_ends = np.where(seg_chain_map[:-1] != seg_chain_map[1:])[0]
