@@ -2165,6 +2165,10 @@ class SasMolScan(sasmol.SasMol):
         # Get indexes where segname-chain combination changes
         seg_chain_ends = np.where(seg_chain_map[:-1] != seg_chain_map[1:])[0]
 
+        #TODO: added by jec
+        #_, idx = np.unique(seg_chain_ends, return_index=True)
+        #seg_chain_ends = seg_chain_ends[np.sort(idx)]
+
         # Get indices for the start of every contiguous segname-chain run
         seg_chain_starts = seg_chain_ends + 1
         seg_chain_starts = np.append([0], seg_chain_starts)
@@ -2176,6 +2180,13 @@ class SasMolScan(sasmol.SasMol):
         # Same logic applied as for segname-chain combination
         chain_map = np.array(zip(segnames, moltypes))
         chain_ends = np.where(chain_map[:-1, 1] != chain_map[1:, 1])[0]
+
+        #TODO: added by jec
+        ###TODO: following line modified ad-hoc to match what is done with segname
+        #chain_ends = np.where(chain_map[:-1] != chain_map[1:])[0]
+        #_, idx = np.unique(chain_ends, return_index=True)
+        #chain_ends = chain_ends[np.sort(idx)]
+
 
         chain_starts = chain_ends + 1
         chain_starts = np.append([0], chain_starts)
