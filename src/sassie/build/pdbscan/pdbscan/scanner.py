@@ -26,7 +26,6 @@ CHARMM forcefield.
 '''
 
 import os
-import sys
 import numpy as np
 import logging
 import copy
@@ -2161,15 +2160,16 @@ class SasMolScan(sasmol.SasMol):
         chain_info = self.chain_info
         segname_info = self.segname_info
 
-        seg_chain_map = np.array(zip(segnames, chains))
+        #seg_chain_map = np.array(zip(segnames, chains))
+
+        ###TODO: added by dww 4/30/2018
+
+        seg_chain_map = np.empty(len(chains), dtype='O')
+        tmp = zip(segnames, chains)
+        seg_chain_map[:] = tmp
 
         # Get indexes where segname-chain combination changes
         seg_chain_ends = np.where(seg_chain_map[:-1] != seg_chain_map[1:])[0]
-
-        ###TODO: lines added by jec
-        _, idx = np.unique(seg_chain_ends, return_index=True)
-        seg_chain_ends = seg_chain_ends[np.sort(idx)]
-
 
         # Get indices for the start of every contiguous segname-chain run
         seg_chain_starts = seg_chain_ends + 1
@@ -2179,16 +2179,11 @@ class SasMolScan(sasmol.SasMol):
         seg_chain_ends = np.append(seg_chain_ends, [natoms - 1])
 
         # Need the start and end of chains to know when to copy terminal regions
-        # Same logic applied as for segname-chain combination
-        chain_map = np.array(zip(segnames, moltypes))
-        chain_ends = np.where(chain_map[:-1, 1] != chain_map[1:, 1])[0]
-
-        ###TODO: lines added by jec
-        ###TODO: following line modified ad-hoc to match what is done with segname
+        # Assume change if moltype changes
+        chain_map = np.empty(len(chains), dtype='O')
+        tmp = zip(chains, moltypes)
+        chain_map[:] = tmp
         chain_ends = np.where(chain_map[:-1] != chain_map[1:])[0]
-        _, idx = np.unique(chain_ends, return_index=True)
-        chain_ends = chain_ends[np.sort(idx)]
-
 
         chain_starts = chain_ends + 1
         chain_starts = np.append([0], chain_starts)
@@ -2355,13 +2350,6 @@ class SasMolScan(sasmol.SasMol):
                   compatible.
         """
 
-        #st_segnames = ','.join(self.segname())
-
-        #dumfile = open('dum.txt', 'a')
-        #dumfile.write('#in check_residues_charmm_ready\n')
-        #dumfile.write('#self.segname() = ' + st_segnames + ' \n')
-        #dumfile.close()
-
         segnames = self.segname()
         charmm_ready = self.charmm
 
@@ -2428,22 +2416,8 @@ class SasMolScan(sasmol.SasMol):
         altloc = self.segname_info.altloc
 
         sim_ready = self.sim_ready
-     
-        st_segnames = ','.join(self.segnames())
-
-        st_seg_charmm_valid = ','.join(seg_charmm_valid)
- 
-        #dumfile = open('dum.txt', 'a') 
-        #dumfile.write('#in scanner\n')
-        #dumfile.write('#self.segnames() = ' + st_segnames + ' \n')
-        #dumfile.write('#seg_charmm_valid = ' + st_seg_charmm_valid + ' \n')
-       
+        
         for segname in self.segnames():
-
-        #    dumfile.write('#segname = ' + segname + ' \n')
-        #    dumfile.write('#type(self.segnames()) = ' + str(type(self.segnames())) + ' \n')
-        #    dumfile.write('#type(segname) = ' + str(type(segname)) + ' \n' + segname)
-        #    dumfile.flush()
 
             sim_ready[segname] = {}
 
@@ -2473,9 +2447,6 @@ class SasMolScan(sasmol.SasMol):
                 first_resid = 0
 
             sim_ready[segname]['start'] = (first_resid == 1)
-
-
-#        dumfile.close()
 
         return
 
