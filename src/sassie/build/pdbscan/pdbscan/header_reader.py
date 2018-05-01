@@ -70,8 +70,6 @@ class PdbHeader:
         @param pdbfile:  PDB filename        
         """
 
-        self.logger = logging.getLogger(__name__)
-
         # All of the record types for which pdb_record_reader has schemas
         self.head_types = rec_schemas.keys()
 
