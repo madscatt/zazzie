@@ -132,8 +132,7 @@ class SasMolScan(sasmol.SasMol):
         kwargs['pdbscan'] = True
         super(SasMolScan, self).read_pdb(filename, **kwargs)
 
-        self.header_data = header_reader.PdbHeader(
-            text=self.header(), parse=True)
+        self.header_data = header_reader.PdbHeader(sasmol=self, parse=True)
 
         self.charmm = [False] * self.natoms()
         self.md_ready = [False] * self.natoms()
