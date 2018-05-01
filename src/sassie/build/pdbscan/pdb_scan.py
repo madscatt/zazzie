@@ -96,7 +96,6 @@ class PDBScan():
 
         return
 
-
     def run_scan(self):
 
         mvars = self.mvars

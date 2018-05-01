@@ -98,14 +98,13 @@ class PdbHeader:
                 self.parse_header()
             except NoHeaderReadError:
                 pass
-            except:
-                if pdbfile:
-                    raise ValueError(
-                        'Unable to parse PDB header: {0:s}'.format(pdbfile))
-                else:
-                    raise ValueError(
-                        #'Unable to parse PDB header: {0:s}'.format(sasmol.pdbname))
-                        'Unable to parse PDB header: {0:s}'.format("sasmol.pdbname"))
+            #except:
+            #    if pdbfile:
+            #        raise ValueError(
+            #            'Unable to parse PDB header: {0:s}'.format(pdbfile))
+            #    else:
+            #        raise ValueError(
+            #            'Unable to parse PDB header: {0:s}'.format(sasmol.pdbname))
 
         return
 
@@ -146,21 +145,17 @@ class PdbHeader:
             if rec_type[0:5] in ['MTRIX', 'ORIGX', 'SCALE']:
                 rec_type = rec_type[0:5] + 'n'
 
-            try:
+            #try:
                 # Parse line in to variables using schema
-                vals, err = parse_line(line, rec_schemas[rec_type])
-                self.pdb_recs[rec_type].append(vals)
-
-            except:
-                # If no schema available or parsing fails use NONSTD
-                # schema which just reads in the line as a text field
+            vals, err = parse_line(line, rec_schemas[rec_type])
+            if err:
                 vals, err = parse_line(line, rec_schemas['NONSTD'])
+                if err:
+                    self.logger.warning('Header line not parsed: {:s}'.format(line))
                 self.pdb_recs['NONSTD'].append(vals)
 
-        if err:
-            err_txt = '\n'.join(err)
-            raise IOError(
-                'Unable to parse PDB header line:\n{0:s}\nError:\n{1:s}'.format(line, err_txt))
+            else:
+                self.pdb_recs[rec_type].append(vals)
 
         return
 
@@ -175,14 +170,9 @@ class PdbHeader:
 
         self.set_blank_values()
 
-        try:
 
-            for line in header_txt:
-                self.process_header_line(line)
-        except Exception as err:
-            py_err = str(err)
-            raise IOError(
-                'Unable to read header line from SasMol object: {0:s}\n{1:s}'.format(line, py_err))
+        for line in header_txt:
+            self.process_header_line(line)
 
         return
 
@@ -277,11 +267,10 @@ class PdbHeader:
         has_header_info = sum(len(v) for v in pdb_recs.itervalues())
 
         if has_header_info:
-            logger.info('has header information')
-            print('has header information')
+            logger.debug('has header information')
 
             if pdb_recs['NUMMDL']:
-                logger.info('has NUMMDL information')
+                logger.debug('has NUMMDL information')
                 self.logger.info('Multiple models (' +
                                  str(pdb_recs['NUMMDL'][0]['no_models']) +
                                  ') detected in the file.')
@@ -289,50 +278,38 @@ class PdbHeader:
                     pdb_recs['NUMMDL'][0]['no_models'])
 
             if pdb_recs['TITLE']:
-                logger.info('has TITLE information')
+                logger.debug('has TITLE information')
                 self.reference_info.title = process_runon_line(
                     pdb_recs['TITLE'], 'text')
 
             # SEQRES records contain full sequence information
-            
             self.process_seqres()
-            logger.info('processed seqres information')
-            print('processed seqres information')
+            logger.debug('processed seqres information')
 
             # Remarks contain quality metrics, BIOMT and missing residue/atom
             # information
-            logger.info('getting read to process remarks information')
-            print('getting read to process remarks information')
+            logger.debug('getting read to process remarks information')
             self.parse_remarks()
-            logger.info('processed remarks information')
-            print('processed remarks information')
+            logger.debug('processed remarks information')
 
             # Citation information
-            try:
-                self.parse_jrnl()
-                logger.info('processed jrnl information')
-                print('processed jrnl information')
-            except:
-                logger.info('unable to process jrnl information')
-                print('unable to process jrnl information')
+            self.parse_jrnl()
+            logger.debug('processed jrnl information')
 
             if pdb_recs['SSBOND']:
                 self.process_disulphides()
-                logger.info('processed ssbond information')
-                print('processed ssbond information')
+                logger.debug('processed ssbond information')
 
             # Information about non-standard residues
             self.process_header_het()
-            logger.info('processed het information')
-            print('processed het information')
+            logger.debug('processed het information')
 
             self.process_compnd()
-            logger.info('processed compnd information')
-            print('processed compnd information')
+            logger.debug('processed compnd information')
 
             self.read_valid_header = True
             self.has_seq_info = self.check_header_seq()
-            print('read_valid_header = ' +
+            logger.debug('read_valid_header = ' +
                            str(self.read_valid_header))
 
         else:
@@ -649,7 +626,7 @@ class PdbHeader:
                     except:
                         metrics['resolution'] = None
 
-            if remark['num'] == 3:
+            elif remark['num'] == 3:
 
                 if 'R VALUE            (WORKING SET) :' in remark['text']:
 
