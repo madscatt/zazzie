@@ -170,14 +170,9 @@ class PdbHeader:
 
         self.set_blank_values()
 
-        #try:
 
         for line in header_txt:
             self.process_header_line(line)
-        #except Exception as err:
-        #    py_err = str(err)
-        #    raise IOError(
-        #        'Unable to read header line from SasMol object: {0:s}\n{1:s}'.format(line, py_err))
 
         return
 
