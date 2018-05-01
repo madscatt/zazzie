@@ -197,12 +197,11 @@ def process_sequence_input(other_self, mol):
     seq_segnames = mol.segname_info.sequence.keys()
 
     st = ','.join(seq_segnames)
-    dumfile = open('dum.txt', 'a')
-    dumfile.write("#SEQ SEGNAMES\n")
-    dumfile.write("st = " + st + "\n")
+    #dumfile = open('dum.txt', 'a')
+    #dumfile.write("#SEQ SEGNAMES\n")
+    #dumfile.write("st = " + st + "\n")
 
-    dumfile.close()
-
+    #dumfile.close()
 
     while not accepted_sequences:
 
