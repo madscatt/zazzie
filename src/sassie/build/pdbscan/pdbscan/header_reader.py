@@ -70,6 +70,8 @@ class PdbHeader:
         @param pdbfile:  PDB filename        
         """
 
+        self.logger = logging.getLogger(__name__)
+
         # All of the record types for which pdb_record_reader has schemas
         self.head_types = rec_schemas.keys()
 
@@ -98,13 +100,13 @@ class PdbHeader:
                 self.parse_header()
             except NoHeaderReadError:
                 pass
-            except:
-                if pdbfile:
-                    raise ValueError(
-                        'Unable to parse PDB header: {0:s}'.format(pdbfile))
-                else:
-                    raise ValueError(
-                        'Unable to parse PDB header: {0:s}'.format(sasmol.pdbname))
+            #except:
+            #    if pdbfile:
+            #        raise ValueError(
+            #            'Unable to parse PDB header: {0:s}'.format(pdbfile))
+            #    else:
+            #        raise ValueError(
+            #            'Unable to parse PDB header: {0:s}'.format(sasmol.pdbname))
 
         return
 
@@ -145,21 +147,17 @@ class PdbHeader:
             if rec_type[0:5] in ['MTRIX', 'ORIGX', 'SCALE']:
                 rec_type = rec_type[0:5] + 'n'
 
-            try:
+            #try:
                 # Parse line in to variables using schema
-                vals, err = parse_line(line, rec_schemas[rec_type])
-                self.pdb_recs[rec_type].append(vals)
-
-            except:
-                # If no schema available or parsing fails use NONSTD
-                # schema which just reads in the line as a text field
+            vals, err = parse_line(line, rec_schemas[rec_type])
+            if err:
                 vals, err = parse_line(line, rec_schemas['NONSTD'])
+                if err:
+                    self.logger.warning('Header line not parsed: {:s}'.format(line))
                 self.pdb_recs['NONSTD'].append(vals)
 
-        if err:
-            err_txt = '\n'.join(err)
-            raise IOError(
-                'Unable to parse PDB header line:\n{0:s}\nError:\n{1:s}'.format(line, err_txt))
+            else:
+                self.pdb_recs[rec_type].append(vals)
 
         return
 
@@ -174,14 +172,14 @@ class PdbHeader:
 
         self.set_blank_values()
 
-        try:
+        #try:
 
-            for line in header_txt:
-                self.process_header_line(line)
-        except Exception as err:
-            py_err = str(err)
-            raise IOError(
-                'Unable to read header line from SasMol object: {0:s}\n{1:s}'.format(line, py_err))
+        for line in header_txt:
+            self.process_header_line(line)
+        #except Exception as err:
+        #    py_err = str(err)
+        #    raise IOError(
+        #        'Unable to read header line from SasMol object: {0:s}\n{1:s}'.format(line, py_err))
 
         return
 
@@ -635,7 +633,7 @@ class PdbHeader:
                     except:
                         metrics['resolution'] = None
 
-            if remark['num'] == 3:
+            elif remark['num'] == 3:
 
                 if 'R VALUE            (WORKING SET) :' in remark['text']:
 

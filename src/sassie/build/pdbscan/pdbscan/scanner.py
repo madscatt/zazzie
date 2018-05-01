@@ -132,8 +132,7 @@ class SasMolScan(sasmol.SasMol):
         kwargs['pdbscan'] = True
         super(SasMolScan, self).read_pdb(filename, **kwargs)
 
-        self.header_data = header_reader.PdbHeader(
-            text=self.header(), parse=True)
+        self.header_data = header_reader.PdbHeader(sasmol=self, parse=True)
 
         self.charmm = [False] * self.natoms()
         self.md_ready = [False] * self.natoms()
@@ -2159,10 +2158,6 @@ class SasMolScan(sasmol.SasMol):
 
         chain_info = self.chain_info
         segname_info = self.segname_info
-
-        #seg_chain_map = np.array(zip(segnames, chains))
-
-        ###TODO: added by dww 4/30/2018
 
         seg_chain_map = np.empty(len(chains), dtype='O')
         tmp = zip(segnames, chains)
