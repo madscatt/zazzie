@@ -137,7 +137,31 @@ class SasMolScan(sasmol.SasMol):
         self.charmm = [False] * self.natoms()
         self.md_ready = [False] * self.natoms()
 
+        self._seq_res = self.resid()
+        self.separate_rescodes()
+
         self.basic_checks()
+
+        return
+
+    def seq_res(self):
+        return self._seq_res
+
+    def setSeqRes(self, newValue):
+        self._seq_res = newValue
+
+    def separate_rescodes(self):
+        """
+
+        """
+
+        resids = self.resid()
+        rescodes = self.rescode()
+        chains = self.chain()
+
+        
+
+        self.setResids(resids)
 
         return
 
