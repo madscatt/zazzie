@@ -137,18 +137,46 @@ class SasMolScan(sasmol.SasMol):
         self.charmm = [False] * self.natoms()
         self.md_ready = [False] * self.natoms()
 
-        self._seq_res = self.resid()
+        self._unique_resid = self.resid()
         self.separate_rescodes()
 
         self.basic_checks()
 
         return
 
-    def seq_res(self):
-        return self._seq_res
+    def unique_resid(self):
+        return self._unique_resid
 
-    def setSeqRes(self, newValue):
-        self._seq_res = newValue
+    def setUniqueResid(self, new_value):
+        self._unique_resid = new_value
+
+    def get_unique_res(self, res_info):
+
+        result = []
+
+        last_res = None
+        last_rescode = None
+
+        new_res = last_res
+
+        for item in res_info:
+
+            curr_res = int(item[1])
+            curr_rescode = item[2]
+
+            if (curr_res == last_res) and (curr_rescode != last_rescode):
+                new_res += 1
+            elif last_res:
+                new_res += (curr_res - last_res)
+            else:
+                new_res = curr_res
+
+            result.append(new_res)
+
+            last_res = curr_res
+            last_rescode = curr_rescode
+
+        return np.array(result)
 
     def separate_rescodes(self):
         """
@@ -159,9 +187,31 @@ class SasMolScan(sasmol.SasMol):
         rescodes = self.rescode()
         chains = self.chain()
 
-        
+        chain_ids = self.chains()
 
-        self.setResids(resids)
+        res_info = np.array(zip(chains, resids, rescodes))
+
+        chain_res_unique = {}
+
+        for chain_id in chain_ids:
+
+            chain_res_info = res_info[res_info[:,0] == chain_id, :]
+
+            if (chain_res_info[:,2] != ' ').any() or (chain_res_info[0,1] < 1):
+
+                unique = self.get_unique_res(chain_res_info)
+                res_info[res_info[:,0] == chain_id, 1] = unique
+
+                chain_res_unique[chain_id] = False
+
+            else:
+
+                chain_res_unique[chain_id] = True
+
+        any_change = (np.logical_not(np.array(chain_res_unique.values()))).any()
+
+        if any_change:
+            self.setUniqueResid(res_info[:,1].astype(int))
 
         return
 
@@ -195,7 +245,8 @@ class SasMolScan(sasmol.SasMol):
                followed by a second starting with the same resid.
         """
 
-        resids = self.resid()
+        #resids = self.resid()
+        resids = self.unique_resid()
         segnames = self.segname()
         chains = self.chain()
 
