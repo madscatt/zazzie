@@ -78,6 +78,8 @@ class SasMolScan(sasmol.SasMol):
 
         self.pdbname = ''
 
+        self.chain_resid_edited = {}
+
         self.header_reconciled_chains = {}
         self.header_reconciliation_status = {}
         self.chains_not_in_header = []
@@ -137,18 +139,18 @@ class SasMolScan(sasmol.SasMol):
         self.charmm = [False] * self.natoms()
         self.md_ready = [False] * self.natoms()
 
-        self._unique_resid = self.resid()
+        self._orig_resid = self.resid()
         self.separate_rescodes()
 
         self.basic_checks()
 
         return
 
-    def unique_resid(self):
-        return self._unique_resid
+    def orig_resid(self):
+        return self._orig_resid
 
-    def setUniqueResid(self, new_value):
-        self._unique_resid = new_value
+    def setOriginalResid(self, new_value):
+        self._orig_resid = new_value
 
     def get_unique_res(self, res_info):
 
@@ -180,10 +182,14 @@ class SasMolScan(sasmol.SasMol):
 
     def separate_rescodes(self):
         """
+        Insertions in the sequence are marked using rescode. This means multiple
+        residues share a resid. Here we renumber all resids to give them a unique
+        resid - the original resid is preserved in self.orig_resid.
 
+        TODO: Add a warning about the change of resids
         """
 
-        resids = self.resid()
+        resids = self.orig_resid()
         rescodes = self.rescode()
         chains = self.chain()
 
@@ -191,7 +197,7 @@ class SasMolScan(sasmol.SasMol):
 
         res_info = np.array(zip(chains, resids, rescodes))
 
-        chain_res_unique = {}
+        chain_resid_edited = self.chain_resid_edited
 
         for chain_id in chain_ids:
 
@@ -202,16 +208,16 @@ class SasMolScan(sasmol.SasMol):
                 unique = self.get_unique_res(chain_res_info)
                 res_info[res_info[:,0] == chain_id, 1] = unique
 
-                chain_res_unique[chain_id] = False
+                chain_resid_edited[chain_id] = True
 
             else:
 
-                chain_res_unique[chain_id] = True
+                chain_resid_edited[chain_id] = False
 
-        any_change = (np.logical_not(np.array(chain_res_unique.values()))).any()
+        any_change = (np.array(chain_resid_edited.values())).any()
 
         if any_change:
-            self.setUniqueResid(res_info[:,1].astype(int))
+            self.setResid(res_info[:,1].astype(int))
 
         return
 
@@ -245,8 +251,7 @@ class SasMolScan(sasmol.SasMol):
                followed by a second starting with the same resid.
         """
 
-        #resids = self.resid()
-        resids = self.unique_resid()
+        resids = self.resid()
         segnames = self.segname()
         chains = self.chain()
 
