@@ -47,6 +47,18 @@ def generate_reports(mol):
 
     short_report.append('# PDB Scan report for ' + mol.pdbname + '\n')
 
+    edited_resids = []
+
+    for chain, was_edited in mol.chain_resid_edited.iteritems():
+
+        if was_edited:
+            edited_resids.append('Chain {0:s}'.format(chain))
+
+    if edited_resids:
+
+        short_report.append('## Residue numbers edited to account for insertions\n')
+        short_report += edited_resids
+
     reconciliation_report = generate_reconciliation_report(mol)
 
     if reconciliation_report:
