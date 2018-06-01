@@ -78,6 +78,8 @@ class SasMolScan(sasmol.SasMol):
 
         self.pdbname = ''
 
+        self.chain_resid_edited = {}
+
         self.header_reconciled_chains = {}
         self.header_reconciliation_status = {}
         self.chains_not_in_header = []
@@ -132,13 +134,90 @@ class SasMolScan(sasmol.SasMol):
         kwargs['pdbscan'] = True
         super(SasMolScan, self).read_pdb(filename, **kwargs)
 
-        self.header_data = header_reader.PdbHeader(
-            text=self.header(), parse=True)
+        self.header_data = header_reader.PdbHeader(sasmol=self, parse=True)
 
         self.charmm = [False] * self.natoms()
         self.md_ready = [False] * self.natoms()
 
+        self._orig_resid = self.resid()
+        self.separate_rescodes()
+
         self.basic_checks()
+
+        return
+
+    def orig_resid(self):
+        return self._orig_resid
+
+    def setOriginalResid(self, new_value):
+        self._orig_resid = new_value
+
+    def get_unique_res(self, res_info):
+
+        result = []
+
+        last_res = None
+        last_rescode = None
+
+        new_res = last_res
+
+        for item in res_info:
+
+            curr_res = int(item[1])
+            curr_rescode = item[2]
+
+            if (curr_res == last_res) and (curr_rescode != last_rescode):
+                new_res += 1
+            elif last_res:
+                new_res += (curr_res - last_res)
+            else:
+                new_res = curr_res
+
+            result.append(new_res)
+
+            last_res = curr_res
+            last_rescode = curr_rescode
+
+        return np.array(result)
+
+    def separate_rescodes(self):
+        """
+        Insertions in the sequence are marked using rescode. This means multiple
+        residues share a resid. Here we renumber all resids to give them a unique
+        resid - the original resid is preserved in self.orig_resid.
+
+        TODO: Add a warning about the change of resids
+        """
+
+        resids = self.orig_resid()
+        rescodes = self.rescode()
+        chains = self.chain()
+
+        chain_ids = self.chains()
+
+        res_info = np.array(zip(chains, resids, rescodes))
+
+        chain_resid_edited = self.chain_resid_edited
+
+        for chain_id in chain_ids:
+
+            chain_res_info = res_info[res_info[:,0] == chain_id, :]
+
+            if (chain_res_info[:,2] != ' ').any() or (chain_res_info[0,1] < 1):
+
+                unique = self.get_unique_res(chain_res_info)
+                res_info[res_info[:,0] == chain_id, 1] = unique
+
+                chain_resid_edited[chain_id] = True
+
+            else:
+
+                chain_resid_edited[chain_id] = False
+
+        any_change = (np.array(chain_resid_edited.values())).any()
+
+        if any_change:
+            self.setResid(res_info[:,1].astype(int))
 
         return
 
@@ -2160,7 +2239,9 @@ class SasMolScan(sasmol.SasMol):
         chain_info = self.chain_info
         segname_info = self.segname_info
 
-        seg_chain_map = np.array(zip(segnames, chains))
+        seg_chain_map = np.empty(len(chains), dtype='O')
+        tmp = zip(segnames, chains)
+        seg_chain_map[:] = tmp
 
         # Get indexes where segname-chain combination changes
         seg_chain_ends = np.where(seg_chain_map[:-1] != seg_chain_map[1:])[0]
@@ -2173,9 +2254,11 @@ class SasMolScan(sasmol.SasMol):
         seg_chain_ends = np.append(seg_chain_ends, [natoms - 1])
 
         # Need the start and end of chains to know when to copy terminal regions
-        # Same logic applied as for segname-chain combination
-        chain_map = np.array(zip(segnames, moltypes))
-        chain_ends = np.where(chain_map[:-1, 1] != chain_map[1:, 1])[0]
+        # Assume change if moltype changes
+        chain_map = np.empty(len(chains), dtype='O')
+        tmp = zip(chains, moltypes)
+        chain_map[:] = tmp
+        chain_ends = np.where(chain_map[:-1] != chain_map[1:])[0]
 
         chain_starts = chain_ends + 1
         chain_starts = np.append([0], chain_starts)
