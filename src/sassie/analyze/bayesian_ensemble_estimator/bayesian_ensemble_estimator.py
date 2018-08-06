@@ -37,13 +37,14 @@ else:
 app = 'bayesian_ensemble_estimator'
 
 # Location of python version
-pythexec = '/share/apps/local/anaconda/bin/python'
-
+#pythexec = '/share/apps/local/anaconda/bin/python'
+pythexec = '/share/apps/local/anaconda2/bin/python'
 # Location of the ensemble modeling runtime
-executable = '/share/apps/local/anaconda/lib/python2.7/site-packages/sassie/analyze/bayesian_ensemble_estimator/bayesian_ensemble_estimator_parallel_routine.py'
-
+#executable = '/share/apps/local/anaconda/lib/python2.7/site-packages/sassie/analyze/bayesian_ensemble_estimator/bayesian_ensemble_estimator_parallel_routine.py'
+executable = '/home/sbowerma/sassie_module/alpha/for_jec/renamed/bayesian_ensemble_estimator_parallel_routine.py'
 # Location of the proper mpiexec commmand
-mpiexec = '/share/apps/local/anaconda/bin/mpirun'
+#mpiexec = '/share/apps/local/anaconda/bin/mpirun'
+mpiexec = '/share/apps/local/anaconda2/bin/mpirun'
 
 
 class module_variables():
@@ -77,7 +78,7 @@ class ensemble_routine(object):
     def __init__(self, parent=None):
         pass
 
-    def main(self, input_variables, txtOutput, plotQueue):
+    def main(self, input_variables, txtOutput, plotQueues):
         self.mvars = module_variables()
         self.efvars = efvars()
         self.run_utils = module_utilities.run_utils(app, txtOutput)
@@ -91,7 +92,7 @@ class ensemble_routine(object):
         pgui('Beginning iterative Bayesian sub-basis fitting.\n\n')
         pgui('STATUS\t0.0001\n\n')
         self.EnsembleFit()
-        self.Epilogue(plotQueue)
+        self.Epilogue(plotQueues)
 
     def UnpackVariables(self, variables):
         '''
@@ -382,11 +383,20 @@ class ensemble_routine(object):
         sts = os.waitpid(p.pid, 0)[1]
         log.debug('Executable PID = '+str(p.pid))
 
-    def Epilogue(self, plotQueue):
+    def Epilogue(self, plotQueues):
         efvars = self.efvars
         mvars = self.mvars
         log = self.log
         pgui = self.run_utils.print_gui
+
+        sasQueue = plotQueues[0]
+        resQueue = plotQueues[1]
+        try:
+            auxQueue = plotQueues[2]
+            auxResQueue = plotQueues[3]
+        except:
+            log.debug('Not using auxiliary plots')
+
         try:
             pgui('Best model found: \n\n')
             parallel_outf = os.path.join(efvars.output_folder,
@@ -403,26 +413,42 @@ class ensemble_routine(object):
                 pgui('\n\n')
             model_dataf.close()
 
-            pgui('Best IC model populations saved to '
-                 + parallel_outf + '\n\n')
-            pgui('Best IC model scattering profile saved to '
-                 + sas_outf + '\n\n')
-            if efvars.include_second_dimension:
-                aux_outf = os.path.join(efvars.output_folder,
-                                        mvars.runname+'_ensemble_aux.dat')
-                pgui('Best IC model auxiliary profile saved to '
-                     + aux_outf + '\n\n')
-            pgui('All sub-ensemble model populations saved to '+all_model_outf+'\n\n')
-            pgui('Analysis plots saved to '+plots_outf+'\n\n')
-
-            bokeh_pickle = os.path.join(efvars.output_folder,
-                                        mvars.runname+'_bokeh.p')
-            bokeh_script = pickle.load(open(bokeh_pickle, 'rb'))
-            plotQueue.put(bokeh_script)
-
         except:
-            log.error('ERROR: Unable to locate parallel routine output'
-                      + ' ('+parallel_outf+').')
+            log.error('ERROR: Unable to locate parallel routine output')
+
+        pgui('Best IC model populations saved to '
+             + parallel_outf + '\n\n')
+        pgui('Best IC model scattering profile saved to '
+             + sas_outf + '\n\n')
+        if efvars.include_second_dimension:
+            aux_outf = os.path.join(efvars.output_folder,
+                                    mvars.runname+'_ensemble_aux.dat')
+            pgui('Best IC model auxiliary profile saved to '
+                 + aux_outf + '\n\n')
+        pgui('All sub-ensemble model populations saved to '
+             + all_model_outf+'\n\n')
+        pgui('Analysis plots saved to '+plots_outf+'\n\n')
+        try:
+            sas_pickle = os.path.join(efvars.output_folder,
+                                      mvars.runname+'_SAS_bokeh.p')
+            sas_script = pickle.load(open(sas_pickle, 'rb'))
+            res_pickle = os.path.join(efvars.output_folder,
+                                      mvars.runname+'_SASres_bokeh.p')
+            res_script = pickle.load(open(res_pickle, 'rb'))
+            sasQueue.put(sas_script)
+            resQueue.put(res_script)
+            if efvars.include_second_dimension:
+                aux_pickle = os.path.join(efvars.output_folder,
+                                          mvars.runname+'_AUX_bokeh.p')
+                aux_script = pickle.load(open(aux_pickle, 'rb'))
+                aux_res_pickle = os.path.join(efvars.output_folder,
+                                              mvars.runname+'_AUXres_bokeh.p')
+                aux_res_script = pickle.load(open(aux_res_pickle, 'rb'))
+
+                auxQueue.put(aux_script)
+                auxResQueue.put(aux_res_script)
+        except:
+            log.error('ERROR: Unable to locate bokeh plot pickle objects')
         pgui('STATUS\t1.0\n\n')
         # os.remove(efvars.status_file)
         time.sleep(2)

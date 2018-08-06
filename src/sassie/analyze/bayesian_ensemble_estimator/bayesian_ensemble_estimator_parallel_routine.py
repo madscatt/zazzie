@@ -867,16 +867,31 @@ class Bokeh_and_Save(object):
                                          self.top10Tab,
                                          self.compareTab])
             bokeh_save(AllTabsTogether)
-            CurrentBokehDoc = curdoc()
+            #CurrentBokehDoc = curdoc()
             try:
-                script, div = components(CurrentBokehDoc)
+                sas_script, div = components(self.SASplot)  # CurrentBokehDoc)
+                res_script, div = components(self.resPlot)
+                if efvars.include_second_dimension:
+                    aux_script, div = components(self.AUXplot)
+                    aux_res_script, div = components(self.AUXresPlot)
             except:
                 os.system('echo "Unable to create Bokeh components"'
                           + ' >> '+self.logfile)
 
-            bokeh_pickle = os.path.join(efvars.output_folder,
-                                        mvars.runname+'_bokeh.p')
-            pickle.dump(script, open(bokeh_pickle, 'wb'))
+            sas_pickle = os.path.join(efvars.output_folder,
+                                      mvars.runname+'_SAS_bokeh.p')
+            res_pickle = os.path.join(efvars.output_folder,
+                                      mvars.runname+'_SASres_bokeh.p')
+            pickle.dump(sas_script, open(sas_pickle, 'wb'))
+            pickle.dump(res_script, open(res_pickle, 'wb'))
+
+            if efvars.include_second_dimension:
+                aux_pickle = os.path.join(efvars.output_folder,
+                                          mvars.runname+'_AUX_bokeh.p')
+                aux_res_pickle = os.path.join(efvars.output_folder,
+                                              mvars.runname+'_AUXres_bokeh.p')
+                pickle.dump(aux_script, open(aux_pickle, 'wb'))
+                pickle.dump(aux_res_script, open(aux_res_pickle, 'wb'))
 
             for thread in range(1, size):
                 comm.send(1, dest=thread)
@@ -1240,9 +1255,14 @@ class Bokeh_and_Save(object):
 
             plotSpace = gridplot([[SASplot, AUXplot],
                                   [resPlot, AUXresPlot]])
-
+            self.AUXplot = AUXplot
+            self.AUXresPlot = AUXresPlot
+            self.SASplot = SASplot
+            self.resPlot = resPlot
         else:
             plotSpace = column([SASplot, resPlot])
+            self.SASplot = SASplot
+            self.resPlot = resPlot
         bestModelTab = Panel(child=plotSpace, title=TabTitle)
         return bestModelTab
 
@@ -1492,6 +1512,7 @@ class Bokeh_and_Save(object):
                                 resPlot])
 
         top10Tab = Panel(child=plotSpace, title='Top 10 Models')
+        # self.top10Table = top10Table #Test if Bokeh components can handle a table
         return top10Tab
 
     def PrepCompareAllTab(self):
