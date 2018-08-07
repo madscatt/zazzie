@@ -67,10 +67,10 @@ plotQueues = dict()
 #Initialize all the plotting object Queues()
 #Best plot
 plotQueues['bestSASplot'] = multiprocessing.JoinableQueue()
-plotQueues['bestSASresPlot'] = multiprocessing.JoinableQueue()
+plotQueues['bestSASresplot'] = multiprocessing.JoinableQueue()
 if svariables['auxiliary_data'] != '':
     plotQueues['bestAUXplot'] = multiprocessing.JoinableQueue()
-    plotQueues['bestAUXresPlot'] = multiprocessing.JoinableQueue()
+    plotQueues['bestAUXresplot'] = multiprocessing.JoinableQueue()
 
 
 #run it
