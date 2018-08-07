@@ -37,14 +37,14 @@ else:
 app = 'bayesian_ensemble_estimator'
 
 # Location of python version
-#pythexec = '/share/apps/local/anaconda/bin/python'
-pythexec = '/share/apps/local/anaconda2/bin/python'
+pythexec = '/share/apps/local/anacondaz/bin/python'
+#pythexec = '/share/apps/local/anaconda2/bin/python'
 # Location of the ensemble modeling runtime
-#executable = '/share/apps/local/anaconda/lib/python2.7/site-packages/sassie/analyze/bayesian_ensemble_estimator/bayesian_ensemble_estimator_parallel_routine.py'
-executable = '/home/sbowerma/sassie_module/alpha/for_jec/renamed/bayesian_ensemble_estimator_parallel_routine.py'
+executable = '/share/apps/local/anacondaz/lib/python2.7/site-packages/sassie/analyze/bayesian_ensemble_estimator/bayesian_ensemble_estimator_parallel_routine.py'
+#executable = '/home/sbowerma/sassie_module/alpha/for_jec/renamed/bayesian_ensemble_estimator_parallel_routine.py'
 # Location of the proper mpiexec commmand
-#mpiexec = '/share/apps/local/anaconda/bin/mpirun'
-mpiexec = '/share/apps/local/anaconda2/bin/mpirun'
+mpiexec = '/share/apps/local/anacondaz/bin/mpirun'
+#mpiexec = '/share/apps/local/anaconda2/bin/mpirun'
 
 
 class module_variables():
