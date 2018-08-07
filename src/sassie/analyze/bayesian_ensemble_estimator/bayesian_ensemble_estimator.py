@@ -213,8 +213,18 @@ class ensemble_routine(object):
         if mvars.auxiliary_data != '':
             pgui('Including second data set.\n\n')
             efvars.include_second_dimension = True
-            efvars.aux_data, efvars.aux_error = np.genfromtxt(
-                mvars.auxiliary_data, usecols=(0, 1), unpack=True, dtype=float)
+            efvars.aux_data = np.array([], dtype=float)
+            efvars.aux_error = np.array([], dtype=float)
+            # efvars.aux_data, efvars.aux_error = np.genfromtxt(
+            #    mvars.auxiliary_data, usecols=(0, 1), unpack=True, dtype=float)
+            auxiliary_data_file = open(mvars.auxiliary_data, 'r')
+            for line in auxiliary_data_file:
+                line_string = auxiliary_data_file.readline()
+                line_string_split = line_string.split()
+                efvars.aux_data = np.append(efvars.aux_data,
+                                            float(line_string_split[0]))
+                efvars.aux_error = np.append(efvars.aux_error,
+                                             float(line_string_split[1]))
             efvars.num_aux = len(efvars.aux_data)
         else:
             pgui('Not using secondary data set.\n\n')
