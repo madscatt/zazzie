@@ -41,7 +41,7 @@ pythexec = '/share/apps/local/anacondaz/bin/python'
 #pythexec = '/share/apps/local/anaconda2/bin/python'
 # Location of the ensemble modeling runtime
 executable = '/share/apps/local/anacondaz/lib/python2.7/site-packages/sassie/analyze/bayesian_ensemble_estimator/bayesian_ensemble_estimator_parallel_routine.py'
-#executable = '/home/sbowerma/sassie_module/alpha/for_jec/renamed/bayesian_ensemble_estimator_parallel_routine.py'
+#executable = '/home/sbowerma/sassie_module/alpha/for_jec/renamed/plotQueue_dict/bayesian_ensemble_estimator_parallel_routine.py'
 # Location of the proper mpiexec commmand
 mpiexec = '/share/apps/local/anacondaz/bin/mpirun'
 #mpiexec = '/share/apps/local/anaconda2/bin/mpirun'
@@ -389,11 +389,11 @@ class ensemble_routine(object):
         log = self.log
         pgui = self.run_utils.print_gui
 
-        sasQueue = plotQueues[0]
-        resQueue = plotQueues[1]
+        sasQueue = plotQueues['bestSASplot']
+        resQueue = plotQueues['bestSASresPlot']
         try:
-            auxQueue = plotQueues[2]
-            auxResQueue = plotQueues[3]
+            auxQueue = plotQueues['bestAUXplot']
+            auxResQueue = plotQueues['bestAUXresPlot']
         except:
             log.debug('Not using auxiliary plots')
 
@@ -450,5 +450,5 @@ class ensemble_routine(object):
         except:
             log.error('ERROR: Unable to locate bokeh plot pickle objects')
         pgui('STATUS\t1.0\n\n')
-        # os.remove(efvars.status_file)
+        os.remove(efvars.status_file)
         time.sleep(2)

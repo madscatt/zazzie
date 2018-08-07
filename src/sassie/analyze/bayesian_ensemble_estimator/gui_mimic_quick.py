@@ -58,17 +58,21 @@ svariables['shansamp'] = (shansamp, 'boolean')
 
 error,variables = input_filter.type_check_and_convert(svariables)
 if len(error) > 0:
-	print("error = ",error)
-	sys.exit()
+        print("error = ",error)
+        sys.exit()
 
 txtQueue = multiprocessing.JoinableQueue()
-sasQueue= multiprocessing.JoinableQueue()
-resQueue= multiprocessing.JoinableQueue()
-plotQueues = [sasQueue, resQueue]
+plotQueues = dict()
+
+#Initialize all the plotting object Queues()
+#Best plot
+plotQueues['bestSASplot'] = multiprocessing.JoinableQueue()
+plotQueues['bestSASresPlot'] = multiprocessing.JoinableQueue()
 if svariables['auxiliary_data'] != '':
-    auxQueue = multiprocessing.JoinableQueue()
-    auxResQueue = multiprocessing.JoinableQueue()
-    plotQueues.append(auxQueue)
-    plotQueues.append(auxResQueue)
+    plotQueues['bestAUXplot'] = multiprocessing.JoinableQueue()
+    plotQueues['bestAUXresPlot'] = multiprocessing.JoinableQueue()
+
+
+#run it
 reweighting = ensemble_fit.ensemble_routine()
 reweighting.main(variables, txtQueue, plotQueues)
