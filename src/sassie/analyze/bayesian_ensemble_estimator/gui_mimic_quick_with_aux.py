@@ -1,4 +1,4 @@
-#!/share/apps/local/anaconda2/bin/python
+#!/share/apps/local/anacondaz/bin/python
 
 import sys,os
 sys.path.append(".")
@@ -20,7 +20,7 @@ size=comm.Get_size()
 runname = 'UBQtest_quick'
 sas_data = './ubq_saxs.dat'
 d_max    = '83.6' #If d_max is non-zero, do Shannon sampling, otherwise use standard chi^2
-theoretical_profiles_zip = './QuickTest.zip' #'./full_K63.zip' 
+theoretical_profiles_zip = './QuickTest_withAuxData.zip' #'./full_K63.zip' 
 number_of_MCs = '1'
 max_iterations = '10' #Maximum number of MC steps per walker
 posterior_burn = '1' #Number of iterations per walker to remove from beginning (lose initial conformation information
