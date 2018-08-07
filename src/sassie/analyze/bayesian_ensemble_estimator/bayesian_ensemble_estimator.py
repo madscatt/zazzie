@@ -92,7 +92,7 @@ class ensemble_routine(object):
         pgui('Beginning iterative Bayesian sub-basis fitting.\n\n')
         pgui('STATUS\t0.0001\n\n')
         self.EnsembleFit()
-        self.Epilogue(plotQueues)
+        self.epilogue(plotQueues)
 
     def UnpackVariables(self, variables):
         '''
@@ -383,17 +383,16 @@ class ensemble_routine(object):
         sts = os.waitpid(p.pid, 0)[1]
         log.debug('Executable PID = '+str(p.pid))
 
-    def Epilogue(self, plotQueues):
+    def epilogue(self, plotQueues):
+
         efvars = self.efvars
         mvars = self.mvars
         log = self.log
         pgui = self.run_utils.print_gui
 
-        sasQueue = plotQueues['bestSASplot']
-        resQueue = plotQueues['bestSASresPlot']
         try:
             auxQueue = plotQueues['bestAUXplot']
-            auxResQueue = plotQueues['bestAUXresPlot']
+            auxResQueue = plotQueues['bestAUXresplot']
         except:
             log.debug('Not using auxiliary plots')
 
@@ -428,6 +427,7 @@ class ensemble_routine(object):
         pgui('All sub-ensemble model populations saved to '
              + all_model_outf+'\n\n')
         pgui('Analysis plots saved to '+plots_outf+'\n\n')
+
         try:
             sas_pickle = os.path.join(efvars.output_folder,
                                       mvars.runname+'_SAS_bokeh.p')
@@ -435,8 +435,10 @@ class ensemble_routine(object):
             res_pickle = os.path.join(efvars.output_folder,
                                       mvars.runname+'_SASres_bokeh.p')
             res_script = pickle.load(open(res_pickle, 'rb'))
-            sasQueue.put(sas_script)
-            resQueue.put(res_script)
+
+            plotQueues['bestSASplot'].put(sas_script)
+            plotQueues['bestSASresplot'].put(res_script)
+
             if efvars.include_second_dimension:
                 aux_pickle = os.path.join(efvars.output_folder,
                                           mvars.runname+'_AUX_bokeh.p')
@@ -445,10 +447,14 @@ class ensemble_routine(object):
                                               mvars.runname+'_AUXres_bokeh.p')
                 aux_res_script = pickle.load(open(aux_res_pickle, 'rb'))
 
-                auxQueue.put(aux_script)
-                auxResQueue.put(aux_res_script)
+                plotQueues['bestAUXplot'].put(aux_script)
+                plotQueues['bestAUXresplot'].put(aux_res_script)
+
         except:
             log.error('ERROR: Unable to locate bokeh plot pickle objects')
-        pgui('STATUS\t1.0\n\n')
+
         os.remove(efvars.status_file)
+
+        pgui('STATUS\t1.0\n\n')
+
         time.sleep(2)
