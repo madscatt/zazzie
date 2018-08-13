@@ -57,7 +57,7 @@ class efvars():
         pass
 
 
-# This is the larger object for managing the Ensemble Fit Routine at top-level
+# This is the larger object for managing the Ensemble Estimator at top-level
 '''
     This object builds up all necessary variables and facilitates the forking 
     of each sub-basis proc. After the sub-basis routines are complete, this 
@@ -90,7 +90,7 @@ class ensemble_routine(object):
         mvars = self.mvars
         efvars = self.efvars
         self.logfile = os.path.join(
-            efvars.output_folder, mvars.runname+'_runtime.log')
+            efvars.log_folder, mvars.runname+'_parallel_routine.log')
 
         # Fix Boolean -> string bug...
         try:
@@ -175,13 +175,6 @@ class ensemble_routine(object):
         efvars.best_total_chi2 = efvars.subspace_dict[str(
             efvars.best_model)].total_chi2
 
-        if rank == 0:
-            trackf = open(efvars.aic_file, 'a')
-            trackf.write(str(1)+'\t'
-                         + str(self.min_aic)+'\t'
-                         + str(efvars.best_total_chi2)+'\n')
-            trackf.close()
-
         if mvars.use_all == True:
             efvars.best_model = str(efvars.id_array)
             efvars.subspace_dict[efvars.best_model] =\
@@ -189,11 +182,6 @@ class ensemble_routine(object):
 
             efvars.subspace_dict[efvars.best_model].BayesMC()
             model_object = efvars.subspace_dict[efvars.best_model]
-            trackf = open(efvars.aic_file, 'a')
-            trackf.write(str(efvars.number_of_profiles)+'\t'
-                         + str(model_object.aic)+'\t'
-                         + str(model_object.total_chi2)+'\n')
-            trackf.close()
         else:
             for subsize in range(2, efvars.number_of_profiles + 1):
                 self.current_subsize = subsize
@@ -350,9 +338,10 @@ class ensemble_routine(object):
             self.subset_min_aic = 9999999.9
             for key in sublist:
                 key_AIC = efvars.subspace_dict[str(key)].aic
-                os.system('echo \"'+str(key_AIC)+','
-                          + str(self.subset_min_aic)+'\" >> '
-                          + self.logfile)
+                if mvars.debug:
+                    os.system('echo \"'+str(key_AIC)+','
+                              + str(self.subset_min_aic)+'\" >> '
+                              + self.logfile)
                 if key_AIC < self.subset_min_aic:
                     self.subset_min_aic = key_AIC
                     self.subset_best_model = key
@@ -370,15 +359,7 @@ class ensemble_routine(object):
                         self.subset_min_aic = dum_min_aic
                         self.subset_best_model = dum_best_model
                         self.subset_best_chi = dum_best_chi
-                efvars.aic_tracker = np.append(efvars.aic_tracker,
-                                               self.subset_min_aic)
-                efvars.chi_tracker = np.append(efvars.chi_tracker,
-                                               self.subset_best_chi)
-                trackf = open(efvars.aic_file, 'a')
-                trackf.write(str(self.current_subsize)+'\t'
-                             + str(self.subset_min_aic)+'\t'
-                             + str(self.subset_best_chi)+'\n')
-                trackf.close()
+
                 for thread in range(1, size):
                     comm.send(self.subset_min_aic, dest=thread)
                     comm.send(self.subset_best_model, dest=thread)
@@ -486,9 +467,10 @@ class ensemble_routine(object):
                         os.remove(os.path.join(efvars.output_folder, item))
             self.toc = time.time()
             runtime = self.toc - self.tic
-            os.system("echo \"Bayesian Ensemble Fit routine complete in " +
+            os.system("echo \"BEES routine complete in " +
                       str(runtime/3600.)+" hours.\" >> "+self.logfile)
-            self.CheckPoint()
+            # Don't checkpoint, a) restarting not yet supported b) diskspace
+            # self.CheckPoint()
         else:
             comm.recv(source=0)
 
@@ -581,7 +563,8 @@ class simulated_basis(object):
         mvars = self.mvars
         efvars = self.efvars
         self.logfile = os.path.join(
-            efvars.output_folder, mvars.runname+'_Rank'+str(rank)+"_BayesMC.log")
+            efvars.log_folder,
+            mvars.runname+'_Rank'+str(rank)+"_BayesMC.log")
         os.system('echo \"Running on sub-basis: ' +
                   str(self.subset_members)+'\" >> '+self.logfile)
         # The posterior array has form [id_1,id_2,...,id_n,SAXSchi^2,Dimension2chi^2,Likelihood]
@@ -878,17 +861,17 @@ class Bokeh_and_Save(object):
                 os.system('echo "Unable to create Bokeh components"'
                           + ' >> '+self.logfile)
 
-            sas_pickle = os.path.join(efvars.output_folder,
+            sas_pickle = os.path.join(efvars.pickle_folder,
                                       mvars.runname+'_SAS_bokeh.p')
-            res_pickle = os.path.join(efvars.output_folder,
+            res_pickle = os.path.join(efvars.pickle_folder,
                                       mvars.runname+'_SASres_bokeh.p')
             pickle.dump(sas_script, open(sas_pickle, 'wb'))
             pickle.dump(res_script, open(res_pickle, 'wb'))
 
             if efvars.include_second_dimension:
-                aux_pickle = os.path.join(efvars.output_folder,
+                aux_pickle = os.path.join(efvars.pickle_folder,
                                           mvars.runname+'_AUX_bokeh.p')
-                aux_res_pickle = os.path.join(efvars.output_folder,
+                aux_res_pickle = os.path.join(efvars.pickle_folder,
                                               mvars.runname+'_AUXres_bokeh.p')
                 pickle.dump(aux_script, open(aux_pickle, 'wb'))
                 pickle.dump(aux_res_script, open(aux_res_pickle, 'wb'))
@@ -1419,7 +1402,7 @@ class Bokeh_and_Save(object):
         colors = d3['Category10'][10]
         styles = ['dashed', 'dotted', 'dotdash', 'dashdot']
         for idx in range(len(names)):
-            line_idx = idx/len(colors)
+            line_idx = (idx/len(colors)) % 4
             key = names[idx]
             line = SASplot.line(x='q', y=key, line_color=colors[idx % 10],
                                 line_width=4, line_dash=styles[line_idx],
@@ -1456,7 +1439,7 @@ class Bokeh_and_Save(object):
                                           source=self.top10auxCDS)
                     rscat = AUXresPlot.circle(x='x', y=auxkey+'res',
                                                 fill_color='black',
-                                                line_color=colors[idx],
+                                                line_color=colors[idx % 10],
                                                 line_width=3, size=12,
                                                 source=self.top10auxCDS)
                 else:

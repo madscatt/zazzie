@@ -29,6 +29,7 @@ import itertools
 import time
 import pickle
 import subprocess
+import bokeh
 
 if sasconfig.__level__ == 'DEBUG':
     DEBUG = True
@@ -41,8 +42,8 @@ app = 'bayesian_ensemble_estimator'
 pythexec = '/share/apps/local/anacondaz/bin/python'
 #pythexec = '/share/apps/local/anaconda2/bin/python'
 # Location of the ensemble modeling runtime
-executable = '/share/apps/local/anacondaz/lib/python2.7/site-packages/sassie/analyze/bayesian_ensemble_estimator/bayesian_ensemble_estimator_parallel_routine.py'
-#executable = '/home/sbowerma/sassie_module/alpha/for_jec/renamed/plotQueue_dict/bayesian_ensemble_estimator_parallel_routine.py'
+#executable = '/share/apps/local/anacondaz/lib/python2.7/site-packages/sassie/analyze/bayesian_ensemble_estimator/bayesian_ensemble_estimator_parallel_routine.py'
+executable = '/home/sbowerma/modified_bees/bayesian_ensemble_estimator_parallel_routine.py'
 # Location of the proper mpiexec commmand
 mpiexec = '/share/apps/local/anacondaz/bin/mpirun'
 #mpiexec = '/share/apps/local/anaconda2/bin/mpirun'
@@ -90,7 +91,10 @@ class ensemble_routine(object):
         self.run_utils.general_setup(self)
         self.Initialize()
         self.PickleVars()
-        pgui('Beginning iterative Bayesian sub-basis fitting.\n\n')
+        pgui("\n%s \n" % ('=' * 60))
+        submit_time = time.asctime(time.gmtime(time.time()))
+        pgui("DATA FROM RUN: %s \n\n" % submit_time)
+        #pgui('Beginning iterative Bayesian sub-basis fitting.\n\n')
         pgui('STATUS\t0.0001\n\n')
         self.EnsembleFit()
         self.epilogue(plotQueues)
@@ -132,17 +136,17 @@ class ensemble_routine(object):
         else:
             mvars.use_all = False
         if mvars.every.lower() == 'true':
-            mvars.use_all = True
+            mvars.every = True
         else:
-            mvars.use_all = False
+            mvars.every = False
         if mvars.use_bic.lower() == 'true':
-            pgui("Using BIC to evaluate model quality.\n\n")
+            #pgui("Using BIC to evaluate model quality.\n\n")
             mvars.use_bic = True
         else:
-            pgui("Using AIC to evaluate model quality.\n\n")
+            #pgui("Using AIC to evaluate model quality.\n\n")
             mvars.use_bic = False
         if mvars.walk_one.lower() == 'true':
-            pgui("Will increment one population at a time.\n\n")
+            #pgui("Will increment one population at a time.\n\n")
             mvars.walk_one = True
         else:
             mvars.walk_one = False
@@ -165,11 +169,19 @@ class ensemble_routine(object):
         mvars = self.mvars
         efvars = self.efvars
         pgui = self.run_utils.print_gui
+        log = self.log
 
         efvars.output_folder = os.path.join(mvars.runname, app)
+        efvars.pickle_folder = os.path.join(efvars.output_folder,
+                                            'pickle_files')
+        efvars.log_folder = os.path.join(efvars.output_folder,
+                                         'logfiles')
         if not os.path.isdir(efvars.output_folder):
             os.mkdir(efvars.output_folder)
-
+        if not os.path.isdir(efvars.pickle_folder):
+            os.mkdir(efvars.pickle_folder)
+        if not os.path.isdir(efvars.log_folder):
+            os.mkdir(efvars.log_folder)
         # Clean out old log files, backs-up most recent version
         existingfiles = os.listdir(efvars.output_folder)
         for item in existingfiles:
@@ -178,65 +190,56 @@ class ensemble_routine(object):
                 newname = os.path.join(efvars.output_folder, item+'.BAK')
                 os.rename(oldname, newname)
 
-        efvars.Q, efvars.I, efvars.ERR = np.genfromtxt(mvars.sas_data,
-                                                       unpack=True,
-                                                       usecols=(0, 1, 2))
+        try:
+            efvars.Q, efvars.I, efvars.ERR = np.genfromtxt(mvars.sas_data,
+                                                           unpack=True,
+                                                           usecols=(0, 1, 2))
+        except:
+            log.error('ERROR: Unable to load interpolated data file: '
+                      + mvars.sas_data)
 
         # Set up _B_ayesian _E_nsemble _F_it _LOG_ file for progress, etc.
         efvars.status_file = os.path.join(efvars.output_folder,
                                           '._status.txt')
-        efvars.aic_file = os.path.join(efvars.output_folder,
-                                       mvars.runname+'_IC_vs_Size.dat')
-        if os.path.isfile(efvars.aic_file):
-            aic_bak = os.path.join(efvars.output_folder,
-                                   mvars.runname+'_IC_vs_Size.dat.BAK')
-            os.rename(efvars.aic_file, aic_bak)
+        statf = open(efvars.status_file, 'w')
+        statf.write('STATUS\t0.0001\n')
+        statf.close()
 
         if mvars.shansamp:
-            pgui('Using Shanning Sampling (chi^2 free).\n\n')
-            statf = open(efvars.status_file, 'w')
-            statf.write('STATUS\t0.0001\n')
-            statf.close()
+            #pgui('Using Shanning Sampling (chi^2 free).\n\n')
             self.BuildShannonSamples()
-            pgui('There are '+str(efvars.number_of_channels)
-                 + ' Shannon channels.\n\n')
+            # pgui('There are '+str(efvars.number_of_channels)
+            #     + ' Shannon channels.\n\n')
             efvars.samples_Q = efvars.Q[efvars.shannon_samples]
             efvars.samples_I = efvars.I[efvars.shannon_samples]
             efvars.samples_ERR = efvars.ERR[efvars.shannon_samples]
             efvars.num_q = efvars.number_of_channels
         else:
-            pgui('Using standard chi^2 (no Shannon Sampling).\n\n')
+            #pgui('Using standard chi^2 (no Shannon Sampling).\n\n')
             efvars.samples_Q = efvars.Q
             efvars.samples_I = efvars.I
             efvars.samples_ERR = efvars.ERR
             efvars.num_q = len(efvars.Q)
 
         if mvars.auxiliary_data != '':
-            pgui('Including second data set.\n\n')
+            #pgui('Including second data set.\n\n')
             efvars.include_second_dimension = True
-            efvars.aux_data = np.array([], dtype=float)
-            efvars.aux_error = np.array([], dtype=float)
-            efvars.aux_data, efvars.aux_error = np.genfromtxt(
-                mvars.auxiliary_data, usecols=(0, 1), unpack=True, dtype=float)
-            #auxiliary_data_file = open(mvars.auxiliary_data,'r')
-            # for line in auxiliary_data_file:
-            #    line_string = auxiliary_data_file.readline()
-            #    line_string_split = line_string.split()
-            #    efvars.aux_data = np.append(efvars.aux_data,
-            #                                float(line_string_split[0]))
-            #    efvars.aux_error= np.append(efvars.aux_error,
-            #                                float(line_string_split[1]))
-            efvars.num_aux = len(efvars.aux_data)
+            try:
+                efvars.aux_data, efvars.aux_error = np.genfromtxt(
+                    mvars.auxiliary_data, usecols=(0, 1),
+                    unpack=True, dtype=float)
+                efvars.num_aux = len(efvars.aux_data)
+            except:
+                log.error('ERROR: Unable to load auxiliary experimental'
+                          + ' data file: '+mvars.auxiliary_data)
         else:
-            pgui('Not using secondary data set.\n\n')
+            #pgui('Not using secondary data set.\n\n')
             efvars.include_second_dimension = False
             efvars.num_aux = 0
 
         efvars.num_points = efvars.num_q + efvars.num_aux
         self.UnpackTheoreticalProfiles()
         self.BuildBasis()
-        efvars.aic_tracker = np.array([], dtype=float)
-        efvars.chi_tracker = np.array([], dtype=float)
 
         return
 
@@ -288,7 +291,7 @@ class ensemble_routine(object):
         efvars = self.efvars
         pgui = self.run_utils.print_gui
         log = self.log
-        pgui('Building Theoretical Basis set.\n\n')
+        #pgui('Building Theoretical Basis set.\n\n')
 
         flist_as_str = os.path.join(efvars.profiles_directory, 'filelist.txt')
         efvars.name_array = np.genfromtxt(flist_as_str, usecols=0, dtype=str)
@@ -365,12 +368,12 @@ class ensemble_routine(object):
         log.debug('In PickleVars.')
 
         self.mvarspickle = os.path.join(
-            efvars.output_folder, mvars.runname+'_mvars.p')
+            efvars.pickle_folder, mvars.runname+'_mvars.p')
         pickle.dump(mvars, open(self.mvarspickle, 'wb'))
         log.debug('mvars have been written to pickle: '+self.mvarspickle)
 
         self.efvarspickle = os.path.join(
-            efvars.output_folder, mvars.runname+'_efvars.p')
+            efvars.pickle_folder, mvars.runname+'_efvars.p')
         pickle.dump(efvars, open(self.efvarspickle, 'wb'))
         log.debug('efvars have been written to pickle: '+self.efvarspickle)
 
@@ -424,37 +427,42 @@ class ensemble_routine(object):
             model_dataf.close()
 
         except:
-            log.error('ERROR: Unable to locate parallel routine output')
+            log.error('ERROR: Unable to locate parallel routine output'
+                      + ' (parallel routine may have crashed)!')
 
-        pgui('Best IC model populations saved to '
-             + parallel_outf + '\n\n')
-        pgui('Best IC model scattering profile saved to '
-             + sas_outf + '\n\n')
-        if efvars.include_second_dimension:
-            aux_outf = os.path.join(efvars.output_folder,
-                                    mvars.runname+'_ensemble_aux.dat')
-            pgui('Best IC model auxiliary profile saved to '
-                 + aux_outf + '\n\n')
-        pgui('All sub-ensemble model populations saved to '
-             + all_model_outf+'\n\n')
-        pgui('Analysis plots saved to '+plots_outf+'\n\n')
+        # pgui('Best IC model populations saved to '
+        #     + parallel_outf + '\n\n')
+        # pgui('Best IC model scattering profile saved to '
+        #     + sas_outf + '\n\n')
+        # if efvars.include_second_dimension:
+        #    aux_outf = os.path.join(efvars.output_folder,
+        #                            mvars.runname+'_ensemble_aux.dat')
+        #    pgui('Best IC model auxiliary profile saved to '
+        #         + aux_outf + '\n\n')
+        # pgui('All sub-ensemble model populations saved to '
+        #     + all_model_outf+'\n\n')
+        #pgui('Analysis plots saved to '+plots_outf+'\n\n')
 
         try:
-            sas_pickle = os.path.join(efvars.output_folder,
+            sas_pickle = os.path.join(efvars.pickle_folder,
                                       mvars.runname+'_SAS_bokeh.p')
             sas_script = pickle.load(open(sas_pickle, 'rb'))
-            res_pickle = os.path.join(efvars.output_folder,
+            res_pickle = os.path.join(efvars.pickle_folder,
                                       mvars.runname+'_SASres_bokeh.p')
             res_script = pickle.load(open(res_pickle, 'rb'))
 
             plotQueues['bestSASplot'].put(sas_script)
             plotQueues['bestSASresplot'].put(res_script)
+        except:
+            log.error('ERROR: Unable to create bokeh data (SAS)'
+                      + ' from pickle object')
 
+        try:
             if efvars.include_second_dimension:
-                aux_pickle = os.path.join(efvars.output_folder,
+                aux_pickle = os.path.join(efvars.pickle_folder,
                                           mvars.runname+'_AUX_bokeh.p')
                 aux_script = pickle.load(open(aux_pickle, 'rb'))
-                aux_res_pickle = os.path.join(efvars.output_folder,
+                aux_res_pickle = os.path.join(efvars.pickle_folder,
                                               mvars.runname+'_AUXres_bokeh.p')
                 aux_res_script = pickle.load(open(aux_res_pickle, 'rb'))
 
@@ -462,10 +470,13 @@ class ensemble_routine(object):
                 plotQueues['bestAUXresplot'].put(aux_res_script)
 
         except:
-            log.error('ERROR: Unable to locate bokeh plot pickle objects')
+            log.error('ERROR: Unable to process bokeh data (AUX)'
+                      + ' from pickle object')
 
+        pgui('\nModel populations, ensemble spectra, and interactive plot HTML files saved in'
+             + ' '+efvars.output_folder+'\n\n')
         os.remove(efvars.status_file)
-
+        pgui('\nBest model spectra plotted below.\n\n')
         pgui('STATUS\t1.0\n\n')
-
+        pgui("\n%s \n" % ('=' * 60))
         time.sleep(2)
