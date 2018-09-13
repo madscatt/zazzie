@@ -15,8 +15,10 @@ svariables = {}
 #### user input ####
 #### user input ####
 
-runname = 'run_0'
+runname = 'run_1'
 pdbfile = 'testing/data/5E3L.pdb'
+pdbfile = '/home/curtisj/test_somo/1HRC.pdb'
+pdbfile = '/home/curtisj/test_somo/1TPO.pdb'
 #pdbfile = '3rki.pdb'
 #pdbfile = 'testing/data/3MWY.pdb'
 topfile = os.path.join(sasconfig.__bin_path__,'toppar','top_all27_prot_na.inp')
