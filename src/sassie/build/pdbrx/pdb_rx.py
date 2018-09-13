@@ -45,7 +45,8 @@ class PDBRx():
     
     def main(self, input_variables, txtOutput, **kwargs):
       
-      
+        self.json_variables = False 
+        
         try: 
             if kwargs:
                 self.json_variables = {}
@@ -53,7 +54,7 @@ class PDBRx():
                 self.json_variables['_tcphost'] = kwargs['_tcphost']
                 self.json_variables['_tcpport'] = kwargs['_tcpport']
         except:
-            self.json_variables = False 
+            pass
              
         self.mvars = module_variables()
         
@@ -89,35 +90,6 @@ class PDBRx():
         
         return
 
-    def ask_question(self, report):
-
-        my_question = '''
-{
-    "id" : "q1"
-    ,"title" : "are you sure?"
-    ,"text" : "<p>header text.</p><hr>"
-    ,"fields" : [
-        {
-            "id" : "l1"
-            ,"type" : "label"
-            ,"label" : "<center>this is label text</center>"
-        }
-        ,{
-            "id" : "t1"
-            ,"type" : "text"
-            ,"label" : "tell me your name:"
-        }
-        ,{
-            "id" : "cb1"
-            ,"type" : "checkbox"
-            ,"label" : "are you sure about the speed of light?"
-        }
-    ]
-}
-'''.strip()
-        answer = communication.tcpquestion(self.json_variables, my_question );
-        return
-
     def run_scan(self):
 
         mvars = self.mvars
@@ -147,21 +119,18 @@ class PDBRx():
 
         if not mvars.use_defaults:
 
-            pgui('Preprocessing starts here')
-            preprocessor = pdbrx.preprocessor.PreProcessor(mol=mol,default_subs=True)
+            pgui('Preprocessing')
+            #preprocessor = pdbrx.preprocessor.PreProcessor(mol=mol,default_subs=True,ui=mvars.gui)
+            preprocessor = pdbrx.preprocessor.PreProcessor(mol=mol,default_subs=True,ui=mvars.gui,logger=log, json=self.json_variables)
 
-            if mvars.gui == 'sassie-web':
-                pgui("asking question to sassie-web")
-                self.ask_question(report.generate_simulation_prep_report(mol))
+            pdbscan_report = report.generate_simulation_prep_report(mol)
 
-            sys.exit(0)
-                 
-            for line in report.generate_simulation_prep_report(mol):
+            pgui('Printing pdbscan_report')
+            for line in pdbscan_report:
 
                 pgui(line)
 
-
-            preprocessor.user_edit_options()
+            preprocessor.user_edit_options(pdbscan_report)
 
         pgui('Build scaffold structure')
 

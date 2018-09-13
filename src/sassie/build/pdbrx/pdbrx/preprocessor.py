@@ -35,6 +35,7 @@ import sassie.build.pdbscan.pdbscan.pdbscan_utils as utils
 from . import cmdline_segname_editor as cmd_segname_edit
 from . import cmdline_transform_editor
 
+from . import sassie_web_editor as sassie_web_editor
 
 # make Python 2.x input behave as in Python 3
 try:
@@ -57,6 +58,12 @@ class PreProcessor(object):
         @type ui_type    :  str
         @keyword ui_type :  Choice of UI type
         """
+       
+        if 'logger' in kwargs:
+            self.logger = kwargs['logger']
+        else:
+            #TODO: the following has not been verified to work
+            self.logger = logging.getLogger(__name__)
 
         if 'mol' in kwargs:
             self.mol = kwargs['mol']
@@ -67,14 +74,22 @@ class PreProcessor(object):
         if 'ui' in kwargs:
             self.ui_type = kwargs['ui']
         else:
+            # TODO: Not strictly needed as it is now passed from gui_mimic
             self.ui_type = 'terminal'
+
+        if 'json' in kwargs:
+            self.json = kwargs['json']
+        else:
+            self.json = False
 
         if 'default_subs' in kwargs:
             self.default_subs = kwargs['default_subs']
         else:
             self.default_subs = False
 
-        self.logger = logging.getLogger(__name__)
+        self.logger.info('ui_type = ' + self.ui_type)
+        self.logger.info('ui_type = ' + self.ui_type)
+        self.logger.info('ui_type = ' + self.ui_type)
 
         return
 
@@ -100,15 +115,21 @@ class PreProcessor(object):
 
         mol = self.mol
 
-        resid_descriptions = self.create_residue_descriptions()
+        self.resid_descriptions = self.create_residue_descriptions()
 
         if self.ui_type == 'terminal':
 
             ui_output = cmd_segname_edit.SegnameEditor(
-                mol.segnames(), resid_descriptions, max_row=20).get_segment_starts()
+                mol.segnames(), self.resid_descriptions, max_row=20).get_segment_starts()
 
         else:
+            ui_output = sassie_web_editor.SegnameEditor(
+                mol.segnames(), self.resid_descriptions, self.json, self.logger).get_segment_starts()
 
+            self.logger.info('SHOULD NOT GET HERE')
+            self.logger.info('SHOULD NOT GET HERE')
+            self.logger.info('SHOULD NOT GET HERE')
+            self.logger.info('SHOULD NOT GET HERE')
             # TODO: something for a real GUI
             ui_output = []
 
@@ -602,7 +623,20 @@ class PreProcessor(object):
 
         return residue_descriptions
 
-    def terminal_edit_options(self):
+    def create_sequence_report(self, mol, seq_segnames): 
+
+        sequence_report = 'Current residue sequences for each segment (uppercase letters have coordinates while lowercase letters do not have coordinates): \n\n'
+
+        for segname in seq_segnames:
+            seq = mol.segname_info.sequence_to_fasta(
+                    segname, missing_lower=True)
+            sequence_report += 'segname ' + segname + ':\n'
+            sequence_report += seq + '\n\n'
+
+        return sequence_report 
+
+    def handle_sassie_web_edit_options(self, pdbscan_report):
+
         """
         Present user with options to edit segmentation, sequence and BIOMT from
         the commandline.
@@ -611,11 +645,156 @@ class PreProcessor(object):
         """
 
         mol = self.mol
+        self.resid_descriptions = self.create_residue_descriptions()
+
+        accepted_segmentation = False
+
+        self.logger.info('UI_TYPE = ' + self.ui_type)
+            
+        sassie_query_object  = sassie_web_editor.SegnameEditor(\
+                mol.segnames(), self.resid_descriptions, self.json, pdbscan_report, self.logger)
+        
+        choice = sassie_query_object.answer["_response"]["button"]
+            
+        if choice == 'yes':
+            choice = 'no'
+
+        if choice == 'no':
+            accepted_segmentation = True
+
+        while not accepted_segmentation:
+
+            if choice in ['y', 'yes']:
+
+                segname_starts = self.get_user_segmentation()
+
+                if segname_starts:
+                    self.redefine_segments(segname_starts)
+                    mol.check_segname_simulation_preparedness()
+
+                accepted_segmentation = True
+
+            elif choice in ['n', 'no']:
+
+                accepted_segmentation = True
+
+        accepted_sequences = False
+       
+        seq_segnames = mol.segname_info.sequence.keys()
+
+        sequence_report = self.create_sequence_report(mol, seq_segnames) 
+        sassie_query_object = sassie_web_editor.FastaEditor(self.json, sequence_report, self.logger) 
+
+        choice = sassie_query_object.answer["_response"]["button"]
+
+        self.logger.info('SEQUENCE EDIT CHOICE = ' + choice)
+        
+        if choice == "no":
+            accepted_sequences = True
+
+        while not accepted_sequences:
+
+            sequence_report = self.create_sequence_report(mol, seq_segnames) 
+            sassie_query_object = sassie_web_editor.FastaEditor(self.json, sequence_report, self.logger) 
+
+            choice = sassie_query_object.answer["_response"]["button"]
+
+            self.logger.info('SEQUENCE CHOICE = ' + choice)
+
+#            print("Do you want to edit any sequences? (answer [y]es/[n]o)")
+
+            choice = "no"
+
+            if choice in ['y', 'yes']:
+
+                if len(seq_segnames) > 1:
+
+                    print("Which segment do you wish to provide a sequence for?")
+            #        segname = input().strip()
+
+                else:
+                    segname = seq_segnames[0]
+
+                if segname in seq_segnames:
+
+                    moltype = self.get_segment_moltype(segname)
+                    fasta_sequence = self.get_user_fasta_sequence(
+                        segname, moltype)
+
+                    if fasta_sequence:
+
+                        success = self.complete_sequence_fasta(
+                            segname, fasta_sequence)
+
+                        if not success:
+
+                            print(
+                                "FASTA did not match existing sequence description")
+
+                    else:
+
+                        print("Invalid FASTA sequence")
+
+                else:
+
+                    print("Invalid segname selected")
+
+            elif choice in ['n', 'no']:
+
+                accepted_sequences = True
+
+        if mol.segname_info.biomt:
+
+            print("Current biological unit transforms: ")
+
+            import sassie.build.pdbscan.pdbscan.report as report
+            for line in report.create_biomt_summary(mol.segname_info.biomt):
+
+                print(line)
+        else:
+            print("There are no existing biological unit transforms")
+
+        choice_made = False
+        choice_made = True
+
+        while not choice_made:
+            print(
+                "Do you want to add a new biological unit transform? (answer [y]es/[n]o)")
+        #    choice = input().lower()
+
+            if choice in ['y', 'yes']:
+
+                self.get_biological_unit_transform()
+                choice_made = True
+
+                if mol.segname_info.biomt:
+
+                    print("Updated biological unit transforms: ")
+
+                    for line in report.create_biomt_summary(mol.segname_info.biomt):
+
+                        print(line)
+
+            elif choice in ['n', 'no']:
+                choice_made = True
+
+        return
+
+    def handle_terminal_edit_options(self):
+        """
+        Present user with options to edit segmentation, sequence and BIOMT from
+        the commandline.
+
+        @return:
+        """
+
+        mol = self.mol
+        self.resid_descriptions = self.create_residue_descriptions()
 
         accepted_segmentation = False
 
         print(
-            "Do you wish to edit the system segmentation? (answer [y]es/[n]o)")
+                "Do you wish to edit the system segmentation? (answer [y]es/[n]o)")
 
         while not accepted_segmentation:
 
@@ -636,7 +815,7 @@ class PreProcessor(object):
                 accepted_segmentation = True
 
         accepted_sequences = False
-
+     
         seq_segnames = mol.segname_info.sequence.keys()
 
         while not accepted_sequences:
@@ -726,7 +905,7 @@ class PreProcessor(object):
 
         return
 
-    def user_edit_options(self):
+    def user_edit_options(self, pdbscan_report):
         """
         Get user input from terminal or other source. ONLY TERMINAL CURRENTLY
 
@@ -735,10 +914,14 @@ class PreProcessor(object):
 
         if self.ui_type == 'terminal':
 
-            self.terminal_edit_options()
+            self.handle_terminal_edit_options()
 
-        else:
+        elif self.ui_type == 'sassie_web':
 
-            pass
+            self.handle_sassie_web_edit_options(pdbscan_report)
+            self.logger.info('I SHOULD QUIT HERE')
+            self.logger.info('I SHOULD QUIT HERE')
+            self.logger.info('I SHOULD QUIT HERE')
+            import sys ; sys.exit()
 
         return

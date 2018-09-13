@@ -47,6 +47,22 @@ def generate_reports(mol):
 
     short_report.append('# PDB Scan report for ' + mol.pdbname + '\n')
 
+    edited_chains = []
+
+    for chain, was_edited in mol.chain_resid_edited.iteritems():
+
+        if was_edited:
+            edited_chains.append(chain)
+
+    if edited_chains:
+
+        short_report.append('##Residue numbers edited to account for insertions')
+        if len(edited_chains) > 1:
+            short_report += ['Chains: ' + ' '.join(edited_chains)]
+        else:
+            short_report += ['Chain: ' + ' '.join(edited_chains)]
+        short_report += ['\n']
+
     reconciliation_report = generate_reconciliation_report(mol)
 
     if reconciliation_report:
@@ -153,7 +169,7 @@ def generate_simulation_prep_report(mol):
     rep.append('parameterized structures. PDB Scan suggests the following ')
     rep.append('mapping of residues from the input chains to segments.\n')
 
-    widths = [6, 7, 4, 13, 16]
+    widths = [6, 7, 8, 13, 16]
     just = ['l', 'l', 'l', 'l', 'l']
     contents = []
 
@@ -172,7 +188,7 @@ def generate_simulation_prep_report(mol):
                 '-' + str(atom_info['resid'][1])
             index_range = str(atom_info['original_index'][
                               0]) + '-' + str(atom_info['original_index'][1])
-            seg_moltype = atom_info['moltype'][:3]
+            seg_moltype = atom_info['moltype'][:8]
 
             tmp_contents.append(
                 [chain, segname, seg_moltype, resid_range, index_range])
