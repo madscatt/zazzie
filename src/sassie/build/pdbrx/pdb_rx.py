@@ -58,7 +58,7 @@ class PDBRx():
              
         self.mvars = module_variables()
         
-        self.run_utils = module_utilities.run_utils(app,txtOutput)
+        self.run_utils = module_utilities.run_utils(app, txtOutput)
 
         self.run_utils.setup_logging(self)
         
@@ -84,7 +84,7 @@ class PDBRx():
         mvars.pdbfile = variables['pdbfile'][0]
         mvars.topfile = variables['topfile'][0]
         mvars.use_defaults = variables['defaults'][0]
-        mvars.gui = variables['gui'][0]
+        mvars.user_interface = variables['user_interface'][0]
 
         # TODO: Think about topology file
         
@@ -97,16 +97,28 @@ class PDBRx():
         log = self.log
 
         log.debug('in run_scan')
-    
-        pgui('-'*50)
-        pgui('PDB Rx')
-        pgui('-'*50)
 
+        pgui("\n"+"="*60+" \n")
+        pgui("DATA FROM RUN: %s \n\n" %(time.asctime( time.gmtime( time.time() ) ) ))
+ 
         mol = pdbscan.SasMolScan()
         mol.read_pdb(mvars.pdbfile)
+        ###TODO: evaluate whether this should be assigned or not to enable an error
+        ###      condition in pdbscan
+        #mol.setPdbname(pdbfile)
 
-        pgui('Initiating scan')
-        mol.run_scan()
+        pgui('Initiating PDB scan\n')
+
+        fraction_done = 0.01
+        pgui('STATUS\t'+str(fraction_done))
+
+        try:
+            mol.run_scan()
+        except:
+            pgui('FATAL ERROR running header scan\n')
+            pgui('HALTING RUN\n')
+            self.epilogue()
+            return
 
         # if mvars.use_defaults and not mol.any_charmm_ready_segments():
         #
@@ -117,44 +129,89 @@ class PDBRx():
 
         mol.copy_biomt_segments()
 
-        if not mvars.use_defaults:
+        fraction_done = 0.25
+        pgui('STATUS\t'+str(fraction_done))
 
-            pgui('Preprocessing')
-            #preprocessor = pdbrx.preprocessor.PreProcessor(mol=mol,default_subs=True,ui=mvars.gui)
-            preprocessor = pdbrx.preprocessor.PreProcessor(mol=mol,default_subs=True,ui=mvars.gui,logger=log, json=self.json_variables)
+        if not mvars.use_defaults:
 
             pdbscan_report = report.generate_simulation_prep_report(mol)
 
-            pgui('Printing pdbscan_report')
-            for line in pdbscan_report:
+            pgui('processing user input for segment(s), sequence(s) and biomt record(s)\n')
 
-                pgui(line)
+            try:
+                preprocessor = pdbrx.preprocessor.user_input(self, mol, pdbscan_report)
+            except:
+                pgui('FATAL ERROR running preprocessor\n')
+                pgui('HALTING RUN\n')
+                self.epilogue()
+                return
 
-            preprocessor.user_edit_options(pdbscan_report)
+        fraction_done = 0.5
+        pgui('STATUS\t'+str(fraction_done))
+        
+        pgui('building scaffold structure\n')
 
-        pgui('Build scaffold structure')
+        try:
 
-        scaffold_builder = pdbrx.scaffold_builder.ScaffoldBuilder(mol=mol,
-                                                                  default_subs=True)
+            scaffold_builder = pdbrx.scaffold_builder.ScaffoldBuilder(mol=mol,
+                                                                  default_subs=True,
+                                                                  ui=mvars.user_interface)
+        except:
+            pgui('FATAL ERROR running scaffold builder\n')
+            pgui('HALTING RUN\n')
+            self.epilogue()
+            return
 
         if mvars.use_defaults:
+            
+            try:
+                scaffold_builder.create_default_scaffold()
 
-            scaffold_builder.create_default_scaffold()
-
+            except:
+                pgui('FATAL ERROR running scaffold builder: create_default_scaffold\n')
+                pgui('HALTING RUN\n')
+                self.epilogue()
+                return
+        
         else:
 
-            scaffold_builder.user_system_selection()
+            try:
 
-        
+                scaffold_builder.user_system_selection(self)
+
+            except:
+                pgui('FATAL ERROR running scaffold builder user selection\n')
+                pgui('HALTING RUN\n')
+                self.epilogue()
+                return
+ 
         tmp_struct_path = self.runpath + os.sep + 'tmp_struct'
         if not os.path.isdir(tmp_struct_path):
             os.mkdir(tmp_struct_path)
 
-        pgui('Start structure completion')
-        structure_builder = pdbrx.structure_builder.StructureBuilder(scaffold_builder.scaffold_model,
+        pgui('building structure\n')
+
+        try:
+            structure_builder = pdbrx.structure_builder.StructureBuilder(scaffold_builder.scaffold_model,
                                                  tmp_struct_path)
 
+        except:
+            pgui('FATAL ERROR running structure builder\n')
+            pgui('HALTING RUN\n')
+            self.epilogue()
+            return
+
+        fraction_done = 0.75
+        pgui('STATUS\t'+str(fraction_done))
+        
+        #try:
         completed_mol = structure_builder.complete_structure()
+
+        #except:
+        #    pgui('FATAL ERROR running structure builder: complete_structure\n')
+        #    pgui('HALTING RUN\n')
+        #    self.epilogue()
+        #    return
 
         out_prefix = os.path.splitext(os.path.basename(mvars.pdbfile))[0] + '_charmm'
 
@@ -162,8 +219,22 @@ class PDBRx():
 
         psfgen = pdbrx.apply_psfgen.PsfgenDriver(completed_mol, segname_info, mvars.topfile, self.runpath, out_prefix)
 
-        psfgen.run_psfgen()
+        try:
 
+            psfgen.run_psfgen()
+       
+        except:
+            pgui('FATAL ERROR running psfgen\n')
+            pgui('HALTING RUN\n')
+            self.epilogue()
+            return
+
+        pgui('\nfinal structure saved as:: ' + out_prefix + '.pdb\n')
+        pgui('\npsf saved as:' + out_prefix + '.psf\n')
+        pgui('\nxplor formatted psf saved as: ' + out_prefix + '_xplor.psf\n\n')
+ 
+        fraction_done = 0.9
+        pgui('STATUS\t'+str(fraction_done))
 
     def epilogue(self):
         '''
@@ -177,6 +248,8 @@ class PDBRx():
 
         self.run_utils.clean_up(log)
 
-        #pgui('\n%s IS DONE\n' % app)
-        #pgui("\n"+"="*60+" \n")
+        fraction_done = 1.0
+        pgui('STATUS\t'+str(fraction_done))
+        pgui("\n"+"="*60+" \n")
+
         time.sleep(0.1)

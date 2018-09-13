@@ -28,6 +28,9 @@ import sassie.build.pdbscan.pdbscan.report as report
 from . import segment_choice
 from . import biomt_choice
 from . import altloc_choice
+from . import sassie_web_utils as sassie_web_utils
+from . import sassie_web_editor as sassie_web_editor
+
 import sasmol.sasmol as sasmol
 import numpy as np
 
@@ -71,6 +74,7 @@ class ScaffoldBuilder():
 
         if 'ui' in kwargs:
             self.ui = kwargs['ui']
+
         else:
             self.ui = 'terminal'
 
@@ -441,7 +445,7 @@ class ScaffoldBuilder():
 
     def get_segnames_altlocs_selected(self):
         '''
-        Return list of segnames fro segments containing altlocs from those
+        Return list of segnames from segments containing altlocs from those
         selected for final model.
 
         @return:
@@ -457,7 +461,7 @@ class ScaffoldBuilder():
 
         return alt_segnames
 
-    def _defaut_altloc(self):
+    def _default_altloc(self):
         '''
         Chose the first altloc for all residues in which one is present
 
@@ -506,7 +510,7 @@ class ScaffoldBuilder():
 
             self.scaffold_model = self.selected_mol
 
-        # self.scaffold_model.write_pdb('combined_test.pdb', 0, 'w')
+        #self.scaffold_model.write_pdb('combined_test.pdb', 0, 'w')
 
         return
 
@@ -603,7 +607,7 @@ class ScaffoldBuilder():
         self.selected_segnames = selected_segnames
 
         # Select first AltLoc where necessary
-        self._defaut_altloc()
+        self._default_altloc()
 
         # Apply all BIOMT records suggested by PDB author
         if biomt:
@@ -620,7 +624,7 @@ class ScaffoldBuilder():
 
         return
 
-    def user_system_selection(self):
+    def user_system_selection(self, other_self):
         '''
         Get user to select the regions of the protein to be included in the
         final model. Also select which AltLoc to use if multiple available.
@@ -677,7 +681,7 @@ class ScaffoldBuilder():
 
                 else:
 
-                    self._defaut_altloc()
+                    self._default_altloc()
 
             if self.mol.segname_info.biomt:
 
@@ -693,8 +697,37 @@ class ScaffoldBuilder():
 
                     self.selected_biomt = [biomt_list[0]]
 
-        else:
-            pass
+        elif(self.ui == 'sassie_web'):
+           
+            self.selected_segnames = sassie_web_utils.final_segment_selection(other_self, mol, self.prep_report)
+
+            ###TODO: need to implement altloc parsing as above for terminal case 
+            alt_segnames = self.get_segnames_altlocs_selected()
+
+            ###TODO: is this needed? --> NO,  unless in larger altloc evaluation section
+            #self._default_altloc()
+
+            ###TODO: need to implement altloc parsing as above for terminal case 
+
+            if self.mol.segname_info.biomt:
+
+                biomt_list = self.mol.segname_info.biomt.keys()
+                ###TODO: at this point the program runs BUT the results are wrong
+                ###TODO:  so the call to the GUI is commented below
+                #sassie_query_object = sassie_web_editor.BiomtChoice(other_self, biomt_list, biomol_report)
+                if len(biomt_list) > 1:
+
+                    ###TODO: at this point the program runs BUT the results are wrong
+                    ###TODO:  so the call to the GUI is commented below
+                    #temp = map(int, sassie_query_object.answer["_response"]["biomt_listbox"])
+                    #self.selected_biomt = [x+1 for x in temp]
+                    ###TODO: at this point the program runs BUT the results are wrong
+                    ###TODO:  so the following line is a temporary override
+                    self.selected_biomt = [biomt_list[0]]
+
+                else:
+
+                    self.selected_biomt = [biomt_list[0]]
 
         self.create_scaffold_model()
 
