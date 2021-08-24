@@ -8,7 +8,6 @@ import time
 import json
 
 
-
 #import sassie.util.sasconfig as sasconfig
 
 import sasconfig 
@@ -28,9 +27,9 @@ class run_utils():
 
         self.logger.info('writing json files with input variables')
 
-        with open(self.parmfile,'w') as outfile:
+        with open(self.parameter_file,'w') as outfile:
             json.dump([self.v],outfile)
-            self.logger.info('writing parameters to '+self.parmfile)
+            self.logger.info('writing parameters to '+self.parameter_file)
 
         if(os.path.isfile('.last_sas.json')):
             os.system('mv .last_sas.json .last_sas.json_backup')
@@ -75,21 +74,21 @@ class run_utils():
 
         self.write_json_file()
         run_name = self.v['run_name']
-        self.runpath = os.path.join(run_name,self.__application__)
+        self.run_path = os.path.join(run_name,self.__application__)
 
-        self.logger.info('setting runpath directory to : '+self.runpath)
+        self.logger.info('setting run_path directory to : '+self.run_path)
 
         try:
             if(not os.path.exists(run_name)):
-                os.makedirs(self.runpath)
-            elif(not os.path.exists(self.runpath)):
-                os.mkdir(self.runpath)
-            self.logger.info('creating directory : '+self.runpath)
+                os.makedirs(self.run_path)
+            elif(not os.path.exists(self.run_path)):
+                os.mkdir(self.run_path)
+            self.logger.info('creating directory : '+self.run_path)
         except:
-            self.logger.critical('FAILED to create '+self.runpath+' directory')
+            self.logger.critical('FAILED to create '+self.run_path+' directory')
 
-        other_self.runpath = self.runpath
-        other_self.parmfile = self.parmfile
+        other_self.run_path = self.run_path
+        other_self.parameter_file = self.parameter_file
 
         return
 
@@ -115,16 +114,16 @@ class run_utils():
         else:
             self.logger.setLevel(logging.INFO)
 
-        timestr = time.strftime("%Y%m%d-%H%M%S")
+        time_string = time.strftime("%Y%m%d-%H%M%S")
 
-        self.logfile = self.__application__+'_'+timestr+'.sassie_log'
-        self.parmfile = self.logfile[:-3]+'json'
-        outfile = open(self.logfile,"w")
+        self.log_file = self.__application__+'_'+time_string+'.sassie_log'
+        self.parameter_file = self.log_file[:-3]+'json'
+        outfile = open(self.log_file,"w")
         st = 'Date\t\tTime\t\tFile\t\tMethod\t\tLine\tLevel\tMessage\n'
         outfile.write(st) #; print(st)
         outfile.close()
 
-        file_handler = logging.FileHandler(self.logfile)
+        file_handler = logging.FileHandler(self.log_file)
         formatter = logging.Formatter('%(asctime)s - %(filename)s - %(funcName)s - %(lineno)d - %(levelname)s - %(message)s')
         file_handler.setFormatter(formatter)
 
@@ -141,7 +140,7 @@ class run_utils():
         self.preamble()
 
         other_self.log = self.logger
-        other_self.logfile = self.logfile
+        other_self.log_file = self.log_file
 
         return
 
@@ -156,13 +155,13 @@ class run_utils():
 
     def clean_up(self,log):
         '''
-        method to move files to runpath directory and finish tasks
+        method to move files to run_path directory and finish tasks
         '''
 
         log.debug('in clean_up')
 
-        os.system('mv '+self.logfile+' '+self.runpath)
-        os.system('mv '+self.parmfile+' '+self.runpath)
+        os.system('mv '+self.log_file+' '+self.run_path)
+        os.system('mv '+self.parameter_file+' '+self.run_path)
 
     def capture_exception(self,message):
 
