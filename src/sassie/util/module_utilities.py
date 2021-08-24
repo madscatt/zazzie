@@ -74,13 +74,13 @@ class run_utils():
         self.v = input_variables
 
         self.write_json_file()
-        runname = self.v['runname']
-        self.runpath = os.path.join(runname,self.__application__)
+        run_name = self.v['run_name']
+        self.runpath = os.path.join(run_name,self.__application__)
 
         self.logger.info('setting runpath directory to : '+self.runpath)
 
         try:
-            if(not os.path.exists(runname)):
+            if(not os.path.exists(run_name)):
                 os.makedirs(self.runpath)
             elif(not os.path.exists(self.runpath)):
                 os.mkdir(self.runpath)
