@@ -57,7 +57,7 @@ class run_utils():
 
         ''' grab all of the variables in the variable class instance '''
         log = other_self.log
-        mvars = other_self.mvars
+        mvars = other_self.module_variables
 
         log.debug('in general_setup')
 
