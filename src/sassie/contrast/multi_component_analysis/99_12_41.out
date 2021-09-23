@@ -1,0 +1,12 @@
+input file: ./input_contrast.txt
+calculated molecular_weight_1,molecular_weight_2: [0.96792902 0.62663915]
+calculated covariance: [[ 0.03052962 -0.00549476]
+ [-0.00549476  0.00111379]]
+--------------------------------
+Final Results
+molecular_weight_1, molecular_weight_2 (kDa): 967.9290158826071	626.6391531637032
+covariance matrix: [[30529.616933   -5494.75986245]
+ [-5494.75986245  1113.79024597]]
+standard deviations, standard_deviation_1, standard_deviation_2: 174.7272644237206	33.37349616042055
+correlation: -0.9422938020431005
+Mw (kDa), weight_fraction_1, weight_fraction_2: 1594.5681690463102	0.6070163914418989	0.3929836085581011
