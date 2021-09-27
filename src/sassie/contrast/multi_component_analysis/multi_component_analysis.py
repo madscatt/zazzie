@@ -15,6 +15,8 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+    @author: susan.krueger
+
 '''
 from __future__ import absolute_import
 from __future__ import division
@@ -35,8 +37,8 @@ import scipy.optimize
 import sassie.util.module_utilities as module_utilities
 import sassie.util.sasconfig as sasconfig
 import sassie.interface.input_filter_sasmol as input_filter
-import sassie.contrast.multi_component_analysis.read_contrast_output_files as read_contrast_output_files
-#import read_contrast_output_files as read_contrast_output_files #this is older version of the method that isn't in the 2.0 format
+#import sassie.contrast.multi_component_analysis.read_contrast_output_files as read_contrast_output_files
+import read_contrast_output_files as read_contrast_output_files
 
 #       MULTI-COMPONENT ANALYSIS
 #
@@ -48,6 +50,13 @@ import sassie.contrast.multi_component_analysis.read_contrast_output_files as re
 '''
     MULTI-COMPONENT ANALYSIS is the module that contains the methods
     that are used to analyze data from contrast variation experiments.
+    It can be used on model data prior to an experiment or on measured data.
+    
+    Include methods: 
+        * Match Point Analysis
+        * Stuhrmann and Parallelx Axis Theorem Analyses
+        * Decomposition Analysis
+        * Stoichiometry Analysis
 
 '''
 
@@ -100,6 +109,9 @@ class multi_component_analysis():
 
 
     def unpack_variables(self,variables):
+        '''
+        method to unpack variables passed from the GUI
+        '''
 
         log = self.log
         mvars = self.module_variables
@@ -142,7 +154,8 @@ class multi_component_analysis():
 
     def multi_component_analysis_initialization(self):
         '''
-        method to prepare for get_molecular_weights
+        method to initialize multi_component_analysis variables and 
+        write initial information to output files
         '''
 
         log = self.log
@@ -187,22 +200,58 @@ class multi_component_analysis():
 
     def get_molecular_weights(self):
         '''
-        method to calculate the molecular weights executed of stoichiometry_flag == True
-        
-        
-        INPUT:  variable descriptions
+        GET_MOLECULAR_WEIGHTS is the Stoichiometry Analysis method that calculates the molecular weights of the components in a complex containing multiple copies of two or more components.
+        Executed if stoichiometry_flag == True. 
+                
+        INPUT:  variable descriptions:
+            run_name:                           name of directory containing the outputs
+            output_file_name:                   name of output file
+            input_file_name:                    name of file containing contrast values calculated from the contrast calculator module
+            read_from_file:                     True if contrast values are being read from an input file with chosen input_file_name; False if contrast values are being input by the user
+            number_of_contrast_points:          number of contrasts being used in the molecular weights calculation
+            number_of_components:               number of components with different contrasts in the complex
+            fraction_d2o array:                 the fraction of D2O in the solvent for each contrast
+            izero array:                        I(0) value at each contrast
+            concentration array:                concentration at each contrast
+            partial_specific_volume array:      partial specific volume of each component
+            delta_rho matrix:                   contrast value for each component at each fraction of D2O
         
         OUTPUT:
+            files stored in output file directory:
+
+            output file with chosen output_file_name:      contains input parameters, calculated molecular weights of the components in kDa, total molecular weight in kDa and weight fractions of each component
+
         '''
 #mvars used:  fraction_d2o, number_of_contrast_points, partial_specific_volume, izero, concentration, delta_rho 
 #mcavars used:  outfile
 
-    # This function is the I(0) equation for two components rearranged such that the x array represents the known coefficients of the equation and the y array is == 0. This function is satisfied at each contrast.
-    # TODO: this function could be outside of this method. If keeping it inside, put it right above the curve fit. NOTE:  I tried the latter and it didn't work.  Error said that molecular_weight_1 was referenced before assignment.
-    #TODO: put the actual equation in the doc string
-    #TODO: generalize this function any number of components
+    #TODO: this function could be outside of this method. If keeping it inside, put it right above the curve fit. NOTE:  I tried the latter and it didn't work.  Error said that molecular_weight_1 was referenced before assignment.
+    #function is now hardwired for 2 components
+    #TODO: generalize this function any number of components? Or offer hardwired options for 2 and 3 components?
 
         def izero_function(x, molecular_weight_1, molecular_weight_2):
+            r'''
+            IZERO_FUNCTION is the I(0) equation 
+            
+            n(\sum_{i} \Delta  \rho_{i}V_{i})^{2} - I(0) = 0, where 
+            
+            I(0) is the intensity at q=0
+            \Delta \rho_{i} is the contrast of i^{th} component
+            V_{i} is the volume of i^{th} component
+            n = c\frac{N_{A}}{\sum_{i} (M_{w})_{i}} is the number density of particles where
+            c is the concentration
+            N_{A} is Avogadro's number and
+            \sum_{i} (M_{w})_{i} is the total molecular weight of the complex.
+            
+            If the volume is rewritten in terms of the partial specific volume, \overline{v},
+            
+            V = \overline{v} \frac {M_{w}}{N_{A}},
+            
+            and the sum over M_{w} is expanded, then the equation can be rewritten in terms
+            of the individual M_{w} values such that they can be obtained by solving a set
+            of simultaneous equations at each contrast. 
+                        
+            '''
             f = x[0] * molecular_weight_1**2 + x[1] * molecular_weight_1*molecular_weight_2 + x[2] * molecular_weight_2**2 - x[3] * molecular_weight_1 - x[3] * molecular_weight_2
             return f
 
@@ -259,19 +308,26 @@ class multi_component_analysis():
         y = numpy.zeros(len(x))
         # print ('y: ', y)
 
-        # transpose x to have correct inputs for curve_fit
+        # transpose x to have correct inputs for curve_fit, which accepts a 1 column matrix with number of rows = number of contrast points.  We have a 1 row matrix of length = number of contrast points.
         x = x.T  
 
         pgui('calculating molecular weights')
         
 
         '''
-scipy.optimize.curve_fit is using scipy version 1.2.1 in Python 2.7.  There is no known change of syntax or usage if using scipy 1.7 under Python 3.
-
+        scipy.optimize.curve_fit is being used to solve the set of simultaneous equations
+        using non-linear least squares fitting.  It uses scipy version 1.2.1 in Python 2.7.
+        There is no known change of syntax or usage if using scipy 1.7 under Python 3.
+        
+        optimized_molecular_weights are the optimal values for the molecular weights such that
+        the sum of the squared error of izero_function(x, optimized_molecular_weights) - y
+        is minimized. 
+        
+        The y array = 0 since izero_function is defined to be equal to zero
+        The x array = the values of the coefficients that consist of the known parameters in izero_function
+        once it is written in terms of the individual M_{w} values.
+        
         '''
-
-        # optimized_molecular_weights are the optimal values for the molecular weights so that the sum of the squared error of izero_function(x, optimized_molecular_weights) - y is minimized
-        # covariance, correlation coefficient and standard deviations are not reported to the user since the option to define errors on the coefficients isn't used since errors on partial specific volume and delta_rho are difficult to estimate. The calculations are left here for reference.
 
         optimized_molecular_weights, covariance = scipy.optimize.curve_fit(izero_function, x, y)
 
