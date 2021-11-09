@@ -60,39 +60,24 @@ def user_variables(self, **kwargs):
 
     self.run_name = 'run_0'
     self.path = './'
-
-#   flags 
-    self.match_point_flag = True
-    self.stuhrmann_parallel_axis_flag = False
-    self.decomposition_flag = False
-    self.stoichiometry_flag = False
-    
-#TODO: At some point we will need a way to know which variables will be used for the chosen method so only they will be used in run_module below.  Otherwise, the input filter will give an error if the string is blank. Right now, all variables have a value even if they aren't being used. How does the input filter work with the GUI?  Can we test only the relevant variables for the method being used?
-
-#   match point analysis variables
-    self.number_of_contrast_points = '5'
-    self.output_file_name = 'matchpoint.out'
-    self.fraction_d2o = '1.0, 0.6, 0.45, 0.15, 0.0' 
-    self.izero = '7.4, 1.33, 0.64, 0.32, 1.4'
-    self.izero_error = '0.1, 0.04, 0.03, 0.02, 0.1' 
-    self.concentration = '0.9, 0.9, 0.9, 0.9, 0.9'
-    self.concentration_error = '0.09, 0.09, 0.09, 0.09, 0.09'
-    self.initial_match_point_guess = '0.3'
- 
-    #stoichiometry analysis variables:
-#    self.number_of_contrast_points = '3' # must be >= number of components (2 in this case)
+    self.number_of_contrast_points = '3' # must be >= number of components (2 in this case)
     self.number_of_components = '2'
     self.read_from_file = False
+    self.output_file_name = '99_12_41.out'
     self.input_file_name = os.path.join(self.path,'input_contrast.txt') #this only matters if read_from_file = True
-#    self.output_file_name = '99_12_41.out'
-#    self.fraction_d2o = '0.99, 0.12, 0.41'  # 1 value for each contrast
-#    self.izero = '11.8, 0.6, 0.17'  # 1 value for each contrast
-#    self.concentration = '3.7, 3.6, 3.1'  # 1 value for each contrast
+    self.match_point_flag = False
+    self.stuhrmann_parallel_axis_flag = False
+    self.decomposition_flag = False
+    self.stoichiometry_flag = True
+    
+#at some point we will need a way to know which variables will be used for the chosen method.  Otherwise, the input filter will give an error if the string is blank.
+    self.fraction_d2o = '0.99, 0.12, 0.41'  # 1 value for each contrast
+    self.izero = '11.8, 0.6, 0.17'  # 1 value for each contrast
+    self.concentration = '3.7, 3.6, 3.1'  # 1 value for each contrast
 #if read_from_file = True, then partial_specific_volume needs to be input IN THE SAME ORDER as the delta_rho values will be read from the file. We need to set up the GUI in such a way that this will be easy to do.
     self.partial_specific_volume = '0.745, 0.903'  # 1 value for each component
 #delta_rho needs to have some default values here if being read from file to avoid error in input filter. These values will be superceded by the new values read from an input file if read_from_file = True. 
     self.delta_rho = '-3.2, -5.7; 1.6, 0.26; 0.031, -1.74' # 2 values for each contrast since there are 2 components.  
-
     self.test_flag = False
     
     #### end user input ####
@@ -119,19 +104,16 @@ def test_variables(self,paths):
     self.path = ''
     self.number_of_contrast_points = '3'
     self.number_of_components = '2'
-    self.read_from_file = False
+    self.read_from_file = True
     self.output_file_name = os.path.join(other_data_path,'99_12_41.out')
     self.input_file_name = os.path.join(other_data_path,'input_contrast.txt')
     self.match_point_flag = False
     self.stuhrmann_parallel_axis_flag = False
     self.decomposition_flag = False
     self.stoichiometry_flag = True
-    self.fraction_d2o = '0.99, 0.12, 0.41'
-    self.izero = '11.8, 0.6, 0.17'
-    self.concentration = '3.7, 3.6, 3.1'
-    self.izero_error = '0.1, 0.04, 0.03' 
-    self.concentration_error = '0.4, 0.4, 0.3'
-    self.initial_match_point_guess = '0.3'
+    self.fraction_d2o = '0.99, 0.12, 0.41' 
+    self.izero = '11.8, 0.6, 0.17' 
+    self.concentration = '3.7, 3.6, 3.1'  
     self.partial_specific_volume = '0.745, 0.903' 
     self.delta_rho = '-3.2,-5.7; 1.6, 0.26; 0.031, -1.74'
 
@@ -160,12 +142,9 @@ def run_module(self, **kwargs):
     svariables['read_from_file'] = (self.read_from_file,'boolean')
     svariables['number_of_contrast_points'] = (self.number_of_contrast_points,'int')
     svariables['number_of_components'] = (self.number_of_components,'int')
-    svariables['initial_match_point_guess'] = (self.initial_match_point_guess,'float')
     svariables['fraction_d2o'] = (self.fraction_d2o,'float_array')
     svariables['izero'] = (self.izero, 'float_array')
-    svariables['izero_error'] = (self.izero_error, 'float_array')
     svariables['concentration'] = (self.concentration, 'float_array')
-    svariables['concentration_error'] = (self.concentration_error, 'float_array')
     svariables['partial_specific_volume'] = (self.partial_specific_volume, 'float_array')
     svariables['delta_rho'] = (self.delta_rho, 'nested_float_array')
 
@@ -222,8 +201,8 @@ class gui_mimic_multi_component_analysis():
         else:
             test_variables(self, paths)
 
-#        run_module(self, test_filter=True)
         run_module(self)
+
 
 if __name__ == '__main__':
 
