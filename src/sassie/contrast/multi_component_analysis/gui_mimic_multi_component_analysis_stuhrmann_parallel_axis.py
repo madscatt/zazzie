@@ -58,31 +58,31 @@ def user_variables(self, **kwargs):
     #### user input ####
     #### user input ####
 
-    self.run_name = 'run_0'
+    self.run_name = 'run_1'
     self.path = './'
 
 #   flags 
-    self.match_point_flag = True
-    self.stuhrmann_parallel_axis_flag = False
+    self.match_point_flag = False
+    self.stuhrmann_parallel_axis_flag = True
     self.decomposition_flag = False
     self.stoichiometry_flag = False
     
 #TODO: At some point we will need a way to know which variables will be used for the chosen method so only they will be used in run_module below.  Otherwise, the input filter will give an error if the string is blank. Right now, all variables have a value even if they aren't being used. How does the input filter work with the GUI?  Can we test only the relevant variables for the method being used?
 
 #   match point analysis variables
-    self.number_of_contrast_points = '5'
-    self.output_file_name = 'matchpoint.out'
-    self.fraction_d2o = '1.0, 0.6, 0.45, 0.15, 0.0' 
-    self.izero = '7.4, 1.33, 0.64, 0.32, 1.4'
-    self.izero_error = '0.1, 0.04, 0.03, 0.02, 0.1' 
-    self.concentration = '0.9, 0.9, 0.9, 0.9, 0.9'
-    self.concentration_error = '0.09, 0.09, 0.09, 0.09, 0.09'
-    self.initial_match_point_guess = '0.3'
+#    self.number_of_contrast_points = '7'
+#    self.output_file_name = 'test_data1.out'
+#    self.fraction_d2o = '1.0, 0.9, 0.8, 0.4, 0.2, 0.1, 0.0' 
+    self.izero = '0.537, 0.332, 0.19, 0.0745, 0.223, 0.352, 0.541'
+    self.izero_error = '0.001, 0.002, 0.001, 0.002, 0.002, 0.002, 0.003' 
+    self.concentration = '11.9, 11.9, 11.9, 26.9, 11.9, 11.9, 11.9'
+    self.concentration_error = '0.6, 0.6, 0.6, 1.3, 0.6, 0.6, 0.6'
+    self.initial_match_point_guess = '0.5'
 
 #   stuhrmann parallel axis variables
-#    self.number_of_contrast_points = '7'
-#    self.output_file_name = 'stuhrmann_parallel_axis_testdata.out'
-#    self.fraction_d2o = '1.0, 0.9, 0.8, 0.4, 0.2, 0.1, 0.0' 
+    self.number_of_contrast_points = '7'
+    self.output_file_name = 'stuhrmann_parallel_axis_testdata.out'
+    self.fraction_d2o = '1.0, 0.9, 0.8, 0.4, 0.2, 0.1, 0.0' 
     self.number_of_components = '2'
     self.read_from_file = True
     self.input_file_name = os.path.join(self.path,'mulch_test_data_contrast.txt') #this only matters if read_from_file = True
@@ -93,8 +93,8 @@ def user_variables(self, **kwargs):
     self.radius_of_gyration = '25.11, 24.16, 23.03, 23.4, 28.22, 28.33, 28.85'
     self.radius_of_gyration_error = '0.09, 0.14, 0.2, 0.7, 0.29, 0.19, 0.12'
 
- 
-    #stoichiometry analysis variables:
+    
+#   stoichiometry analysis variables:
 #    self.number_of_contrast_points = '3' # must be >= number of components (2 in this case)
 #    self.number_of_components = '2'
 #    self.read_from_file = False
@@ -188,6 +188,7 @@ def run_module(self, **kwargs):
     svariables['delta_rho'] = (self.delta_rho, 'nested_float_array')
 
 
+#    print('before input filter')
     error, self.variables = input_filter.type_check_and_convert(svariables)
     if len(error) > 0:
         print('error = ', error)

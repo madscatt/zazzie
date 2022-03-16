@@ -154,10 +154,11 @@ if __name__ == "__main__":
 
     fig, (ax0,ax1) = plt.subplots(nrows=2, sharex=True)
 
-    ax0.errorbar(fraction_d2o, square_root_izero, yerr=square_root_izero_error, fmt='bo', markersize = 2)
-    ax0.plot(fraction_d2o,ycalc,'r--')
+    ax0.errorbar(fraction_d2o, square_root_izero, yerr=square_root_izero_error, fmt='bo', markersize = 2, label = "data")
+    ax0.plot(fraction_d2o,ycalc,'r--', label = "calc")
     ax0.set_title('data')
     ax0.set_ylabel('sqrt[I(0)/c]')
+    ax0.legend(loc="upper right")    
 #
     ax1.plot(fraction_d2o, diff, 'ko', markersize = 5)
     ax1.set_title('residuals')

@@ -114,6 +114,7 @@ def get_match_point(other_self):
 #   In most cases, this routine will only be called when analyzing data (since planning is done with the contrast calculator), so it is assumed that the user has input I(0), c and an error on both I(0) and c, and a weighted fit will be used.  Values of "0" for the errors aren't allowed, so this is checked in the module filter.
 
 # calculate sqrt[I(0)/c] and propagate the error on I(0)/c to make the relationship between I(0) and fraction D2O linear.  The user needs to to input a frac_d2o value for which the sign changes, i.e, an initial guess for the match point. Several values may need to be tried to get an optimal fit.  An initial guess should be able to be made from the data (perhaps with help from contrast calculator output).
+#TODO:  consider doing a 2nd order polynomial fit to I(0)/c vs fraction_d2o to get an estimate for the match point instead of having the user provide one. (This is done in MulCh, for instance.)
 
     mode = 1 #for weighted fit
     normalized_izero = numpy.zeros(mvars.number_of_contrast_points, numpy.float)
@@ -125,6 +126,8 @@ def get_match_point(other_self):
 
     pgui('Match Point Method\n')
     pgui('calculating sqrt[I(0)/c] and propagating errors')        
+
+#TODO:  should concentration be converted to g/cm^3?  See what is done in MulCh and contrast calculator. 
 
     for i in range(mvars.number_of_contrast_points):
         normalized_izero[i] = mvars.izero[i]/mvars.concentration[i]

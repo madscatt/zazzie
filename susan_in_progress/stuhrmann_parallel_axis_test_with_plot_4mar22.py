@@ -85,7 +85,7 @@ def stuhrmann(radius_of_gyration, radius_of_gyration_error, delta_rho, volume_fr
     # the next statement fits a second-order polynomial to the data to get alpha, beta and Rm
 
     reduced_chi_squared,fit,correlation = polynomial_function_fit.polynomial_fit(2,delta_rho_inverse,rg_squared,rg_squared_error,number_of_contrast_points)
-#    print('chi_squared, fit, correlation: ', chi_squared, fit, correlation)
+#    print('reducted chi_squared, fit, correlation: ', reduced_chi_squared, fit, correlation)
 
     for i in range(number_of_contrast_points):
         rg_squared_calculated[i] = fit[2].item() + (fit[1].item()*delta_rho_inverse[i].item()) + (fit[0].item()*delta_rho_inverse[i].item()*delta_rho_inverse[i].item())
@@ -326,8 +326,8 @@ if __name__ == "__main__":
     delta_rho_inverse, rg_squared, rg_squared_error, rg_squared_calculated, diff, alpha, alpha_error, beta, beta_error, rg_infinite_contrast, rg_infinite_contrast_error, chi_squared_stuhrmann, rg1_stuhrmann,rg1_error_stuhrmann, rg2_stuhrmann, rg2_error_stuhrmann, cm_distance_stuhrmann, cm_distance_error_stuhrmann = stuhrmann(radius_of_gyration, radius_of_gyration_error, delta_rho, volume_fraction, fraction_d2o, number_of_contrast_points)
 
     print('after call to stuhrmann \n')
-    for i in range(0, number_of_contrast_points):
-        print('i, rho^-1, Rg^2, sigma Rg^2, Rg^2 calc, diff ', i,delta_rho_inverse[i], rg_squared[i], rg_squared_error[i], rg_squared_calculated[i], diff[i])
+#    for i in range(0, number_of_contrast_points):
+#        print('i, rho^-1, Rg^2, sigma Rg^2, Rg^2 calc, diff ', i,delta_rho_inverse[i], rg_squared[i], rg_squared_error[i], rg_squared_calculated[i], diff[i])
     print(beta, beta_error)
     print(alpha, alpha_error)
     print(rg_infinite_contrast, rg_infinite_contrast_error)
@@ -373,10 +373,11 @@ if __name__ == "__main__":
 
     fig, (ax0,ax1) = plt.subplots(nrows=2, sharex=True)
 
-    ax0.errorbar(delta_rho_inverse, rg_squared, yerr=rg_squared_error, fmt='bo', markersize = 3)
+    ax0.errorbar(delta_rho_inverse, rg_squared, yerr=rg_squared_error, fmt='bo', markersize = 3, label = "data")
 #    ax0.plot(delta_rho_inverse,rg_squared_calculated,'r--')
-    ax0.plot(delta_rho_inverse,rg_squared_calculated,'ro', markersize = 3)
+    ax0.plot(delta_rho_inverse,rg_squared_calculated,'ro', markersize = 3, label = "calc")
     ax0.set_title('data')
+    ax0.legend(loc="upper right") 
 #
     ax1.plot(delta_rho_inverse, diff, 'ko', markersize = 3)
     ax1.set_title('residuals')

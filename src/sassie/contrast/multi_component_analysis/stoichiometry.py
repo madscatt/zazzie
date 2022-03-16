@@ -69,10 +69,10 @@ def get_molecular_weights(other_self):
             number_of_contrast_points:          number of contrasts being used in the molecular weights calculation
             number_of_components:               number of components with different contrasts in the complex
             fraction_d2o array:                 the fraction of D2O in the solvent for each contrast
-            izero array:                        I(0) value at each contrast
-            concentration array:                concentration at each contrast
-            partial_specific_volume array:      partial specific volume of each component
-            delta_rho matrix:                   contrast value for each component at each fraction of D2O
+            izero array:                        I(0) value at each contrast in cm^-1
+            concentration array:                concentration at each contrast in mg/mL
+            partial_specific_volume array:      partial specific volume of each component in cm^3/g
+            delta_rho matrix:                   contrast value for each component at each fraction of D2O in 10^10 cm^-2 (10^-6 A^-2)
 
         multi_component_analysis_variables
             output_file_name:                   name of output file
@@ -133,21 +133,24 @@ def get_molecular_weights(other_self):
         delta_rho_2 = mvars.delta_rho[i][1]
         izero_1 = mvars.izero[i]
         concentration_1 = mvars.concentration[i]
-    # print('delta_rho_1, delta_rho_2, izero, concentration: ', delta_rho_1, delta_rho_2, izero_1, concentration_1)
+#        print('delta_rho_1, delta_rho_2, izero, concentration: ', delta_rho_1, delta_rho_2, izero_1, concentration_1)
         x0 = delta_rho_1**2*partial_specific_volume_1**2
         x1 = 2*delta_rho_1*delta_rho_2*partial_specific_volume_1*partial_specific_volume_2
         x2 = delta_rho_2**2*partial_specific_volume_2**2
         x3 = izero_1*Na/concentration_1
         x[i] = (x0, x1, x2, x3)
 
-    # print ('x: ', x)
-    # print ('length of x: ', len(x))
+    #print ('x: ', x)
+    #print ('length of x: ', len(x))
 
     y = numpy.zeros(len(x))
     # print ('y: ', y)
 
-    # transpose x to have correct inputs for curve_fit, which accepts a 1 column matrix with number of rows = number of contrast points.  We have a 1 row matrix of length = number of contrast points.
-    x = x.T  
+    # transpose x to have correct inputs for curve_fit.
+    x = x.T 
+    
+    #print ('transposed x: ', x)
+    #print ('length of transposed x: ', len(x)) 
 
     pgui('calculating molecular weights')
     
@@ -169,12 +172,14 @@ def get_molecular_weights(other_self):
 
     optimized_molecular_weights, covariance = scipy.optimize.curve_fit(molecular_weight_function, x, y)
 
-#TODO: decide what results should be in the output file and what should be printed out to the GUI screen.  Also, Test some errors on the coefficients (hardwired) here to see if we should be allowing users to enter errors. Look at Watson et al power law paper for ranges of values for molecular volume. Would we ask for errors on each parameter, i.e., izero, delta_rho, concentration, etc. and then propagate them here when we calculate the coefficients? If we decide to include errors, then we can report the covariance matrix and standard deviations. 
+#TODO: Test some errors on the coefficients (hardwired) here to see if we should be allowing users to enter errors. Look at Watson et al power law paper for ranges of values for molecular volume. Would we ask for errors on each parameter, i.e., izero, delta_rho, concentration, etc. and then propagate them here when we calculate the coefficients? Curve_fit wants the errors in y, not the coefficients, x.  So what is the best way to test how the errors in x affect y?
 
 #    pgui('calculated molecular_weight_1,molecular_weight_2: '+str(optimized_molecular_weights)+'\n')
 #    mcavars.outfile.write('calculated molecular_weight_1,molecular_weight_2: '+str(optimized_molecular_weights)+'\n')
 #    pgui('calculated covariance: '+str(covariance)+'\n')
 #    mcavars.outfile.write('calculated covariance: '+str(covariance)+'\n')
+
+
 
     pgui('results written to output file: %s' % (mcavars.multi_component_analysis_path+mvars.output_file_name))
     pgui('-------------------------------')
@@ -189,6 +194,8 @@ def get_molecular_weights(other_self):
     mcavars.outfile.write('molecular_weight_1, molecular_weight_2 (kDa): '+str(molecular_weight_1)+'\t'+str(molecular_weight_2)+'\n')
 
 
+# Since we aren't taking into account the errors on the coefficients, the standard deviations shouldn't be reported?  
+# The residuals for I(0) are calcluated below.
     # The covariance matrix will be infinite if there are only two contrasts, so we don't want to calculate standard deviations in this case; numpy.all tests whether all array elements along a given axis evaluate to True.
 #    if numpy.all(covariance != numpy.inf):
 
@@ -211,10 +218,33 @@ def get_molecular_weights(other_self):
     weight_fraction_1 = molecular_weight_1/total_molecular_weight
     weight_fraction_2 = molecular_weight_2/total_molecular_weight
 
-# Do we want to calculate volume fractions here as well? Will they be needed?
+# Calculate volume fractions in case they are needed in other methods.
 
-    pgui('Total Mw (kDa), weight_fraction_1, weight_fraction_2: '+str(total_molecular_weight)+'\t'+str(weight_fraction_1)+'\t'+str(weight_fraction_2))
-    mcavars.outfile.write('Total Mw (kDa), weight_fraction_1, weight_fraction_2: '+str(total_molecular_weight)+'\t'+str(weight_fraction_1)+'\t'+str(weight_fraction_2))
+    volume_fraction_1 = partial_specific_volume_1*molecular_weight_1/(partial_specific_volume_1*molecular_weight_1 + partial_specific_volume_2*molecular_weight_2)
+    volume_fraction_2 = partial_specific_volume_2*molecular_weight_2/(partial_specific_volume_1*molecular_weight_1 + partial_specific_volume_2*molecular_weight_2)
+    
+    pgui('Total Mw (kDa): '+str(total_molecular_weight))
+    pgui('weight_fraction_1, weight_fraction_2: '+str(weight_fraction_1)+'\t'+str(weight_fraction_2))
+    pgui('volume_fraction_1, volume_fraction_2: '+str(volume_fraction_1)+'\t'+str(volume_fraction_2))
+    mcavars.outfile.write('Total Mw (kDa): '+str(total_molecular_weight)+'\n')
+    mcavars.outfile.write('weight_fraction_1, weight_fraction_2: '+str(weight_fraction_1)+'\t'+str(weight_fraction_2)+'\n')
+    mcavars.outfile.write('volume_fraction_1, volume_fraction_2: '+str(volume_fraction_1)+'\t'+str(volume_fraction_2)+'\n\n')
+
+# Calculate I(0) using the optimized molecular weight values. Use the values before rescaling so I(0) will be in the correct units. Then, calculate the residuals for plotting and writing to file.
+
+    izero_calc = numpy.zeros(mvars.number_of_contrast_points)
+    diff = numpy.zeros(mvars.number_of_contrast_points)
+    
+    for i in range(mvars.number_of_contrast_points):
+        izero_calc[i] = (mvars.concentration[i]*(optimized_molecular_weights[0] + optimized_molecular_weights[1])/Na)*(weight_fraction_1*mvars.delta_rho[i][0]*partial_specific_volume_1 + weight_fraction_2*mvars.delta_rho[i][1]*partial_specific_volume_2)**2
+        diff[i] = mvars.izero[i] - izero_calc[i]
+
+        #print('i, I(0), I(0)calc, diff: ', mvars.izero[i], izero_calc[i], diff[i])
+
+    mcavars.outfile.write('fraction_d2o        I(0)            I(0)_calc       I(0)-I(0)_calc\n')
+    for i in range(mvars.number_of_contrast_points):
+        mcavars.outfile.write('%9.4f\t%9.4f\t%9.4f\t%9.4f\n' % (mvars.fraction_d2o[i], mvars.izero[i], izero_calc[i], diff[i]))   
+
     mcavars.outfile.close()
 
     return
