@@ -99,7 +99,7 @@ class data_interpolation():
         mvars = self.mvars
         log.debug('in unpack_variables')
         
-        mvars.runname = variables['runname'][0]
+        mvars.run_name = variables['run_name'][0]
         mvars.expdata = variables['expdata'][0]
         mvars.ofile = variables['ofile'][0]
         mvars.io = variables['io'][0]
@@ -274,7 +274,7 @@ class data_interpolation():
         method to prepare for data interpolation
         '''
         
-#mvars:    runname, expdata, ofile, io, ioe, dq, maxpoints, plotflag 
+#mvars:    run_name, expdata, ofile, io, ioe, dq, maxpoints, plotflag 
 
         log = self.log
         log.debug('in initialization')
@@ -283,7 +283,7 @@ class data_interpolation():
         mvars = self.mvars
         avars = self.avars
 
-        avars.interpath = mvars.runname + '/data_interpolation/'
+        avars.interpath = mvars.run_name + '/data_interpolation/'
         direxist = os.path.exists(avars.interpath)
         if(direxist == 0):
             os.system('mkdir -p ' + avars.interpath)
@@ -330,7 +330,7 @@ class data_interpolation():
 
         INPUT:  variable descriptions:
 
-                runname:		    project name
+                run_name:		    project name
                 expdata:        input NCNR data file (*.sub)
                 io:             I(0) 
                 ioe:            Error in I(0) 
@@ -339,13 +339,13 @@ class data_interpolation():
 
         OUTPUT:
 
-                file is stored in "runname"/data_interpolation directory
+                file is stored in "run_name"/data_interpolation directory
 
                 ofile:                  output filename 
 
         '''
 
-#mvars:   runname, expdata, ofile, io, ioe, dq, maxpoints, plotflag
+#mvars:   run_name, expdata, ofile, io, ioe, dq, maxpoints, plotflag
 
         log = self.log
         pgui = self.run_utils.print_gui

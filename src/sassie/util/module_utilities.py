@@ -57,18 +57,18 @@ class run_utils():
 
         ''' grab all of the variables in the variable class instance '''
         log = other_self.log
-        mvars = other_self.module_variables
+        module_variables = other_self.module_variables
 
         log.debug('in general_setup')
 
-        input_vars = [attr for attr in dir(mvars) if not callable(getattr(mvars,attr)) and not attr.startswith("__")]
+        input_vars = [attr for attr in dir(module_variables) if not callable(getattr(module_variables,attr)) and not attr.startswith("__")]
 
         ''' put the variables into a dictionary to send to json '''
 
         input_variables = {}
 
         for var in input_vars:
-            input_variables[var] = getattr(mvars, var)
+            input_variables[var] = getattr(module_variables, var)
 
         self.v = input_variables
 

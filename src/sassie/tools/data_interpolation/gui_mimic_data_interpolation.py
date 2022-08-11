@@ -19,7 +19,7 @@ def user_variables(self, **kwargs):
     #### user input ####
     #### user input ####
 
-    self.runname = 'run_0'
+    self.run_name = 'run_0'
     self.expdata = 'sans_data.sub'
 #    self.expdata = 'trunc2a_saxs.sub'
     self.ofile = 'sans_data.dat'
@@ -54,7 +54,7 @@ def test_variables(self,paths):
     module_data_path = paths['module_data_path']
     other_data_path = paths['other_data_path']
 
-    self.runname = 'run_0'
+    self.run_name = 'run_0'
     self.expdata = os.path.join(other_data_path,'sans_data.sub')
     self.ofile = 'sans_data.dat'
     self.io = '0.04'
@@ -75,7 +75,7 @@ def run_module(self, **kwargs):
 
     svariables={}
 
-    svariables['runname'] = (self.runname,'string')
+    svariables['run_name'] = (self.run_name,'string')
     svariables['expdata'] = (self.expdata,'string')
     svariables['ofile'] = (self.ofile,'string')
     svariables['io'] = (self.io,'float')
@@ -109,10 +109,10 @@ def run_module(self, **kwargs):
     except:
         pass
 
-    runname = self.variables['runname'][0]
+    run_name = self.variables['run_name'][0]
 
-    if os.path.exists(os.path.join(runname, self.module)):
-        shutil.rmtree(os.path.join(runname, self.module))
+    if os.path.exists(os.path.join(run_name, self.module)):
+        shutil.rmtree(os.path.join(run_name, self.module))
 
     txtQueue = multiprocessing.JoinableQueue()
     this_interpolate = data_interpolation.data_interpolation()
