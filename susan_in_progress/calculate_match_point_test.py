@@ -99,9 +99,9 @@ if __name__ == "__main__":
 
     import matplotlib.pyplot as plt 
     path = ('./')
-    input_file_name = os.path.join(path,'test_matchpoint.txt')
+    input_file_name = os.path.join(path,'test_matchpoint1.txt')
     print (input_file_name)
-    output_file_name = os.path.join(path,'matchpoint4.out')
+    output_file_name = os.path.join(path,'matchpoint_testdata.out')
     initial_match_point_guess = 0.4
     mode = 1
 
@@ -131,9 +131,13 @@ if __name__ == "__main__":
         fraction_d2o[i] = words[i][0]
         izero[i] = words[i][1]
         izero_error[i] = words[i][2]
-        concentration[i] = 0.9
-        concentration_error[i] = 0.09
-#        print('i, fraction_d2o[i], izero[i], izero_error[i], concentration, concentration_error: ', i, fraction_d2o[i], izero[i], izero_error[i], concentration[i], concentration_error[i])
+        if(i == 3):
+            concentration[i] = 26.9
+            concentration_error[i] = 1.3
+        else:
+            concentration[i] = 11.9
+            concentration_error[i] = 0.6
+        print('i, fraction_d2o[i], izero[i], izero_error[i], concentration, concentration_error: ', i, fraction_d2o[i], izero[i], izero_error[i], concentration[i], concentration_error[i])
         
     match_point, match_point_error, square_root_izero, square_root_izero_error, ycalc, diff, r_value, reduced_chi_squared = calculate_match_point(izero, izero_error, concentration, concentration_error, fraction_d2o, number_of_data_points, initial_match_point_guess, mode)
 
@@ -150,10 +154,11 @@ if __name__ == "__main__":
 
     fig, (ax0,ax1) = plt.subplots(nrows=2, sharex=True)
 
-    ax0.errorbar(fraction_d2o, square_root_izero, yerr=square_root_izero_error, fmt='bo', markersize = 2)
-    ax0.plot(fraction_d2o,ycalc,'r--')
+    ax0.errorbar(fraction_d2o, square_root_izero, yerr=square_root_izero_error, fmt='bo', markersize = 2, label = "data")
+    ax0.plot(fraction_d2o,ycalc,'r--', label = "calc")
     ax0.set_title('data')
     ax0.set_ylabel('sqrt[I(0)/c]')
+    ax0.legend(loc="upper right")    
 #
     ax1.plot(fraction_d2o, diff, 'ko', markersize = 5)
     ax1.set_title('residuals')

@@ -1,5 +1,5 @@
 '''
-    SASSIE: Copyright (C) 2011 Joseph E. Curtis, Ph.D.
+    SASSIE: Copyright (C) 2011 Joseph E. Curtis, Ph.D. 
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -13,7 +13,7 @@
 
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
+    
 '''
 import os
 import string
@@ -42,7 +42,7 @@ import sassie.util.sasconfig as sasconfig
         Numerical Recipes: The Art of Scientific Computing
         Third Edition (2007), 1256 pp.
         Cambridge University Press
-        ISBN-10: 0521880688
+        ISBN-10: 0521880688	
 '''
 
 
@@ -51,18 +51,15 @@ if sasconfig.__level__ == "DEBUG":
 
 app = 'data_interpolation'
 
-
 class module_variables():
 
     def __init__(self, parent=None):
         self.app = app
 
-
 class data_interpolation_variables():
 
     def __init__(self, parent=None):
         pass
-
 
 class data_interpolation():
 
@@ -93,7 +90,7 @@ class data_interpolation():
 
         return
 
-    def unpack_variables(self, variables):
+    def unpack_variables(self,variables):
         '''
         method to extract variables into system wise class instance
         '''
@@ -101,7 +98,7 @@ class data_interpolation():
         log = self.log
         mvars = self.module_variables
         log.debug('in unpack_variables')
-
+        
         mvars.run_name = variables['run_name'][0]
         mvars.expdata = variables['expdata'][0]
         mvars.ofile = variables['ofile'][0]
@@ -115,7 +112,8 @@ class data_interpolation():
 
         return
 
-    def wait(self, str=None, prompt='Plot will clear in 10 seconds ...\n'):
+
+    def wait(self,str=None, prompt='Plot will clear in 10 seconds ...\n'):
         '''
         WAIT is the function to prompt the user to clear a plot on a screen
         '''
@@ -143,12 +141,13 @@ class data_interpolation():
 #
 #        return
 
-    def readfile(self, data_file):
+
+    def readfile(self,data_file):
         '''
         READFILE is the function to read NCNR SANS data files
         '''
         log = self.log
-        pgui = self.run_utils.print_gui
+        pgui = self.run_utils.print_gui        
         log.debug('in readfile')
 
         mvars = self.module_variables
@@ -191,10 +190,11 @@ class data_interpolation():
         if fake_error:
             message = 'Error values in I(q) were set to be ' + str(100 * error_magnitude) + '% of I(0) values since appropriate values were not found'
             pgui(message)
+            
 
         return
 
-    def spline(self, array):
+    def spline(self,array):
         '''
         SPLINE is the function to calculate an approximate data set
         '''
@@ -203,7 +203,7 @@ class data_interpolation():
         log.debug('in spline')
 
         mvars = self.module_variables
-        divars = self.data_interpolation_variables
+        divars = self.data_interpolation_variables             
 
         u = numpy.zeros(divars.nval)
         divars.array2 = numpy.zeros(divars.nval)
@@ -214,16 +214,13 @@ class data_interpolation():
             u[0] = 0.0
         else:
             divars.array2[0] = -0.5
-            u[0] = (3.0 / (divars.x[1] - divars.x[0])) * ((array[
-                    1] - array[0]) / (divars.x[1] - divars.x[0]) - divars.yp1)
+            u[0] = (3.0 / (divars.x[1] - divars.x[0])) * ((array[1] - array[0]) / (divars.x[1] - divars.x[0]) - divars.yp1)
         for i in range(1, divars.nval - 2):
-            sig = (divars.x[i] - divars.x[i - 1]) / (divars.x[
-                   i + 1] - divars.x[i - 1])
+            sig = (divars.x[i] - divars.x[i - 1]) / (divars.x[i + 1] - divars.x[i - 1])
             p = sig * divars.array2[i - 1] + 2.0
             divars.array2[i] = (sig - 1.0) / p
             u[i] = (array[i + 1] - array[i]) / (divars.x[i + 1] - divars.x[i]) - (array[i] - array[i - 1]) / (divars.x[i] - divars.x[i - 1])
-            u[i] = (6.0 * u[i] / (divars.x[i + 1] - divars.x[
-                    i - 1]) - sig * u[i - 1]) / p
+            u[i] = (6.0 * u[i] / (divars.x[i + 1] - divars.x[i - 1]) - sig * u[i - 1]) / p
 
         if(divars.ypn > maxval):
             qn = 0.0
@@ -231,17 +228,17 @@ class data_interpolation():
         else:
             qn = 0.5
             un = (3.0 / (divars.x[divars.nval - 1] - divars.x[divars.nval - 2])) * (divars.ypn -
-                                                                                    (array[divars.nval - 1] - array[divars.nval - 2]) / (divars.x[divars.nval - 1] - divars.x[divars.nval - 2]))
+                                                    (array[divars.nval - 1] - array[divars.nval - 2]) / (divars.x[divars.nval - 1] - divars.x[divars.nval - 2]))
 
-        divars.array2[divars.nval - 1] = (un - qn * u[divars.nval - 2]) / (
-            qn * divars.array2[divars.nval - 2] + 1.0)
+        divars.array2[divars.nval - 1] = (un - qn * u[divars.nval - 2]) / (qn * divars.array2[divars.nval - 2] + 1.0)
 
         for k in range(divars.nval - 2, -1, -1):
             divars.array2[k] = divars.array2[k] * divars.array2[k + 1] + u[k]
+    
+        return 
 
-        return
 
-    def splint(self, array, array2):
+    def splint(self,array,array2):
 
         log = self.log
         log.debug('in splint')
@@ -266,16 +263,18 @@ class data_interpolation():
         b = (divars.ux - divars.x[klo]) / h
         divars.nyval = a * array[klo] + b * array[khi] + \
             ((a * a * a - a) * array2[klo] +
-             (b * b * b - b) * array2[khi]) * (h * h) / 6.0
+            (b * b * b - b) * array2[khi]) * (h * h) / 6.0
 
-        return
+        return 
+
+
 
     def initialization(self):
         '''
         method to prepare for data interpolation
         '''
-
-#mvars:    run_name, expdata, ofile, io, ioe, dq, maxpoints, plotflag
+        
+#mvars:    run_name, expdata, ofile, io, ioe, dq, maxpoints, plotflag 
 
         log = self.log
         log.debug('in initialization')
@@ -322,26 +321,27 @@ class data_interpolation():
 
         return
 
+
     def interpolate(self):
         '''
-        INTERPOLATE is the function to read in variables from GUI input and
+        INTERPOLATE is the function to read in variables from GUI input and 
         calculate an approximate data set to be used in subsequent modeling
-        steps.
+        steps. 
 
         INPUT:  variable descriptions:
 
                 run_name:		    project name
                 expdata:        input NCNR data file (*.sub)
-                io:             I(0)
-                ioe:            Error in I(0)
-                dq:             new delta q
+                io:             I(0) 
+                ioe:            Error in I(0) 
+                dq:             new delta q 
                 maxpoints:      number of new points
 
         OUTPUT:
 
                 file is stored in "run_name"/data_interpolation directory
 
-                ofile:                  output filename
+                ofile:                  output filename 
 
         '''
 
@@ -383,7 +383,7 @@ class data_interpolation():
         outfile3.write('%f\t%f\t%f\n' % (0.0, mvars.io, mvars.ioe))
         divars.io_tally.append([0.0, mvars.io, mvars.ioe])
         divars.ux = 0.00
-        pgui("\nSignal to noise cutoff value: %s\n" % (str(divars.cutval)))
+        pgui("\nSignal to noise cutoff value: %s\n" %(str(divars.cutval)))
         for i in range(mvars.maxpoints - 1):
             divars.ux = divars.ux + mvars.dq
             splint(divars.y, divars.y2)
@@ -393,8 +393,7 @@ class data_interpolation():
             divars.io_tally.append([divars.ux, divars.ny, divars.nz])
             outfile2.write('%f\t%f\t%f\n' % (divars.ux, divars.ny, divars.nz))
             if(divars.ux <= divars.cutval):
-                outfile3.write(
-                    '%f\t%f\t%f\n' % (divars.ux, divars.ny, divars.nz))
+                outfile3.write('%f\t%f\t%f\n' % (divars.ux, divars.ny, divars.nz))
 
         outfile2.close()
         outfile3.close()
@@ -425,12 +424,12 @@ class data_interpolation():
 #        print 'Interpolated data with S/N > 2 were written to %s\n' % ('./' + divars.interpath + 'stn_' + mvars.ofile)
 #        print '\ndelta q = %f\t : number of q-points = %i\t : q-range: q = 0 to %f\n' % (mvars.dq, mvars.maxpoints, (mvars.maxpoints - 1) * mvars.dq)
         pgui("\nInterpolated data were written to %s\n" %
-             ('./' + divars.interpath + mvars.ofile))
+                     ('./' + divars.interpath + mvars.ofile))
         pgui("\nInterpolated data with S/N > 2 were written to %s\n\n" %
-             ('./' + divars.interpath + 'stn_' + mvars.ofile))
+                    ('./' + divars.interpath + 'stn_' + mvars.ofile))
         pgui("\ndelta q = %f (1/A)\n\nnumber of q-points = %i\n\nq-range: 0 to %f (1/A)\n" %
-             (mvars.dq, mvars.maxpoints, (mvars.maxpoints - 1) * mvars.dq))
-
+                    (mvars.dq, mvars.maxpoints, (mvars.maxpoints - 1) * mvars.dq))
+    
         if(mvars.plotflag == 1):
             graph = Gnuplot.Gnuplot(debug=1)
             graph.clear()
@@ -438,11 +437,9 @@ class data_interpolation():
             graph.xlabel('Q (1/A)')
             graph.ylabel('I(Q)')
             graph('set logscale y')
-
-            graph.plot(
-                Gnuplot.Data(
-                    divars.odata, using='1:2 w p ps 4', title='Original Data'), Gnuplot.Data(divars.io_tally, using='1:2 w lp ps 2',
-                                                                                             title='Interpolated Data'), Gnuplot.Data(divars.cut, title='[I(Q)/(std.dev. I(Q))] < 2', using='1:2:3 w yerrorbars'))
+        
+            graph.plot(Gnuplot.Data(divars.odata, using='1:2 w p ps 4', title='Original Data'), Gnuplot.Data(divars.io_tally, using='1:2 w lp ps 2',
+                title='Interpolated Data'), Gnuplot.Data(divars.cut, title='[I(Q)/(std.dev. I(Q))] < 2', using='1:2:3 w yerrorbars'))
 
         time.sleep(2)
 
@@ -457,3 +454,4 @@ class data_interpolation():
         time.sleep(1.0)
 
         return
+

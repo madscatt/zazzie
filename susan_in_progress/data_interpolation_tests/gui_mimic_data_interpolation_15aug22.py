@@ -13,7 +13,6 @@ import sassie.interface.input_filter_sasmol as input_filter
 import sassie.interface.data_interpolation.interpolate_filter as interpolate_filter
 import multiprocessing
 
-
 def user_variables(self, **kwargs):
 
     #### user input ####
@@ -35,13 +34,12 @@ def user_variables(self, **kwargs):
     self.plotflag = '0'
 
     self.testflag = False
-
+    
     #### end user input ####
     #### end user input ####
     #### end user input ####
 
-
-def test_variables(self, paths):
+def test_variables(self,paths):
     '''
     users of gui_mimic as a driver script to run this module should not edit the values below as they
     are used for development tests
@@ -57,7 +55,7 @@ def test_variables(self, paths):
     other_data_path = paths['other_data_path']
 
     self.run_name = 'run_0'
-    self.expdata = os.path.join(other_data_path, 'sans_data.sub')
+    self.expdata = os.path.join(other_data_path,'sans_data.sub')
     self.ofile = 'sans_data.dat'
     self.io = '0.04'
     self.ioe = '0.001'
@@ -67,25 +65,24 @@ def test_variables(self, paths):
 
     self.testflag = True
 
-
 def run_module(self, **kwargs):
     '''
     method to run the module and/or its input filter
     only the module input filter is run if kwargs is: test_filter=True
-    method is defined outside the class so that it can be used
+    method is defined outside the class so that it can be used 
     by other programs such as test_module and test_module_filter
     '''
 
-    svariables = {}
+    svariables={}
 
-    svariables['run_name'] = (self.run_name, 'string')
-    svariables['expdata'] = (self.expdata, 'string')
-    svariables['ofile'] = (self.ofile, 'string')
-    svariables['io'] = (self.io, 'float')
-    svariables['ioe'] = (self.ioe, 'float')
-    svariables['dq'] = (self.dq, 'float')
-    svariables['maxpoints'] = (self.maxpoints, 'int')
-    svariables['plotflag'] = (self.plotflag, 'int')
+    svariables['run_name'] = (self.run_name,'string')
+    svariables['expdata'] = (self.expdata,'string')
+    svariables['ofile'] = (self.ofile,'string')
+    svariables['io'] = (self.io,'float')
+    svariables['ioe'] = (self.ioe,'float')
+    svariables['dq'] = (self.dq,'float')
+    svariables['maxpoints'] = (self.maxpoints,'int')
+    svariables['plotflag'] = (self.plotflag,'int')
 
     error, self.variables = input_filter.type_check_and_convert(svariables)
     if len(error) > 0:
@@ -98,8 +95,7 @@ def run_module(self, **kwargs):
         if kwargs['file_check']:
             error = interpolate_filter.check_interpolate(self.variables)
     except:
-        error = interpolate_filter.check_interpolate(
-            self.variables, no_file_check="true")
+        error = interpolate_filter.check_interpolate(self.variables, no_file_check="true")
 
     if(len(error) > 0):
         print 'error = ', error
@@ -161,3 +157,5 @@ if __name__ == '__main__':
     start = time.time()
     run_gui = gui_mimic_data_interpolation(test, paths)
     print "time used: ", time.time() - start
+
+

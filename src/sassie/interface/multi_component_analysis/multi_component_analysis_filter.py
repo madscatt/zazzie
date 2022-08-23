@@ -48,6 +48,9 @@
         concentration
         concentration_error
         partial_specific_volume
+        molecular_weight
+        radius_of_gyration
+        radius_of_gyration_error
         delta_rho
             
     OUTPUTS:
@@ -105,10 +108,10 @@ def check_multi_component_analysis(variables, **kwargs):
         error.append('at least one method must be selected')
         return error
 
-#TODO:  Do we need to check of only one flag is True? Will more than one flag be allowed to be True at a time to execute methods sequentially? Right now, this is not the way the program is envisioned.  Like MulCh, you would choose a method and execute it.  Then choose another an execute, etc.  If the method is selected by a drop down menu, then we don't need to check to make sure that at least one flag is chosen and that only one flag is True.
+#TODO:  Do we need to check if only one flag is True? Will more than one flag be allowed to be True at a time to execute methods sequentially? Right now, this is not the way the program is envisioned.  Like MulCh, you would choose a method and execute it.  Then choose another an execute, etc.  If the method is selected by a drop down menu, then we don't need to check to make sure that at least one flag is chosen and that only one flag is True.
         
 #check the multi_component analysis variables depending on the method.
-    print('len frac d2o: ', len(fraction_d2o))
+#    print('len frac d2o: ', len(fraction_d2o))
 #variables common to all methods:  fraction_d2o
 #check if length of fraction D2O = number of contrasts
     if(len(fraction_d2o) != number_of_contrast_points):
@@ -119,9 +122,6 @@ def check_multi_component_analysis(variables, **kwargs):
         if(fraction_d2o[i] < 0 or fraction_d2o[i] > 1):
             error.append('fraction D2O[%i] must be between 0 and 1' %(i))
             return error
-
-#TODO: make only one test for variables common to more than one method? Would need to test for one method OR another and put a single test there.
-
 
     if(stoichiometry_flag == True):
         number_of_components = variables['number_of_components'][0]
@@ -146,7 +146,7 @@ def check_multi_component_analysis(variables, **kwargs):
             if(len(delta_rho) != number_of_contrast_points):
                 error.append('delta rho must have %i sets of values' %(number_of_contrast_points))
                 return error
-#check if length delta_rho[i] = number of components. 
+#check if length delta_rho[i] = number of components 
             for i in range(number_of_contrast_points):
                 if(len(delta_rho[i]) != number_of_components):
                     error.append('delta rho[%i] must have %i values' %(i,number_of_components))
@@ -163,7 +163,7 @@ def check_multi_component_analysis(variables, **kwargs):
         concentration = variables['concentration'][0]
         concentration_error = variables['concentration_error'][0]
         initial_match_point_guess = variables['initial_match_point_guess'][0]
-        print('init matchpoint guess: ', initial_match_point_guess)
+#        print('init matchpoint guess: ', initial_match_point_guess)
         
 #check if length of izero, izero_error, concentration and concentration_error = number of contrasts
         if(len(izero) != number_of_contrast_points):
@@ -190,6 +190,50 @@ def check_multi_component_analysis(variables, **kwargs):
         if(initial_match_point_guess < 0 or initial_match_point_guess > 1):
             error.append('initial match point guess must be between 0 and 1')
             return error
+
+
+    elif(stuhrmann_parallel_axis_flag == True):
+        number_of_components = variables['number_of_components'][0]
+        molecular_weight = variables['molecular_weight'][0]
+        partial_specific_volume = variables['partial_specific_volume'][0]
+        radius_of_gyration = variables['radius_of_gyration'][0]
+        radius_of_gyration_error = variables['radius_of_gyration_error'][0]
+        delta_rho = variables['delta_rho'][0]
+
+#check if number of contrast points is >= the number of components
+        if(number_of_contrast_points < number_of_components):
+            error.append('number of contrasts must be >= number of components')
+            return error
+#delta_rho_checks if the values are input by hand
+        if(read_from_file == False):
+            if(len(delta_rho) != number_of_contrast_points):
+                error.append('delta rho must have %i sets of values' %(number_of_contrast_points))
+                return error
+#check if length delta_rho[i] = number of components. 
+            for i in range(number_of_contrast_points):
+                if(len(delta_rho[i]) != number_of_components):
+                    error.append('delta rho[%i] must have %i values' %(i,number_of_components))
+                    return error
+#check if length of partial specific volume = number of components
+        if(len(partial_specific_volume) != number_of_components):
+            error.append('partial_specific_volume must have %i values' %(number_of_components))
+            return error
+#check if length of molecular weight = number of components
+        if(len(molecular_weight) != number_of_components):
+            error.append('Mw must have %i values' %(number_of_components))
+            return error
+#check if length of izero, concentration and delta_rho = number of contrasts
+        if(len(radius_of_gyration) != number_of_contrast_points):
+            error.append('Rg must have %i values' %(number_of_contrast_points))
+            return error
+        if(len(radius_of_gyration_error) != number_of_contrast_points):
+            error.append('Rg error must have %i values' %(number_of_contrast_points))
+            return error
+#check if radius_of_gyration_error is non-zero since a weighted fit is performed
+        for i in range(number_of_contrast_points):
+                if(radius_of_gyration_error[i] == 0.0):
+                    error.append('Rg error[%i] cannot equal zero' %(i))
+                    return error
 
     return error
 

@@ -78,6 +78,20 @@ def user_variables(self, **kwargs):
 #    self.concentration = '0.9, 0.9, 0.9, 0.9, 0.9'
     self.concentration_error = '0.09, 0.09, 0.09, 0.09, 0.09'
     self.initial_match_point_guess = '0.3'
+
+#   stuhrmann parallel axis variables
+#    self.number_of_contrast_points = '7'
+#    self.output_file_name = 'stuhrmann_parallel_axis_testdata.out'
+#    self.fraction_d2o = '1.0, 0.9, 0.8, 0.4, 0.2, 0.1, 0.0' 
+#    self.number_of_components = '2'
+#    self.read_from_file = True
+#    self.input_file_name = os.path.join(self.path,'mulch_test_data_contrast.txt') #this only matters if read_from_file = True
+#    self.partial_specific_volume = '0.73, 0.73'  # 1 value for each component
+    self.molecular_weight = '50.7, 11.7' #kDa
+#delta_rho needs to have some default values here if being read from file to avoid error in input filter. These values will be superceded by the new values read from an input file if read_from_file = True. 
+#    self.delta_rho = '-3.34, 0.41; -2.78, 0.98; -2.21, 1.54; 0.055, 3.80; 1.18, 4.93; 1.75, 5.49; 2.31, 6.06' # 2 values for each contrast since there are 2 components.  
+    self.radius_of_gyration = '25.11, 24.16, 23.03, 23.4, 28.22, 28.33, 28.85'
+    self.radius_of_gyration_error = '0.09, 0.14, 0.2, 0.7, 0.29, 0.19, 0.12'
  
     #stoichiometry analysis variables:
     self.number_of_contrast_points = '3' # must be >= number of components (2 in this case)
@@ -86,7 +100,7 @@ def user_variables(self, **kwargs):
     self.input_file_name = os.path.join(self.path,'input_contrast.txt') #this only matters if read_from_file = True
     self.output_file_name = '99_12_41.out'
     self.fraction_d2o = '0.99, 0.12, 0.41'  # 1 value for each contrast
-    self.izero = '11.8, 0.6, 0.17'  # 1 value for each contrast
+    self.izero = '8.4, 0.6, 0.17'  # 1 value for each contrast
     self.concentration = '3.7, 3.6, 3.1'  # 1 value for each contrast
 #if read_from_file = True, then partial_specific_volume needs to be input IN THE SAME ORDER as the delta_rho values will be read from the file. We need to set up the GUI in such a way that this will be easy to do.
     self.partial_specific_volume = '0.745, 0.903'  # 1 value for each component
@@ -167,6 +181,9 @@ def run_module(self, **kwargs):
     svariables['concentration'] = (self.concentration, 'float_array')
     svariables['concentration_error'] = (self.concentration_error, 'float_array')
     svariables['partial_specific_volume'] = (self.partial_specific_volume, 'float_array')
+    svariables['molecular_weight'] = (self.molecular_weight, 'float_array')
+    svariables['radius_of_gyration'] = (self.radius_of_gyration, 'float_array')
+    svariables['radius_of_gyration_error'] = (self.radius_of_gyration_error, 'float_array')
     svariables['delta_rho'] = (self.delta_rho, 'nested_float_array')
 
 

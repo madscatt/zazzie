@@ -66,9 +66,6 @@ import string
 import locale
 import time
 
-import numpy
-import scipy.optimize
-
 import sassie.util.module_utilities as module_utilities
 import sassie.util.sasconfig as sasconfig
 import sassie.interface.input_filter_sasmol as input_filter
@@ -76,6 +73,7 @@ import sassie.interface.input_filter_sasmol as input_filter
 import read_contrast_output_files as read_contrast_output_files
 import match_point as match_point
 import stoichiometry as stoichiometry
+import stuhrmann_parallel_axis as stuhrmann_parallel_axis
 
 
 if sasconfig.__level__ == "DEBUG":
@@ -124,6 +122,11 @@ class multi_component_analysis():
 
             stoichiometry.get_molecular_weights(self)
 
+        elif self.module_variables.stuhrmann_parallel_axis_flag:
+
+            stuhrmann_parallel_axis.parallel_axis(self)
+            stuhrmann_parallel_axis.stuhrmann(self)
+
         self.epilogue()
 
         return
@@ -138,29 +141,29 @@ class multi_component_analysis():
         mvars = self.module_variables
         log.debug('in unpack_variables')
 
+#Unpack the variables that are used for all methods.
         mvars.run_name = variables['run_name'][0]
         mvars.output_file_name = variables['output_file_name'][0]
-        mvars.input_file_name = variables['input_file_name'][0]
-        mvars.read_from_file = variables['read_from_file'][0]
         mvars.number_of_contrast_points = variables['number_of_contrast_points'][0]
-        mvars.number_of_components = variables['number_of_components'][0]
         mvars.stoichiometry_flag = variables['stoichiometry_flag'][0]
         mvars.match_point_flag = variables['match_point_flag'][0] 
         mvars.stuhrmann_parallel_axis_flag = variables['stuhrmann_parallel_axis_flag'][0]
         mvars.decomposition_flag = variables['decomposition_flag'][0]
         mvars.fraction_d2o = variables['fraction_d2o'][0]
 
-#unpack the variables that are unique to each method. If some variables turn out to be needed for all methods, then they can be unpacked above before checking the flags. The read_from_file if statement may not be needed if the GUI is going to be populated with these values prior to running the main program.
+#Unpack the additional variables that are unique to each method. The read_from_file if statement may not be needed if the GUI is going to be populated with these values prior to running the main program.
         if mvars.stoichiometry_flag == True:
+            mvars.input_file_name = variables['input_file_name'][0]
+            mvars.read_from_file = variables['read_from_file'][0]
             mvars.izero = variables['izero'][0]
             mvars.concentration = variables['concentration'][0]
             mvars.partial_specific_volume = variables['partial_specific_volume'][0]
+            mvars.number_of_components = variables['number_of_components'][0]
 
             if mvars.read_from_file == True:
                 read_contrast_output_files.read_contrast_file(self)
 #                print('delta rho after reading from file: ', mvars.delta_rho)
                 log.debug('delta rho after reading from file: %s' % (str(mvars.delta_rho)))
-#               mvars.delta_rho = delta_rho_read_from_file
             elif mvars.read_from_file == False:
                 mvars.delta_rho = variables['delta_rho'][0]
                 
@@ -171,14 +174,28 @@ class multi_component_analysis():
             mvars.concentration_error = variables['concentration_error'][0]
             mvars.initial_match_point_guess = variables['initial_match_point_guess'][0]
 
+        elif mvars.stuhrmann_parallel_axis_flag == True:
+            mvars.input_file_name = variables['input_file_name'][0]
+            mvars.read_from_file = variables['read_from_file'][0]
+            mvars.partial_specific_volume = variables['partial_specific_volume'][0]
+            mvars.molecular_weight = variables['molecular_weight'][0]
+            mvars.number_of_components = variables['number_of_components'][0]
+            mvars.radius_of_gyration = variables['radius_of_gyration'][0]
+            mvars.radius_of_gyration_error = variables['radius_of_gyration_error'][0]
+            
+            if mvars.read_from_file == True:
+                read_contrast_output_files.read_contrast_file(self)
+#                print('delta rho after reading from file: ', mvars.delta_rho)
+                log.debug('delta rho after reading from file: %s' % (str(mvars.delta_rho)))
+            elif mvars.read_from_file == False:
+                mvars.delta_rho = variables['delta_rho'][0]
+
 #        print(vars(mvars))
 
         log.debug(vars(mvars))
 
         return
 
-
-#Will there be multiple initialization methods depending on which analysis is being done?  If so, the initialization and main method for each analysis should be in a separate file (formatted like read_contrast_output_files).
 
     def multi_component_analysis_initialization(self):
         '''
@@ -187,12 +204,27 @@ class multi_component_analysis():
         
         INPUTS:
             module variables
+                run_name
+                output_file_name
+                input_file_name
+                read_from_file
+                number_of_contrast_points
+                number_of_components
                 stoichiometry_flag
                 match_point_flag
-                stuhrmann_parallel_axis_flag 
+                stuhrmann_parallel_axis_flag
                 decomposition_flag
-                run_name 
-                read_from_file   
+                fraction_d2o
+                initial_matchpoint_guess
+                izero
+                izero_error
+                concentration
+                concentration_error
+                partial_specific_volume
+                molecular_weight
+                radius_of_gyration
+                radius_of_gyration_error
+                delta_rho   
         
         OUTPUTS:
             variables added to multi_component analysis variables
@@ -208,7 +240,7 @@ class multi_component_analysis():
         mcavars = self.multi_component_analysis_variables
 
         
-# Need to ask which method is being initialized to put a sub-path for the method used, i.e., multi_component_analysis/method.
+# Need to ask which method is being initialized to put a sub-path for the method used.
         if mvars.stoichiometry_flag == True:
             if (mvars.run_name[-1] == '/'):
                 log.debug('run_name(1) = %s' % (mvars.run_name))
@@ -227,22 +259,41 @@ class multi_component_analysis():
                 log.debug('run_name(2) = %s' % (mvars.run_name))
                 mcavars.multi_component_analysis_path = mvars.run_name + '/multi_component_analysis/match_point/'
                 log.debug('multi_component_analysis_path = %s' % (mcavars.multi_component_analysis_path))
-
+        elif mvars.stuhrmann_parallel_axis_flag == True:
+            if (mvars.run_name[-1] == '/'):
+                log.debug('run_name(1) = %s' % (mvars.run_name))
+                mcavars.multi_component_analysis_path = mvars.run_name + 'multi_component_analysis/stuhrmann_parallel_axis/'
+                log.debug('multi_component_analysis_path = %s' % (mcavars.multi_component_analysis_path))
+            else:
+                log.debug('run_name(2) = %s' % (mvars.run_name))
+                mcavars.multi_component_analysis_path = mvars.run_name + '/multi_component_analysis/stuhrmann_parallel_axis/'
+                log.debug('multi_component_analysis_path = %s' % (mcavars.multi_component_analysis_path))
+# calculate the volume fraction of each component from the partial specific volume and molecular weight
+            total_volume = 0.0
+            mcavars.volume_fraction = []
+            for i in range(mvars.number_of_components):
+                total_volume = total_volume + mvars.molecular_weight[i]*mvars.partial_specific_volume[i]
+#            print('total volume: ', total_volume)
+            for i in range(mvars.number_of_components):
+                volume_fraction = mvars.molecular_weight[i]*mvars.partial_specific_volume[i]/total_volume
+                mcavars.volume_fraction.append(volume_fraction)
+#            print('volume fraction: ', mcavars.volume_fraction)
         direxist = os.path.exists(mcavars.multi_component_analysis_path)
         if(direxist == 0):
             os.system('mkdir -p ' + mcavars.multi_component_analysis_path)
 
-        # this is just to write the contrast calculator filename into the output file so we know this option was used
+# this is just to write the contrast calculator filename into the output file so we know this option was used
         mcavars.outfile = io.open(mcavars.multi_component_analysis_path+mvars.output_file_name, 'w')
 
-        if mvars.read_from_file == True:
-#            pgui('input file: %s' % (mvars.input_file_name))
-            mcavars.outfile.write('input file: ' + mvars.input_file_name +'\n')
-        else:
-#            pgui('input file: None')
-            mcavars.outfile.write('input file: None\n')
+        if mvars.stoichiometry_flag == True or mvars.stuhrmann_parallel_axis_flag == True:
+            if mvars.read_from_file == True:
+                pgui('\ninput file: %s' % (mvars.input_file_name))
+                mcavars.outfile.write('input file: ' + mvars.input_file_name +'\n')
+            else:
+                pgui('\ninput file: None')
+                mcavars.outfile.write('input file: None\n')
             
-#TODO: write out the individual input variables on separate lines and only write out the ones that are relevant for the method being used
+#TODO: write out the individual input variables on separate lines and only write out the ones that are relevant for the method being used.  For stuhrmann_parallel_axis, include volume fraction.
         mcavars.outfile.write('input variables: ' + repr(vars(mvars)) + '\n')
  
         log.debug(vars(mvars))
