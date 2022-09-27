@@ -16,16 +16,20 @@ ifeq ($(_ARCH), Darwin)
     NVCC=/usr/local/cuda/bin/nvcc
 endif
 ifeq ($(_ARCH), Linux)
-    INCDIR+=-I/share/apps/local/cuda/include
-    INCDIR+=-I/share/apps/local/include
-    CC=/share/apps/local/bin/g++
+    #INCDIR+=-I/share/apps/local/cuda/include
+    INCDIR+=-I/usr/include
+    #INCDIR+=-I/share/apps/local/include
+    INCDIR+=-I/usr/include/hdf5/serial
+    INCDIR+=-I/usr/local/cuda/include
+    #CC=/share/apps/local/bin/g++
     CC=g++
-    NVCC=/share/apps/local/cuda/bin/nvcc
+    #NVCC=/share/apps/local/cuda/bin/nvcc
+    NVCC=/usr/local/cuda/bin/nvcc
 endif
 
 CCFLAGS=-fPIC -g -std=c++11
 
-NVCCFLAGS=-Xcompiler -fPIC -DCUCC_ID="nVidia" -DBLD_PROCEDURE -DWITH_GSL -DHAVE_INLINE -DWITH_CUDA -DWITH_MPI -DPARALLEL -DWITH_PARALLEL_IO  $(CUDA_ARCH) -g -G -arch=sm_30
+NVCCFLAGS=-Xcompiler -fPIC -DCUCC_ID="nVidia" -DBLD_PROCEDURE -DWITH_GSL -DHAVE_INLINE -DWITH_CUDA -DWITH_MPI -DPARALLEL -DWITH_PARALLEL_IO  $(CUDA_ARCH) -g -G #-arch=sm_30
 
 LIBNAME=sascalc
 CUDA_LIBNAME=cudaSascalc

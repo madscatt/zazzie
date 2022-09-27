@@ -47,12 +47,12 @@ PyObject *initialize(PyObject *self, PyObject *args)
     double *B_xray = (double*)(pyArray_B_xray->data);
     if(DEBUG) printf("B_xray: %f %f %f %f\n",B_xray[0],B_xray[1],B_xray[2],B_xray[3]);
 
-    std::string xon(PyString_AsString(PyObject_GetAttrString(py_sascalc_inputs, "xon")));
+    std::string xon(PyBytes_AsString(PyObject_GetAttrString(py_sascalc_inputs, "xon")));
     int neutron_flag=0, xray_flag=0;
     if (xon==std::string("neutron") or xon==std::string("neutron_and_xray")) neutron_flag = 1;
     if (xon==std::string("xray") or xon==std::string("neutron_and_xray")) xray_flag = 1;
 
-    const int Nq = PyInt_AsLong(PyObject_GetAttrString(py_sascalc_inputs, "number_q_values"));
+    const int Nq = PyLong_AsLong(PyObject_GetAttrString(py_sascalc_inputs, "number_q_values"));
     const double Qmax = PyFloat_AsDouble(PyObject_GetAttrString(py_sascalc_inputs, "q_max"));
     if(DEBUG) printf("Nq: %d, Qmax: %f\n",Nq,Qmax);
 
@@ -60,8 +60,8 @@ PyObject *initialize(PyObject *self, PyObject *args)
     std::vector<sascalc::ScVars::neutron_contrast_t> neutron_contrasts_vector;
     if (neutron_flag)
     {
-        int Ncontrasts = PyInt_AsLong(PyObject_GetAttrString(py_sascalc_inputs, "number_contrast_points"));
-        double D2O_percentage, I0;
+        int Ncontrasts = PyLong_AsLong(PyObject_GetAttrString(py_sascalc_inputs, "number_contrast_points"));
+        double D2O_percentage ; //, I0;
         if (Ncontrasts<0) Ncontrasts=0;
         for (int i=0; i<Ncontrasts; ++i)
         {
@@ -74,12 +74,13 @@ PyObject *initialize(PyObject *self, PyObject *args)
     // exH region data
     sascalc::ScVars::neutron_exH_t neutron_exH;
     std::vector<sascalc::ScVars::neutron_exH_t> neutron_exH_vector;
-    const int NexH = PyInt_AsLong(PyObject_GetAttrString(py_sascalc_inputs, "number_exH_regions"));
+    const int NexH = PyLong_AsLong(PyObject_GetAttrString(py_sascalc_inputs, "number_exH_regions"));
     std::string exH_basis_string;
     double fraction_exH;
     for (int i=0; i<NexH; ++i)
     {
-        exH_basis_string = PyString_AsString(PyList_GetItem(PyObject_GetAttrString(py_sascalc_inputs, "exH_basis_string_array"),i));
+        //exH_basis_string = PyString_AsString(PyList_GetItem(PyObject_GetAttrString(py_sascalc_inputs, "exH_basis_string_array"),i));
+        exH_basis_string = PyBytes_AsString(PyList_GetItem(PyObject_GetAttrString(py_sascalc_inputs, "exH_basis_string_array"),i));
         fraction_exH = PyFloat_AsDouble(PyList_GetItem(PyObject_GetAttrString(py_sascalc_inputs, "fraction_exH_array"),i));
         neutron_exH_vector.push_back(std::make_pair(exH_basis_string, fraction_exH));
     }
@@ -87,12 +88,12 @@ PyObject *initialize(PyObject *self, PyObject *args)
     // deuterated region data
     sascalc::ScVars::neutron_deut_t neutron_deut;
     std::vector<sascalc::ScVars::neutron_deut_t> neutron_deut_vector;
-    const int Ndeut = PyInt_AsLong(PyObject_GetAttrString(py_sascalc_inputs, "number_deuteration_regions"));
+    const int Ndeut = PyLong_AsLong(PyObject_GetAttrString(py_sascalc_inputs, "number_deuteration_regions"));
     std::string deut_basis_string;
     double fraction_deut;
     for (int i=0; i<Ndeut; ++i)
     {
-        deut_basis_string = PyString_AsString(PyList_GetItem(PyObject_GetAttrString(py_sascalc_inputs, "deuterated_basis_string_array"),i));
+        deut_basis_string = PyBytes_AsString(PyList_GetItem(PyObject_GetAttrString(py_sascalc_inputs, "deuterated_basis_string_array"),i));
         fraction_deut = PyFloat_AsDouble(PyList_GetItem(PyObject_GetAttrString(py_sascalc_inputs, "fraction_deuterated_array"),i));
         neutron_deut_vector.push_back(std::make_pair(deut_basis_string, fraction_deut));
     }
@@ -101,7 +102,7 @@ PyObject *initialize(PyObject *self, PyObject *args)
     std::vector<sascalc::ScVars::xray_contrast_t> xray_contrasts_vector;
     if (xray_flag)
     {
-        int Nxraycontrasts = PyInt_AsLong(PyObject_GetAttrString(py_sascalc_inputs, "xray_number_contrast_points"));
+        int Nxraycontrasts = PyLong_AsLong(PyObject_GetAttrString(py_sascalc_inputs, "xray_number_contrast_points"));
         if (Nxraycontrasts<0) Nxraycontrasts=0;
         for (int i=0; i<Nxraycontrasts; ++i)
         {
@@ -112,10 +113,10 @@ PyObject *initialize(PyObject *self, PyObject *args)
     }
 
     // gv data
-    const std::string gv_method = PyString_AsString(PyObject_GetAttrString(py_sascalc_inputs, "golden_vector_method_option"));
+    const std::string gv_method = PyBytes_AsString(PyObject_GetAttrString(py_sascalc_inputs, "golden_vector_method_option"));
     double gv_parameter;
     if (gv_method == std::string("fixed"))
-        gv_parameter = PyInt_AsLong(PyObject_GetAttrString(py_sascalc_inputs, "number_golden_vectors"));
+        gv_parameter = PyLong_AsLong(PyObject_GetAttrString(py_sascalc_inputs, "number_golden_vectors"));
     else if  (gv_method == std::string("converge"))
         gv_parameter = PyFloat_AsDouble(PyObject_GetAttrString(py_sascalc_inputs, "golden_vector_method_converge_tolerance"));
 
@@ -147,7 +148,8 @@ PyObject *initialize(PyObject *self, PyObject *args)
 
 
     ///< return
-    return PyCObject_FromVoidPtr((void*)p_sascalc, NULL);
+    //return PyCObject_FromVoidPtr((void*)p_sascalc, NULL);
+    return PyCapsule_New((void*)p_sascalc, NULL, NULL);
 }
 
 
@@ -173,12 +175,14 @@ PyObject *calculate(PyObject *self, PyObject *args)
     double *coordinates = (double*)(pyArray_coordinates->data);
     if(DEBUG) printf("Coor: %f %f %f %f\n",coordinates[0],coordinates[1],coordinates[2],coordinates[3]);
 
-    sascalc::SasCalc *p_sascalc = static_cast<sascalc::GV*>(PyCObject_AsVoidPtr(sascalc_object));
+    //sascalc::SasCalc *p_sascalc = static_cast<sascalc::GV*>(PyCObject_AsVoidPtr(sascalc_object));
+    sascalc::SasCalc *p_sascalc = static_cast<sascalc::GV*>(PyCapsule_GetPointer(sascalc_object, NULL));
 
     sascalc::ScResults *p_results = p_sascalc -> calculate(coordinates, Nframes);
 
     ///< return
-    return PyCObject_FromVoidPtr((void*)p_results, NULL);
+    //return PyCObject_FromVoidPtr((void*)p_results, NULL);
+    return PyCapsule_New((void*)p_results, NULL, NULL);
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -197,16 +201,18 @@ PyObject *save(PyObject *self, PyObject *args)
         return Py_None;
     }
 
-    sascalc::ScResults *p_results = static_cast<sascalc::ScResults*>(PyCObject_AsVoidPtr(results_object));
+    //sascalc::ScResults *p_results = static_cast<sascalc::ScResults*>(PyCObject_AsVoidPtr(results_object));
+    sascalc::ScResults *p_results = static_cast<sascalc::ScResults*>(PyCapsule_GetPointer(results_object, NULL));
 
-    const std::string name = PyString_AsString(py_name);
-    const std::string runname = PyString_AsString(py_runname);
+    const std::string name = PyBytes_AsString(py_name);
+    const std::string runname = PyBytes_AsString(py_runname);
 
     //std::cout<<(*p_results)<<std::endl;
     p_results->save(name, runname);
 
     ///< return
-    return PyCObject_FromVoidPtr((void*)p_results, NULL);
+    //return PyCObject_FromVoidPtr((void*)p_results, NULL);
+    return PyCapsule_New((void*)p_results, NULL, NULL);
 }
 
 
@@ -226,7 +232,8 @@ PyObject *clean(PyObject *self, PyObject *args)
         return Py_None;
     }
 
-    sascalc::SasCalc * p_sascalc = static_cast<sascalc::SasCalc*>(PyCObject_AsVoidPtr(sascalc_object));
+    //sascalc::SasCalc * p_sascalc = static_cast<sascalc::SasCalc*>(PyCObject_AsVoidPtr(sascalc_object));
+    sascalc::SasCalc * p_sascalc = static_cast<sascalc::SasCalc*>(PyCapsule_GetPointer(sascalc_object, NULL));
     delete p_sascalc;
 
     ///< return
@@ -234,20 +241,40 @@ PyObject *clean(PyObject *self, PyObject *args)
     return Py_None;
 }
 
-
-
-static PyMethodDef exampleMethods[] = {
+static PyMethodDef SascalcMethods[] = {
+    
+    	//{"system",  spam_system, METH_VARARGS,
+     	//"Execute a shell command."},
 	{ "initialize", initialize, METH_VARARGS },
 	{ "calculate", calculate, METH_VARARGS },
 	{ "save", save, METH_VARARGS },
 	{ "clean", clean, METH_VARARGS },
-	{ NULL, NULL }
-} ;
+    	{NULL, NULL, 0, NULL}        /* Sentinel */
+};
 
+static struct PyModuleDef sascalc_api = {
+	PyModuleDef_HEAD_INIT,
+    	"sascalc_api",   /* name of module */
+    	NULL, /* module documentation, may be NULL */
+    	-1,       /* size of per-interpreter state of the module,
+                 or -1 if the module keeps state in global variables. */
+	SascalcMethods
+  
+};
+
+PyMODINIT_FUNC
+PyInit_sascalc_api(void)
+{
+	return PyModule_Create(&sascalc_api);
+}
+
+/*
 PyMODINIT_FUNC
 initsascalc_api(){
 	PyObject *m;
 	m = Py_InitModule("sascalc_api", exampleMethods);
 	import_array();
 }
+*/
+
 

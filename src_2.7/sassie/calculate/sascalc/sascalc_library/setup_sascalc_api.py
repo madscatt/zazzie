@@ -6,8 +6,10 @@ os_type = platform.system()
 
 os.environ["CC"] = "h5cc"
 
-os.environ["CC"] = "/share/apps/local/bin/gcc"
-os.environ["CXX"] = "/share/apps/local/bin/gcc"
+#os.environ["CC"] = "/share/apps/local/bin/gcc"
+#os.environ["CXX"] = "/share/apps/local/bin/gcc"
+os.environ["CC"] = "/usr/bin/gcc"
+os.environ["CXX"] = "/usr/bin/gcc"
 
 ### USER EDIT
 cpp_buildingBlock_dir=os.path.join('.','extensions')
@@ -22,8 +24,14 @@ if os_type == "Darwin":
     cuda_dir = os.path.join(os.path.sep,'usr','local','cuda')
     share_dir = os.path.join(os.path.sep,'usr','local')
 elif os_type == "Linux":
-    cuda_dir = os.path.join(os.path.sep,'share','apps','local','cuda')
-    share_dir = os.path.join(os.path.sep,'share','apps','local')
+    #cuda_dir = os.path.join(os.path.sep,'share','apps','local','cuda')
+    #share_dir = os.path.join(os.path.sep,'share','apps','local')
+
+    #cuda_dir = os.path.join(os.path.sep,'share','apps','local','cuda')
+    #share_dir = os.path.join(os.path.sep,'share','apps','local')
+
+    cuda_dir = os.path.join(os.path.sep,'usr','local','cuda')
+    share_dir = os.path.join(os.path.sep,'usr','local')
 
 # Third-party modules - we depend on numpy for everything
 import numpy
