@@ -58,7 +58,7 @@ def check_basis(pdbfile, basis_string, residue, num_basis):
         if seg not in segmentlist:
             segmentlist.append(seg)
 
-    print 'segmentlist= ', segmentlist
+    print('segmentlist= ', segmentlist)
 
 # check and see if a keyword was supplied, if this passes then you get the
 # atom array for that segment
@@ -66,14 +66,14 @@ def check_basis(pdbfile, basis_string, residue, num_basis):
     segment_basis = []
 
     for key in supported_basis:
-        print 'key = ', key
-        for i in xrange(len(segmentlist)):
+        print('key = ', key)
+        for i in range(len(segmentlist)):
             if key == basis[i]:
                 segment_basis.append(supported_basis[key])
 
-    print 'segment_basis = ', segment_basis
+    print('segment_basis = ', segment_basis)
 
-    print 'len(segment_basis) = ', len(segment_basis)
+    print('len(segment_basis) = ', len(segment_basis))
 
     if(len(segment_basis) > 0 and len(segment_basis) != num_basis):
         error.append(
@@ -81,11 +81,11 @@ def check_basis(pdbfile, basis_string, residue, num_basis):
         return error, mask_array
 
     elif(len(segment_basis) == 0):
-        for i in xrange(len(segmentlist)):
+        for i in range(len(segmentlist)):
             segment_basis.append((basis[i],))
 
-        print 'atom based basis = ', segment_basis
-        print 'keyword based basis = ', segment_basis
+        print('atom based basis = ', segment_basis)
+        print('keyword based basis = ', segment_basis)
 
 
 # check and see if the atoms requested for each basis exist over the
@@ -99,7 +99,7 @@ def check_basis(pdbfile, basis_string, residue, num_basis):
     resid = m1.resid()
     name = m1.name()
     natoms = m1.natoms()
-    print 'natoms = ', natoms
+    print('natoms = ', natoms)
     goal_count = 0
     if(basis[0] == 'all'):
         goal_count = 'all'
@@ -128,7 +128,7 @@ def check_basis(pdbfile, basis_string, residue, num_basis):
     unique_segment_list = []
     natoms_per_segment = []
     natoms_last_segment = 0
-    for i in xrange(natoms):
+    for i in range(natoms):
         this_segment = segname[i]
         if this_segment not in unique_segment_list:
             unique_segment_list.append(this_segment)
@@ -137,22 +137,22 @@ def check_basis(pdbfile, basis_string, residue, num_basis):
                 natoms_last_segment = i + 1
     natoms_per_segment.append((i + 1) - natoms_last_segment)
 
-    print 'unique_segment_list = ', unique_segment_list
-    print 'natoms_per_segment = ', natoms_per_segment
+    print('unique_segment_list = ', unique_segment_list)
+    print('natoms_per_segment = ', natoms_per_segment)
 
     if(num_basis != len(unique_segment_list)):
         error.append(
             'number of basis ranges does not equal the number of unique segment names in pdb file')
         return error, mask_array
 
-    for i in xrange(num_basis):
+    for i in range(num_basis):
         thislow = residue[i][0]
         thishigh = residue[i][1]
-        print 'this low = ', thislow
-        print 'this high = ', thishigh
+        print('this low = ', thislow)
+        print('this high = ', thishigh)
         newresid = 1
         preliminary_mask_array = []
-        for j in xrange(natoms_per_segment[i]):
+        for j in range(natoms_per_segment[i]):
             thisres = resid[j]
             thisatom = name[j]
             if (j == 0):
@@ -185,24 +185,24 @@ def check_basis(pdbfile, basis_string, residue, num_basis):
                 'you need to specify at least 3 atoms to form a basis for segment = ' + unique_segment_list[i])
             return array, mask_array
 
-        print 'sum pa = ', numpy.sum(preliminary_mask_array)
+        print('sum pa = ', numpy.sum(preliminary_mask_array))
 
         mask_array[i] = preliminary_mask_array
 
-    print 'mask_array = ', mask_array
-    print 'len(mask_array[0]) = ', len(mask_array[0])
+    print('mask_array = ', mask_array)
+    print('len(mask_array[0]) = ', len(mask_array[0]))
 
-    print 'total_atoms_in_basis = ', total_atoms_in_basis
+    print('total_atoms_in_basis = ', total_atoms_in_basis)
 
     coor = m1.coor()
 
-    print 'coor[0,0,0] = ', coor[0, 0, 0]
-    print 'coor[0,0] = ', coor[0, 0]
-    print 'coor[0] = ', coor[0]
+    print('coor[0,0,0] = ', coor[0, 0, 0])
+    print('coor[0,0] = ', coor[0, 0])
+    print('coor[0] = ', coor[0])
 
-    print 'len(residue) = ', len(residue)
+    print('len(residue) = ', len(residue))
 
-    for i in xrange(num_basis):
+    for i in range(num_basis):
         pass
 
     # clearly this is not done
@@ -229,4 +229,4 @@ if __name__ == '__main__':
     residue = [[1, 48], [1, 48], [1, 48], [1, 48], [1, 48], [1, 48]]
     num_basis = 6
     error, mask_array = check_basis(pdbfile, basis_string, residue, num_basis)
-    print error, mask_array
+    print(error, mask_array)

@@ -115,7 +115,7 @@ if __name__=='__main__':
         output['e'] = mass_energy.einstein(mass,speed_of_light)
         output['answer'] = json.dumps(answer)
 
-        print json.dumps(output)
+        print(json.dumps(output))
 
 
 

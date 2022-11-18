@@ -18,7 +18,7 @@ import os
 import sys
 import string
 import locale
-import sasmol.system as sasmol
+import sasmol.system as system
 import sassie.util.sasutil as sasutil
 
 
@@ -33,7 +33,7 @@ def check_and_convert_formula(formula_array):
         error.append('unable to read formula')
         return error, formulas
 
-    for i in xrange(number_of_formulas):
+    for i in range(number_of_formulas):
 
         error, formula_dictionary = sasutil.get_chemical_formula(formula_array[i])
 
@@ -48,7 +48,7 @@ def check_name(filename):
     bad_characters = ["<", ">", "|", "\\",
                       ":", "(", ")", "&", ";", "#", "?", "*"]
     error = []
-    for i in xrange(len(filename)):
+    for i in range(len(filename)):
         character = filename[i]
         if character in bad_characters:
             error.append('file or path : ' + filename +
@@ -139,7 +139,7 @@ def type_check_and_convert(svariables):
                 lin = string.split(value[0], ',')
 
                 duma = []
-                for x in xrange(len(lin)):
+                for x in range(len(lin)):
                     try:
                         dum = locale.atof(lin[x])
                         duma.append(dum)
@@ -159,7 +159,7 @@ def type_check_and_convert(svariables):
                 lin = string.split(value[0], ',')
 
                 duma = []
-                for x in xrange(len(lin)):
+                for x in range(len(lin)):
                     try:
                         dum = locale.atoi(lin[x])
                         duma.append(dum)
@@ -170,6 +170,55 @@ def type_check_and_convert(svariables):
             except:
                 error.append(key + ': could not read array of values')
                 return error, variables
+                
+        elif (svariables[key][1] == 'nested_float_array'):
+            value = svariables.get(key)
+            
+            try: 
+                lin = value[0].split(';')
+                
+                nested_array = []
+                for item in lin:
+                    new_item = item.replace(' ', '')
+                    new_item = new_item.split(',')
+                    temp = []
+                    for value in new_item:
+                        try:
+                            float_item = locale.atof(value)
+                            temp.append(float_item)
+                        except:
+                            error.append(key + ' is not a ' + svariables[key][1] + ' : ' + svariables[key][0])
+                    nested_array.append(temp)
+                variables[key] = (nested_array, 'nested_float_array')
+#                print 'new variable: ', variables[key]
+            except:
+                error.append(key + ': could not read nested array of values')
+                return error, variables
+                
+        elif (svariables[key][1] == 'nested_int_array'):
+            value = svariables.get(key)
+            
+            try: 
+                lin = value[0].split(';')
+                
+                nested_array = []
+                for item in lin:
+                    new_item = item.replace(' ', '')
+                    new_item = new_item.split(',')
+                    temp = []
+                    for value in new_item:
+                        try:
+                            int_item = locale.atoi(value)
+                            temp.append(int_item)
+                        except:
+                            error.append(key + ' is not a ' + svariables[key][1] + ' : ' + svariables[key][0])
+                    nested_array.append(temp)
+                variables[key] = (nested_array, 'nested_int_array')
+            except:
+                error.append(key + ': could not read nested array of values')
+                return error, variables
+
+
 
     return error, variables
 
@@ -212,7 +261,7 @@ def check_pdb_dcd(infile, filetype):
         if(fileexist):
             binary = check_binary(infile)
             print('binary = ', binary)
-            test_mol = sasmol.SasMol(0)
+            test_mol = system.Molecule(0) 
             fileexist = 1
             if(filetype == 'pdb' and not binary):
                 test_mol.read_pdb(infile, fastread=True)
@@ -238,8 +287,8 @@ def certify_pdb_pdb(pdbfile1, pdbfile2):
         fileexist2 = os.path.isfile(pdbfile2)
         if(fileexist1 and fileexist2):
             fileexist = 1
-            pdbmol1 = sasmol.SasMol(0)
-            pdbmol2 = sasmol.SasMol(1)
+            pdbmol1 = system.Molecule(0)
+            pdbmol2 = system.Molecule(0)
             try:
                 pdbmol1.read_pdb(pdbfile1, fastread=True)
                 pdbmol2.read_pdb(pdbfile2, fastread=True)
@@ -275,7 +324,7 @@ def read_psf_file(psffile):
     natoms = locale.atoi(st[0])
     print('natoms = ', natoms)
     offset2 = offset1 + natoms + 2
-    for i in xrange(offset1 + 1, offset1 + 1 + natoms):
+    for i in range(offset1 + 1, offset1 + 1 + natoms):
         tal = string.split(infile[i])
         segments.append(tal[1])
         names.append(tal[4])
@@ -300,7 +349,7 @@ def certify_dcd_psf(dcdfile, psffile):
             fileexist = 1
             try:
                 natoms_psf, names_psf = read_psf_file(psffile)
-                dcdmol = sasmol.SasMol(1)
+                dcdmol = system.Molecule(0)
 
                 dcdfile = dcdmol.open_dcd_read(dcdfile)
                 natoms_dcd = dcdfile[1]
@@ -327,7 +376,7 @@ def certify_pdb_psf(pdbfile, psffile):
             fileexist = 1
             try:
                 natoms_psf, names_psf = read_psf_file(psffile)
-                pdbmol = sasmol.SasMol(1)
+                pdbmol = system.Molecule(0)
                 pdbmol.read_pdb(pdbfile, fastread=True)
                 natoms_pdb = pdbmol.natoms()
                 names_pdb = pdbmol.name()
@@ -354,8 +403,8 @@ def certify_pdb_dcd(pdbfile, dcdfile):
     '''
     value = 0
     try:
-        pdbmol = sasmol.SasMol(0)
-        dcdmol = sasmol.SasMol(1)
+        pdbmol = system.Molecule(0)
+        dcdmol = system.Molecule(0)
 
         pdbmol.read_pdb(pdbfile, fastread=True)
         natoms_pdb = pdbmol.natoms()
@@ -374,11 +423,11 @@ def certify_pdb_dcd(pdbfile, dcdfile):
 def get_pdb_stats(filename, variables):
     value = 0
     try:
-        a = sasmol.SasMol(0)
+        a = system.Molecule(0)
         a.read_pdb(filename, fastread=True)
         result = []
         try:
-            for i in xrange(len(variables)):
+            for i in range(len(variables)):
                 if(variables[i] == 'atom'):
                     result.append(a.atom())
                 elif(variables[i] == 'index'):
@@ -428,15 +477,15 @@ def get_pdb_stats(filename, variables):
 def get_pdb_complex_stats(filename, segname, variables):
     value = 0
     try:
-        o = sasmol.SasMol(0)
+        o = system.Molecule(0)
         o.read_pdb(filename, fastread=True)
         seg_filter = 'segname[i] == "' + segname.strip() + '"'
         error, seg_mask = o.get_subset_mask(seg_filter)
-        a = sasmol.SasMol(1)
+        a = system.Molecule(0)
         error = o.copy_molecule_using_mask(a, seg_mask, 0)
         result = []
         try:
-            for i in xrange(len(variables)):
+            for i in range(len(variables)):
                 if(variables[i] == 'atom'):
                     result.append(a.atom())
                 elif(variables[i] == 'index'):
