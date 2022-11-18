@@ -43,7 +43,7 @@ import shutil
 import time
 
 import sassie.contrast.multi_component_analysis.multi_component_analysis as multi_component_analysis
-import sassie.interface.input_filter_sasmol as input_filter
+import sassie.interface.input_filter as input_filter
 import sassie.interface.multi_component_analysis.multi_component_analysis_filter as multi_component_analysis_filter
 import multiprocessing
 
