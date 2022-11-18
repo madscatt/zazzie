@@ -245,7 +245,7 @@ def parallel_axis(other_self):
 #    print('volume fraction in parallel axis: ', mcavars.volume_fraction)
 
     ttxt = time.asctime(time.gmtime(time.time()))
-    st = ''.join(['=' for x in xrange(60)])
+    st = ''.join(['=' for x in range(60)])
 
     pgui('\n%s \n' % (st))
     pgui('DATA FROM RUN: %s \n\n' % (ttxt))

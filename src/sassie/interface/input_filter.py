@@ -16,7 +16,6 @@
 '''
 import os
 import sys
-import string
 import locale
 import sasmol.system as system
 import sassie.util.sasutil as sasutil
@@ -136,7 +135,7 @@ def type_check_and_convert(svariables):
             value = svariables.get(key)
 
             try:
-                lin = string.split(value[0], ',')
+                lin = value[0].split(',')
 
                 duma = []
                 for x in range(len(lin)):
@@ -156,7 +155,7 @@ def type_check_and_convert(svariables):
             value = svariables.get(key)
 
             try:
-                lin = string.split(value[0], ',')
+                lin = value[0].split(',')
 
                 duma = []
                 for x in range(len(lin)):
@@ -316,16 +315,16 @@ def read_psf_file(psffile):
 
 #       1 FALA 1    ALA  CAY  CT3   -0.270000       12.0110           0
 
-    st = string.split(infile[2])
+    st = infile[2].split()
     num_remarks = locale.atoi(st[0])
     print('remarks = ', num_remarks)
     offset1 = 2 + num_remarks + 2
-    st = string.split(infile[offset1])
+    st = infile[offset1].split()
     natoms = locale.atoi(st[0])
     print('natoms = ', natoms)
     offset2 = offset1 + natoms + 2
     for i in range(offset1 + 1, offset1 + 1 + natoms):
-        tal = string.split(infile[i])
+        tal = infile[i].split()
         segments.append(tal[1])
         names.append(tal[4])
 

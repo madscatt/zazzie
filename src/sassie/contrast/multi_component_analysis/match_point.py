@@ -106,7 +106,7 @@ def get_match_point(other_self):
     log.debug(vars(mcavars))
 
     ttxt = time.asctime(time.gmtime(time.time()))
-    st = ''.join(['=' for x in xrange(60)])
+    st = ''.join(['=' for x in range(60)])
 
     pgui('\n%s \n' % (st))
     pgui('DATA FROM RUN: %s \n\n' % (ttxt))

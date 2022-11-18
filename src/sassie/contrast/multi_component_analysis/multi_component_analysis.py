@@ -312,7 +312,7 @@ class multi_component_analysis():
 
         self.run_utils.clean_up(log)
 
-        st = ''.join(['=' for x in xrange(60)])
+        st = ''.join(['=' for x in range(60)])
         pgui('\n%s \n\n' % (st))        
         pgui('MULTI-COMPONENT ANALYSIS IS DONE')
 
