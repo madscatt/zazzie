@@ -18,7 +18,7 @@ import os
 import sys
 import string
 import locale
-import sasmol.sasmol as sasmol
+import sasmol.system as system
 import sassie.util.sasutil as sasutil
 
 
@@ -33,7 +33,7 @@ def check_and_convert_formula(formula_array):
         error.append('unable to read formula')
         return error, formulas
 
-    for i in xrange(number_of_formulas):
+    for i in range(number_of_formulas):
 
         error, formula_dictionary = sasutil.get_chemical_formula(formula_array[i])
 
@@ -48,7 +48,7 @@ def check_name(filename):
     bad_characters = ["<", ">", "|", "\\",
                       ":", "(", ")", "&", ";", "#", "?", "*"]
     error = []
-    for i in xrange(len(filename)):
+    for i in range(len(filename)):
         character = filename[i]
         if character in bad_characters:
             error.append('file or path : ' + filename +
@@ -139,7 +139,7 @@ def type_check_and_convert(svariables):
                 lin = string.split(value[0], ',')
 
                 duma = []
-                for x in xrange(len(lin)):
+                for x in range(len(lin)):
                     try:
                         dum = locale.atof(lin[x])
                         duma.append(dum)
@@ -159,7 +159,7 @@ def type_check_and_convert(svariables):
                 lin = string.split(value[0], ',')
 
                 duma = []
-                for x in xrange(len(lin)):
+                for x in range(len(lin)):
                     try:
                         dum = locale.atoi(lin[x])
                         duma.append(dum)
@@ -324,7 +324,7 @@ def read_psf_file(psffile):
     natoms = locale.atoi(st[0])
     print('natoms = ', natoms)
     offset2 = offset1 + natoms + 2
-    for i in xrange(offset1 + 1, offset1 + 1 + natoms):
+    for i in range(offset1 + 1, offset1 + 1 + natoms):
         tal = string.split(infile[i])
         segments.append(tal[1])
         names.append(tal[4])
@@ -427,7 +427,7 @@ def get_pdb_stats(filename, variables):
         a.read_pdb(filename, fastread=True)
         result = []
         try:
-            for i in xrange(len(variables)):
+            for i in range(len(variables)):
                 if(variables[i] == 'atom'):
                     result.append(a.atom())
                 elif(variables[i] == 'index'):
@@ -485,7 +485,7 @@ def get_pdb_complex_stats(filename, segname, variables):
         error = o.copy_molecule_using_mask(a, seg_mask, 0)
         result = []
         try:
-            for i in xrange(len(variables)):
+            for i in range(len(variables)):
                 if(variables[i] == 'atom'):
                     result.append(a.atom())
                 elif(variables[i] == 'index'):

@@ -21,9 +21,9 @@ import locale
 import time
 import platform
 import numpy
-import Gnuplot
-import Gnuplot.PlotItems
-import Gnuplot.funcutils
+#import Gnuplot
+#import Gnuplot.PlotItems
+#import Gnuplot.funcutils
 import sassie.util.module_utilities as module_utilities
 import sassie.util.sasconfig as sasconfig
 
@@ -121,7 +121,7 @@ class data_interpolation():
         '''
 
         if str is not None:
-            print str
+            print(str)
         try:
             if(platform.system() == "Linux"):
                 import curses
@@ -166,7 +166,8 @@ class data_interpolation():
         divars.z.append(mvars.ioe)
 
         for line in data_file:
-            this_line = string.split(line)
+            #this_line = string.split(line)
+            this_line = line.split()
             try:
                 qval = locale.atof(this_line[0])
                 ival = locale.atof(this_line[1])
@@ -291,7 +292,7 @@ class data_interpolation():
 
         # ttxt=time.ctime()
         ttxt = time.asctime(time.gmtime(time.time()))
-        st = ''.join(['=' for x in xrange(60)])
+        st = ''.join(['=' for x in range(60)])
 
         pgui("\n%s \n" % (st))
         pgui("DATA FROM RUN: %s \n\n" % (ttxt))
@@ -431,20 +432,20 @@ class data_interpolation():
         pgui("\ndelta q = %f (1/A)\n\nnumber of q-points = %i\n\nq-range: 0 to %f (1/A)\n" %
              (mvars.dq, mvars.maxpoints, (mvars.maxpoints - 1) * mvars.dq))
 
-        if(mvars.plotflag == 1):
-            graph = Gnuplot.Gnuplot(debug=1)
-            graph.clear()
-            graph('set title "Interpolation Results"')
-            graph.xlabel('Q (1/A)')
-            graph.ylabel('I(Q)')
-            graph('set logscale y')
+        #if(mvars.plotflag == 1):
+            #graph = Gnuplot.Gnuplot(debug=1)
+        #    graph.clear()
+        #    graph('set title "Interpolation Results"')
+        #    graph.xlabel('Q (1/A)')
+        #    graph.ylabel('I(Q)')
+        #    graph('set logscale y')
+#
+#            graph.plot(
+#                Gnuplot.Data(
+#                    divars.odata, using='1:2 w p ps 4', title='Original Data'), Gnuplot.Data(divars.io_tally, using='1:2 w lp ps 2',
+#                                                                                             title='Interpolated Data'), Gnuplot.Data(divars.cut, title='[I(Q)/(std.dev. I(Q))] < 2', using='1:2:3 w yerrorbars'))
 
-            graph.plot(
-                Gnuplot.Data(
-                    divars.odata, using='1:2 w p ps 4', title='Original Data'), Gnuplot.Data(divars.io_tally, using='1:2 w lp ps 2',
-                                                                                             title='Interpolated Data'), Gnuplot.Data(divars.cut, title='[I(Q)/(std.dev. I(Q))] < 2', using='1:2:3 w yerrorbars'))
-
-        time.sleep(2)
+#        time.sleep(2)
 
         if(mvars.plotflag == 1):
             wait('\n')

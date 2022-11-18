@@ -89,7 +89,7 @@ def run_module(self, **kwargs):
 
     error, self.variables = input_filter.type_check_and_convert(svariables)
     if len(error) > 0:
-        print 'error = ', error
+        print('error = ', error)
         if not(self.testflag):
             sys.exit()
         return error
@@ -102,7 +102,7 @@ def run_module(self, **kwargs):
             self.variables, no_file_check="true")
 
     if(len(error) > 0):
-        print 'error = ', error
+        print('error = ', error)
         if not(self.testflag):
             sys.exit()
         return error
@@ -160,4 +160,4 @@ if __name__ == '__main__':
 
     start = time.time()
     run_gui = gui_mimic_data_interpolation(test, paths)
-    print "time used: ", time.time() - start
+    print("time used: ", time.time() - start)

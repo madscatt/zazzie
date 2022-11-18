@@ -8,9 +8,9 @@ import time
 import json
 
 
-#import sassie.util.sasconfig as sasconfig
+import sassie.util.sasconfig as sasconfig
 
-import sasconfig 
+#import sasconfig 
 
 
 if sasconfig.__level__ == "DEBUG": DEBUG = True

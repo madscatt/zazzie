@@ -26,7 +26,7 @@
 	SasUtil holds general methods for file naming, os differences,
         chemical formula parsing, etc.
 '''
-import sasmol.sasproperties as sasproperties
+import sasmol.properties as properties
 import string
    
 
@@ -44,7 +44,7 @@ def get_full_filename(path,filename,**kwargs):
 	if 'web_path' in kwargs:				# dict kwarg['web_path'] = web_path
 		web_flag = True
 		web_path = kwargs['web_path']
-		print 'web_path = ',web_path		
+		print('web_path = ',web_path)		
 
 	return
 
@@ -211,7 +211,7 @@ class ElementSequence:
             items = result.items()
             items.sort()
             for sym, count in items:
-                print sym, " : ",count
+                print(sym, " : ",count)
 
 
 class Tokenizer:
@@ -285,7 +285,7 @@ def parse_sequence(sym2elt):
 
 def get_chemical_formula(formula_string):
 
-    Atomic = sasproperties.Atomic()
+    Atomic = properties.Atomic()
     #standard_atomic_weights = Atomic.amu(keep_lower_case=True) 
     amu = Atomic.amu(keep_lower_case=True) 
     sym2elt = build_dict(_data)
@@ -308,8 +308,8 @@ def get_chemical_formula(formula_string):
         #for sym, count in items:
         #    print sym," :: ",count
 
-    except ValueError, detail:
-        print str(detail)
+    except (ValueError, detail):
+        print(str(detail))
         error.append(detail)
 
     return error,formula_dictionary
@@ -328,7 +328,7 @@ if __name__ == "__main__":
         x = raw_input("? ")
         fields = string.split(x)
         if len(fields) != 2:
-            print "input must have two fields"
+            print("input must have two fields")
             continue
         action, formula = fields
         ok = 0
@@ -336,15 +336,15 @@ if __name__ == "__main__":
             seq = parse(formula,sym2elt)
             ok = 1
         except ValueError, detail:
-            print str(detail)
+            print(str(detail))
         if not ok:
             continue
         if action == "molw":
-            print "molecular weight", seq.getweight()
+            print("molecular weight", seq.getweight())
         elif action == "syms":
             seq.displaysyms(sym2elt)
         else:
-            print "unknown action:", action
+            print("unknown action:", action)
     '''
 
 
