@@ -47,7 +47,8 @@ from numpy.distutils.core import Extension, setup
 library_dirs = [os.path.join(os.sep, 'usr', 'local', 'lib')]
 
 all_packages = ['sassie', 'sassie.util',
-    'sassie.interface', 'sassie.interface.data_interpolation',
+    'sassie.interface', 'sassie.contrast','sassie.contrast.multi_component_analysis',
+    'sassie.interface.multi_component_analysis','sassie.interface.data_interpolation',
     'sassie.tools', 'sassie.tools.data_interpolation'
     ]
 
