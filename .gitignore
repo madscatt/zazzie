@@ -20,3 +20,5 @@ build
 *.egg-info
 run_*
 
+src_2.7/sassie/calculate/sascalc/sascalc_library/extensions/lib/
+
