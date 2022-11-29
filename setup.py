@@ -15,6 +15,7 @@ import os,sys
 from distutils.core import setup
 from distutils      import sysconfig
 from numpy.distutils.core import Extension, setup
+import numpy
 
 #
 
@@ -44,14 +45,24 @@ from numpy.distutils.core import Extension, setup
 ### begin user edit ###
 ### begin user edit ###
 
+try:
+    numpy_include = numpy.get_include()
+except AttributeError:
+    numpy_include = numpy.get_numpy_include()
+
+
 library_dirs = [os.path.join(os.sep, 'usr', 'local', 'lib')]
 
 all_packages = ['sassie', 'sassie.util',
     'sassie.interface', 'sassie.contrast','sassie.contrast.multi_component_analysis',
     'sassie.interface.multi_component_analysis','sassie.interface.data_interpolation',
-    'sassie.tools', 'sassie.tools.data_interpolation'
+    'sassie.tools', 'sassie.tools.data_interpolation',
+    'sassie.simulate', 'sassie.simulate.torsion_angle_monte_carlo',
+    'sassie.simulate.torsion_angle_monte_carlo.monte_carlo_utilities',
+    'sassie.simulate.torsion_angle_monte_carlo.extensions',
+    'sassie.simulate.torsion_angle_monte_carlo.extensions.ooverlap'
     ]
-
+    
 ### end user edit ###
 ### end user edit ###
 ### end user edit ###
@@ -95,6 +106,7 @@ setup(name='sassie',
     package_data = {'':['sascalc_api.so']},
 
     ext_modules=[
+        Extension('sassie.simulate.torsion_angle_monte_carlo.ooverlap',['sassie/simulate/torsion_angle_monte_carlo/extensions/ooverlap/ooverlap.c'],include_dirs=[numpy_include])
         ]
 
     )

@@ -8,10 +8,15 @@
 *.sassie_json
 *.sassie_log
 
+build
+
 # byte compiled python
 *.pyc
 
 # C extensions
 *.o
 *.so
+
+*.egg-info
+run_*
 
