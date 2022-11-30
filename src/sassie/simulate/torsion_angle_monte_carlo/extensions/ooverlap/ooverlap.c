@@ -1,6 +1,7 @@
 #include <math.h>
 #include "Python.h"
 #include "numpy/arrayobject.h"
+//#define NPY_NO_DEPRECATED_API NPY_1_7_API_VERSION
 
 /*
     SASSIE  Copyright (C) 2011 Joseph E. Curtis
@@ -9,10 +10,10 @@
     conditions; see http://www.gnu.org/licenses/gpl-3.0.html for details.
 */
 
-PyObject *ooverlap(PyObject *self, PyObject *args){
+PyObject *overlap(PyObject *self, PyObject *args){
 	PyObject *cut ;
 	PyArrayObject *array = NULL ;
-	double sum,x1,y1,z1,x2,y2,z2,sdist,dist ;
+	double x1,y1,z1,x2,y2,z2,sdist,dist ;
 	float lcut ;
 	int i,j,natoms,check;
 
@@ -50,7 +51,7 @@ PyObject *ooverlap(PyObject *self, PyObject *args){
 PyObject *moloverlap(PyObject *self, PyObject *args){
 	PyObject *cut ;
 	PyArrayObject *array_1 = NULL, *array_2 = NULL, *interres=NULL;
-	double sum,x1,y1,z1,x2,y2,z2,sdist,dist ;
+	double x1,y1,z1,x2,y2,z2,sdist,dist ;
 	float lcut ;
 	int i,j,k,natoms_1,natoms_2,resid_1,resid_2,nex,qex,check;
 
@@ -103,45 +104,38 @@ PyObject *moloverlap(PyObject *self, PyObject *args){
 	return Py_BuildValue("i",check) ;
 }
 
-static PyMethodDef exampleMethods[] = {
-	{ "ooverlap", ooverlap, METH_VARARGS },
+static PyMethodDef module_methods[] = {
+	{ "overlap", overlap, METH_VARARGS },
 	{ "moloverlap", moloverlap, METH_VARARGS },
 	{ NULL, NULL }
 } ;
 
+/* new for python 3.X */
+
+static struct PyModuleDef c_overlap =
+{
+    PyModuleDef_HEAD_INIT,
+    "c_overlap",
+    "",
+    -1,
+    module_methods
+};
+
+PyMODINIT_FUNC PyInit_ooverlap(void)
+{
+    return PyModule_Create(&c_overlap) ;
+}
+
+/* worked for python 2.X */
+
+/*
+ 
 void initooverlap(){
 	PyObject *m, *m2;
 	m = Py_InitModule("ooverlap", exampleMethods);
 	m2 = Py_InitModule("moloverlap", exampleMethods);
 	import_array();
 }
-
-/*
-Mapping between python and c function names.
-static PyMethodDef FERNSModule_methods[] = {
-        {"fizzbuzz", py_fizzbuzz, METH_VARARGS},
-            {NULL, NULL}
-                };
-
-Module initialisation routine.
-                void initfizzbuzz(void)
-                {
-Init module.
-(void) Py_InitModule("fizzbuzz", fizzbuzzModule_methods);
-
-                }
-
-static PyMethodDef exampleMethods[] = {
-        { "overlap", overlap, METH_VARARGS },
-            { "moloverlap", moloverlap, METH_VARARGS },
-                { NULL, NULL }
-} ;
-
-void initoverlap(){
-        PyObject *m, *m2;
-            m = Py_InitModule("overlap", exampleMethods);
-                m2 = Py_InitModule("moloverlap", exampleMethods);
-                    import_array();
-}
 */
+
 

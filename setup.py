@@ -105,8 +105,9 @@ setup(name='sassie',
 
     package_data = {'':['sascalc_api.so']},
 
+
     ext_modules=[
-        Extension('sassie.simulate.torsion_angle_monte_carlo.ooverlap',['sassie/simulate/torsion_angle_monte_carlo/extensions/ooverlap/ooverlap.c'],include_dirs=[numpy_include])
+        Extension('sassie.simulate.torsion_angle_monte_carlo.ooverlap',[os.path.join('src','sassie','simulate','torsion_angle_monte_carlo','extensions','ooverlap','ooverlap.c')],include_dirs=[numpy_include])
         ]
 
     )
