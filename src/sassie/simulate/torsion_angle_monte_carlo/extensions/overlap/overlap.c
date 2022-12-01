@@ -121,7 +121,7 @@ static struct PyModuleDef c_overlap =
     module_methods
 };
 
-PyMODINIT_FUNC PyInit_ooverlap(void)
+PyMODINIT_FUNC PyInit_overlap(void)
 {
     return PyModule_Create(&c_overlap) ;
 }

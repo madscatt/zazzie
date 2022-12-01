@@ -181,15 +181,32 @@ PyObject *overlap(PyObject *self, PyObject *args){
 	return Py_BuildValue("i",flag_overlap) ;
 }
 
-static PyMethodDef exampleMethods[] = {
-	{ "overlap", overlap, METH_VARARGS },
-	{ NULL, NULL }
-} ;
+static struct PyModuleDef exampleMethods = 
+{   
+    PyModuleDef_HEAD_INIT,
+    "overlap",
+    "",
+    -1,
+    module_methods
+};
 
-PyMODINIT_FUNC
-initoverlap(){
-	PyObject *m, *m2;
-	m = Py_InitModule("overlap", exampleMethods);
-	import_array();
-}
+PyMODINIT_FUNC PyInit_overlap(void)
+{
+    return PyModule_Create(&overlap) ;
+};
+
+//
+//  Python 2.X 
+//
+//static PyMethodDef exampleMethods[] = {
+//	{ "overlap", overlap, METH_VARARGS },
+//	{ NULL, NULL }
+//} ;
+
+//PyMODINIT_FUNC
+//initoverlap(){
+//	PyObject *m, *m2;
+//	m = Py_InitModule("overlap", exampleMethods);
+//	import_array();
+//}
 

@@ -21,7 +21,7 @@ except AttributeError:
     numpy_include = numpy.get_numpy_include()
 
 # simple extension module
-ooverlap = Extension(name="ooverlap",sources=['./ooverlap.c'],
+overlap = Extension(name="overlap",sources=['./overlap.c'],
                    include_dirs = [numpy_include],
                    )
 
@@ -30,14 +30,14 @@ setup(  name        = "OVERLAP",
         description = "Module checks for atomic overlap",
         author      = "Joseph E. Curtis",
         version     = "0.1",
-        ext_modules = [ooverlap]
+        ext_modules = [overlap]
         )
 
 
 ### post compilation file move
 
 try:
-    lib_file = os.path.join('build', 'lib*', 'ooverlap.*')
+    lib_file = os.path.join('build', 'lib*', 'overlap.*')
     os.system('mv ' + lib_file + ' .')
 except:
     print('\nINSTALLATION FAILED\n')
