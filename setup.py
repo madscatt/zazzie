@@ -60,7 +60,8 @@ all_packages = ['sassie', 'sassie.util',
     'sassie.simulate', 'sassie.simulate.torsion_angle_monte_carlo',
     'sassie.simulate.torsion_angle_monte_carlo.monte_carlo_utilities',
     'sassie.simulate.torsion_angle_monte_carlo.extensions',
-    'sassie.simulate.torsion_angle_monte_carlo.extensions.overlap'
+    'sassie.simulate.torsion_angle_monte_carlo.extensions.overlap',
+    'sassie.simulate.torsion_angle_monte_carlo.extensions.dna_overlap'
     ]
     
 ### end user edit ###
@@ -107,7 +108,8 @@ setup(name='sassie',
 
 
     ext_modules=[
-        Extension('sassie.simulate.torsion_angle_monte_carlo.overlap',[os.path.join('src','sassie','simulate','torsion_angle_monte_carlo','extensions','overlap','overlap.c')],include_dirs=[numpy_include])
+        Extension('sassie.simulate.torsion_angle_monte_carlo.overlap',[os.path.join('src','sassie','simulate','torsion_angle_monte_carlo','extensions','overlap','overlap.c')],include_dirs=[numpy_include]),
+        Extension('sassie.simulate.torsion_angle_monte_carlo.dna_overlap',[os.path.join('src','sassie','simulate','torsion_angle_monte_carlo','extensions','dna_overlap','dna_overlap.f')],include_dirs=[numpy_include])
         ]
 
     )

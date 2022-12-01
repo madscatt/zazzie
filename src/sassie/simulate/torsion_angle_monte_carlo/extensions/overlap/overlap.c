@@ -123,7 +123,12 @@ static struct PyModuleDef c_overlap =
 
 PyMODINIT_FUNC PyInit_overlap(void)
 {
-    return PyModule_Create(&c_overlap) ;
+    PyObject *m ;
+    m = PyModule_Create(&c_overlap) ;
+    if (m == NULL)
+        return NULL;
+       
+    return m ;
 }
 
 /* worked for python 2.X */
