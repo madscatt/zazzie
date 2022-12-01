@@ -5,7 +5,7 @@ import os,sys,locale
 import pprint
 import copy
 
-import sasmol.sasmol as sasmol
+import sasmol.system as system
 
 import sassie.simulate.torsion_angle_monte_carlo.group_psf as group_psf
 
@@ -24,7 +24,7 @@ def get_bond_list(psf_data):
         if words[1]=='!NBOND:':
             number_of_bonds = locale.atoi(words[0])
             continue
-        for i in xrange(number_of_bonds_this_line):
+        for i in range(number_of_bonds_this_line):
             bonds.append([locale.atoi(words[2*i]), locale.atoi(words[2*i+1])])
     return bonds
 
@@ -91,19 +91,19 @@ def traverse_recursive_restore(graph, mol, mask, current, back_watch):
            mask -- a mask for the to-be-rotated atoms
            current -- current
     """
-    print '^^^\ncurrent in traverse_recursive_restore: (',mol.resid()[current],',',mol.resname()[current],',',mol.name()[current],')'
+    print('^^^\ncurrent in traverse_recursive_restore: (',mol.resid()[current],',',mol.resname()[current],',',mol.name()[current],')')
     if mask[current] in [0,1] or current==back_watch:
-        print 'return\nvvv'
+        print('return\nvvv')
         return
     elif mask[current]>1:
-        print 'reset current'
+        print('reset current')
         mask[current] = 0;
 
     for child in graph[current]:
-        print 'child in traverse_recursive_restore: (',mol.resid()[child],',',mol.resname()[child],',',mol.name()[child],')'
+        print('child in traverse_recursive_restore: (',mol.resid()[child],',',mol.resname()[child],',',mol.name()[child],')')
         traverse_recursive_restore(graph, mol, mask, child, back_watch)
 
-    print 'return\nvvv'
+    print('return\nvvv')
 
     return
 
@@ -174,7 +174,7 @@ def traverse_graph_for_pivot(graph, mol, exceptions, mask, pivot, direction='for
     """
     '''reset the mask'''
     '''
-    for i in xrange(len(mask)):
+    for i in range(len(mask)):
         mask[i] = 0
     '''
     '''set the pivot atoms'''
@@ -209,7 +209,7 @@ if __name__=='__main__':
     '''set up the sasmol object'''
     print('\n'+'='*100+'\nSetting up the sasmol object...')
     pdb_file = 'ten_mer.pdb'
-    m = sasmol.SasMol(0)
+    m = system.Molecule(0)
     m.read_pdb(pdb_file)
     natoms = m.natoms()
     mask = [0]*natoms

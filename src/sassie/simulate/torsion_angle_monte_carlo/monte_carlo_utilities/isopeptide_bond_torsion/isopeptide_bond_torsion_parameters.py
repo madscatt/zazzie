@@ -1,4 +1,3 @@
-import sasmol.sasmol as sasmol
 import sassie.simulate.torsion_angle_monte_carlo.monte_carlo_utilities.tamc_utilities.setup_torsion_parameters as setup_torsion_parameters
 import sassie.util.basis_to_python as basis_to_python
 import re
@@ -144,8 +143,8 @@ def build_basis_strings(residue_main_pivots,residue_main_pivots_outside,residue_
                         else:
                             residue_basis += '(segname[i] == "'+lys_segname+'" and resid[i] == '+str(lys_resid)+' and name[i] == "'+this_name+'")'
                     elif keyword == "previous":
-                        print 'isopeptide TAMC along previous direction not implemented yet'
-                        print 'Quit now'
+                        print('isopeptide TAMC along previous direction not implemented yet')
+                        print('Quit now')
                         exit(0)
                     elif keyword == "next":
                         residue_basis += '(segname[i] == "'+cter_segname+'" and resid[i] == '+str(cter_resid)+' and name[i] == "'+this_name+'") or '

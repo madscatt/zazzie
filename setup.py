@@ -50,15 +50,23 @@ try:
 except AttributeError:
     numpy_include = numpy.get_numpy_include()
 
-
 library_dirs = [os.path.join(os.sep, 'usr', 'local', 'lib')]
 
 all_packages = ['sassie', 'sassie.util',
     'sassie.interface', 'sassie.contrast','sassie.contrast.multi_component_analysis',
     'sassie.interface.multi_component_analysis','sassie.interface.data_interpolation',
     'sassie.tools', 'sassie.tools.data_interpolation',
-    'sassie.simulate', 'sassie.simulate.torsion_angle_monte_carlo',
+    'sassie.simulate', 
+    'sassie.simulate.constraints',
+    'sassie.simulate.energy',
+    'sassie.simulate.energy.extensions',
+    'sassie.simulate.torsion_angle_monte_carlo',
     'sassie.simulate.torsion_angle_monte_carlo.monte_carlo_utilities',
+    'sassie.simulate.torsion_angle_monte_carlo.monte_carlo_utilities.tamc_utilities',
+    'sassie.simulate.torsion_angle_monte_carlo.monte_carlo_utilities.isopeptide_bond_torsion',
+    'sassie.simulate.torsion_angle_monte_carlo.monte_carlo_utilities.single_stranded_nucleic_backbone_torsion',
+    'sassie.simulate.torsion_angle_monte_carlo.monte_carlo_utilities.double_stranded_nucleic',
+    'sassie.simulate.torsion_angle_monte_carlo.monte_carlo_utilities.protein_backbone_torsion',
     'sassie.simulate.torsion_angle_monte_carlo.extensions',
     'sassie.simulate.torsion_angle_monte_carlo.extensions.overlap',
     'sassie.simulate.torsion_angle_monte_carlo.extensions.dna_overlap'

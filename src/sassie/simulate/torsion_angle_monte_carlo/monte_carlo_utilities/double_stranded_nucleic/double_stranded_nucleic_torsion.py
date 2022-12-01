@@ -5,11 +5,9 @@ import inspect
 import warnings
 import os
 import sys
-try:
-    import sasmol.sasmol as sasmol
-except:
-    import sassie.sasmol.sasmol as sasmol
-    print 'ERROR: forced to use the old sasmol'
+
+import sasmol.system as system
+    
 import sassie.util.sasconfig as sasconfig
 import sassie.util.basis_to_python as basis_to_python
 import sassie.simulate.torsion_angle_monte_carlo.dna_overlap as dna_overlap
@@ -1053,9 +1051,9 @@ def setup_double_stranded_nucleic_parameters(other_self, group_number, nvars):
 
     n_flex_regions = mvars.number_of_flexible_regions
 
-    dna_chain1_mol = sasmol.SasMol(0)
-    dna_chain2_mol = sasmol.SasMol(1)
-    coarse_grained_flexible_mol = sasmol.SasMol(2)
+    dna_chain1_mol = system.Molecule(0)
+    dna_chain2_mol = system.Molecule(0)
+    coarse_grained_flexible_mol = system.Molecule(0)
 
     # coarse-grain the flexible_basis_mol
     tic = time.time()
@@ -1135,7 +1133,7 @@ def setup_double_stranded_nucleic_parameters(other_self, group_number, nvars):
 
     # store the molecules for each bead
     for j in xrange(number_beads):
-        bead = sasmol.SasMol(0)
+        bead = system.Molecule(0)
         error = flexible_mol.copy_molecule_using_mask(
             bead, nvars.nucleic_acid_bead_masks[group_number][j], 0)
         handle_error(other_self, error)

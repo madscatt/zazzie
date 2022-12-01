@@ -1,8 +1,8 @@
 import sys
 import math,numpy,random
 
-import sasmol.sasmol as sasmol
-import sasmol.sasmath as sasmath
+import sasmol.system as system
+import sasmol.linear_algebra as linear_algebra
 
 def calc(other_self,itheta,theta,parm,beta,nonbondflag,seed_object):
     '''
@@ -88,7 +88,7 @@ def rotate_dihedral(other_self, group_molecule, group_number, pivot_number, ithe
 
     active_pivot_mask = main_pivots_masks[pivot_number]
     #err, active_pivot_coor=group_molecule.get_coor_using_mask(frame, active_pivot_mask)
-    tmp_group_flexible_molecule = sasmol.SasMol(0)
+    tmp_group_flexible_molecule = system.Molecule(0)
     error = group_molecule.copy_molecule_using_mask(tmp_group_flexible_molecule,group_flexible_mask,0)
     err, active_pivot_coor=tmp_group_flexible_molecule.get_coor_using_mask(frame, active_pivot_mask) ## @NOTE to ZHL: temporary solution for a hack
     masks_to_be_rotated = [main_pivots_post_masks[pivot_number]] ## @NOTE to ZHL: need a comprehensive way to build the to-be-rotated masks, including the post-internal and post-external. Hacked currently.
@@ -118,13 +118,13 @@ def rotate_dihedral(other_self, group_molecule, group_number, pivot_number, ithe
             nv=v/lv
         else:
             result = 0
-            print 'v = ',v
-            print 'lv = ',lv
+            print('v = ',v)
+            print('lv = ',lv)
             return result
     except:
         result = 0
-        print 'v = ',v
-        print 'lv = ',lv
+        print('v = ',v)
+        print('lv = ',lv)
         return result
 
 
@@ -178,7 +178,7 @@ def measure(other_self, group_molecule, group_number, pivot_number):
 
     lcoor=numpy.take(this_frame_coor[:,:],ind,0)
 
-    angle=sasmath.dihedral_angle(lcoor[0,:],lcoor[1,:],lcoor[2,:],lcoor[3,:])
+    angle=linear_algebra.dihedral_angle(lcoor[0,:],lcoor[1,:],lcoor[2,:],lcoor[3,:])
 
     return angle
 

@@ -1,5 +1,4 @@
 import sys,string,numpy
-import sasmol.sasmol as sasmol
 import sassie.util.sasconfig as sasconfig
 from sassie.simulate.torsion_angle_monte_carlo.monte_carlo_utilities.tamc_utilities.sample_torsion import sample_torsion 
 from sassie.simulate.torsion_angle_monte_carlo.monte_carlo_utilities.tamc_utilities.setup_torsion_parameters import setup_torsion_parameters 

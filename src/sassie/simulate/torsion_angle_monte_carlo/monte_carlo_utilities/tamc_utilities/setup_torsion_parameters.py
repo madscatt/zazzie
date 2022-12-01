@@ -1,7 +1,7 @@
 import sys,os
 import sassie.util.sasconfig as sasconfig
-import sasmol.sasmol as sasmol
-import sasmol.sasmath as sasmath
+import sasmol.system as system
+import sasmol.linear_algebra as linear_algebra
 import sassie.simulate.energy.readpsf as readpsf
 import sassie.simulate.energy.readparam as readparam
 import sassie.simulate.torsion_angle_monte_carlo.group_psf as group_psf
@@ -192,8 +192,8 @@ def collect_dihedrals_from_psf_inputs(mol, pivot_indices, atoms, dihedrals, new_
 
         elif not found:
 
-            print 'count = ', count
-            print 'this_pivot_type = ', this_pivot_type
+            print('count = ', count)
+            print('this_pivot_type = ', this_pivot_type)
 
             message = 'no valid pivot found for pivot type definition = '+str(this_pivot_type)
             log.error(message)
@@ -239,7 +239,7 @@ def calculate_initial_torsion_variables(other_self, main_pivots_masks):
             log.error('ERROR: '+str(error))
         else:
             c = coor[0]
-            torsion_angles.append(sasmath.dihedral_angle(c[0],c[1],c[2],c[3]))
+            torsion_angles.append(linear_algebra.dihedral_angle(c[0],c[1],c[2],c[3]))
             #print torsion_angles[-1]
 
     return
@@ -255,7 +255,7 @@ def get_post(group_molecule, group_flexible_mask, direction, main_pivots_indices
 
     DEBUG = False
     if input_psf_file==None:
-        if (DEBUG): print "flexible post mask generation not implemented for brute force yet!" ## @NOTE to ZHL: not implemented
+        if (DEBUG): print("flexible post mask generation not implemented for brute force yet!") ## @NOTE to ZHL: not implemented
         exit(0)
     else:
         '''get the bond list from the external psf file'''
@@ -277,19 +277,19 @@ def get_post(group_molecule, group_flexible_mask, direction, main_pivots_indices
         if (DEBUG): print('graph:'); pprint.pprint(graph)
 
         for indices in main_pivots_indices:
-            if (DEBUG): print 'selected mask',mask
+            if (DEBUG): print('selected mask',mask)
             flexible_post_mask = numpy.zeros(group_flexible_natoms)
             if direction=="forward":
                 pivot_axis = [indices[1]-1, indices[2]-1] ## @NOTE to ZHL: is this always right?
             elif direction=="backward" or direction=="reverse":
                 pivot_axis = [indices[2]-1, indices[1]-1] ## @NOTE to ZHL: is this always right?
             else:
-                print "ERROR: expected forward/reverse direction, received", direction
+                print("ERROR: expected forward/reverse direction, received", direction)
                 exit(1)
             if (DEBUG): print('pivot axis: '),pivot_axis
             traversal.traverse_graph_for_pivot(graph, group_molecule,  main_pivots['graph_traversal_exception'], flexible_post_mask, pivot_axis)
             #traversal.traverse_graph_for_pivot(graph, group_molecule,  flexible_post_mask, pivot_axis)
-            if (DEBUG): print ('flexible_post_mask after traversal: '),flexible_post_mask
+            if (DEBUG): print(('flexible_post_mask after traversal: '),flexible_post_mask)
 
             post_mask = numpy.ones(group_natoms)
             count=0
@@ -315,7 +315,7 @@ def setup_torsion_parameters(other_self, group_molecule, group_number, pvars):
     group_flexible_mask = other_self.group_flexible_masks[group_number]
     group_post_mask = other_self.group_post_masks[group_number]
 
-    group_flexible_molecule = sasmol.SasMol(0)
+    group_flexible_molecule = system.Molecule(0)
     error = group_molecule.copy_molecule_using_mask(group_flexible_molecule,group_flexible_mask,0)
 
     pvars.main_pivots = torsion_parameter_module.define_main_pivots(direction)

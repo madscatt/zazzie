@@ -1,7 +1,6 @@
 import sys,os,copy
 import sassie.util.sasconfig as sasconfig
-import sasmol.sasmol as sasmol
-import sasmol.sasmath as sasmath
+import sasmol.system as system
 import sassie.simulate.energy.readpsf as readpsf
 import sassie.simulate.energy.readparam as readparam
 import sassie.simulate.torsion_angle_monte_carlo.group_psf as group_psf
@@ -13,7 +12,7 @@ def log_error(message):
 
     try:
         raise ValueError(message)
-    except Exception, err:
+    except(Exception, err):
         sys.stderr.write('\n\n')
         sys.stderr.write('ERROR: '+str(err))
         sys.stderr.write('\n\nQUITTING NOW\n\n')
@@ -60,7 +59,7 @@ def check_if_all_atoms_captured(mol,unique_basis_atoms,residue_sidechain_atoms):
 
     for this_resid in resids:
         error,mask = mol.get_subset_mask('resid[i] == '+str(this_resid))
-        temp_mol = sasmol.SasMol(0)
+        temp_mol = system.Molecule(0)
         mol.copy_molecule_using_mask(temp_mol,mask,frame)
         this_resname = temp_mol.resname()[0]
         this_names = temp_mol.name()

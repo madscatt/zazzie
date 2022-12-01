@@ -37,7 +37,7 @@ def init(psffilepath,psffilename,parmfilepath,parmfilename,simple_flag):
 
 		angleparam=initialize.getangles(atoms,angles,pangles)
 
-		print 'dihedral parameters were NOT determined'
+		print('dihedral parameters were NOT determined')
 		#dihedralparam=initialize.getdihedrals(atoms,dihedrals,pdihedrals)
 
 	else:
