@@ -5,7 +5,7 @@ from __future__ import unicode_literals
 
 __author__ = 'curtisj'
 
-import shlex, string,sys
+import shlex, sys
 
 DEBUG = False
 
@@ -87,7 +87,7 @@ def parse_basis(basis):
     number_of_tokens = len(tokenlist)
     new_basis = ''
 
-    for i in xrange(number_of_tokens):
+    for i in range(number_of_tokens):
         this_word = tokenlist[i]
         try: 
             next_word = tokenlist[i+1]
@@ -129,7 +129,7 @@ def clean_up_weight_basis(basis_string):
     else:  
         new_basis_string = string.split(basis_string,',')
     '''
-    new_basis_string = string.split(str(basis_string),',')
+    new_basis_string = str(basis_string).split(',')
 
     python_basis = [] 
 
@@ -155,7 +155,7 @@ if __name__ == '__main__':
     basis.append('segname HC1 and resid < 210')
     basis.append('(resid > 23 and resid < 68) and name "CA"')
 
-    for i in xrange(5):
+    for i in range(5):
         print('#####')
         new_basis = parse_basis(basis[i])
         print('\n','\n')
@@ -189,8 +189,8 @@ if __name__ == '__main__':
 
     ### HERE here now NOW
 
-    rg = [float(x) for x in xrange(20)]
-    x2 = [0.1*float(x) for x in xrange(20)]
+    rg = [float(x) for x in range(20)]
+    x2 = [0.1*float(x) for x in range(20)]
 
     #basis = 'rg < "3.8" and rg > "0.5"'
     
@@ -204,7 +204,7 @@ if __name__ == '__main__':
         mask_array = []
 
         try:
-            for i in xrange(len(rg)):
+            for i in range(len(rg)):
                 if(eval(basis)):
                     mask_array.append(1)
                 else:

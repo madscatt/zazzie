@@ -12,7 +12,6 @@ import sassie.util.sasconfig as sasconfig
 
 #import sasconfig 
 
-
 if sasconfig.__level__ == "DEBUG": DEBUG = True
 
 class run_utils():

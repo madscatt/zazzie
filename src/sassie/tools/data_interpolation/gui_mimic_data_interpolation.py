@@ -126,7 +126,7 @@ class gui_mimic_data_interpolation():
     '''
     gui_mimic class contains the name of the module
     '''
-    module = 'data_interpolation'
+    module = 'torsion_angle_monte_carlo'
 
     def __init__(self, test, paths):
 
@@ -142,7 +142,6 @@ if __name__ == '__main__':
 
     test = False  # option to run with test variables not implemented in 1.0.
     paths = None
-
 
 # We are thinking of defining the install path so the gui mimic can be run from anywhere as long as it is called from that particular python
 # That way, the test files will always be available to the user.

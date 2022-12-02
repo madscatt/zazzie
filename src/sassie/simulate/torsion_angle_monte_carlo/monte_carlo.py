@@ -14,14 +14,13 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
-from __future__ import division
+#from __future__ import division
 
 import sys
 import os
 import random
 import logging
 import numpy
-import string
 import time
 import subprocess
 
@@ -73,26 +72,22 @@ import sassie.simulate.torsion_angle_monte_carlo.group_psf as group_psf
 if sasconfig.__level__ == "DEBUG":
     DEBUG = True
 
-app = 'monte_carlo'
-
+app = 'torsion_angle_monte_carlo'
 
 class module_variables():
 
     def __init__(self, parent=None):
         self.app = app
 
-
 class mcvars():
 
     def __init__(self, parent=None):
         pass
 
-
 class simvars():
 
     def __init__(self, parent=None):
         pass
-
 
 class simulation():
 
@@ -105,7 +100,7 @@ class simulation():
         main method to manage simulation
         """
 
-        self.mvars = module_variables()
+        self.module_variables = module_variables()
 
         self.mcvars = mcvars()
 
@@ -133,10 +128,10 @@ class simulation():
         method to extract variables into system wide class instance
         """
 
-        mvars = self.mvars
+        mvars = self.module_variables
         self.log.debug('in unpack_variables')
 
-        mvars.runname = variables['runname'][0]
+        mvars.run_name = variables['run_name'][0]
         mvars.dcdfile = variables['dcdfile'][0]
         mvars.pdbfile = variables['pdbfile'][0]
         mvars.psffile = variables['psffile'][0]
@@ -182,7 +177,7 @@ class simulation():
     def setup_group_simulation(self, group_pdb_name, group_psf_name):
 
         log = self.log.print_gui
-        mvars = self.mvars
+        mvars = self.module_variables
 
         log.debug('setting up group simulation object')
 
@@ -213,7 +208,7 @@ class simulation():
         """
 
         log = self.log
-        mvars = self.mvars
+        mvars = self.module_variables
         full_molecule = self.full_molecule
         pgui = self.run_utils.print_gui
 
@@ -238,7 +233,7 @@ class simulation():
             mvars.psf_data = group_psf.psf_data()
             group_psf.parse_psf_file(mvars.psf_file_data, mvars.psf_data)
 
-        for group_number in xrange(mvars.number_of_flexible_regions):
+        for group_number in range(mvars.number_of_flexible_regions):
             frame = 0
             this_group_rotation = mvars.rotation_type_array[group_number]
 
@@ -398,7 +393,7 @@ class simulation():
         """
 
         log = self.log
-        mvars = self.mvars
+        mvars = self.module_variables
         full_molecule = self.full_molecule
 
         mvars.filter_flag = 0
@@ -411,7 +406,7 @@ class simulation():
         mvars.mask_a_array = []
         mvars.mask_b_array = []
 
-        for i in xrange(len(distance_array)):
+        for i in range(len(distance_array)):
             log.debug('constraint_basis1_array[i] = ' +
                       str(constraint_basis1_array[i]))
             log.debug('constraint_basis2_array[i] = ' +
@@ -438,7 +433,7 @@ class simulation():
         """
 
         log = self.log
-        mvars = self.mvars
+        mvars = self.module_variables
         pgui = self.run_utils.print_gui
         full_molecule = self.full_molecule
 
@@ -446,12 +441,12 @@ class simulation():
         mvars.bonds = []
 
         for line in mvars.psf_data.nbond:
-            this_line = string.split(line)
+            this_line = line.split()
             if "!NBOND:" not in this_line and len(this_line) > 1:
                 try:
                     local_number_of_pairs = int(len(this_line) / 2)
                     j = 0
-                    for i in xrange(local_number_of_pairs):
+                    for i in range(local_number_of_pairs):
                         mvars.bonds.append([int(this_line[j]) - 1,
                                             int(this_line[j + 1]) - 1])
                         mvars.number_of_bonds += 1
@@ -482,7 +477,7 @@ class simulation():
 
         log = self.log
         log.debug('in initialization')
-        mvars = self.mvars
+        mvars = self.module_variables
 
         """
         convert input basis string to enable python version
@@ -575,7 +570,7 @@ class simulation():
         """
 
         log = self.log
-        mvars = self.mvars
+        mvars = self.module_variables
         full_molecule = self.full_molecule
 
         group_molecule = self.group_molecules[group_number]
@@ -593,7 +588,7 @@ class simulation():
         """
 
         log = self.log
-        mvars = self.mvars
+        mvars = self.module_variables
         full_molecule = self.full_molecule
 
         error, group_coordinates = full_molecule.get_coor_using_mask(
@@ -609,10 +604,10 @@ class simulation():
         """
 
         log = self.log
-        mvars = self.mvars
+        mvars = self.module_variables
         full_molecule = self.full_molecule
 
-        for n in xrange(mvars.number_of_flexible_regions):
+        for n in range(mvars.number_of_flexible_regions):
             error, group_coordinates = full_molecule.get_coor_using_mask(
                 0, self.group_masks[n])
             self.group_molecules[n].setCoor(group_coordinates)
@@ -626,7 +621,7 @@ class simulation():
         """
 
         log = self.log
-        mvars = self.mvars
+        mvars = self.module_variables
         mcvars = self.mcvars
         pgui = self.run_utils.print_gui
         group_molecule = self.group_molecules[group]
@@ -654,7 +649,7 @@ class simulation():
         checks all atom overlap over entire molecule
         """
         log = self.log
-        mvars = self.mvars
+        mvars = self.module_variables
         mcvars = self.mcvars
         pgui = self.run_utils.print_gui
         full_molecule = self.full_molecule
@@ -682,7 +677,7 @@ class simulation():
         """
 
         log = self.log
-        mvars = self.mvars
+        mvars = self.module_variables
         mcvars = self.mcvars
         pgui = self.run_utils.print_gui
         full_molecule = self.full_molecule
@@ -721,7 +716,7 @@ class simulation():
         mcvars.number_z_failures = 0
         mcvars.fail_tally = 0
 
-        for i in xrange(mvars.trial_steps):
+        for i in range(mvars.trial_steps):
 
             """
             pick a group
