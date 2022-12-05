@@ -66,7 +66,7 @@ import os
 import sys
 import locale
 import string
-import sassie.interface.input_filter_sasmol as input_filter
+import sassie.interface.input_filter as input_filter
 
 
 #this version uses the new input filter that recognizes a nested_float_array
