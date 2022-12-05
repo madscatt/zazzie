@@ -18,7 +18,7 @@ import os
 import sys
 import string
 import locale
-import sassie.interface.input_filter_sasmol as input_filter
+import sassie.interface.input_filter as input_filter
 
 
 def data_check(expdata, dq, maxpoints, datatype):
