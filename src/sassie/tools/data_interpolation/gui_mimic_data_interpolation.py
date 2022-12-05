@@ -8,7 +8,7 @@ import shutil
 import time
 
 import sassie.tools.data_interpolation.data_interpolation as data_interpolation
-import sassie.interface.input_filter_sasmol as input_filter
+import sassie.interface.input_filter as input_filter
 import sassie.interface.data_interpolation.interpolate_filter as interpolate_filter
 import multiprocessing
 
