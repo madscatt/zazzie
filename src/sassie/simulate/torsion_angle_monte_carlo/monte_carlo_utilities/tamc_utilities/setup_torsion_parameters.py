@@ -131,7 +131,7 @@ def get_subset_mask_and_indices_string_order(self,basis_filter):
 
     for this_basis_filter in new_basis_filter:
         found = False
-        for i in xrange(self.natoms()):
+        for i in range(self.natoms()):
             try:
                 if(eval(this_basis_filter)):
                     mask_array[i] = 1
@@ -293,7 +293,7 @@ def get_post(group_molecule, group_flexible_mask, direction, main_pivots_indices
 
             post_mask = numpy.ones(group_natoms)
             count=0
-            for i in xrange(group_natoms):
+            for i in range(group_natoms):
                 if group_flexible_mask[i]:
                     post_mask[i] = flexible_post_mask[count]
                     count += 1
@@ -308,7 +308,7 @@ def setup_torsion_parameters(other_self, group_molecule, group_number, pvars):
     '''
 
     log = other_self.log
-    mvars = other_self.mvars
+    mvars = other_self.module_variables
     direction = mvars.rotation_direction_array[group_number]
     torsion_parameter_module = pvars.torsion_parameter_module
     
@@ -335,12 +335,12 @@ def setup_torsion_parameters(other_self, group_molecule, group_number, pvars):
 
     # residue_sidechain_indices, pvars.residue_sidechain_masks, residue_other_indices, pvars.residue_other_masks = assign_sidechain_and_other_atoms(group_molecule, pvars.main_pivots) ## @NOTE to ZHL: sidechain pivot not implemented yet
 
-    group_flexible_psf_name = os.path.join(other_self.runpath, "group_flexible_"+str(group_number)+".psf")
+    group_flexible_psf_name = os.path.join(other_self.run_path, "group_flexible_"+str(group_number)+".psf")
     #pvars.main_pivots_post_masks[group_number] = get_post(group_molecule, group_flexible_mask, direction, pvars.main_pivots_masks[group_number], group_flexible_psf_name)
     #pvars.main_pivots_post_masks[group_number] = get_post(group_molecule, group_flexible_mask, direction, main_pivots_indices, pvars.main_pivots, group_flexible_psf_name)
     pvars.main_pivots_post_masks[group_number] = get_post(group_flexible_molecule, group_flexible_mask, direction, main_pivots_indices, pvars.main_pivots, group_flexible_psf_name)
 
-    group_psf_name = os.path.join(other_self.runpath, "group_flexible_"+str(group_number)+".psf")
+    group_psf_name = os.path.join(other_self.run_path, "group_flexible_"+str(group_number)+".psf")
     pvars.main_pivots_parameters[group_number] = setup_main_pivot_force_field_parameters(group_flexible_molecule, main_pivots_indices, pvars.main_pivots_masks[group_number], pvars.residue_main_pivots[group_number], group_psf_name)
 
     #calculate_initial_torsion_variables(other_self, pvars.main_pivots_masks)

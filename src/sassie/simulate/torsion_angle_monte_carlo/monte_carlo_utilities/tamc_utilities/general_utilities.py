@@ -107,7 +107,7 @@ def build_basis_strings(resids,residue_main_pivots,residue_main_pivots_outside,r
             this_pivot_number = residue_main_pivots_list[residue_number][this_pivot_counter]
 
             this_residue_main_pivots_outside = []
-            for key, value in residue_main_pivots_outside[residue_number].iteritems():   # iterate over dictionary
+            for key, value in residue_main_pivots_outside[residue_number].items():   # iterate over dictionary
                 if key == this_pivot_number:
                     this_residue_main_pivots_outside = residue_main_pivots_outside[residue_number][key]
                     break

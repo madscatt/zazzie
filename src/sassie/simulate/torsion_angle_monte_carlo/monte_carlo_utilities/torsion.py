@@ -42,7 +42,7 @@ def setup(other_self,group_number):
 
     ''' this method prepares a group for a flexible isopeptide bond region'''
 
-    mvars = other_self.mvars
+    mvars = other_self.module_variables
     log = other_self.log
     pgui = other_self.run_utils.print_gui
     mol = other_self.group_molecules[group_number]

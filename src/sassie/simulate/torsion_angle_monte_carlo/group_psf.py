@@ -1,5 +1,3 @@
-import string
-
 class psf_data():
     pass
 
@@ -14,7 +12,7 @@ def parse_psf_file(psf_file_data, psf_data):
     natom_flag = nbond_flag = ntheta_flag = nphi_flag = nimphi_flag = ndon_flag = nacc_flag = nnb_flag = ngrp_flag = False
      
     for line in psf_file_data:
-        this_line = string.split(line)
+        this_line = line.split()
 
         if "!NATOM" in this_line:
             header_flag = False
@@ -97,7 +95,7 @@ def parse_psf_file(psf_file_data, psf_data):
 def get_group_psf(other_self,new_psf_file_name, psf_data, group_mol):
 
     log = other_self.log 
-    mvars = other_self.mvars
+    mvars = other_self.module_variables
 
 
     new_file = open(new_psf_file_name,'w')
@@ -126,7 +124,7 @@ def get_group_psf(other_self,new_psf_file_name, psf_data, group_mol):
             new_file.write(st)
         else:
             try: 
-                this_index = int(string.split(line)[0])
+                this_index = int(line)[0].split()
                 if (this_index in index_map):
                     st = '{:8d}{:62s}'.format(index_map[this_index],line[8:])
                     new_file.write(st)
@@ -147,12 +145,12 @@ def get_group_psf(other_self,new_psf_file_name, psf_data, group_mol):
               
     pairs = []
     for line in psf_data.nbond:                     
-        this_line = string.split(line)
+        this_line = line.split()
         if "!NBOND:" not in this_line and len(this_line) > 1:
             try:
                 local_number_of_pairs = len(this_line)/2
                 j = 0
-                for i in xrange(local_number_of_pairs):
+                for i in range(local_number_of_pairs):
                     if (int(this_line[j]) in index_map) and (int(this_line[j+1]) in index_map):
                         pairs.append([index_map[int(this_line[j])],index_map[int(this_line[j+1])]])
                         number_of_bonds += 1
@@ -181,12 +179,12 @@ def get_group_psf(other_self,new_psf_file_name, psf_data, group_mol):
     
     triplets = []
     for line in psf_data.ntheta:                     
-        this_line = string.split(line)
+        this_line = line.split()
         if "!NTHETA:" not in this_line:
             try:
                 local_number_of_triplets = len(this_line)/3
                 j = 0
-                for i in xrange(local_number_of_triplets):
+                for i in range(local_number_of_triplets):
                     if (int(this_line[j]) in index_map)  and (int(this_line[j+1]) in index_map) and (int(this_line[j+2]) in index_map):
                         triplets.append([index_map[int(this_line[j])],index_map[int(this_line[j+1])],index_map[int(this_line[j+2])]])
                         number_of_angles += 1
@@ -215,12 +213,12 @@ def get_group_psf(other_self,new_psf_file_name, psf_data, group_mol):
     
     quartets = []
     for line in psf_data.nphi:                     
-        this_line = string.split(line)
+        this_line = line.split()
         if "!NPHI:" not in this_line:
             try:
                 local_number_of_quartets = len(this_line)/4
                 j = 0
-                for i in xrange(local_number_of_quartets):
+                for i in range(local_number_of_quartets):
                     if (int(this_line[j]) in index_map) and (int(this_line[j+1]) in index_map) and (int(this_line[j+2]) in index_map) and (int(this_line[j+3]) in index_map):
                         quartets.append([index_map[int(this_line[j])],index_map[int(this_line[j+1])],index_map[int(this_line[j+2])],index_map[int(this_line[j+3])]])
                         number_of_dihedrals += 1
@@ -249,12 +247,12 @@ def get_group_psf(other_self,new_psf_file_name, psf_data, group_mol):
     
     quartets = []
     for line in psf_data.nimphi:                     
-        this_line = string.split(line)
+        this_line = line.split()
         if "!NIMPHI:" not in this_line:
             try:
                 local_number_of_quartets = len(this_line)/4
                 j = 0
-                for i in xrange(local_number_of_quartets):
+                for i in range(local_number_of_quartets):
                     if (int(this_line[j]) in index_map) and (int(this_line[j+1]) in index_map) and (int(this_line[j+2]) in index_map) and (int(this_line[j+3]) in index_map):
                         quartets.append([index_map[int(this_line[j])],index_map[int(this_line[j+1])],index_map[int(this_line[j+2])],index_map[int(this_line[j+3])]])
                         number_of_impropers += 1
@@ -293,7 +291,7 @@ def get_group_psf(other_self,new_psf_file_name, psf_data, group_mol):
 
     for line in psf_data.nnb:
         try:
-            this_line = string.split(line)
+            this_line = line.split()
             if "!NNB:" not in this_line and this_line[3] == '0':
                 sum = len(this_line)
                 count += sum
@@ -312,7 +310,7 @@ def get_group_psf(other_self,new_psf_file_name, psf_data, group_mol):
     st = '' 
     count = 0
     total_count = 0
-    for number in xrange(group_mol.natoms()):
+    for number in range(group_mol.natoms()):
         st += '{:8d}'.format(0)
         count += 1 ; total_count += 1
         if count == 8:
@@ -364,7 +362,7 @@ if __name__ == "__main__":
     get_group_psf(new_psf_file_name, psf_data, group_mol)
 
     index = []
-    for i in xrange(group_mol.natoms()):
+    for i in range(group_mol.natoms()):
         index.append(i+1)
     group_mol.setIndex(index)
     group_mol.write_pdb("mab_1.pdb",frame,"w")
@@ -378,7 +376,7 @@ if __name__ == "__main__":
     get_group_psf(new_psf_file_name, psf_data, group_mol)
 
     index = []
-    for i in xrange(group_mol.natoms()):
+    for i in range(group_mol.natoms()):
         index.append(i+1)
     group_mol.setIndex(index)
     group_mol.write_pdb("mab_2.pdb",frame,"w")

@@ -277,22 +277,22 @@ class simulation():
 
             if mvars.psf_flag:
 
-                group_pdb_name = os.path.join(self.runpath, "group_%d.pdb"
+                group_pdb_name = os.path.join(self.run_path, "group_%d.pdb"
                                               % group_number)
-                group_psf_name = os.path.join(self.runpath, "group_%d.psf"
+                group_psf_name = os.path.join(self.run_path, "group_%d.psf"
                                               % group_number)
 
-                group_flexible_pdb_name = os.path.join(self.runpath,
+                group_flexible_pdb_name = os.path.join(self.run_path,
                                                        "group_flexible_%d.pdb"
                                                        % group_number)
-                group_flexible_psf_name = os.path.join(self.runpath,
+                group_flexible_psf_name = os.path.join(self.run_path,
                                                        "group_flexible_%d.psf"
                                                        % group_number)
 
-                group_post_pdb_name = os.path.join(self.runpath,
+                group_post_pdb_name = os.path.join(self.run_path,
                                                    "group_post_%d.pdb"
                                                    % group_number)
-                group_post_psf_name = os.path.join(self.runpath,
+                group_post_psf_name = os.path.join(self.run_path,
                                                    "group_post_%d.psf"
                                                    % group_number)
 
@@ -511,11 +511,11 @@ class simulation():
         self.full_molecule.read_pdb(mvars.pdbfile) #SH: TEMPORARY
 
         log.info('opening new dcd file to store trajectory: %s' %
-                 os.path.join(self.runpath, mvars.dcdfile))
+                 os.path.join(self.run_path, mvars.dcdfile))
         self.dcdoutfile = self.full_molecule.open_dcd_write(
-            os.path.join(self.runpath, mvars.dcdfile))
+            os.path.join(self.run_path, mvars.dcdfile))
 
-        cmd = "cp %s %s %s" % (mvars.psffile, mvars.pdbfile, self.runpath)
+        cmd = "cp %s %s %s" % (mvars.psffile, mvars.pdbfile, self.run_path)
         return_code = subprocess.call(cmd, shell=True)
         if return_code:
             log.info('FAILED to copy pdb and psf file to run directory')
@@ -836,7 +836,7 @@ class simulation():
                         log.debug('\nreloading coordinates from a previously '
                                   'accepted structure')
                         full_molecule.read_single_dcd_step(os.path.join(
-                            self.runpath, mvars.dcdfile), goback_frame)
+                            self.run_path, mvars.dcdfile), goback_frame)
 
                     if ('double_stranded_nucleic_torsion' in
                         mvars.rotation_type_array):
@@ -867,9 +867,9 @@ class simulation():
             and DEBUG):
             double_stranded_nucleic_torsion.epilogue(self)
 
-        pgui('Configurations and statistics saved in %s directory\n\n' % (self.runpath+os.path.sep))
+        pgui('Configurations and statistics saved in %s directory\n\n' % (self.run_path+os.path.sep))
 
-        pgui('DCD data were written to %s\n\n' % os.path.join(self.runpath, self.mvars.dcdfile))
+        pgui('DCD data were written to %s\n\n' % os.path.join(self.run_path, self.mvars.dcdfile))
 
         fraction_accepted = self.mcvars.accepted / self.mvars.trial_steps
         pgui('accepted %d out of %d : %0.2f%% percent\n' %
@@ -880,9 +880,9 @@ class simulation():
         self.run_utils.clean_up(log)
 
         pgui('\nrun json inputs saved to:\n    %s\n' %
-             os.path.join(self.runpath, self.parmfile))
+             os.path.join(self.run_path, self.parmfile))
         pgui('\nrun log output saved to:\n    %s\n' %
-             os.path.join(self.runpath, self.logfile))
+             os.path.join(self.run_path, self.logfile))
 
         pgui("\n\n")
         pgui("%s \n" % ('=' * 60))
