@@ -29,7 +29,7 @@ def user_variables(self, **kwargs):
     self.number_of_flexible_regions = '1'
 
     self.basis_string_array = []
-    self.basis_string_array.append('resid >= 3 and resid < 5')
+    self.basis_string_array.append('resid >= 2 and resid < 5')
     self.delta_theta_array = '30.0'
     self.rotation_type_array = ['protein_backbone_torsion']
     self.rotation_direction_array = ['forward']

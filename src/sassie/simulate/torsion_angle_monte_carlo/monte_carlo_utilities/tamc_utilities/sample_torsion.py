@@ -22,7 +22,7 @@ def calc(other_self,itheta,theta,parm,beta,nonbondflag,seed_object):
     number_of_parm = len(parm)/3
 
     iv = 0.0 ; v = 0.0
-    for i in xrange(number_of_parm):
+    for i in range(number_of_parm):
         offset = i*3
         k_ang = float(parm[0+offset])
         n_ang = float(parm[1+offset])
@@ -142,7 +142,7 @@ def rotate_dihedral(other_self, group_molecule, group_number, pivot_number, ithe
     br = tee*ir
 
     for mask in masks_to_be_rotated:
-        for i in xrange(len(mask)):
+        for i in range(len(mask)):
             if not mask[i]:
                 continue
             ta=coor[frame][i]

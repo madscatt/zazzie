@@ -38,9 +38,9 @@ def get_unique_atoms(list):
     utility method to get unique elements from a nested list
     '''
     unique_list = []
-    for i in xrange(len(list)):
+    for i in range(len(list)):
         this_i = list[i]
-        for j in xrange(len(list[i])):
+        for j in range(len(list[i])):
             this_j = this_i[j]
             if this_j not in unique_list:
                 unique_list.append(this_j)
@@ -107,6 +107,8 @@ def build_basis_strings(resids,residue_main_pivots,residue_main_pivots_outside,r
             this_pivot_number = residue_main_pivots_list[residue_number][this_pivot_counter]
 
             this_residue_main_pivots_outside = []
+
+            #for k, v in d.items() ##python 3
             for key, value in residue_main_pivots_outside[residue_number].items():   # iterate over dictionary
                 if key == this_pivot_number:
                     this_residue_main_pivots_outside = residue_main_pivots_outside[residue_number][key]

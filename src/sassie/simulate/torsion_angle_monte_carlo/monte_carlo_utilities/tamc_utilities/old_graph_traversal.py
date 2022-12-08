@@ -1,16 +1,13 @@
 # Hailiang Zhang
 # March 2015
 
-import os
-import sys
-import locale
+import os,sys,locale
 import pprint
 import copy
 
 import sasmol.system as system
 
 import sassie.simulate.torsion_angle_monte_carlo.group_psf as group_psf
-
 
 def get_bond_list(psf_data):
     """
@@ -21,17 +18,16 @@ def get_bond_list(psf_data):
     bonds = []
     for line in psf_data.nbond:
         words = line.split()
-        #number_of_bonds_this_line = len(words)/2
-        number_of_bonds_this_line = len(words)//2
+        number_of_bonds_this_line = len(words)/2
         if not number_of_bonds_this_line:
             continue
-        if words[1] == '!NBOND:':
+        if words[1]=='!NBOND:':
             number_of_bonds = locale.atoi(words[0])
             continue
-        for i in range(number_of_bonds_this_line):
+        for i in range(int(number_of_bonds_this_line)):
+        #for i in range(number_of_bonds_this_line):
             bonds.append([locale.atoi(words[2*i]), locale.atoi(words[2*i+1])])
     return bonds
-
 
 def setup_graph(bonds):
     """
@@ -43,7 +39,7 @@ def setup_graph(bonds):
     for bond in bonds:
         a = bond[0]
         b = bond[1]
-        if a == b:
+        if a==b:
             print('self-looping is not allowed in my graph')
             print('quitting program')
             exit(0)
@@ -54,7 +50,6 @@ def setup_graph(bonds):
             graph[b] = []
         graph[b].append(a)
     return graph
-
 
 def traverse_self_util(graph, mol, resid, mask, current, back_watch):
     """
@@ -71,9 +66,8 @@ def traverse_self_util(graph, mol, resid, mask, current, back_watch):
     mask[current] = 1
     for child in graph[current]:
         if child == back_watch:
-            return
+            return 
         traverse_self_util(graph, mol, resid, mask, child, back_watch)
-
 
 def traverse_try_util(graph, mol, exceptions, mask, current, back_watch):
     """
@@ -91,7 +85,6 @@ def traverse_try_util(graph, mol, exceptions, mask, current, back_watch):
             return False
         return traverse_recursive_watch(graph, mol, exceptions, mask, child, back_watch)
 
-
 def traverse_recursive_restore(graph, mol, mask, current, back_watch):
     """
     Functionality: the recursive function for graph traversal
@@ -99,22 +92,21 @@ def traverse_recursive_restore(graph, mol, mask, current, back_watch):
            mask -- a mask for the to-be-rotated atoms
            current -- current
     """
-    print('^^^\ncurrent in traverse_recursive_restore: (', mol.resid()[current], ',', mol.resname()[current], ',', mol.name()[current], ')')
-    if mask[current] in [0, 1] or current == back_watch:
+    print('^^^\ncurrent in traverse_recursive_restore: (',mol.resid()[current],',',mol.resname()[current],',',mol.name()[current],')')
+    if mask[current] in [0,1] or current==back_watch:
         print('return\nvvv')
         return
-    elif mask[current] > 1:
+    elif mask[current]>1:
         print('reset current')
-        mask[current] = 0
+        mask[current] = 0;
 
     for child in graph[current]:
-        print('child in traverse_recursive_restore: (', mol.resid()[child], ',', mol.resname()[child], ',', mol.name()[child], ')')
+        print('child in traverse_recursive_restore: (',mol.resid()[child],',',mol.resname()[child],',',mol.name()[child],')')
         traverse_recursive_restore(graph, mol, mask, child, back_watch)
 
     print('return\nvvv')
 
     return
-
 
 def traverse_recursive_try(graph, mol, mask, current, back_watch):
     """
@@ -124,14 +116,13 @@ def traverse_recursive_try(graph, mol, mask, current, back_watch):
            current -- current
     """
     if mask[current]:
-        return
-    mask[current] = 2
+        return 
+    mask[current] = 2;
 
     for child in graph[current]:
         if child == back_watch:
             raise Exception
         traverse_recursive_try(graph, mol, mask, child, back_watch)
-
 
 def traverse_recursive_watch(graph, mol, exceptions, mask, current, back_watch):
     """
@@ -143,36 +134,33 @@ def traverse_recursive_watch(graph, mol, exceptions, mask, current, back_watch):
     """
     if mask[current]:
         return
-    mask[current] = 1
+    mask[current] = 1 
 
     resname = mol.resname()[current]
     resid = mol.resid()[current]
     name = mol.name()[current]
 
     flag_exception = False
-    if resname in exceptions and name == exceptions[resname][0]:
+    if resname in exceptions and name==exceptions[resname][0]:
         flag_exception = True
 
     for child in graph[current]:
 
         if flag_exception:
-            if not (mol.resid()[child] == resid and mol.name()[child] in exceptions[resname][1]):
+            if not (mol.resid()[child]==resid and mol.name()[child] in exceptions[resname][1]):
                 mask_tmp = copy.copy(mask)
                 try:
-                    traverse_recursive_try(
-                        graph, mol, mask_tmp, child, back_watch)
+                    traverse_recursive_try(graph, mol, mask_tmp, child, back_watch)
                 except:
                     continue
         if child == back_watch:
-            # print "privot found inside a loop without exceptions"
-            # print vars()
+            #print "privot found inside a loop without exceptions"
+            #print vars()
             continue
-
-        traverse_recursive_watch(
-            graph, mol, exceptions, mask, child, back_watch)
+        
+        traverse_recursive_watch(graph, mol, exceptions, mask, child, back_watch)
 
     return
-
 
 def traverse_graph_for_pivot(graph, mol, exceptions, mask, pivot, direction='forward'):
     """
@@ -217,7 +205,7 @@ def traverse_graph_for_pivot(graph, mol, exceptions, mask, pivot, direction='for
 
 
 '''my test'''
-if __name__ == '__main__':
+if __name__=='__main__':
 
     '''set up the sasmol object'''
     print('\n'+'='*100+'\nSetting up the sasmol object...')
@@ -233,98 +221,73 @@ if __name__ == '__main__':
     psf_data = group_psf.psf_data()
     group_psf.parse_psf_file(open(psf_file).readlines(), psf_data)
     bonds = get_bond_list(psf_data)
-    print('bond list:')
-    pprint.pprint(bonds)
+    print('bond list:'); pprint.pprint(bonds)
 
-    '''convert atomic indices to addresses'''  # @NOTE to ZHL: hardwired for the pdb file
+    '''convert atomic indices to addresses''' ## @NOTE to ZHL: hardwired for the pdb file
     for bond in bonds:
         bond[0] -= 1
         bond[1] -= 1
     #print('reorganized bond list:'); pprint.pprint(bonds)
 
     '''Build the graph'''
+    print('\n'+'='*100+'\nBuilding the graph...')
+    graph = setup_graph(bonds)
     #print('graph:'); pprint.pprint(graph)
 
     '''pick up a pivot and rotating direction and traverse the graph'''
     print('\n'+'='*100+'\nTesting...')
-    # rotate N-CA bond of residue 1 in forward direction (first residue forward)
+    #rotate N-CA bond of residue 1 in forward direction (first residue forward)
     pivot = bonds[0]
     direction = 'forward'
-    graph = setup_graph(bonds)
-    exceptions = []
-    # graph, mol, exceptions, mask, pivot, direction='forward')
-    traverse_graph_for_pivot(graph, m, exceptions, mask, pivot, direction)
+    traverse_graph_for_pivot(graph, mask, pivot, direction)
     print('\n'+'.'*100+'\nTesting for rotation of N-CA bond of residue 1 in forward direction (first residue forward)...')
-    print('mask of the to-be-rotated atoms for pivot (%i, %i) in %s direction' %
-          (pivot[0], pivot[1], direction))
-    print(mask)
+    print('mask of the to-be-rotated atoms for pivot (%i, %i) in %s direction'%(pivot[0],pivot[1],direction)); print(mask)
 
-    # rotate N-CA bond of residue 1 in forward direction (first residue backward)
+    #rotate N-CA bond of residue 1 in forward direction (first residue backward)
     pivot = bonds[0]
     direction = 'backward'
-    #traverse_graph_for_pivot(graph, mask, pivot, direction)
-    traverse_graph_for_pivot(graph, m, exceptions, mask, pivot, direction)
+    traverse_graph_for_pivot(graph, mask, pivot, direction)
     print('\n'+'.'*100+'\nTesting for rotation of N-CA bond of residue 1 in forward direction (first residue backward)...')
-    print('mask of the to-be-rotated atoms for pivot (%i, %i) in %s direction' %
-          (pivot[0], pivot[1], direction))
-    print(mask)
+    print('mask of the to-be-rotated atoms for pivot (%i, %i) in %s direction'%(pivot[0],pivot[1],direction)); print(mask)
 
-    # rotate N-CA bond of residue 3 in backward direction (middle residue forward)
-    pivot = [19, 21]
+    #rotate N-CA bond of residue 3 in backward direction (middle residue forward)
+    pivot = [19,21]
     direction = 'forward'
-    #traverse_graph_for_pivot(graph, mask, pivot, direction)
-    traverse_graph_for_pivot(graph, m, exceptions, mask, pivot, direction)
+    traverse_graph_for_pivot(graph, mask, pivot, direction)
     print('\n'+'.'*100+'\nTesting for rotation of N-CA bond of residue 3 in backward direction (middle residue forward)...')
-    print('mask of the to-be-rotated atoms for pivot (%i, %i) in %s direction' %
-          (pivot[0], pivot[1], direction))
-    print(mask)
+    print('mask of the to-be-rotated atoms for pivot (%i, %i) in %s direction'%(pivot[0],pivot[1],direction)); print(mask)
 
-    # rotate N-CA bond of residue 3 in backward direction (middle residue backward)
-    pivot = [19, 21]
+    #rotate N-CA bond of residue 3 in backward direction (middle residue backward)
+    pivot = [19,21]
     direction = 'backward'
-    #traverse_graph_for_pivot(graph, mask, pivot, direction)
-    traverse_graph_for_pivot(graph, m, exceptions, mask, pivot, direction)
+    traverse_graph_for_pivot(graph, mask, pivot, direction)
     print('\n'+'.'*100+'\nTesting for rotation of N-CA bond of residue 3 in backward direction (middle residue backward)...')
-    print('mask of the to-be-rotated atoms for pivot (%i, %i) in %s direction' %
-          (pivot[0], pivot[1], direction))
-    print(mask)
+    print('mask of the to-be-rotated atoms for pivot (%i, %i) in %s direction'%(pivot[0],pivot[1],direction)); print(mask)
 
-    # rotate CB-CG bond of residue 5 (Arg) in forward direction (sidechain rotation forward)
-    pivot = [48, 51]
+    #rotate CB-CG bond of residue 5 (Arg) in forward direction (sidechain rotation forward)
+    pivot = [48,51]
     direction = 'forward'
-    #traverse_graph_for_pivot(graph, mask, pivot, direction)
-    traverse_graph_for_pivot(graph, m, exceptions, mask, pivot, direction)
+    traverse_graph_for_pivot(graph, mask, pivot, direction)
     print('\n'+'.'*100+'\nTesting for rotation of CB-CG bond of residue 5 (Arg) in forward direction (sidechain rotation forward)...')
-    print('mask of the to-be-rotated atoms for pivot (%i, %i) in %s direction' %
-          (pivot[0], pivot[1], direction))
-    print(mask)
+    print('mask of the to-be-rotated atoms for pivot (%i, %i) in %s direction'%(pivot[0],pivot[1],direction)); print(mask)
 
-    # rotate CB-CG bond of residue 5 (Arg) in backward direction (sidechain rotation backward)
-    pivot = [48, 51]
+    #rotate CB-CG bond of residue 5 (Arg) in backward direction (sidechain rotation backward)
+    pivot = [48,51]
     direction = 'backward'
-    #traverse_graph_for_pivot(graph, mask, pivot, direction)
-    traverse_graph_for_pivot(graph, m, exceptions, mask, pivot, direction)
+    traverse_graph_for_pivot(graph, mask, pivot, direction)
     print('\n'+'.'*100+'\nTesting for rotation of CB-CG bond of residue 5 (Arg) in backward direction (sidechain rotation backward)...')
-    print('mask of the to-be-rotated atoms for pivot (%i, %i) in %s direction' %
-          (pivot[0], pivot[1], direction))
-    print(mask)
+    print('mask of the to-be-rotated atoms for pivot (%i, %i) in %s direction'%(pivot[0],pivot[1],direction)); print(mask)
 
-    # rotate CB-CG bond of last residue in backward direction (last residue forward)
-    pivot = [135, 130]
+    #rotate CB-CG bond of last residue in backward direction (last residue forward)
+    pivot = [135,130]
     direction = 'forward'
-    #traverse_graph_for_pivot(graph, mask, pivot, direction)
-    traverse_graph_for_pivot(graph, m, exceptions, mask, pivot, direction)
+    traverse_graph_for_pivot(graph, mask, pivot, direction)
     print('\n'+'.'*100+'\nTesting for rotation of CB-CG bond of last residue in backward direction (last residue forward)...')
-    print('mask of the to-be-rotated atoms for pivot (%i, %i) in %s direction' %
-          (pivot[0], pivot[1], direction))
-    print(mask)
+    print('mask of the to-be-rotated atoms for pivot (%i, %i) in %s direction'%(pivot[0],pivot[1],direction)); print(mask)
 
-    # rotate CB-CG bond of last residue in backward direction (last residue backward)
-    pivot = [135, 130]
+    #rotate CB-CG bond of last residue in backward direction (last residue backward)
+    pivot = [135,130]
     direction = 'backward'
-    #traverse_graph_for_pivot(graph, mask, pivot, direction)
-    traverse_graph_for_pivot(graph, m, exceptions, mask, pivot, direction)
+    traverse_graph_for_pivot(graph, mask, pivot, direction)
     print('\n'+'.'*100+'\nTesting for rotation of CB-CG bond of last residue in backward direction (last residue backward)...')
-    print('mask of the to-be-rotated atoms for pivot (%i, %i) in %s direction' %
-          (pivot[0], pivot[1], direction))
-    print(mask)
+    print('mask of the to-be-rotated atoms for pivot (%i, %i) in %s direction'%(pivot[0],pivot[1],direction)); print(mask)
