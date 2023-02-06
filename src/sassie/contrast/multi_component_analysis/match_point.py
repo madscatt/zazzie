@@ -49,7 +49,7 @@ import string
 import locale
 import time
 import numpy
-import linear_fit as linear_fit
+import sassie.contrast.multi_component_analysis.linear_fit as linear_fit
 
 
 def get_match_point(other_self):

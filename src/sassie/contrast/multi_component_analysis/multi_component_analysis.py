@@ -68,11 +68,10 @@ import time
 
 import sassie.util.module_utilities as module_utilities
 import sassie.util.sasconfig as sasconfig
-#import sassie.contrast.multi_component_analysis.read_contrast_output_files as read_contrast_output_files
-import read_contrast_output_files as read_contrast_output_files
-import match_point as match_point
-import stoichiometry as stoichiometry
-import stuhrmann_parallel_axis as stuhrmann_parallel_axis
+import sassie.contrast.multi_component_analysis.read_contrast_output_files as read_contrast_output_files
+import sassie.contrast.multi_component_analysis.match_point as match_point
+import sassie.contrast.multi_component_analysis.stoichiometry as stoichiometry
+import sassie.contrast.multi_component_analysis.stuhrmann_parallel_axis as stuhrmann_parallel_axis
 
 
 if sasconfig.__level__ == "DEBUG":
