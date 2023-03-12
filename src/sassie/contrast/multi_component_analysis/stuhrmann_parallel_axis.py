@@ -59,7 +59,7 @@ import io
 import time
 import numpy
 import sassie.contrast.multi_component_analysis.read_contrast_output_files
-import sassie.contrast.multi_component_analysis.polynomial_function_fit
+import sassie.contrast.multi_component_analysis.polynomial_function_fit as polynomial_function_fit
 
 def stuhrmann(other_self):
 
