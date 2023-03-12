@@ -92,7 +92,7 @@ def read(fname):
 # for compatibility with from __future__ import unicode_literals
 
 setup(name='sassie',
-	version='2.00_rev_0',
+	version='3.00_rev_0',
 	author='Joseph E. Curtis',
 	author_email='joseph.curtis@nist.gov',
 	license='GPL 3',
