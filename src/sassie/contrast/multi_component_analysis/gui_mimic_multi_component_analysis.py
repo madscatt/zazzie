@@ -55,9 +55,9 @@ def user_variables(self, **kwargs):
     #### INPUT VARIABLES FOR ALL METHODS
 
     self.run_name = 'run_0'
-    self.output_file_name = 'matchpoint.out'
     self.number_of_contrast_points = '5'
     self.fraction_d2o = '1.0, 0.6, 0.45, 0.15, 0.0'
+    self.output_file_name = 'general_output_file.out'
 
     self.path = './'
 
@@ -65,8 +65,8 @@ def user_variables(self, **kwargs):
     #### ONLY ONE OF THE FOLLOWING FOUR SHOULD BE TRUE
 
     self.match_point_flag = True
-    self.stoichiometry_flag = False
     self.stuhrmann_parallel_axis_flag = False
+    self.stoichiometry_flag = False
     self.decomposition_flag = False
 
     #### MATCH POINT ANALYSIS VARIABLES
@@ -79,32 +79,67 @@ def user_variables(self, **kwargs):
         self.izero_error = '0.1, 0.04, 0.03, 0.02, 0.1'
         self.initial_match_point_guess = '0.3'
 
-    #### STOICHIOMETRY ANALYSIS VARIABLES
-
-    elif self.stoichiometry_flag:
-
-        self.concentration = '0.9, 0.9, 0.9, 0.9, 0.9'
-        self.concentration_error = '0.09, 0.09, 0.09, 0.09, 0.09'
-        self.number_of_components = '2'
-        self.component_name = 'dum1, dum2'
-        self.read_from_file = False
-        self.input_file_name = os.path.join(self.path,'input_contrast.txt') #this only matters if read_from_file = True
-        #if read_from_file = True, then partial_specific_volume needs to be input IN THE SAME ORDER as the delta_rho values will be read from the file. We need to set up the GUI in such a way that this will be easy to do.
-        self.partial_specific_volume = '0.745, 0.903'  # 1 value for each component
-       #delta_rho needs to have some default values here if being read from file to avoid error in input filter. These values will be superceded by the new values read from an input file if read_from_file = True. 
-        self.delta_rho = '-3.2, -5.7; 1.6, 0.26; 0.031, -1.74' # 2 values for each contrast since there are 2 components.  
-
     #### STUHRMANN PARALLEL AXIS ANALYSIS VARIABLES
 
     elif self.stuhrmann_parallel_axis_flag:
-    
+
+        self.number_of_components = '2'
+        self.component_name = 'dum1, dum2'
+
+        self.read_from_contrast_calculator_output_file = False
+        self.read_from_sascalc_output_file = False
+
+        if self.read_from_contrast_calculator_output_file:
+            # TODO NEED TO READ THESE IN; VALUES ARE HERE AS A PLACEHOLDER
+            self.contrast_calculator_output_file_name = os.path.join(self.path,'test_contrast_calculator_output_file')  
+
+            self.partial_specific_volume = '0.745, 0.903'  # 1 value for each component
+            self.molecular_weight = '14000.0, 24000.0'  # 1 value for each component
+            self.delta_rho = '-3.2, -5.7; 1.6, 0.26; 0.031, -1.74' # 2 values for each contrast since there are 2 components.  
+
+        else:
+
+            self.partial_specific_volume = '0.745, 0.903'  # 1 value for each component
+            self.molecular_weight = '14000.0, 24000.0'  # 1 value for each component
+            self.delta_rho = '-3.2, -5.7; 1.6, 0.26; 0.031, -1.74' # 2 values for each contrast since there are 2 components.  
+
+        if self.read_from_sascalc_output_file:
+            # TODO NEED TO READ THESE IN; VALUES ARE HERE AS A PLACEHOLDER
+            self.sascalc_output_file_name = os.path.join(self.path,'test_sascalc_output_file')  
+
+            self.radius_of_gyration = '14.0, 24.0'  # 1 value for each component
+            self.radius_of_gyration_error = '1.0, 2.0'  # 1 value for each component
+
+        else:
+
+            self.radius_of_gyration = '14.0, 24.0'  # 1 value for each component
+            self.radius_of_gyration_error = '1.0, 2.0'  # 1 value for each component
+
+
         self.concentration = '0.9, 0.9, 0.9, 0.9, 0.9'
+        self.concentration_error = '0.09, 0.09, 0.09, 0.09, 0.09'
+
+    #### STOICHIOMETRY AND PARALLEL AXSI ANALYSIS VARIABLES
+
+    elif self.stoichiometry_flag:
+
+        self.concentration = '0.9'
+        self.number_of_components = '2'
+        self.component_name = 'dum1, dum2'
+        self.partial_specific_volume = '0.745, 0.903'  # 1 value for each component
+
 
     #### DECOMPOSITION ANALYSIS VARIABLES
 
     elif self.decomposition_flag:
 
-    
+        self.number_of_components = '2'
+        self.component_name = 'dum1, dum2'
+        self.concentration = '0.9'
+
+
+
+
     #### end user input ####
     #### end user input ####
     #### end user input ####
