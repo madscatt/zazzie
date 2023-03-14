@@ -83,10 +83,9 @@ import sassie.interface.input_filter as input_filter
       return ((areAnyTrue) && (!areTwoTrue));
     }
 
+https://stackoverflow.com/questions/14888174/how-do-i-determine-if-exactly-one-boolean-is-true-without-type-conversion
+
 '''
-
-
-
 
 def check_multi_component_analysis(variables, **kwargs):
 
