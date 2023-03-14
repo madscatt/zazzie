@@ -98,7 +98,7 @@ def user_variables(self, **kwargs):
             self.delta_rho = '-3.2, -5.7; 1.6, 0.26; 0.031, -1.74' # 2 values for each contrast since there are 2 components.  
 
         else:
-
+#test
             self.partial_specific_volume = '0.745, 0.903'  # 1 value for each component
             self.molecular_weight = '14000.0, 24000.0'  # 1 value for each component
             self.delta_rho = '-3.2, -5.7; 1.6, 0.26; 0.031, -1.74' # 2 values for each contrast since there are 2 components.  
