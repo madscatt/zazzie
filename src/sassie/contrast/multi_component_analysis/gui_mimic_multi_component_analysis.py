@@ -46,6 +46,11 @@ import multiprocessing
 def user_variables(self, **kwargs):
     '''
     Method for the user to enter the input variables.
+
+    Note: if data is read from file (either from constrast calculator or sascalc)
+    the data are used to "autofill" the values in the GUI to be then checked and/or
+    altered by the user.
+
     '''
 
     #### user input ####
@@ -58,6 +63,11 @@ def user_variables(self, **kwargs):
     self.number_of_contrast_points = '5'
     self.fraction_d2o = '1.0, 0.6, 0.45, 0.15, 0.0'
     self.output_file_name = 'general_output_file.out'
+
+    self.read_from_contrast_calculator_output_file = False
+
+    if self.read_from_contrast_calculator_output_file:
+        self.contrast_calculator_output_file_name = os.path.join(self.path, 'test_contrast_calculator_output_file')
 
     self.path = './'
 
@@ -75,9 +85,16 @@ def user_variables(self, **kwargs):
 
         self.concentration = '0.9, 0.9, 0.9, 0.9, 0.9'
         self.concentration_error = '0.09, 0.09, 0.09, 0.09, 0.09'
-        self.izero = '7.4, 1.33, 0.64, 0.32, 1.4'
-        self.izero_error = '0.1, 0.04, 0.03, 0.02, 0.1'
         self.initial_match_point_guess = '0.3'
+
+        if self.read_from_contrast_calculator_output_file:
+            # TODO NEED TO READ THESE IN; VALUES ARE HERE AS A PLACEHOLDER
+            self.izero = '7.4, 1.33, 0.64, 0.32, 1.4'
+            self.izero_error = '0.1, 0.04, 0.03, 0.02, 0.1'
+
+        else:
+            self.izero = '7.4, 1.33, 0.64, 0.32, 1.4'
+            self.izero_error = '0.1, 0.04, 0.03, 0.02, 0.1'
 
     #### STUHRMANN PARALLEL AXIS ANALYSIS VARIABLES
 
@@ -86,19 +103,17 @@ def user_variables(self, **kwargs):
         self.number_of_components = '2'
         self.component_name = 'dum1, dum2'
 
-        self.read_from_contrast_calculator_output_file = False
         self.read_from_sascalc_output_file = False
 
         if self.read_from_contrast_calculator_output_file:
             # TODO NEED TO READ THESE IN; VALUES ARE HERE AS A PLACEHOLDER
-            self.contrast_calculator_output_file_name = os.path.join(self.path,'test_contrast_calculator_output_file')  
 
             self.partial_specific_volume = '0.745, 0.903'  # 1 value for each component
             self.molecular_weight = '14000.0, 24000.0'  # 1 value for each component
             self.delta_rho = '-3.2, -5.7; 1.6, 0.26; 0.031, -1.74' # 2 values for each contrast since there are 2 components.  
 
         else:
-#test
+
             self.partial_specific_volume = '0.745, 0.903'  # 1 value for each component
             self.molecular_weight = '14000.0, 24000.0'  # 1 value for each component
             self.delta_rho = '-3.2, -5.7; 1.6, 0.26; 0.031, -1.74' # 2 values for each contrast since there are 2 components.  
@@ -116,18 +131,29 @@ def user_variables(self, **kwargs):
             self.radius_of_gyration_error = '1.0, 2.0'  # 1 value for each component
 
 
-        self.concentration = '0.9, 0.9, 0.9, 0.9, 0.9'
-        self.concentration_error = '0.09, 0.09, 0.09, 0.09, 0.09'
-
     #### STOICHIOMETRY AND PARALLEL AXSI ANALYSIS VARIABLES
 
     elif self.stoichiometry_flag:
 
-        self.concentration = '0.9'
+        self.concentration = '0.09, 0.09, 0.09, 0.09, 0.09'
+        self.concentration_error = '0.09, 0.09, 0.09, 0.09, 0.09'
         self.number_of_components = '2'
         self.component_name = 'dum1, dum2'
-        self.partial_specific_volume = '0.745, 0.903'  # 1 value for each component
 
+        if self.read_from_contrast_calculator_output_file:
+            # TODO NEED TO READ THESE IN; VALUES ARE HERE AS A PLACEHOLDER
+
+            self.partial_specific_volume = '0.745, 0.903'  # 1 value for each component
+            self.delta_rho = '-3.2, -5.7; 1.6, 0.26; 0.031, -1.74' # 2 values for each contrast since there are 2 components.  
+            self.izero = '7.4, 1.33, 0.64, 0.32, 1.4'
+            self.izero_error = '0.1, 0.04, 0.03, 0.02, 0.1'
+
+        else:
+
+            self.partial_specific_volume = '0.745, 0.903'  # 1 value for each component
+            self.delta_rho = '-3.2, -5.7; 1.6, 0.26; 0.031, -1.74' # 2 values for each contrast since there are 2 components.  
+            self.izero = '7.4, 1.33, 0.64, 0.32, 1.4'
+            self.izero_error = '0.1, 0.04, 0.03, 0.02, 0.1'
 
     #### DECOMPOSITION ANALYSIS VARIABLES
 
@@ -136,9 +162,7 @@ def user_variables(self, **kwargs):
         self.number_of_components = '2'
         self.component_name = 'dum1, dum2'
         self.concentration = '0.9'
-
-
-
+        self.concentration_error = '0.09, 0.09, 0.09, 0.09, 0.09'
 
     #### end user input ####
     #### end user input ####
