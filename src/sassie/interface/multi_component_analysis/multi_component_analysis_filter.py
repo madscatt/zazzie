@@ -70,6 +70,22 @@ import sassie.interface.input_filter as input_filter
 
 
 #this version uses the new input filter that recognizes a nested_float_array
+'''
+ ### pseudo code stub to filter boolean list so at least ONE and only ONE value is TRUE 
+ bool IsExactlyOneBooleanTrue( bool *boolAry, int size )
+    {
+      bool areAnyTrue = false;
+      bool areTwoTrue = false;
+      for(int i = 0; (!areTwoTrue) && (i < size); i++) {
+        areTwoTrue = (areAnyTrue && boolAry[i]);
+        areAnyTrue |= boolAry[i];
+      }
+      return ((areAnyTrue) && (!areTwoTrue));
+    }
+
+'''
+
+
 
 
 def check_multi_component_analysis(variables, **kwargs):
