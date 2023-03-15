@@ -60,14 +60,16 @@ def user_variables(self, **kwargs):
     #### INPUT VARIABLES FOR ALL METHODS
 
     self.run_name = 'run_0'
-    self.number_of_contrast_points = '5'
-    self.fraction_d2o = '1.0, 0.6, 0.45, 0.15, 0.0'
+    self.number_of_contrast_points = '7' #works for stuhrmann and match point
+    self.fraction_d2o = '1.0, 0.9, 0.8, 0.4, 0.2, 0.1, 0.0'  #works for stuhrmann and match point
+#    self.number_of_contrast_points = '3' #works for stoichiometry   
+#    self.fraction_d2o ='0.99, 0.12, 0.41' #works for stoichiometry
     self.output_file_name = 'general_output_file.out'
 
     self.read_from_contrast_calculator_output_file = False
 
     if self.read_from_contrast_calculator_output_file:
-        self.contrast_calculator_output_file_name = os.path.join(self.path, 'test_contrast_calculator_output_file')
+        self.contrast_calculator_output_file_name = os.path.join(self.path, 'test_contrast_calculator_output_file.txt')
 
     self.path = './'
 
@@ -83,18 +85,18 @@ def user_variables(self, **kwargs):
 
     if self.match_point_flag:
 
-        self.concentration = '0.9, 0.9, 0.9, 0.9, 0.9'
-        self.concentration_error = '0.09, 0.09, 0.09, 0.09, 0.09'
-        self.initial_match_point_guess = '0.3'
+        self.concentration = '11.9, 11.9, 11.9, 26.9, 11.9, 11.9, 11.9'
+        self.concentration_error = '0.6, 0.6, 0.6, 1.3, 0.6, 0.6, 0.6'
+        self.initial_match_point_guess = '0.5'
 
         if self.read_from_contrast_calculator_output_file:
             # TODO NEED TO READ THESE IN; VALUES ARE HERE AS A PLACEHOLDER
-            self.izero = '7.4, 1.33, 0.64, 0.32, 1.4'
-            self.izero_error = '0.1, 0.04, 0.03, 0.02, 0.1'
+            self.izero = '0.537, 0.332, 0.19, 0.0745, 0.223, 0.352, 0.541'
+            self.izero_error = '0.001, 0.002, 0.001, 0.002, 0.002, 0.002, 0.003' 
 
         else:
-            self.izero = '7.4, 1.33, 0.64, 0.32, 1.4'
-            self.izero_error = '0.1, 0.04, 0.03, 0.02, 0.1'
+            self.izero = '0.537, 0.332, 0.19, 0.0745, 0.223, 0.352, 0.541'
+            self.izero_error = '0.001, 0.002, 0.001, 0.002, 0.002, 0.002, 0.003' 
 
     #### STUHRMANN PARALLEL AXIS ANALYSIS VARIABLES
 
@@ -108,35 +110,35 @@ def user_variables(self, **kwargs):
         if self.read_from_contrast_calculator_output_file:
             # TODO NEED TO READ THESE IN; VALUES ARE HERE AS A PLACEHOLDER
 
-            self.partial_specific_volume = '0.745, 0.903'  # 1 value for each component
-            self.molecular_weight = '14000.0, 24000.0'  # 1 value for each component
-            self.delta_rho = '-3.2, -5.7; 1.6, 0.26; 0.031, -1.74' # 2 values for each contrast since there are 2 components.  
+            self.partial_specific_volume = '0.73, 0.73'  # 1 value for each component
+            self.molecular_weight = '50.7, 11.7'  #kDa; 1 value for each component
+            self.delta_rho = '-3.34, 0.41; -2.78, 0.98; -2.21, 1.54; 0.055, 3.80; 1.18, 4.93; 1.75, 5.49; 2.31, 6.06' # 2 values for each contrast since there are 2 components.  
 
         else:
 
-            self.partial_specific_volume = '0.745, 0.903'  # 1 value for each component
-            self.molecular_weight = '14000.0, 24000.0'  # 1 value for each component
-            self.delta_rho = '-3.2, -5.7; 1.6, 0.26; 0.031, -1.74' # 2 values for each contrast since there are 2 components.  
+            self.partial_specific_volume = '0.73, 0.73'  # 1 value for each component
+            self.molecular_weight = '50.7, 11.7'  #kDa; 1 value for each component
+            self.delta_rho = '-3.34, 0.41; -2.78, 0.98; -2.21, 1.54; 0.055, 3.80; 1.18, 4.93; 1.75, 5.49; 2.31, 6.06' # 2 values for each contrast point since there are 2 components.  
 
         if self.read_from_sascalc_output_file:
             # TODO NEED TO READ THESE IN; VALUES ARE HERE AS A PLACEHOLDER
-            self.sascalc_output_file_name = os.path.join(self.path,'test_sascalc_output_file')  
+            self.sascalc_output_file_name = os.path.join(self.path,'test_sascalc_output_file.txt')  
 
-            self.radius_of_gyration = '14.0, 24.0'  # 1 value for each component
-            self.radius_of_gyration_error = '1.0, 2.0'  # 1 value for each component
+            self.radius_of_gyration = '25.11, 24.16, 23.03, 23.4, 28.22, 28.33, 28.85'  # 1 value for each contrast point
+            self.radius_of_gyration_error = '0.09, 0.14, 0.2, 0.7, 0.29, 0.19, 0.12'  # 1 value for each contrast point
 
         else:
 
-            self.radius_of_gyration = '14.0, 24.0'  # 1 value for each component
-            self.radius_of_gyration_error = '1.0, 2.0'  # 1 value for each component
+            self.radius_of_gyration = '25.11, 24.16, 23.03, 23.4, 28.22, 28.33, 28.85'  # 1 value for each contrast point
+            self.radius_of_gyration_error = '0.09, 0.14, 0.2, 0.7, 0.29, 0.19, 0.12'  # 1 value for each contrast point
 
 
-    #### STOICHIOMETRY AND PARALLEL AXSI ANALYSIS VARIABLES
+    #### STOICHIOMETRY ANALYSIS VARIABLES
 
     elif self.stoichiometry_flag:
 
-        self.concentration = '0.09, 0.09, 0.09, 0.09, 0.09'
-        self.concentration_error = '0.09, 0.09, 0.09, 0.09, 0.09'
+        self.concentration = '3.7, 3.6, 3.1'
+        self.concentration_error = '0.18, 0.18, 0.18'
         self.number_of_components = '2'
         self.component_name = 'dum1, dum2'
 
@@ -144,16 +146,16 @@ def user_variables(self, **kwargs):
             # TODO NEED TO READ THESE IN; VALUES ARE HERE AS A PLACEHOLDER
 
             self.partial_specific_volume = '0.745, 0.903'  # 1 value for each component
-            self.delta_rho = '-3.2, -5.7; 1.6, 0.26; 0.031, -1.74' # 2 values for each contrast since there are 2 components.  
-            self.izero = '7.4, 1.33, 0.64, 0.32, 1.4'
-            self.izero_error = '0.1, 0.04, 0.03, 0.02, 0.1'
+            self.delta_rho = '-3.2, -5.7; 1.6, 0.26; 0.031, -1.74' # 2 values for each contrast point since there are 2 components.  
+            self.izero = '8.4, 0.6, 0.17' # 1 value for each contrast point
+            self.izero_error = '0.2, 0.04, 0.01' # 1 value for each contrast point
 
         else:
 
             self.partial_specific_volume = '0.745, 0.903'  # 1 value for each component
-            self.delta_rho = '-3.2, -5.7; 1.6, 0.26; 0.031, -1.74' # 2 values for each contrast since there are 2 components.  
-            self.izero = '7.4, 1.33, 0.64, 0.32, 1.4'
-            self.izero_error = '0.1, 0.04, 0.03, 0.02, 0.1'
+            self.delta_rho = '-3.2, -5.7; 1.6, 0.26; 0.031, -1.74' # 2 values for each contrast point since there are 2 components.  
+            self.izero = '8.4, 0.6, 0.17' # 1 value for each contrast point
+            self.izero_error = '0.2, 0.04, 0.01' # 1 value for each contrast point
 
     #### DECOMPOSITION ANALYSIS VARIABLES
 
@@ -161,8 +163,8 @@ def user_variables(self, **kwargs):
 
         self.number_of_components = '2'
         self.component_name = 'dum1, dum2'
-        self.concentration = '0.9'
-        self.concentration_error = '0.09, 0.09, 0.09, 0.09, 0.09'
+        self.concentration = '11.9, 11.9, 11.9, 26.9, 11.9, 11.9, 11.9'
+        self.concentration_error = '0.6, 0.6, 0.6, 1.3, 0.6, 0.6, 0.6'
 
     #### end user input ####
     #### end user input ####
