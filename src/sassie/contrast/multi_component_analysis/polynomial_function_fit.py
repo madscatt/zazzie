@@ -18,6 +18,7 @@
 #       2/2006       --      initial coding         :   Andrew Whitten
 #       6/2021       --      converted to Python    :   Kathryn Sarachan
 #       3/2022       --      revised for SASSIE 2.0 :   Susan Krueger
+#       3/2023       --      revised for SASSIE 3.0 :   Joseph E. Curtis
 #
 # LC      1         2         3         4         5         6         7
 # LC4567890123456789012345678901234567890123456789012345678901234567890123456789
@@ -37,58 +38,53 @@
         y array
         yerr, error in y array
         number of data points
-        
-    
+
+
     OUTPUTS:
         M, a vector with the coefficients from the polynomial fit with weighting 1.0/yerr**2
         Bi, the correlation matrix
         reduced chi-squared, number of accepted data points for which yerr > 0 - (order + 1) degrees of freedom
-        
+
 
     Can be called by any method performing a fit to a polynomial.
-    
-'''
 
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
-from __future__ import unicode_literals
+'''
 
 import numpy
 
 def polynomial_fit(order, X, Y, yerr, n):
-    vector_shape = (order+1,1)
+
+    vector_shape = (order+1, 1)
     A = numpy.zeros(vector_shape)
     M = numpy.zeros(vector_shape)
-    shape = (order+1,order+1)
+    shape = (order+1, order+1)
     B = numpy.zeros(shape)
     Bi = numpy.zeros(shape)
-    
-    for i in range (0,n):
+
+    for i in range(0, n):
         if yerr[0] > 0.0:
             w = 1.0/(yerr[i]*yerr[i])
-            for j in range (0,order+1):
+            for j in range(0, order+1):
                 A[j] += w*Y[i]*X[i]**(order-j)
-                for k in range(0,order+1):
+                for k in range(0, order+1):
                     B[j][k] += w*X[i]**(order-j)*X[i]**(order-k)
-    
-    Bi = numpy.linalg.inv(numpy.matrix(B))  #correlation matrix
-    M = Bi*A    #fit coefficients
-    
+
+    Bi = numpy.linalg.inv(numpy.matrix(B))  # correlation matrix
+    M = Bi*A    # fit coefficients
+
     chi_squared = 0.0
     nDisregarded = 0
-    
+
     if n > order+1:
-        for i in range(0,n):
+        for i in range(0, n):
             if yerr[i] > 0.0:
                 delta = 0.0
-                for j in range(0,order+1):
+                for j in range(0, order+1):
                     delta += M[j]*X[i]**(order-j)
                 chi_squared += (delta - Y[i])*(delta - Y[i])/yerr[i]/yerr[i]
             else:
                 nDisregarded = nDisregarded+1
-            
+
     reduced_chi_squared = chi_squared/float((n-nDisregarded)-(order+1))
-    
+
     return reduced_chi_squared, M, Bi
-        

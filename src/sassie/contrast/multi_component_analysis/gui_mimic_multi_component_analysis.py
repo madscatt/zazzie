@@ -57,21 +57,6 @@ def user_variables(self, **kwargs):
     #### user input ####
     #### user input ####
 
-    #### INPUT VARIABLES FOR ALL METHODS
-
-    self.run_name = 'run_0'
-    self.number_of_contrast_points = '7' #works for stuhrmann and match point
-    self.fraction_d2o = '1.0, 0.9, 0.8, 0.4, 0.2, 0.1, 0.0'  #works for stuhrmann and match point
-#    self.number_of_contrast_points = '3' #works for stoichiometry   
-#    self.fraction_d2o ='0.99, 0.12, 0.41' #works for stoichiometry
-    self.output_file_name = 'general_output_file.out'
-
-    self.read_from_contrast_calculator_output_file = False
-
-    if self.read_from_contrast_calculator_output_file:
-        self.contrast_calculator_output_file_name = os.path.join(self.path, 'test_contrast_calculator_output_file.txt')
-
-    self.path = './'
 
     #### METHOD SELECTION FLAGS 
     #### ONLY ONE OF THE FOLLOWING FOUR SHOULD BE TRUE
@@ -80,6 +65,26 @@ def user_variables(self, **kwargs):
     self.stuhrmann_parallel_axis_flag = False
     self.stoichiometry_flag = False
     self.decomposition_flag = False
+
+    #### INPUT VARIABLES FOR ALL METHODS
+
+    if self.match_point_flag or self.stuhrmann_parallel_axis_flag:
+        self.number_of_contrast_points = '7'
+        self.fraction_d2o = '1.0, 0.9, 0.8, 0.4, 0.2, 0.1, 0.0'
+
+    elif self.stoichiometry_flag:
+        self.number_of_contrast_points = '3'
+        self.fraction_d2o = '0.99, 0.12, 0.41'
+
+    self.run_name = 'run_0'
+    self.output_file_name = 'general_output_file.out'
+
+    self.read_from_contrast_calculator_output_file = False
+
+    if self.read_from_contrast_calculator_output_file:
+        self.contrast_calculator_output_file_name = os.path.join(self.path, 'test_contrast_calculator_output_file.txt')
+
+    self.path = './'
 
     #### MATCH POINT ANALYSIS VARIABLES
 
