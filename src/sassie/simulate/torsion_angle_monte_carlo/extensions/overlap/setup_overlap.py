@@ -37,6 +37,7 @@ setup(  name        = "OVERLAP",
 ### post compilation file move
 
 try:
+    import os
     lib_file = os.path.join('build', 'lib*', 'overlap.*')
     os.system('mv ' + lib_file + ' .')
 except:
