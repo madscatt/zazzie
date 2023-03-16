@@ -17,7 +17,7 @@ import subprocess as sub
 
 if "--debug" in sys.argv:
     # flags mainly intended to speed up the builds during development
-    print "Using debug compiler flags ..."
+    print("Using debug compiler flags ...")
     debug_build = True
     sys.argv.remove("--debug")
 else:
@@ -66,10 +66,10 @@ def locate_cuda():
                   'nvcc':nvcc,
                   'include': os.path.join(home, 'include'),
                   'lib64': os.path.join(home, 'lib64')}
-    for k, v in cudaconfig.iteritems():
+    for k, v in cudaconfig.items():
         if not os.path.exists(v):
             raise EnvironmentError('The CUDA %s path could not be located in %s' % (k, v))
-    print "Found CUDA: " + home
+    print("Found CUDA: " + home)
     return cudaconfig
 CUDA = locate_cuda()
 
@@ -80,10 +80,10 @@ def get_cuda_ver(nvcc="nvcc"):
     minor = -1
     patch = -1
     try:
-        raw = sub.check_output(cmd).split('\n')
+        raw = sub.check_output(cmd).split(b'\n')
         for line in raw:
-            if line.startswith('Cuda'):
-                tokens = line.split(',')
+            if line.startswith(b'Cuda'):
+                tokens = line.decode().split(',')
                 # we obtain a version string such as "7.5.17"
                 verstr = tokens[2].strip().strip('V')
                 vertup = verstr.split('.')
@@ -171,15 +171,16 @@ else:
     #nvcc_flags += ['--generate-code', 'arch=compute_20,code=sm_21']
     #nvcc_flags += ['--generate-code', 'arch=compute_30,code=sm_30']
     #nvcc_flags += ['--generate-code', 'arch=compute_32,code=sm_32']
-    nvcc_flags += ['--generate-code', 'arch=compute_35,code=sm_35']
+    #nvcc_flags += ['--generate-code', 'arch=compute_35,code=sm_35']
+    nvcc_flags += ['--generate-code', 'arch=compute_75,code=sm_75']
     #nvcc_flags += ['--generate-code', 'arch=compute_37,code=sm_37']
-    if (CUDAVER[0] >= 6):
-        nvcc_flags += ['--generate-code', 'arch=compute_50,code=sm_50']
-    if (CUDAVER[0] >= 7):
-        nvcc_flags += ['--generate-code', 'arch=compute_52,code=sm_52']
-        nvcc_flags += ['--generate-code', 'arch=compute_53,code=sm_53']
-    if (CUDAVER[0] >= 8):
-        pass
+    #if (CUDAVER[0] >= 6):
+    #    nvcc_flags += ['--generate-code', 'arch=compute_50,code=sm_50']
+    #if (CUDAVER[0] >= 7):
+    #    nvcc_flags += ['--generate-code', 'arch=compute_52,code=sm_52']
+    #    nvcc_flags += ['--generate-code', 'arch=compute_53,code=sm_53']
+    #if (CUDAVER[0] >= 8):
+    #    pass
         # nvcc_flags += ['--generate-code', 'arch=compute_52,code=sm_52']
         # nvcc_flags += ['--generate-code', 'arch=compute_53,code=sm_53']
 nvcc_flags += ['--compiler-options=' + gcc_flags_string + ' -fPIC']

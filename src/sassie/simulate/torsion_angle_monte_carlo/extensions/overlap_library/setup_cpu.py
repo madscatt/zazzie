@@ -1,7 +1,8 @@
 from __future__ import print_function
 # System imports
 from distutils.core import *
-import os, platform
+import os 
+import platform
 
 os_type = platform.system()
 
