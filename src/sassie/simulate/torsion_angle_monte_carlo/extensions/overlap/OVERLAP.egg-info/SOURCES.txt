@@ -1,6 +1,0 @@
-setup_overlap.py
-./ooverlap.c
-OVERLAP.egg-info/PKG-INFO
-OVERLAP.egg-info/SOURCES.txt
-OVERLAP.egg-info/dependency_links.txt
-OVERLAP.egg-info/top_level.txt

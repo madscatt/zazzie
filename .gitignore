@@ -79,3 +79,6 @@ run_*
 *_json
 *src_2.7/sassie/calculate/sascalc/sascalc_library/extensions/lib/
 .last_sas*
+*egg-info*
+
+
