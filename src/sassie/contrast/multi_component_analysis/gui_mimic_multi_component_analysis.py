@@ -61,8 +61,11 @@ def user_variables(self, **kwargs):
     #### METHOD SELECTION FLAGS 
     #### ONLY ONE OF THE FOLLOWING FOUR SHOULD BE TRUE
 
+    self.match_point_flag = False
     self.match_point_flag = True
+    self.stuhrmann_parallel_axis_flag = True
     self.stuhrmann_parallel_axis_flag = False
+    self.stoichiometry_flag = True
     self.stoichiometry_flag = False
     self.decomposition_flag = False
 
@@ -231,8 +234,8 @@ def run_module(self, **kwargs):
     svariables['number_of_contrast_points'] = (self.number_of_contrast_points,'int')
     svariables['fraction_d2o'] = (self.fraction_d2o,'float_array')
 
-    svariables['stoichiometry_flag'] = (self.stoichiometry_flag,'boolean')
     svariables['match_point_flag'] = (self.match_point_flag,'boolean')
+    svariables['stoichiometry_flag'] = (self.stoichiometry_flag,'boolean')
     svariables['stuhrmann_parallel_axis_flag'] = (self.stuhrmann_parallel_axis_flag,'boolean')
     svariables['decomposition_flag'] = (self.decomposition_flag,'boolean')
 
@@ -297,9 +300,9 @@ def run_module(self, **kwargs):
         print('error = ', error)
         return error
 
-    print('after input filter')
-    print(self.variables)
-    import sys; sys.exit()
+    #print('after input filter')
+    #print(self.variables)
+    #import sys; sys.exit()
 
     try:
         if kwargs['file_check']:
