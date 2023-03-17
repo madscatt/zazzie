@@ -221,36 +221,85 @@ def run_module(self, **kwargs):
     by other programs such as test_module and test_module_filter.
     '''
 
-#TODO: figure out how to just define the variables that will be needed for the method used.  For now, all variables will be given values and sent to the multi_component_analysis_filter.  The relevant variables will be checked from there, as only they will exist in the GUI.
     svariables={}
+
+    #### INPUT VARIABLES FOR ALL METHODS
 
     svariables['run_name'] = (self.run_name,'string')
     svariables['path'] = (self.path,'string')
     svariables['output_file_name'] = (self.output_file_name,'string')
-    svariables['input_file_name'] = (self.input_file_name,'string')
+    svariables['number_of_contrast_points'] = (self.number_of_contrast_points,'int')
+    svariables['fraction_d2o'] = (self.fraction_d2o,'float_array')
+
     svariables['stoichiometry_flag'] = (self.stoichiometry_flag,'boolean')
     svariables['match_point_flag'] = (self.match_point_flag,'boolean')
     svariables['stuhrmann_parallel_axis_flag'] = (self.stuhrmann_parallel_axis_flag,'boolean')
     svariables['decomposition_flag'] = (self.decomposition_flag,'boolean')
-    svariables['read_from_file'] = (self.read_from_file,'boolean')
-    svariables['number_of_contrast_points'] = (self.number_of_contrast_points,'int')
-    svariables['number_of_components'] = (self.number_of_components,'int')
-    svariables['initial_match_point_guess'] = (self.initial_match_point_guess,'float')
-    svariables['fraction_d2o'] = (self.fraction_d2o,'float_array')
-    svariables['izero'] = (self.izero, 'float_array')
-    svariables['izero_error'] = (self.izero_error, 'float_array')
-    svariables['concentration'] = (self.concentration, 'float_array')
-    svariables['concentration_error'] = (self.concentration_error, 'float_array')
-    svariables['partial_specific_volume'] = (self.partial_specific_volume, 'float_array')
-    svariables['delta_rho'] = (self.delta_rho, 'nested_float_array')
+
+    svariables['read_from_contrast_calculator_output_file'] = (self.read_from_contrast_calculator_output_file,'boolean')
+
+    if self.read_from_contrast_calculator_output_file:
+
+        svariables['contrast_calculator_output_file_name'] = (self.contrast_calculator_output_file_name,'string')
+
+    #### MATCH POINT ANALYSIS VARIABLES
+
+    if self.match_point_flag:
+
+        svariables['initial_match_point_guess'] = (self.initial_match_point_guess,'float')
+        svariables['concentration'] = (self.concentration, 'float_array')
+        svariables['concentration_error'] = (self.concentration_error, 'float_array')
+
+        svariables['izero'] = (self.izero, 'float_array')
+        svariables['izero_error'] = (self.izero_error, 'float_array')
+
+   #### STUHRMANN PARALLEL AXIS ANALYSIS VARIABLES
+
+    elif self.stuhrmann_parallel_axis_flag:
+
+        svariables['number_of_components'] = (self.number_of_components,'int')
+        svariables['component_name'] = (self.component_name,'string_array')
+        svariables['read_from_contrast_calculator_output_file'] = (self.read_from_contrast_calculator_output_file,'boolean')
+
+        svariables['partial_specific_volume'] = (self.partial_specific_volume, 'float_array')
+        svariables['molecular_weight'] = (self.molecular_weight, 'float_array')
+        svariables['delta_rho'] = (self.delta_rho, 'nested_float_array')
+
+        if self.read_from_sascalc_output_file:
+            svariables['sascalc_output_file_name'] = (self.sascalc_output_file_name,'string')
+
+        svariables['radius_of_gyration'] = (self.radius_of_gyration, 'float_array')
+        svariables['radius_of_gyration_error'] = (self.radius_of_gyration_error, 'float_array')
+
+    #### STOICHIOMETRY ANALYSIS VARIABLES
+
+    elif self.stoichiometry_flag:
+
+        svariables['concentration'] = (self.concentration, 'float_array')
+        svariables['concentration_error'] = (self.concentration_error, 'float_array')
+        svariables['number_of_components'] = (self.number_of_components,'int')
+        svariables['component_name'] = (self.component_name,'string_array')
+        svariables['read_from_contrast_calculator_output_file'] = (self.read_from_contrast_calculator_output_file,'boolean')
+
+        svariables['partial_specific_volume'] = (self.partial_specific_volume, 'float_array')
+        svariables['delta_rho'] = (self.delta_rho, 'nested_float_array')
+        svariables['izero'] = (self.izero, 'float_array')
+        svariables['izero_error'] = (self.izero_error, 'float_array')
+
+    #### DECOMPOSITION ANALYSIS VARIABLES
+
+    elif self.decomposition_flag:
+
+        svariables['number_of_components'] = (self.number_of_components,'int')
 
     error, self.variables = input_filter.type_check_and_convert(svariables)
     if len(error) > 0:
         print('error = ', error)
         return error
 
-#    print('after input filter')
-#    print(self.variables)
+    print('after input filter')
+    print(self.variables)
+    import sys; sys.exit()
 
     try:
         if kwargs['file_check']:
