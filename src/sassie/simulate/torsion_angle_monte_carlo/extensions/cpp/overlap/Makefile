@@ -8,14 +8,14 @@ INSTALLDIRINC=../../include/
 INSTALLDIRLIB=../../lib/
 
 # mac / linux
-#SYSINSTALLDIRINC=/usr/local/core_libraries/include/
-#SYSINSTALLDIRLIB=/usr/local/core_libraries/lib/
-#CC=g++
+SYSINSTALLDIRINC=/usr/local/core_libraries/include/
+SYSINSTALLDIRLIB=/usr/local/core_libraries/lib/
+CC=g++
 
 #cluster
-SYSINSTALLDIRINC=/share/apps/local/core_libraries/include/
-SYSINSTALLDIRLIB=/share/apps/local/core_libraries/lib/
-CC=/share/apps/local/bin/g++
+#SYSINSTALLDIRINC=/share/apps/local/core_libraries/include/
+#SYSINSTALLDIRLIB=/share/apps/local/core_libraries/lib/
+#CC=/share/apps/local/bin/g++
 
 # compilers and flags
 CCFLAGS=-fPIC -g -std=c++11

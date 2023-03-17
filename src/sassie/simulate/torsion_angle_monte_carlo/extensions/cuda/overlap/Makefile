@@ -9,21 +9,20 @@ INSTALLDIRLIB=../../lib/
 
 #mac / linux
 
-#SYSINSTALLDIRINC=/usr/local/core_libraries/include/
-#SYSINSTALLDIRLIB=/usr/local/core_libraries/lib/
-#INCDIR=-I/usr/local/cuda-6.5/include
+SYSINSTALLDIRINC=/usr/local/core_libraries/include/
+SYSINSTALLDIRLIB=/usr/local/core_libraries/lib/
+INCDIR=-I/usr/local/cuda-12.1/include
 
 #cluster
-SYSINSTALLDIRINC=/share/apps/local/core_libraries/include/
-SYSINSTALLDIRLIB=/share/apps/local/core_libraries/lib/
-INCDIR=-I/share/apps/local/cuda-6.5/include
+#SYSINSTALLDIRINC=/share/apps/local/core_libraries/include/
+#SYSINSTALLDIRLIB=/share/apps/local/core_libraries/lib/
+#INCDIR=-I/share/apps/local/cuda-6.5/include
 
 # compilers and flags
 CC=g++
 CCFLAGS=-fPIC -g -std=c++11
 
 NVCC=nvcc
-NVCC=/share/apps/local/cuda/bin/nvcc
 NVCCFLAGS=-Xcompiler -fPIC -DCUCC_ID="nVidia" -DBLD_PROCEDURE -DWITH_GSL -DHAVE_INLINE -DWITH_CUDA -DWITH_MPI -DPARALLEL -DWITH_PARALLEL_IO  $(CUDA_ARCH) -g -G -arch=sm_30
 
 CUDA_LIBNAME=cudaOverlap

@@ -51,7 +51,7 @@ cuda_driver = True
 if os.path.isfile(os.path.join(core_libraries,'lib','liboverlap.a')):
     cpp_lib = True
 else:
-    print os.path.join(core_libraries,'lib','liboverlap.a')
+    print(os.path.join(core_libraries,'lib','liboverlap.a'))
 
     cpp_lib = False
 
