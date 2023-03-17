@@ -17,8 +17,8 @@ def user_variables(self, **kwargs):
 
     self.run_name = 'run_0'
     self.dcdfile = 'run_0.dcd'
-    self.pdbfile = '../../../../src_2.7/developer_files_for_testing/torsion_angle_monte_carlo/ten_mer.pdb'
-    self.psffile = '../../../../src_2.7/developer_files_for_testing/torsion_angle_monte_carlo/ten_mer.psf'
+    self.pdbfile = '../../../../old_src_2.7/developer_files_for_testing/torsion_angle_monte_carlo/ten_mer.pdb'
+    self.psffile = '../../../../old_src_2.7/developer_files_for_testing/torsion_angle_monte_carlo/ten_mer.psf'
     self.psf_flag = True # sh: making this false to prevent crash
     #self.psf_flag = False # sh: making this false to prevent crash
 

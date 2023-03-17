@@ -28,7 +28,7 @@ import sasmol.system as system
 import sassie.util.sasconfig as sasconfig
 import sassie.util.module_utilities as module_utilities
 import sassie.util.basis_to_python as basis_to_python
-import sassie.simulate.torsion_angle_monte_carlo.ooverlap as overlap
+import sassie.simulate.torsion_angle_monte_carlo.overlap as overlap
 import sassie.simulate.constraints.constraints as constraints
 import sassie.simulate.torsion_angle_monte_carlo.monte_carlo_utilities.torsion as torsion
 import sassie.simulate.torsion_angle_monte_carlo.monte_carlo_utilities.double_stranded_nucleic.double_stranded_nucleic_torsion as double_stranded_nucleic_torsion
