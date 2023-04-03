@@ -303,11 +303,11 @@ def check_multi_component_analysis(variables, **kwargs):
 
 if __name__ == "__main__":
     variables = {}
-#devBio[newKey] = newValue.
-    variables["match_point_flag"] = (True, 'boolean')
-    variables["stuhrmann_parallel_axis_flag"] = (False, 'boolean')
-    variables["stoichiometry_flag"] = (False, 'boolean')
-    variables["decomposition_flag"] = (False, 'boolean')
+
+    variables["match_point_flag"] = (True, "boolean")
+    variables["stuhrmann_parallel_axis_flag"] = (False, "boolean")
+    variables["stoichiometry_flag"] = (False, "boolean")
+    variables["decomposition_flag"] = (False, "boolean")
 
     variables["run_name"] = ("run_0", "string")
     variables["output_file_name"] = "test.out" "string"
@@ -317,10 +317,25 @@ if __name__ == "__main__":
     variables["number_of_contrast_points"] = (3, "int")
     variables["fraction_d2o"] = ([0.1, 0.2, 0.3], "int_array")
 
+    """
+    # match_point_variables to test
+    {'run_name': ('run_0', 'string'), 'path': ('./', 'string'), 'output_file_name': ('general_output_file.out', 'string'),
+     'number_of_contrast_points': (7, 'int'), 'fraction_d2o': ([1.0, 0.9, 0.8, 0.4, 0.2, 0.1, 0.0],
+     'float_array'), 'match_point_flag': (True, 'boolean'), 'stoichiometry_flag': (False, 'boolean'),
+     'stuhrmann_parallel_axis_flag': (False, 'boolean'), 'decomposition_flag': (False, 'boolean'),
+     'read_from_contrast_calculator_output_file': (False, 'boolean'), 'initial_match_point_guess': (0.5, 'float'),
+     'concentration': ([11.9, 11.9, 11.9, 26.9, 11.9, 11.9, 11.9], 'float_array'),
+     'concentration_error': ([0.6, 0.6, 0.6, 1.3, 0.6, 0.6, 0.6], 'float_array'),
+     'izero': ([0.537, 0.332, 0.19, 0.0745, 0.223, 0.352, 0.541], 'float_array'),
+     'izero_error': ([0.001, 0.002, 0.001, 0.002, 0.002, 0.002, 0.003], 'float_array')}
+
+    """
+
     error = check_multi_component_analysis(variables)
-    if(len(error)) == 0:
+    if (len(error)) == 0:
         print("NO ERRORS FOUND")
     else:
         print("len(__main__ error) = " + str(len(error)))
         from pprint import pprint
+
         pprint(error)

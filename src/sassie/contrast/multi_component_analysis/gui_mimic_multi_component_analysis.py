@@ -322,9 +322,8 @@ def run_module(self, **kwargs):
         print("error = ", error)
         return error
 
-    # print('after input filter')
-    # print(self.variables)
-    # import sys; sys.exit()
+    print(self.variables)
+    import sys; sys.exit()
 
     try:
         if kwargs["file_check"]:
