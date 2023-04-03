@@ -1,4 +1,4 @@
-'''
+"""
     SASSIE: Copyright (C) 2011 Joseph E. Curtis, Ph.D. 
 
     This program is free software: you can redistribute it and/or modify
@@ -13,46 +13,44 @@
 
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-'''
+"""
 import os
-import sys
 import locale
 import sasmol.system as system
 import sassie.util.sasutil as sasutil
 
 
 def check_and_convert_formula(formula_array):
-
     error = []
     formulas = []
 
     try:
         number_of_formulas = len(formula_array)
     except:
-        error.append('unable to read formula')
+        error.append("unable to read formula")
         return error, formulas
 
     for i in range(number_of_formulas):
-
         error, formula_dictionary = sasutil.get_chemical_formula(formula_array[i])
 
-        if(len(error) > 0):
+        if len(error) > 0:
             return error, formulas
         else:
             formulas.append(formula_dictionary)
 
     return error, formulas
 
+
 def check_name(filename):
-    bad_characters = ["<", ">", "|", "\\",
-                      ":", "(", ")", "&", ";", "#", "?", "*"]
+    bad_characters = ["<", ">", "|", "\\", ":", "(", ")", "&", ";", "#", "?", "*"]
     error = []
     for i in range(len(filename)):
         character = filename[i]
         if character in bad_characters:
-            error.append('file or path : ' + filename +
-                         ' has incorrect character : ' + character)
-#            print('file or path has incorrect character : ' + character)
+            error.append(
+                "file or path : " + filename + " has incorrect character : " + character
+            )
+            #            print('file or path has incorrect character : ' + character)
             return error
     return error
 
@@ -62,7 +60,7 @@ def check_file_exists(infile):
 
     try:
         error = check_name(infile)
-        if(len(error) > 0):
+        if len(error) > 0:
             return error
     except:
         error.append("failed to check infile name")
@@ -71,71 +69,75 @@ def check_file_exists(infile):
     try:
         value = os.path.exists(infile)
     except:
-        error.append('file/path : ' + infile + ' does not exist')
+        error.append("file/path : " + infile + " does not exist")
         return error
 
-    if(value == 0):
-        error.append('file : ' + infile + ' does not exist')
+    if value == 0:
+        error.append("file : " + infile + " does not exist")
         return error
 
-#	if(os.path.isdir(infile)):
-#		error.append('file : '+infile+' is a directory!')
-#		return error
+    # 	if(os.path.isdir(infile)):
+    # 		error.append('file : '+infile+' is a directory!')
+    # 		return error
 
     return error
 
 
 def check_exe(exe):
     error = []
-    if(os.path.isdir(exe)):
-        error.append('Executable file : ' + exe + ' is a directory!')
+    if os.path.isdir(exe):
+        error.append("Executable file : " + exe + " is a directory!")
         return error
     elif not os.path.isfile(exe):
-        error.append('Executable file : ' + exe + ' is not a file')
+        error.append("Executable file : " + exe + " is not a file")
         return error
     elif not os.access(exe, os.X_OK):
-        error.append('Executable file : ' + exe + ' is not accessible')
+        error.append("Executable file : " + exe + " is not accessible")
         return error
 
     return error
 
 
 def type_check_and_convert(svariables):
-
     error = []
     variables = {}
 
     for key in svariables:
-
-        if (svariables[key][1] == 'string'):
+        if svariables[key][1] == "string":
             variables[key] = svariables[key]
 
-        elif (svariables[key][1] == 'boolean'):
+        elif svariables[key][1] == "boolean":
             variables[key] = svariables[key]
 
-        elif (svariables[key][1] == 'float'):
+        elif svariables[key][1] == "float":
             try:
                 dum = locale.atof(svariables[key][0])
-                variables[key] = (dum, 'float')
+                variables[key] = (dum, "float")
             except:
                 error.append(
-                    key + ' is not a ' + str(svariables[key][1]) + ' : ' + str(svariables[key][0]))
+                    key
+                    + " is not a "
+                    + str(svariables[key][1])
+                    + " : "
+                    + str(svariables[key][0])
+                )
                 return error, variables
 
-        elif (svariables[key][1] == 'int'):
+        elif svariables[key][1] == "int":
             try:
                 dum = locale.atoi(svariables[key][0])
-                variables[key] = (dum, 'int')
+                variables[key] = (dum, "int")
             except:
-                error.append(key + ' is not a ' +
-                             svariables[key][1] + ' : ' + svariables[key][0])
+                error.append(
+                    key + " is not a " + svariables[key][1] + " : " + svariables[key][0]
+                )
                 return error, variables
 
-        elif (svariables[key][1] == 'float_array'):
+        elif svariables[key][1] == "float_array":
             value = svariables.get(key)
 
             try:
-                lin = value[0].split(',')
+                lin = value[0].split(",")
 
                 duma = []
                 for x in range(len(lin)):
@@ -144,18 +146,23 @@ def type_check_and_convert(svariables):
                         duma.append(dum)
                     except:
                         error.append(
-                            key + ' is not a ' + svariables[key][1] + ' : ' + svariables[key][0])
+                            key
+                            + " is not a "
+                            + svariables[key][1]
+                            + " : "
+                            + svariables[key][0]
+                        )
                         return error, variables
-                variables[key] = (duma, 'float_array')
+                variables[key] = (duma, "float_array")
             except:
-                error.append(key + ': could not read array of values')
+                error.append(key + ": could not read array of values")
                 return error, variables
 
-        elif (svariables[key][1] == 'int_array'):
+        elif svariables[key][1] == "int_array":
             value = svariables.get(key)
 
             try:
-                lin = value[0].split(',')
+                lin = value[0].split(",")
 
                 duma = []
                 for x in range(len(lin)):
@@ -164,66 +171,80 @@ def type_check_and_convert(svariables):
                         duma.append(dum)
                     except:
                         error.append(
-                            key + ' is not a ' + svariables[key][1] + ' : ' + svariables[key][0])
-                variables[key] = (duma, 'int_array')
+                            key
+                            + " is not a "
+                            + svariables[key][1]
+                            + " : "
+                            + svariables[key][0]
+                        )
+                variables[key] = (duma, "int_array")
             except:
-                error.append(key + ': could not read array of values')
+                error.append(key + ": could not read array of values")
                 return error, variables
-                
-        elif (svariables[key][1] == 'nested_float_array'):
+
+        elif svariables[key][1] == "nested_float_array":
             value = svariables.get(key)
-            
-            try: 
-                lin = value[0].split(';')
-                
+
+            try:
+                lin = value[0].split(";")
+
                 nested_array = []
                 for item in lin:
-                    new_item = item.replace(' ', '')
-                    new_item = new_item.split(',')
+                    new_item = item.replace(" ", "")
+                    new_item = new_item.split(",")
                     temp = []
                     for value in new_item:
                         try:
                             float_item = locale.atof(value)
                             temp.append(float_item)
                         except:
-                            error.append(key + ' is not a ' + svariables[key][1] + ' : ' + svariables[key][0])
+                            error.append(
+                                key
+                                + " is not a "
+                                + svariables[key][1]
+                                + " : "
+                                + svariables[key][0]
+                            )
                     nested_array.append(temp)
-                variables[key] = (nested_array, 'nested_float_array')
-#                print 'new variable: ', variables[key]
+                variables[key] = (nested_array, "nested_float_array")
+            #                print 'new variable: ', variables[key]
             except:
-                error.append(key + ': could not read nested array of values')
+                error.append(key + ": could not read nested array of values")
                 return error, variables
-                
-        elif (svariables[key][1] == 'nested_int_array'):
+
+        elif svariables[key][1] == "nested_int_array":
             value = svariables.get(key)
-            
-            try: 
-                lin = value[0].split(';')
-                
+
+            try:
+                lin = value[0].split(";")
+
                 nested_array = []
                 for item in lin:
-                    new_item = item.replace(' ', '')
-                    new_item = new_item.split(',')
+                    new_item = item.replace(" ", "")
+                    new_item = new_item.split(",")
                     temp = []
                     for value in new_item:
                         try:
                             int_item = locale.atoi(value)
                             temp.append(int_item)
                         except:
-                            error.append(key + ' is not a ' + svariables[key][1] + ' : ' + svariables[key][0])
+                            error.append(
+                                key
+                                + " is not a "
+                                + svariables[key][1]
+                                + " : "
+                                + svariables[key][0]
+                            )
                     nested_array.append(temp)
-                variables[key] = (nested_array, 'nested_int_array')
+                variables[key] = (nested_array, "nested_int_array")
             except:
-                error.append(key + ': could not read nested array of values')
+                error.append(key + ": could not read nested array of values")
                 return error, variables
-
-
 
     return error, variables
 
 
 def check_permissions(path):
-
     try:
         existvalue = os.access(path, os.F_OK)
     except:
@@ -241,9 +262,7 @@ def check_permissions(path):
 
 
 def check_binary(filename):
-
-    textchars = ''.join(
-        map(chr, [7, 8, 9, 10, 12, 13, 27] + range(0x20, 0x100)))
+    textchars = "".join(map(chr, [7, 8, 9, 10, 12, 13, 27] + range(0x20, 0x100)))
     is_binary_string = lambda bytes: bool(bytes.translate(None, textchars))
 
     flag = is_binary_string(open(filename).read(1024))
@@ -252,19 +271,18 @@ def check_binary(filename):
 
 
 def check_pdb_dcd(infile, filetype):
-
     fileexist = 0
     value = 0
     try:
         fileexist = os.path.isfile(infile)
-        if(fileexist):
+        if fileexist:
             binary = check_binary(infile)
-            print('binary = ', binary)
-            test_mol = system.Molecule(0) 
+            print("binary = ", binary)
+            test_mol = system.Molecule(0)
             fileexist = 1
-            if(filetype == 'pdb' and not binary):
+            if filetype == "pdb" and not binary:
                 test_mol.read_pdb(infile, fastread=True)
-            elif(filetype == 'dcd' and binary):
+            elif filetype == "dcd" and binary:
                 test_mol.read_single_dcd_step(infile, 0)
             else:
                 return fileexist, value
@@ -278,13 +296,12 @@ def check_pdb_dcd(infile, filetype):
 
 
 def certify_pdb_pdb(pdbfile1, pdbfile2):
-
     fileexist = 0
     value = 0
     try:
         fileexist1 = os.path.isfile(pdbfile1)
         fileexist2 = os.path.isfile(pdbfile2)
-        if(fileexist1 and fileexist2):
+        if fileexist1 and fileexist2:
             fileexist = 1
             pdbmol1 = system.Molecule(0)
             pdbmol2 = system.Molecule(0)
@@ -293,7 +310,7 @@ def certify_pdb_pdb(pdbfile1, pdbfile2):
                 pdbmol2.read_pdb(pdbfile2, fastread=True)
                 name1 = pdbmol1.name()
                 name2 = pdbmol2.name()
-                if(name1 == name2):
+                if name1 == name2:
                     value = 1
             except:
                 value = 0
@@ -306,22 +323,21 @@ def certify_pdb_pdb(pdbfile1, pdbfile2):
 
 
 def read_psf_file(psffile):
-
     segments = []
     names = []
 
-    infile = open(psffile, 'r').readlines()
+    infile = open(psffile, "r").readlines()
     nlines = len(infile)
 
-#       1 FALA 1    ALA  CAY  CT3   -0.270000       12.0110           0
+    #       1 FALA 1    ALA  CAY  CT3   -0.270000       12.0110           0
 
     st = infile[2].split()
     num_remarks = locale.atoi(st[0])
-    print('remarks = ', num_remarks)
+    print("remarks = ", num_remarks)
     offset1 = 2 + num_remarks + 2
     st = infile[offset1].split()
     natoms = locale.atoi(st[0])
-    print('natoms = ', natoms)
+    print("natoms = ", natoms)
     offset2 = offset1 + natoms + 2
     for i in range(offset1 + 1, offset1 + 1 + natoms):
         tal = infile[i].split()
@@ -332,19 +348,19 @@ def read_psf_file(psffile):
 
 
 def certify_dcd_psf(dcdfile, psffile):
-    '''
+    """
     This method checks that the number of atoms in the psf file
     is equal to the number of atoms in the dcd file.
 
     The method assumes that the psf and dcd files exist and are
     readable.
-    '''
+    """
 
     fileexist = 0
     value = 0
     try:
         fileexist = os.path.isfile(psffile)
-        if(fileexist):
+        if fileexist:
             fileexist = 1
             try:
                 natoms_psf, names_psf = read_psf_file(psffile)
@@ -353,7 +369,7 @@ def certify_dcd_psf(dcdfile, psffile):
                 dcdfile = dcdmol.open_dcd_read(dcdfile)
                 natoms_dcd = dcdfile[1]
 
-                if(natoms_psf == natoms_dcd):
+                if natoms_psf == natoms_dcd:
                     value = 1
             except:
                 value = 0
@@ -366,12 +382,11 @@ def certify_dcd_psf(dcdfile, psffile):
 
 
 def certify_pdb_psf(pdbfile, psffile):
-
     fileexist = 0
     value = 0
     try:
         fileexist = os.path.isfile(psffile)
-        if(fileexist):
+        if fileexist:
             fileexist = 1
             try:
                 natoms_psf, names_psf = read_psf_file(psffile)
@@ -380,7 +395,7 @@ def certify_pdb_psf(pdbfile, psffile):
                 natoms_pdb = pdbmol.natoms()
                 names_pdb = pdbmol.name()
                 # if((natoms_pdb == natoms_psf) and (names_pdb == names_psf)):
-                if((natoms_pdb == natoms_psf)):
+                if natoms_pdb == natoms_psf:
                     value = 1
             except:
                 value = 0
@@ -393,13 +408,13 @@ def certify_pdb_psf(pdbfile, psffile):
 
 
 def certify_pdb_dcd(pdbfile, dcdfile):
-    '''
+    """
     This method checks that the number of atoms in the pdb file
     is equal to the number of atoms in the dcd file.
 
     The method assumes that the pdb and dcd files exist and are
     readable.
-    '''
+    """
     value = 0
     try:
         pdbmol = system.Molecule(0)
@@ -411,7 +426,7 @@ def certify_pdb_dcd(pdbfile, dcdfile):
         dcdfile = dcdmol.open_dcd_read(dcdfile)
         natoms_dcd = dcdfile[1]
 
-        if(natoms_pdb == natoms_dcd):
+        if natoms_pdb == natoms_dcd:
             value = 1
     except:
         value = 0
@@ -427,39 +442,39 @@ def get_pdb_stats(filename, variables):
         result = []
         try:
             for i in range(len(variables)):
-                if(variables[i] == 'atom'):
+                if variables[i] == "atom":
                     result.append(a.atom())
-                elif(variables[i] == 'index'):
+                elif variables[i] == "index":
                     result.append(a.index())
-                elif(variables[i] == 'name'):
+                elif variables[i] == "name":
                     result.append(a.name())
-                elif(variables[i] == 'loc'):
+                elif variables[i] == "loc":
                     result.append(a.loc())
-                elif(variables[i] == 'resname'):
+                elif variables[i] == "resname":
                     result.append(a.resname())
-                elif(variables[i] == 'chain'):
+                elif variables[i] == "chain":
                     result.append(a.chain())
-                elif(variables[i] == 'resid'):
+                elif variables[i] == "resid":
                     result.append(a.resid())
-                elif(variables[i] == 'rescode'):
+                elif variables[i] == "rescode":
                     result.append(a.rescode())
-                elif(variables[i] == 'x'):
+                elif variables[i] == "x":
                     result.append(coor[0, :, 0]())
-                elif(variables[i] == 'y'):
+                elif variables[i] == "y":
                     result.append(coor[0, :, 1]())
-                elif(variables[i] == 'z'):
+                elif variables[i] == "z":
                     result.append(coor[0, :, 2]())
-                elif(variables[i] == 'occupancy'):
+                elif variables[i] == "occupancy":
                     result.append(a.occupancy())
-                elif(variables[i] == 'beta'):
+                elif variables[i] == "beta":
                     result.append(a.beta())
-                elif(variables[i] == 'segname'):
+                elif variables[i] == "segname":
                     result.append(a.segname())
-                elif(variables[i] == 'element'):
+                elif variables[i] == "element":
                     result.append(a.element())
-                elif(variables[i] == 'charge'):
+                elif variables[i] == "charge":
                     result.append(a.charge())
-                elif(variables[i] == 'moltype'):
+                elif variables[i] == "moltype":
                     result.append(a.moltype())
             value = 1
 
@@ -485,39 +500,39 @@ def get_pdb_complex_stats(filename, segname, variables):
         result = []
         try:
             for i in range(len(variables)):
-                if(variables[i] == 'atom'):
+                if variables[i] == "atom":
                     result.append(a.atom())
-                elif(variables[i] == 'index'):
+                elif variables[i] == "index":
                     result.append(a.index())
-                elif(variables[i] == 'name'):
+                elif variables[i] == "name":
                     result.append(a.name())
-                elif(variables[i] == 'loc'):
+                elif variables[i] == "loc":
                     result.append(a.loc())
-                elif(variables[i] == 'resname'):
+                elif variables[i] == "resname":
                     result.append(a.resname())
-                elif(variables[i] == 'chain'):
+                elif variables[i] == "chain":
                     result.append(a.chain())
-                elif(variables[i] == 'resid'):
+                elif variables[i] == "resid":
                     result.append(a.resid())
-                elif(variables[i] == 'rescode'):
+                elif variables[i] == "rescode":
                     result.append(a.rescode())
-                elif(variables[i] == 'x'):
+                elif variables[i] == "x":
                     result.append(coor[0, :, 0]())
-                elif(variables[i] == 'y'):
+                elif variables[i] == "y":
                     result.append(coor[0, :, 1]())
-                elif(variables[i] == 'z'):
+                elif variables[i] == "z":
                     result.append(coor[0, :, 2]())
-                elif(variables[i] == 'occupancy'):
+                elif variables[i] == "occupancy":
                     result.append(a.occupancy())
-                elif(variables[i] == 'beta'):
+                elif variables[i] == "beta":
                     result.append(a.beta())
-                elif(variables[i] == 'segname'):
+                elif variables[i] == "segname":
                     result.append(a.segname())
-                elif(variables[i] == 'element'):
+                elif variables[i] == "element":
                     result.append(a.element())
-                elif(variables[i] == 'charge'):
+                elif variables[i] == "charge":
                     result.append(a.charge())
-                elif(variables[i] == 'moltype'):
+                elif variables[i] == "moltype":
                     result.append(a.moltype())
             value = 1
 

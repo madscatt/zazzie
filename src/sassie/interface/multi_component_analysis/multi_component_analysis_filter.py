@@ -18,6 +18,7 @@
 #       MULTI-COMPONENT ANALYSIS FILTER
 #
 #       08/30/2021       --      initial coding         :   Susan Krueger
+#       04/03/2023       --      python 3 coding        :   Joseph E. Curtis
 #
 # LC      1         2         3         4         5         6         7
 # LC4567890123456789012345678901234567890123456789012345678901234567890123456789
@@ -57,30 +58,12 @@
         error string 
 """
 
-
 import sassie.interface.input_filter as input_filter
 
 # this version uses the new input filter that recognizes a nested_float_array
-"""
- ### pseudo code stub to filter boolean list so at least ONE and only ONE value is TRUE 
 
-bool IsExactlyOneBooleanTrue( bool *boolAry, int size )
-    {
-      bool areAnyTrue = false;
-      bool areTwoTrue = false;
-      for(int i = 0; (!areTwoTrue) && (i < size); i++) {
-        areTwoTrue = (areAnyTrue && boolAry[i]);
-        areAnyTrue |= boolAry[i];
-      }
-      return ((areAnyTrue) && (!areTwoTrue));
-    }
-
-https://stackoverflow.com/questions/14888174/how-do-i-determine-if-exactly-one-boolean-is-true-without-type-conversion
-
-"""
 
 def check_multi_component_analysis(variables, **kwargs):
-
     #### INPUT VARIABLES FOR ALL METHODS
 
     match_point_flag = variables["match_point_flag"][0]
@@ -91,8 +74,9 @@ def check_multi_component_analysis(variables, **kwargs):
     run_name = variables["run_name"][0]
     output_file_name = variables["output_file_name"][0]
     input_file_name = variables["input_file_name"][0]
-    read_from_contrast_calculator_output_file = variables["read_from_contrast_calculator_output_file"][0]
-
+    read_from_contrast_calculator_output_file = variables[
+        "read_from_contrast_calculator_output_file"
+    ][0]
 
     number_of_contrast_points = variables["number_of_contrast_points"][0]
     fraction_d2o = variables["fraction_d2o"][0]
@@ -103,36 +87,43 @@ def check_multi_component_analysis(variables, **kwargs):
 
     # check flags to make sure they are boolean type
 
-    if match_point_flag is not bool:
+    if type(match_point_flag) is not bool:
         error.append("match_point_flag is not a boolean")
         return error
-    elif stuhrmann_parallel_axis_flag is not bool:
+    elif type(stuhrmann_parallel_axis_flag) is not bool:
         error.append("stuhrmann_parallel_axis_flag is not a boolean")
         return error
-    elif stoichiometry_flag is not bool:
+    elif type(stoichiometry_flag) is not bool:
         error.append("stoichiometry_flag is not a boolean")
         return error
-    elif decomposition_flag is not bool:
+    elif type(decomposition_flag) is not bool:
         error.append("decomposition_flag is not a boolean")
         return error
 
-    flag_list = [match_point_flag, stuhrmann_parallel_axis_flag, stoichiometry_flag, decomposition_flag]
+    flag_list = [
+        match_point_flag,
+        stuhrmann_parallel_axis_flag,
+        stoichiometry_flag,
+        decomposition_flag,
+    ]
 
     # count the number of True values in the list
     number_of_true_values = flag_list.count(True)
 
     if number_of_true_values != 1:
-        error.append("one method value must be True and only one method flag can be True\n")
-        error.append("match_point_flag = " + match_point_flag + "\n")
-        error.append("stuhrmann_parallel_axis_flag = " + stuhrmann_parallel_axis_flag + "\n")
-        error.append("stoichiometry_flag = " + stoichiometry_flag + "\n")
-        error.append("decomposition_flag = " + decomposition_flag + "\n")
+        error.append(
+            "one method value must be True and only one method flag can be True\n"
+        )
+        error.append("match_point_flag = " + str(match_point_flag) + "\n")
+        error.append(
+            "stuhrmann_parallel_axis_flag = " + str(stuhrmann_parallel_axis_flag) + "\n"
+        )
+        error.append("stoichiometry_flag = " + str(stoichiometry_flag) + "\n")
+        error.append("decomposition_flag = " + str(decomposition_flag) + "\n")
         return error
 
-
-    import sys ; sys.exit()
-
-
+    #### TESTING END POINT
+    return error
 
     # check run_name
 
@@ -308,3 +299,28 @@ def check_multi_component_analysis(variables, **kwargs):
                 return error
 
     return error
+
+
+if __name__ == "__main__":
+    variables = {}
+#devBio[newKey] = newValue.
+    variables["match_point_flag"] = (True, 'boolean')
+    variables["stuhrmann_parallel_axis_flag"] = (False, 'boolean')
+    variables["stoichiometry_flag"] = (False, 'boolean')
+    variables["decomposition_flag"] = (False, 'boolean')
+
+    variables["run_name"] = ("run_0", "string")
+    variables["output_file_name"] = "test.out" "string"
+    variables["input_file_name"] = ("input_test.txt", "string")
+    variables["read_from_contrast_calculator_output_file"] = (False, "boolean")
+
+    variables["number_of_contrast_points"] = (3, "int")
+    variables["fraction_d2o"] = ([0.1, 0.2, 0.3], "int_array")
+
+    error = check_multi_component_analysis(variables)
+    if(len(error)) == 0:
+        print("NO ERRORS FOUND")
+    else:
+        print("len(__main__ error) = " + str(len(error)))
+        from pprint import pprint
+        pprint(error)
