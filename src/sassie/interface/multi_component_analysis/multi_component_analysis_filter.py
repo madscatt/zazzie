@@ -63,7 +63,8 @@ import sassie.interface.input_filter as input_filter
 # this version uses the new input filter that recognizes a nested_float_array
 """
  ### pseudo code stub to filter boolean list so at least ONE and only ONE value is TRUE 
- bool IsExactlyOneBooleanTrue( bool *boolAry, int size )
+
+bool IsExactlyOneBooleanTrue( bool *boolAry, int size )
     {
       bool areAnyTrue = false;
       bool areTwoTrue = false;
@@ -78,21 +79,58 @@ https://stackoverflow.com/questions/14888174/how-do-i-determine-if-exactly-one-b
 
 """
 
-
 def check_multi_component_analysis(variables, **kwargs):
+
+    #### INPUT VARIABLES FOR ALL METHODS
+
+    match_point_flag = variables["match_point_flag"][0]
+    stuhrmann_parallel_axis_flag = variables["stuhrmann_parallel_axis_flag"][0]
+    stoichiometry_flag = variables["stoichiometry_flag"][0]
+    decomposition_flag = variables["decomposition_flag"][0]
+
     run_name = variables["run_name"][0]
     output_file_name = variables["output_file_name"][0]
     input_file_name = variables["input_file_name"][0]
-    read_from_file = variables["read_from_file"][0]
+    read_from_contrast_calculator_output_file = variables["read_from_contrast_calculator_output_file"][0]
+
+
     number_of_contrast_points = variables["number_of_contrast_points"][0]
     fraction_d2o = variables["fraction_d2o"][0]
-    stoichiometry_flag = variables["stoichiometry_flag"][0]
-    match_point_flag = variables["match_point_flag"][0]
-    stuhrmann_parallel_axis_flag = variables["stuhrmann_parallel_axis_flag"][0]
-    decomposition_flag = variables["decomposition_flag"][0]
+
+    # define empty error list to return
+
+    error = []
+
+    # check flags to make sure they are boolean type
+
+    if match_point_flag is not bool:
+        error.append("match_point_flag is not a boolean")
+        return error
+    elif stuhrmann_parallel_axis_flag is not bool:
+        error.append("stuhrmann_parallel_axis_flag is not a boolean")
+        return error
+    elif stoichiometry_flag is not bool:
+        error.append("stoichiometry_flag is not a boolean")
+        return error
+    elif decomposition_flag is not bool:
+        error.append("decomposition_flag is not a boolean")
+        return error
+
+    flag_list = [match_point_flag, stuhrmann_parallel_axis_flag, stoichiometry_flag, decomposition_flag]
+
+    # count the number of True values in the list
+    number_of_true_values = flag_list.count(True)
+
+    if number_of_true_values != 1:
+        error.append("more than one method flag is True\n")
+        error.append("match_point_flag = " + match_point_flag + "\n")
+        error.append("stuhrmann_parallel_axis_flag = " + stuhrmann_parallel_axis_flag + "\n")
+        error.append("stoichiometry_flag = " + stoichiometry_flag + "\n")
+        error.append("decomposition_flag = " + decomposition_flag + "\n")
+        return error
+
 
     # check run_name
-    error = []
     error = input_filter.check_name(run_name)
     if error != []:
         return error
