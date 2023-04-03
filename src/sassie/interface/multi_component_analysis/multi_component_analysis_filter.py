@@ -122,7 +122,7 @@ def check_multi_component_analysis(variables, **kwargs):
     number_of_true_values = flag_list.count(True)
 
     if number_of_true_values != 1:
-        error.append("more than one method flag is True\n")
+        error.append("one method value must be True and only one method flag can be True\n")
         error.append("match_point_flag = " + match_point_flag + "\n")
         error.append("stuhrmann_parallel_axis_flag = " + stuhrmann_parallel_axis_flag + "\n")
         error.append("stoichiometry_flag = " + stoichiometry_flag + "\n")
@@ -130,7 +130,12 @@ def check_multi_component_analysis(variables, **kwargs):
         return error
 
 
+    import sys ; sys.exit()
+
+
+
     # check run_name
+
     error = input_filter.check_name(run_name)
     if error != []:
         return error
