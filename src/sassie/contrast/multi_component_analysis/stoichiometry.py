@@ -120,9 +120,9 @@ def get_molecular_weights(other_self):
     pgui('Stoichiometry method\n')
     pgui('setting up I(0) equation coefficients')
         
-    if mvars.read_from_file == True:
-        #pgui('\n')
-        pgui('contrast values read from input file: %s' % (mvars.input_file_name))
+    #if mvars.read_from_file == True:
+    #    #pgui('\n')
+    #    pgui('contrast values read from input file: %s' % (mvars.input_file_name))
         
     x = numpy.zeros(shape=(mvars.number_of_contrast_points, 4))
 

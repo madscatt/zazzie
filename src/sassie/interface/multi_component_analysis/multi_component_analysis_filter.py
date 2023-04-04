@@ -73,7 +73,7 @@ def check_multi_component_analysis(variables, **kwargs):
 
     run_name = variables["run_name"][0]
     output_file_name = variables["output_file_name"][0]
-    input_file_name = variables["input_file_name"][0]
+    #input_file_name = variables["input_file_name"][0]
     read_from_contrast_calculator_output_file = variables[
         "read_from_contrast_calculator_output_file"
     ][0]

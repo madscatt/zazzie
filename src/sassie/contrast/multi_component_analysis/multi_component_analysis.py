@@ -151,19 +151,21 @@ class multi_component_analysis():
 
 #Unpack the additional variables that are unique to each method. The read_from_file if statement may not be needed if the GUI is going to be populated with these values prior to running the main program.
         if mvars.stoichiometry_flag == True:
-            mvars.input_file_name = variables['input_file_name'][0]
-            mvars.read_from_file = variables['read_from_file'][0]
+            #mvars.input_file_name = variables['input_file_name'][0]
+            #mvars.read_from_file = variables['read_from_file'][0]
             mvars.izero = variables['izero'][0]
             mvars.concentration = variables['concentration'][0]
             mvars.partial_specific_volume = variables['partial_specific_volume'][0]
             mvars.number_of_components = variables['number_of_components'][0]
 
-            if mvars.read_from_file == True:
-                read_contrast_output_files.read_contrast_file(self)
-#                print('delta rho after reading from file: ', mvars.delta_rho)
-                log.debug('delta rho after reading from file: %s' % (str(mvars.delta_rho)))
-            elif mvars.read_from_file == False:
-                mvars.delta_rho = variables['delta_rho'][0]
+            #if mvars.read_from_file == True:
+                #read_contrast_output_files.read_contrast_file(self)
+#               # print('delta rho after reading from file: ', mvars.delta_rho)
+                #log.debug('delta rho after reading from file: %s' % (str(mvars.delta_rho)))
+                #pass
+            #elif mvars.read_from_file == False:
+                #mvars.delta_rho = variables['delta_rho'][0]
+            mvars.delta_rho = variables['delta_rho'][0]
                 
         elif mvars.match_point_flag == True:
             mvars.izero = variables['izero'][0]
@@ -173,20 +175,22 @@ class multi_component_analysis():
             mvars.initial_match_point_guess = variables['initial_match_point_guess'][0]
 
         elif mvars.stuhrmann_parallel_axis_flag == True:
-            mvars.input_file_name = variables['input_file_name'][0]
-            mvars.read_from_file = variables['read_from_file'][0]
+            #mvars.input_file_name = variables['input_file_name'][0]
+            #mvars.read_from_file = variables['read_from_file'][0]
             mvars.partial_specific_volume = variables['partial_specific_volume'][0]
             mvars.molecular_weight = variables['molecular_weight'][0]
             mvars.number_of_components = variables['number_of_components'][0]
             mvars.radius_of_gyration = variables['radius_of_gyration'][0]
             mvars.radius_of_gyration_error = variables['radius_of_gyration_error'][0]
             
-            if mvars.read_from_file == True:
-                read_contrast_output_files.read_contrast_file(self)
-#                print('delta rho after reading from file: ', mvars.delta_rho)
-                log.debug('delta rho after reading from file: %s' % (str(mvars.delta_rho)))
-            elif mvars.read_from_file == False:
-                mvars.delta_rho = variables['delta_rho'][0]
+            #if mvars.read_from_file == True:
+            #    #read_contrast_output_files.read_contrast_file(self)
+#           #    # print('delta rho after reading from file: ', mvars.delta_rho)
+            #    #log.debug('delta rho after reading from file: %s' % (str(mvars.delta_rho)))
+            #    pass
+            #elif mvars.read_from_file == False:
+            #    mvars.delta_rho = variables['delta_rho'][0]
+            mvars.delta_rho = variables['delta_rho'][0]
 
 #        print(vars(mvars))
 
@@ -283,13 +287,14 @@ class multi_component_analysis():
 # this is just to write the contrast calculator filename into the output file so we know this option was used
         mcavars.outfile = io.open(mcavars.multi_component_analysis_path+mvars.output_file_name, 'w')
 
-        if mvars.stoichiometry_flag == True or mvars.stuhrmann_parallel_axis_flag == True:
-            if mvars.read_from_file == True:
-                pgui('\ninput file: %s' % (mvars.input_file_name))
-                mcavars.outfile.write('input file: ' + mvars.input_file_name +'\n')
-            else:
-                pgui('\ninput file: None')
-                mcavars.outfile.write('input file: None\n')
+        #if mvars.stoichiometry_flag == True or mvars.stuhrmann_parallel_axis_flag == True:
+        #    if mvars.read_from_file == True:
+        #        #pgui('\ninput file: %s' % (mvars.input_file_name))
+        #        #mcavars.outfile.write('input file: ' + mvars.input_file_name +'\n')
+        #        pass
+        #    else:
+        #        pgui('\ninput file: None')
+        #        mcavars.outfile.write('input file: None\n')
             
 #TODO: write out the individual input variables on separate lines and only write out the ones that are relevant for the method being used.  For stuhrmann_parallel_axis, include volume fraction.
         mcavars.outfile.write('input variables: ' + repr(vars(mvars)) + '\n')

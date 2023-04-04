@@ -323,7 +323,7 @@ def run_module(self, **kwargs):
         return error
 
     print(self.variables)
-    import sys; sys.exit()
+    #import sys; sys.exit()
 
     try:
         if kwargs["file_check"]:
