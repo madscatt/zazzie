@@ -61,11 +61,11 @@ def user_variables(self, **kwargs):
     #### ONLY ONE OF THE FOLLOWING FOUR SHOULD BE TRUE
 
     self.match_point_flag = False
-    self.match_point_flag = True
-    self.stuhrmann_parallel_axis_flag = True
+    #self.match_point_flag = True
+    #self.stuhrmann_parallel_axis_flag = True
     self.stuhrmann_parallel_axis_flag = False
     self.stoichiometry_flag = True
-    self.stoichiometry_flag = False
+    #self.stoichiometry_flag = False
     self.decomposition_flag = False
 
     #### INPUT VARIABLES FOR ALL METHODS

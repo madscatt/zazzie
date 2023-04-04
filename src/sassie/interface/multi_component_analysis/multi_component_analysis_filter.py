@@ -122,43 +122,26 @@ def check_multi_component_analysis(variables, **kwargs):
         error.append("decomposition_flag = " + str(decomposition_flag) + "\n")
         return error
 
-    #### TESTING END POINT
-    return error
-
     # check run_name
 
     error = input_filter.check_name(run_name)
     if error != []:
         return error
 
-    # check read_from_file (Will an error be raised prior to this point?  YES! The program will crash in the input filter, so this test isn't needed.
-    if read_from_file != True and read_from_file != False:
-        error.append("read_from_file must be True or False")
+    # check read_from_contrast_calculator_output_file (Will an error be raised prior to this point?  YES! The program will crash in the input filter, so this test isn't needed.
+    if type(read_from_contrast_calculator_output_file) is not bool:
+        error.append("read_from_contrast_calculator_output_file must be True or False")
         return error
 
     # check that input file exists
-    if read_from_file == True:
+    if read_from_contrast_calculator_output_file:
         error = input_filter.check_file_exists(input_file_name)
         if len(error) > 0:
-            error.append("input file is not readable or does not exist")
+            error.append(
+                "read_from_contrast_calculator_output_file file is not readable or does not exist"
+            )
             return error
 
-    # check that at least one method is chosen.
-    if (
-        not stoichiometry_flag
-        and not match_point_flag
-        and not stuhrmann_parallel_axis_flag
-        and not decomposition_flag
-    ):
-        error.append("at least one method must be selected")
-        return error
-
-    # TODO:  Do we need to check if only one flag is True? Will more than one flag be allowed to be True at a time to execute methods sequentially? Right now, this is not the way the program is envisioned.  Like MulCh, you would choose a method and execute it.  Then choose another an execute, etc.  If the method is selected by a drop down menu, then we don't need to check to make sure that at least one flag is chosen and that only one flag is True.
-
-    # check the multi_component analysis variables depending on the method.
-    #    print('len frac d2o: ', len(fraction_d2o))
-    # variables common to all methods:  fraction_d2o
-    # check if length of fraction D2O = number of contrasts
     if len(fraction_d2o) != number_of_contrast_points:
         error.append("fraction D2O must have %i values" % (number_of_contrast_points))
         return error
@@ -168,55 +151,12 @@ def check_multi_component_analysis(variables, **kwargs):
             error.append("fraction D2O[%i] must be between 0 and 1" % (i))
             return error
 
-    if stoichiometry_flag == True:
-        number_of_components = variables["number_of_components"][0]
-        izero = variables["izero"][0]
-        concentration = variables["concentration"][0]
-        partial_specific_volume = variables["partial_specific_volume"][0]
-        delta_rho = variables["delta_rho"][0]
-
-        # check if number of contrast points is >= the number of components
-        if number_of_contrast_points < number_of_components:
-            error.append("number of contrasts must be >= number of components")
-            return error
-        # check if length of izero, concentration and delta_rho = number of contrasts
-        if len(izero) != number_of_contrast_points:
-            error.append("I(0) must have %i values" % (number_of_contrast_points))
-            return error
-        if len(concentration) != number_of_contrast_points:
-            error.append(
-                "concentration must have %i values" % (number_of_contrast_points)
-            )
-            return error
-        # If read_from_file is True, the values are read from a contrast calculator output file, which is done in the unpack variables method in the main program. The way the program is written now, this executes after these checks are performed.  If we execute the reading of the values from the file to fill the value into the GUI before executing the main program, then we can perform this whether read_from_file is True or False and the if statement can be removed.
-        if read_from_file == False:
-            if len(delta_rho) != number_of_contrast_points:
-                error.append(
-                    "delta rho must have %i sets of values"
-                    % (number_of_contrast_points)
-                )
-                return error
-            # check if length delta_rho[i] = number of components
-            for i in range(number_of_contrast_points):
-                if len(delta_rho[i]) != number_of_components:
-                    error.append(
-                        "delta rho[%i] must have %i values" % (i, number_of_components)
-                    )
-                    return error
-        # check if length of partial specific volume = number of components
-        if len(partial_specific_volume) != number_of_components:
-            error.append(
-                "partial_specific_volume must have %i values" % (number_of_components)
-            )
-            return error
-
-    elif match_point_flag == True:
+    if match_point_flag:
         izero = variables["izero"][0]
         izero_error = variables["izero_error"][0]
         concentration = variables["concentration"][0]
         concentration_error = variables["concentration_error"][0]
         initial_match_point_guess = variables["initial_match_point_guess"][0]
-        #        print('init matchpoint guess: ', initial_match_point_guess)
 
         # check if length of izero, izero_error, concentration and concentration_error = number of contrasts
         if len(izero) != number_of_contrast_points:
@@ -248,7 +188,7 @@ def check_multi_component_analysis(variables, **kwargs):
             error.append("initial match point guess must be between 0 and 1")
             return error
 
-    elif stuhrmann_parallel_axis_flag == True:
+    elif stuhrmann_parallel_axis_flag:
         number_of_components = variables["number_of_components"][0]
         molecular_weight = variables["molecular_weight"][0]
         partial_specific_volume = variables["partial_specific_volume"][0]
@@ -261,7 +201,14 @@ def check_multi_component_analysis(variables, **kwargs):
             error.append("number of contrasts must be >= number of components")
             return error
         # delta_rho_checks if the values are input by hand
-        if read_from_file == False:
+
+        #### TODO: read_from_sascalc_output_file = False
+        #### TODO: read_from_contrast_calculator_output_file:
+
+        read_from_contrast_calculator_output_file = variables["read_from_contrast_calculator_output_file"][0]
+        read_from_sascalc_output_file = variables["read_from_sascalc_output_file"][0]
+
+        if not read_from_contrast_calculator_output_file:
             if len(delta_rho) != number_of_contrast_points:
                 error.append(
                     "delta rho must have %i sets of values"
@@ -298,6 +245,49 @@ def check_multi_component_analysis(variables, **kwargs):
                 error.append("Rg error[%i] cannot equal zero" % (i))
                 return error
 
+    elif stoichiometry_flag:
+        number_of_components = variables["number_of_components"][0]
+        izero = variables["izero"][0]
+        concentration = variables["concentration"][0]
+        partial_specific_volume = variables["partial_specific_volume"][0]
+        delta_rho = variables["delta_rho"][0]
+
+        # check if number of contrast points is >= the number of components
+        if number_of_contrast_points < number_of_components:
+            error.append("number of contrasts must be >= number of components")
+            return error
+        # check if length of izero, concentration and delta_rho = number of contrasts
+        if len(izero) != number_of_contrast_points:
+            error.append("I(0) must have %i values" % (number_of_contrast_points))
+            return error
+        if len(concentration) != number_of_contrast_points:
+            error.append(
+                "concentration must have %i values" % (number_of_contrast_points)
+            )
+            return error
+        # If read_from_file is True, the values are read from a contrast calculator output file, which is done in the unpack variables method in the main program. The way the program is written now, this executes after these checks are performed.  If we execute the reading of the values from the file to fill the value into the GUI before executing the main program, then we can perform this whether read_from_file is True or False and the if statement can be removed.
+        read_from_contrast_calculator_output_file = variables["read_from_contrast_calculator_output_file"][0]
+        if not read_from_contrast_calculator_output_file:
+            if len(delta_rho) != number_of_contrast_points:
+                error.append(
+                    "delta rho must have %i sets of values"
+                    % (number_of_contrast_points)
+                )
+                return error
+            # check if length delta_rho[i] = number of components
+            for i in range(number_of_contrast_points):
+                if len(delta_rho[i]) != number_of_components:
+                    error.append(
+                        "delta rho[%i] must have %i values" % (i, number_of_components)
+                    )
+                    return error
+        # check if length of partial specific volume = number of components
+        if len(partial_specific_volume) != number_of_components:
+            error.append(
+                "partial_specific_volume must have %i values" % (number_of_components)
+            )
+            return error
+
     return error
 
 
@@ -305,8 +295,11 @@ if __name__ == "__main__":
     variables = {}
 
     variables["match_point_flag"] = (True, "boolean")
+    variables["match_point_flag"] = (False, "boolean")
+    #variables["stuhrmann_parallel_axis_flag"] = (True, "boolean")
     variables["stuhrmann_parallel_axis_flag"] = (False, "boolean")
-    variables["stoichiometry_flag"] = (False, "boolean")
+    variables["stoichiometry_flag"] = (True, "boolean")
+    #variables["stoichiometry_flag"] = (False, "boolean")
     variables["decomposition_flag"] = (False, "boolean")
 
     variables["run_name"] = ("run_0", "string")
@@ -314,22 +307,45 @@ if __name__ == "__main__":
     variables["input_file_name"] = ("input_test.txt", "string")
     variables["read_from_contrast_calculator_output_file"] = (False, "boolean")
 
-    variables["number_of_contrast_points"] = (3, "int")
-    variables["fraction_d2o"] = ([0.1, 0.2, 0.3], "int_array")
+    if variables["match_point_flag"][0]:
 
-    """
-    # match_point_variables to test
-    {'run_name': ('run_0', 'string'), 'path': ('./', 'string'), 'output_file_name': ('general_output_file.out', 'string'),
-     'number_of_contrast_points': (7, 'int'), 'fraction_d2o': ([1.0, 0.9, 0.8, 0.4, 0.2, 0.1, 0.0],
-     'float_array'), 'match_point_flag': (True, 'boolean'), 'stoichiometry_flag': (False, 'boolean'),
-     'stuhrmann_parallel_axis_flag': (False, 'boolean'), 'decomposition_flag': (False, 'boolean'),
-     'read_from_contrast_calculator_output_file': (False, 'boolean'), 'initial_match_point_guess': (0.5, 'float'),
-     'concentration': ([11.9, 11.9, 11.9, 26.9, 11.9, 11.9, 11.9], 'float_array'),
-     'concentration_error': ([0.6, 0.6, 0.6, 1.3, 0.6, 0.6, 0.6], 'float_array'),
-     'izero': ([0.537, 0.332, 0.19, 0.0745, 0.223, 0.352, 0.541], 'float_array'),
-     'izero_error': ([0.001, 0.002, 0.001, 0.002, 0.002, 0.002, 0.003], 'float_array')}
+        variables["number_of_contrast_points"] = (7, "int")
+        variables["fraction_d2o"] = ([1.0, 0.9, 0.8, 0.4, 0.2, 0.1, 0.0], "int_array")
 
-    """
+        variables["izero"] = ([0.537, 0.332, 0.19, 0.0745, 0.223, 0.352, 0.541], 'float_array')
+        variables["izero_error"] = ([0.001, 0.002, 0.001, 0.002, 0.002, 0.002, 0.003], 'float_array')
+        variables["concentration"] = ([11.9, 11.9, 11.9, 26.9, 11.9, 11.9, 11.9], 'float_array')
+        variables["concentration_error"] = ([0.6, 0.6, 0.6, 1.3, 0.6, 0.6, 0.6], 'float_array')
+        variables["initial_match_point_guess"] = (0.5, 'float')
+
+    elif variables["stuhrmann_parallel_axis_flag"][0]:
+
+        variables["read_from_sascalc_output_file"] = (False, 'boolean')
+
+        variables["number_of_contrast_points"] = (7, "int")
+        variables["fraction_d2o"] = ([1.0, 0.9, 0.8, 0.4, 0.2, 0.1, 0.0], "int_array")
+
+        variables["number_of_components"] = (2, 'int')
+        variables["partial_specific_volume"] = ([0.73, 0.73], 'float_array')
+        variables["molecular_weight"] = ([50.7, 11.7], 'float_array')
+        variables['delta_rho'] = ([[-3.34, 0.41], [-2.78, 0.98], [-2.21, 1.54], [0.055, 3.8], [1.18, 4.93], [1.75, 5.49], [2.31, 6.06]], 'nested_float_array')
+        variables['radius_of_gyration'] = ([25.11, 24.16, 23.03, 23.4, 28.22, 28.33, 28.85], 'float_array')
+        variables['radius_of_gyration_error'] = ([0.09, 0.14, 0.2, 0.7, 0.29, 0.19, 0.12], 'float_array')
+
+    elif variables["stoichiometry_flag"][0]:
+
+        variables['number_of_contrast_points'] = (3, 'int')
+        variables['fraction_d2o'] = ([0.99, 0.12, 0.41], 'float_array')
+        variables['concentration'] = ([3.7, 3.6, 3.1], 'float_array')
+        variables['concentration_error'] = ([0.18, 0.18, 0.18], 'float_array')
+        variables['number_of_components'] = (2, 'int')
+        variables['partial_specific_volume'] = ([0.745, 0.903], 'float_array')
+        variables['delta_rho'] = ([[-3.2, -5.7], [1.6, 0.26], [0.031, -1.74]], 'nested_float_array')
+        variables['izero'] = ([8.4, 0.6, 0.17], 'float_array')
+        variables['izero_error'] = ([0.2, 0.04, 0.01], 'float_array')
+
+    elif variables["decomposition_flag"][0]:
+        pass
 
     error = check_multi_component_analysis(variables)
     if (len(error)) == 0:
