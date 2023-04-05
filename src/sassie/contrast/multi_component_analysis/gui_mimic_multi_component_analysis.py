@@ -272,6 +272,11 @@ def run_module(self, **kwargs):
             self.read_from_contrast_calculator_output_file,
             "boolean",
         )
+        svariables["read_from_sascalc_output_file"] = (
+            self.read_from_sascalc_output_file,
+            "boolean",
+        )
+        
 
         svariables["partial_specific_volume"] = (
             self.partial_specific_volume,
