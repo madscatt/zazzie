@@ -1,4 +1,4 @@
-#    SASSIE: Copyright (C) 2011 Joseph E. Curtis, Ph.D. 
+#    SASSIE: Copyright (C) 2011 Joseph E. Curtis, Ph.D.
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -25,26 +25,18 @@
 #                                                                      *      **
 
 '''
-    POLYNOMIAL FIT performs a weighted polynomial fit to a polynomial function. This
-    is the version that was first written by Andrew Whitten (2/2006) for a 2nd order
-    polynomial as part of the MulCh program. Rewritten in Python by Kathryn Sarachan (6/2021). 
-    REFERENCE: Whitten, A.E., Cai, S, Trewhella, J. (2008). "MULCh: modules for the
-    analysis of small-angle neutron contrast variation data from biomolecular assemblies",
-    J. Appl. Cryst. 41, 222 - 226.
 
-    INPUTS:
-        order, order of polynomial
-        x array
-        y array
-        yerr, error in y array
-        number of data points
+    **Polynomial Function Fit** contains the method that performs a weighted fit to a polynomial function. This is the version that was first written by Andrew Whitten (2/2006) for a 2nd order polynomial as part of the MulCh program. Rewritten in Python by Kathryn Sarachan (6/2021). 
+    
+    **Reference:** Whitten, A.E., Cai, S, Trewhella, J. (2008). "MULCh: modules for the analysis of small-angle neutron contrast variation data from biomolecular assemblies", *J. Appl. Cryst.* **41**, 222 - 226.
 
+    **Inputs:**
+    
+        order of polynomial, number of data points, x array, y array, error in y array
 
-    OUTPUTS:
-        M, a vector with the coefficients from the polynomial fit with weighting 1.0/yerr**2
-        Bi, the correlation matrix
-        reduced chi-squared, number of accepted data points for which yerr > 0 - (order + 1) degrees of freedom
-
+    **Outputs:**
+    
+        coefficients from the weighted polynomial fit, correlation matrix, reduced chi-squared
 
     Can be called by any method performing a fit to a polynomial.
 
@@ -52,7 +44,35 @@
 
 import numpy
 
+
 def polynomial_fit(order, X, Y, yerr, n):
+    '''Performs a weighted fit (1.0/yerr\ :sup:`2` ) to a polynomial function of order n.
+
+    Parameters
+    ----------
+
+    order: int
+        order of the polynomial
+    n:  int
+        number of data points    
+    X:  float array (dimension = n)
+        x data
+    Y:  float array (dimension = n)
+        y data
+    yerr: float array (dimension = n)
+        error in y data
+
+    Returns
+    -------
+
+    M: 2D float array (dimensions = order+1 x 1)
+        coefficients from the polynomial fit with weighting 1.0/yerr\ :sup:`2` 
+    Bi: 2D float array (dimensions = order+1 x order+1)
+        correlation matrix
+    reduced chi_squared: float
+        chi-squared divided by the number of accepted data points for which yerr > 0 - (order + 1) degrees of freedom
+
+    '''
 
     vector_shape = (order+1, 1)
     A = numpy.zeros(vector_shape)
