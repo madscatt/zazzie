@@ -25,11 +25,10 @@
 # LC4567890123456789012345678901234567890123456789012345678901234567890123456789
 #                                                                      *      **
 """
-    GUI MIMIC MULTI-COMPONENT ANALYSIS is the driver method to run the
-    MULTI-COMPONENT ANALYSIS module.
+    **Gui Mimic Multi-component Analysis** is the driver method to run the
+    **Multi-compoment Analysis** module.
 
-    This method requires input_filter, multi_component_analysis_filter
-    and multi_component_analysis files.
+    Requires **Input Filter**, **Multi-component Analysis Filter** and **Multi-component Analysis**.
 
 """
 
@@ -219,6 +218,7 @@ def run_module(self, **kwargs):
     Only the module input filter is run if kwargs is: test_filter=True
     The method is defined outside the class so that it can be used
     by other programs such as test_module and test_module_filter.
+
     """
 
     svariables = {}

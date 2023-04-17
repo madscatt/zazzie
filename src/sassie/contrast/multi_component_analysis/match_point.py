@@ -83,14 +83,14 @@ def get_match_point(other_self):
     fraction_d2o:   float array (dimension = number_of_contrast_points)
         The fraction D\ :sub:`2`\ O values that define the contrasts
     izero:  float array (dimension = number_of_contrast_points)
-        I(0) value at each contrast in cm\ :sup:`-1`\
-    izero error:  float array (dimension = number_of_contrast_points)
+        I(0) value at each contrast in cm\ :sup:`-1`\ 
+    izero_error:  float array (dimension = number_of_contrast_points)
         I(0) error value at each contrast
     concentration:  float array (dimension = number_of_contrast_points)
         concentration at each contrast in mg/mL
-    concentration error:  float array (dimension = number_of_contrast_points)
+    concentration_error:  float array (dimension = number_of_contrast_points)
         concentration error at each contrast
-    initial match point guess:  float
+    initial_match_point_guess:  float
         The fraction D\ :sub:`2`\ O value to be used as initial match point guess
     output_file_name:  string
         name of output file        

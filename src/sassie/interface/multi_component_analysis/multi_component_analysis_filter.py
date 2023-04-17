@@ -24,38 +24,31 @@
 # LC4567890123456789012345678901234567890123456789012345678901234567890123456789
 #                                                                      *      **
 """
-    MULTI-COMPONENT ANALYSIS FILTER is the method that checks the inputs for
-    the MULTI-COMPONENT ANALYSIS module that were not previously checked by
-    INPUT FILTER, which only checks for valid string, float, integer, boolean, etc.
+    **Multi-component Analysis Filter** is the method that checks the inputs for
+    the **Multi-component Analysis** module that were not previously checked by
+    **Input Filter**, which only checks for valid string, float, integer, boolean, etc.
 
-    Called from GUI_MIMIC_MULTI_COMPONENT_ANALYSIS
-    Calls INPUT_FILTER
+    **Inputs:**
+    
+        The inputs checked depend on which method is used.
+     
+        The method is chosen based on which of the following flags is True:
+    
+        - match_point_flag: Match Point Analysis
+        - stuhrmann_parallel_axis_flag: Sturhmann and Parallel Axis Theorem Analyses
+        - decomposition_flag: Decomposition Analysis
+        - stoichiometry_flag: Stoichiometry Analysis
+        
+        Only one flag at a time can be True.
+    
+    **Outputs:**
+    
+        Error string
 
-    INPUTS:
-        run_name
-        output_file_name
-        input_file_name
-        read_from_file
-        number_of_contrast_points
-        number_of_components
-        stoichiometry_flag
-        match_point_flag
-        stuhrmann_parallel_axis_flag
-        decomposition_flag
-        fraction_d2o
-        initial_matchpoint_guess
-        izero
-        izero_error
-        concentration
-        concentration_error
-        partial_specific_volume
-        molecular_weight
-        radius_of_gyration
-        radius_of_gyration_error
-        delta_rho
+    Called from **Gui Mimic Multi-component Analysis**
+    
+    Calls **Input Filter**
 
-    OUTPUTS:
-        error string 
 """
 
 import sassie.interface.input_filter as input_filter
@@ -64,6 +57,56 @@ import sassie.interface.input_filter as input_filter
 
 
 def check_multi_component_analysis(variables, **kwargs):
+    """
+    Method to check the **Multi-component Analysis** variables.
+        
+    Parameters
+    ----------
+    
+        run_name: string
+            run name
+        output_file_name: string
+            user-specified output file name
+        stoichiometry_flag: boolean
+            flag to determine if stoichiometry analysis is being used
+        match_point_flag: boolean
+            flag to determine if match point analysis is being used 
+        stuhrmann_parallel_axis_flag: boolean
+            flag to determine if Stuhrmann and Parallel Axis methods are being used
+        decomposition_flag: boolean
+            flag to determine if decomposition analysis is being used
+        number_of_contrast_points:  int
+            The number of solvent conditions with different fraction D\ :sub:`2`\ O values
+        fraction_d2o:   float array (dimension = number_of_contrast_points)
+            The fraction D\ :sub:`2`\ O values that define the contrasts
+        izero:  float array (dimension = number_of_contrast_points)
+            I(0) value at each contrast in cm\ :sup:`-1`\ 
+        izero_error:  float array (dimension = number_of_contrast_points)
+            I(0) error value at each contrast
+        concentration:  float array (dimension = number_of_contrast_points)
+            concentration at each contrast in mg/mL
+        concentration_error:  float array (dimension = number_of_contrast_points)
+            concentration error at each contrast
+        initial_match_point_guess:  float
+            The fraction D\ :sub:`2`\ O value to be used as initial match point guess    
+        partial_specific_volume: float array (dimension = number of components)
+            partial specific volume of each component
+        molecular_weight: float array (dimension = number of components)
+            molecular_weight of each component
+        radius_of_gyration: float array (dimension = number_of_contrast_points)
+            radius of gyration at each contrast in Angstroms
+        radius_of_gyration_error: float array (dimension = number_of_contrast_points)
+            radius of gyration error at each contrast in Angstroms
+        delta_rho:  2D float array (dimensions = number_of_contrast_points x number_of_components)
+            The contrast for each component at all fraction D\ :sub:`2`\ O values of interest in 10\ :sup:`10`\ cm\ :sup:`-2`\  (10 :sup:`-6`\ A\ :sup:`-2`\ )        
+
+    Returns
+    -------
+    
+        error: string
+            The error message generated when a check fails. If there are no failures, the error is blank.
+    
+    """
     #### INPUT VARIABLES FOR ALL METHODS
 
     match_point_flag = variables["match_point_flag"][0]
