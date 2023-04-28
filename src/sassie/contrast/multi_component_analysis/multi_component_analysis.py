@@ -285,6 +285,7 @@ class multi_component_analysis():
                 log.debug('multi_component_analysis_path = %s' %
                           (mcavars.multi_component_analysis_path))
 # calculate the volume fraction of each component from the partial specific volume and molecular weight
+# Note:  Avogadro's number cancels out when calculating the volume fraction, i.e., V1/(V1+V2)
             total_volume = 0.0
             mcavars.volume_fraction = []
             for i in range(mvars.number_of_components):
@@ -296,6 +297,7 @@ class multi_component_analysis():
                     mvars.partial_specific_volume[i]/total_volume
                 mcavars.volume_fraction.append(volume_fraction)
 #            print('volume fraction: ', mcavars.volume_fraction)
+# TODO:  Add a check to make sure that the volume fractions add up to 1?
         direxist = os.path.exists(mcavars.multi_component_analysis_path)
         if(direxist == 0):
             os.system('mkdir -p ' + mcavars.multi_component_analysis_path)
