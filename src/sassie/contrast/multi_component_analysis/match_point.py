@@ -201,7 +201,7 @@ def get_match_point(other_self):
         'fraction_d2o  sqrt[I(0)/c]  sqrt[I(0)/c]_error  sqrt[I(0)/c]_calc  sqrt[I(0)/c]-sqrt[I(0)/c]_calc\n')
     for i in range(mvars.number_of_contrast_points):
         mcavars.outfile.write('%9.4f\t%9.4f\t%9.4f\t%9.4f\t\t%9.4f\n' % (
-            mvars.fraction_d2o[i], square_root_izero[i], square_root_izero[i], ycalc[i], diff[i]))
+            mvars.fraction_d2o[i], square_root_izero[i], square_root_izero_error[i], ycalc[i], diff[i]))
     mcavars.outfile.close()
 
 # TODO: plot sqrt[I(0)/c] with errorbars vs fraction D2O and the residuals, i.e., sqrt[I(0)/c]-sqrt[I(0)/c]_calc, with residuals on a separate plot
