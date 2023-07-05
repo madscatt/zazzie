@@ -105,6 +105,11 @@ def polynomial_fit(order, X, Y, yerr, n):
             else:
                 nDisregarded = nDisregarded+1
 
-    reduced_chi_squared = chi_squared/float((n-nDisregarded)-(order+1))
+#    reduced_chi_squared = chi_squared/float((n-nDisregarded)-(order+1))
+
+    try:
+        reduced_chi_squared = chi_squared/float((n-nDisregarded)-(order+1))
+    except ZeroDivisionError as e:
+        reduced_chi_squared = chi_squared/1
 
     return reduced_chi_squared, M, Bi
