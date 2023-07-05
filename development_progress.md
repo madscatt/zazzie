@@ -7,7 +7,7 @@
 |---------------------|--------------|-------------------|---------------|------------------|-------------|------|------------------|-----------------|------------|
 | Contrast Calculator |      x       |         x         |
 | Contrast Explorer   |              |                   |
-| Multi Comp Analysis |              |                   |      
+| Multi Comp Analysis |      x       |                   |      
 | Align               |      x       |         x         |
 | Data Interpolation  |      x       |         x         |
 | Extract Utilities   |      x       |         x         |
