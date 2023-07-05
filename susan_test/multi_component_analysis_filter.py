@@ -17,8 +17,9 @@
 #
 #       MULTI-COMPONENT ANALYSIS FILTER
 #
-#       08/30/2021       --      initial coding         :   Susan Krueger
-#       04/03/2023       --      python 3 coding        :   Joseph E. Curtis
+#       08/30/2021       --      initial coding               :  Susan Krueger
+#       04/03/2023       --      python 3 coding              :  Joseph E. Curtis
+#       05/23/2023       --      added decomposition variables:  Susan Krueger
 #
 # LC      1         2         3         4         5         6         7
 # LC4567890123456789012345678901234567890123456789012345678901234567890123456789
@@ -141,6 +142,10 @@ def check_multi_component_analysis(variables, **kwargs):
             flag to determine if Stuhrmann and Parallel Axis methods are being used
         decomposition_flag: boolean
             flag to determine if decomposition analysis is being used
+        read_from_contrast_calculator_output_file: boolean
+            flag to determine if the contrasts (:math:`\Delta \rho`) values are read from a contrast calculator output file
+        contrast_calculator_output_file_name: string
+            user-specified contrast calculator output file name
         number_of_contrast_points:  int
             The number of solvent conditions with different fraction D\ :sub:`2`\ O values
         fraction_d2o:   float array (dimension = number_of_contrast_points)
@@ -163,6 +168,16 @@ def check_multi_component_analysis(variables, **kwargs):
             radius of gyration at each contrast in Angstroms
         radius_of_gyration_error: float array (dimension = number_of_contrast_points)
             radius of gyration error at each contrast in Angstroms
+        data_file_name: string array (dimension = number_of_contrast_points)
+            contrast variation data file name at each fraction D\ :sub:`2`\ O 
+        q_rg_limit_guinier: float array (dimension = number_of_contrast_points)
+            qR\ :sub:`g`\  limit for the Guinier analysis at each fraction D\ :sub:`2`\ O
+        starting_data_point_guinier: int array (dimension = number_of_contrast_points)
+            index of the starting data point for the Guinier fit at each fraction D\ :sub:`2`\ O  (index of the first data point = 1)
+        initial_points_to_use_guinier: int array (dimension = number_of_contrast_points)
+            number of data points to use initially for the Guinier fit at each fraction D\ :sub:`2`\ O  (the final number of points used depends on the qR\ :sub:`g`\  limit)
+        refine_scale_factor_flag: boolean
+            Indicates whether the scale factor at each fraction D\ :sub:`2`\ O  will be adjusted based on the I(0) values 
         delta_rho:  2D float array (dimensions = number_of_contrast_points x number_of_components)
             The contrast for each component at all fraction D\ :sub:`2`\ O values of interest in 10\ :sup:`10`\ cm\ :sup:`-2`\  (10 :sup:`-6`\ A\ :sup:`-2`\ )
 

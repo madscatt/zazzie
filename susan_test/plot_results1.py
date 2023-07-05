@@ -2,7 +2,7 @@ import os
 import glob
 import matplotlib.pyplot as plt
 import numpy
-import read_data_file_test as read_data_file 
+import read_data_file as read_data_file 
 
 count = 0
 

@@ -18,7 +18,9 @@
 #
 #       MULTI-COMPONENT ANALYSIS
 #
-#       08/09/2021       --      initial coding         :   Susan Krueger
+#       08/09/2021       --      initial coding               :  Susan Krueger
+#       04/03/2023       --      python 3 coding              :  Joseph E. Curtis
+#       06/27/2023       --      added decomposition variables:  Susan Krueger
 #
 # LC      1         2         3         4         5         6         7
 # LC4567890123456789012345678901234567890123456789012345678901234567890123456789
@@ -241,10 +243,14 @@ class multi_component_analysis():
                 flag to determine if Stuhrmann and Parallel Axis methods are being used
             decomposition_flag: boolean
                 flag to determine if decomposition analysis is being used
-            partial_specific_volume: float array (dimension = number of components)
+            partial_specific_volume: float array (dimension = number_of_components)
                 partial specific volume of each component (used only if stuhrmann_parallel_axis_flag or decomposition_flag = True)
-            molecular_weight: float array (dimension = number of components)
+            molecular_weight: float array (dimension = number_of_components)
                 molecular_weight of each component (used only if stuhrmann_parallel_axis_flag or decomposition_flag = True)
+            concentration: float array (dimension = number_of_contrast_points)
+                total concentration of the complex at each fraction D\ :sub:`2`\ O  (used only if decomposition_flag = True)
+            data_file_name: string array (dimension = number_of_contrast_points)
+                contrast variation data file name at each fraction D\ :sub:`2`\ O  (used only if decomposition_flag = True)
 
         Returns
         -------
@@ -253,10 +259,20 @@ class multi_component_analysis():
                 sub-path where output file will be written: run_name + \'multi_component_analysis\' + method-dependent sub-path
             outfile: string
                 output file name (with full path): path + output_file_name
-            volume_fraction: float array (dimension = number of components)
+            volume_fraction: float array (dimension = number_of_components)
                 volume fraction of each component (returned only if stuhrmann_parallel_axis_flag or decomposition_flag = True)
-
-
+            initial_scale_factor:  float array (dimension = number_of_contrast_points)
+                initial scale factor for the data at each fraction D\ :sub:`2`\ O  (returned only if decomposition_flag = True)
+            scale_factor:  float array (dimension = number_of_contrast_points)
+                scale factor for the data at each fraction D\ :sub:`2`\ O  that is the same as the initial scale factor before the Guinier analysis is performed (returned only if decomposition_flag = True)
+            delta_rho_v:  float array (dimension = number_of_contrast_points)
+                :math:`\Delta \rho V` at each fraction D\ :sub:`2`\ O  as defined in the Guinier analysis helper program (returned only if decomposition_flag = True)
+            composite_intensity_file_name:  string array (dimension = 3)
+                names of the composite scattering intensity output files (returned only if decomposition_flag = True)
+            rescaled_data_file_name:  string array (dimension = number_of_contrast_points)
+                names of the rescaled data output files (returned only if decomposition_flag = True)
+            calculated_data_file_name:  string array (dimension = number_of_contrast_points)
+                names of the calculated data output files (returned only if decomposition_flag = True)
 
         '''
 

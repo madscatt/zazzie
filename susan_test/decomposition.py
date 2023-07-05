@@ -70,10 +70,34 @@ import guinier_analysis as guinier_analysis
 def get_composite_scattering_intensities(other_self):
     '''
     
-    **Get Composite Scattering Intensities** is the **Decomposition Analysis** method that sets up the calculation of the scattering scattering intensities of the individual components in a two component complex and the cross-term intensity.
+    **Get Composite Scattering Intensities** is the **Decomposition Analysis** method that calculates the composite scattering functions, :math:`I_{11}`, :math:`I_{12}`, and :math:`I_{22}` for a two-component complex from a set of SANS contrast variation data. :math:`I_{11}`, and :math:`I_{22}` are the scattering intensities of components 1 and 2, respectively, and :math:`I_{12}` is the cross-term. First, the data are rescaled with respect to each other to account for differences in concentration as a function of contrast (fraction D\ :sub:`2`\ O  in the solvent).  Then, a Guinier analysis is performed to obtain :math:`R_{g}` and :math:`I_{0}` as a function of contrast.  If desired by the user, the :math:`I_{0}` values are used to further refine the scale factors at each contrast to account for possible inaccuracies in the concentrations. See the **Guinier Analysis** helper program for details.  
+
+    Executed if decomposition_flag == True.
+
+    Notes:
+
+        Output file with chosen output_file_name is stored in the output file directory.
+        TODO: Need boilerplate language to add variable name/path for the directory. 
+
+        Output file contains:
+            - module variable input parameters
+            - results from Guinier analysis at each fraction D\ :sub:`2`\ O value
+              - Guinier R\ :sub:`g`\ , Guinier R\ :sub:`g`\  error, Guinier I(0), Guinier I(0) error
+              - q:sub:`min`\ , q:sub:`max`\ , qR:sub:`gmin`\ , qR:sub:`gmax`\ 
+              - number of points used, reduced chi-squared, :math:`\Delta \rho^2`
+              - initial and final scale factors
+            - results from decomposition analysis
+              - mean square differences at each q value for all fraction D\ :sub:`2`\ O values
+              - global reduced chi-squared value at each q value
+
+        Additional output files stored in the output file directory:
+            - composition scattering intensities (3 files)
+            - rescaled data files (number of files = number of contrast points)
+            - calculated data files (number of files = number of contrast points)
 
     This method calls **Read Data File**, **Gunier Analysis**, **Do Multiple Linear Regression** and **Get Reduced Chi-squared**.
-    
+
+
     Parameters
     ----------
     run_name:  string
@@ -85,12 +109,68 @@ def get_composite_scattering_intensities(other_self):
     fraction_d2o:   float array (dimension = number_of_contrast_points)
         The fraction D\ :sub:`2`\ O values that define the contrasts
     delta_rho:  2D float array (dimensions = number_of_contrast_points x number_of_components)
-        The contrast for each component at all fraction D\ :sub:`2`\ O values of interest in 10\ :sup:`10`\ cm\ :sup:`-2`\  (10 :sup:`-6`\ A\ :sup:`-2`\ )        
+        The contrast for each component at all fraction D\ :sub:`2`\ O values of interest in 10\ :sup:`10`\ cm\ :sup:`-2`\  (10 :sup:`-6`\ A\ :sup:`-2`\ )
+    data_file_name:  string array (dimension = number_of_contrast_points)
+        The names of the contrast variation data files
+    q_rg_limit_guinier: float array (dimension = number_of_contrast_points)
+        qR\ :sub:`g`\  limit for the Guinier analysis at each fraction D\ :sub:`2`\ O
+    starting_data_point_guinier: int array (dimension = number_of_contrast_points)
+        The index of the starting data point for the Guinier fit at each fraction D\ :sub:`2`\ O  (index of the first data point = 1)
+    initial_points_to_use_guinier: int array (dimension = number_of_contrast_points)
+        The number of data points to use initially for the Guinier fit at each fraction D\ :sub:`2`\ O  (the final number of points used depends on the qR\ :sub:`g`\  limit)
+    refine_scale_factor_flag: boolean
+        Indicates whether the scale factor at each fraction D\ :sub:`2`\ O  will be adjusted based on the I(0) values calculated from the Guinier fit and delta_rho_v
+    multi_component_analysis_path: string
+        sub-path where output file will be written: run_name + \'multi_component_analysis\' + method-dependent sub-path
+    outfile: string
+        output file name (with full path): path + output_file_name
+    initial_scale_factor:  float array (dimension = number_of_contrast_points)
+        initial scale factor for the data at each fraction D\ :sub:`2`\ O 
+    scale_factor:  float array (dimension = number_of_contrast_points)
+        scale factor for the data at each fraction D\ :sub:`2`\ O  that is the same as the initial scale factor before the Guinier analysis is performed
+    delta_rho_v:  float array (dimension = number_of_contrast_points)
+        :math:`\Delta \rho V` at each fraction D\ :sub:`2`\ O  as defined in the Guinier analysis helper program
+    composite_intensity_file_name:  string array (dimension = 3)
+        names of the composite scattering intensity output files
+    rescaled_data_file_name:  string array (dimension = number_of_contrast_points)
+        names of the rescaled data output files
+    calculated_data_file_name:  string array (dimension = number_of_contrast_points)
+        names of the calculated data output files
 
    Returns
     -------
-    rg_guinier:  float array (dimension = number of contrast points)
-        The radius of gyration from the Guinier analyis, :math:`R_{g}`
+    rg_guinier: float array( dimension = number_of_contrast_points)
+        The radius of gyration from the Guinier fit at each fraction D\ :sub:`2`\ O
+    rg_guinier_error: float array (dimension = number_of_contrast_points)
+        The error in the Gunier radius of gyration at each fraction D\ :sub:`2`\ O
+    izero_guinier: float array 
+        The I(0) value from the Guinier fit at each fraction D\ :sub:`2`\ O 
+    izero_error_guinier: float array
+        The error in the Guinier I(0) value at each fraction D\ :sub:`2`\ O 
+    points_used_guinier: int array (dimension = number_of_contrast_points)
+        The final number of points used in the Guinier fit at each fraction D\ :sub:`2`\ O 
+    chi_squared_guinier: float array (dimension = number_of_contrast_points)
+        The chi-square value for the Guinier fit at each fraction D\ :sub:`2`\ O 
+    q_min_guinier: float array (dimension = number_of_contrast_points)
+        The minimum q value for the Guinier fit at each fraction D\ :sub:`2`\ O 
+    q_max_guinier: float array (dimension = number_of_contrast_points)
+        The maximum q value for the Guinier fit at each fraction D\ :sub:`2`\ O 
+    q_rg_min_guinier: float array (dimension = number_of_contrast_points)
+        The minimum qR\ :sub: `g`\  value for the Guinier fit at each fraction D\ :sub:`2`\ O 
+    q_rg_max_guinier: float array (dimension = number_of_contrast_points)
+        The maximum qR\ :sub: `g`\  value for the Guinier fit at each fraction D\ :sub:`2`\ O 
+    scale_factor: float array (dimension = number_of_contrast_points)
+        The final scale factor at each fraction D\ :sub:`2`\ O  (rescaling is only preformed if refine_scale_factor_flag is True) 
+    rescaled_scattering_data:  3D array (dimensions = number_of_contrast_points x number_of_data_points x 3)
+        q, I(q) and I(q) error for the rescaled data at at each fraction D\ :sub:`2`\ O
+    mean_square_difference:  2D float array (dimensions = number_of_data_points x number_of_contrast_points)
+        a complete list (all q values, all datasets) of mean square differences
+    reduced_chi_squared_list: float array (dimension = number_of_data_points)
+        global reduced chi-squared at all q values
+    composite_scattering_intensity:  3D float array (dimensions = 3 x number_of_data_points x 2)
+        I(q) and I(q) error for each of the 3 composite scattering intensities, :math:`I_{11}`, :math:`I_{12}` and :math:`I_{22}`
+    calculated_scattering_data:  2D float array (dimensions = number_of_data_points x number_of_contrast_points)
+        calculated I(q) values from the above :math:`I_{exp}` equation at each fraction D\ :sub:`2`\ O
 
     '''
     
@@ -204,6 +284,16 @@ def get_composite_scattering_intensities(other_self):
 
     pgui('results written to output file: %s' %
          (mcavars.multi_component_analysis_path+mvars.output_file_name))
+    pgui('component 1 composite scattering intensity written to output file: %s' %
+         (mcavars.multi_component_analysis_path+mcavars.composite_intensity_file_name[0]))
+    pgui('component 2 composite scattering intensity written to output file: %s' %
+         (mcavars.multi_component_analysis_path+mcavars.composite_intensity_file_name[2]))
+    pgui('inter-component composite scattering intensity written to output file: %s' %
+         (mcavars.multi_component_analysis_path+mcavars.composite_intensity_file_name[1]))         
+    pgui('rescaled data files written to: %s' %
+         (mcavars.multi_component_analysis_path))
+    pgui('calculated data files written to: %s' %
+         (mcavars.multi_component_analysis_path))
     pgui('-------------------------------')
     pgui('Final Results\n')
              
@@ -342,7 +432,7 @@ def get_composite_scattering_intensities(other_self):
 # TODO:  This could be done in a loop
 
     with io.open(mcavars.multi_component_analysis_path+mcavars.composite_intensity_file_name[0], 'w') as f1:
-        f1.write("# Subunit-1 composite scattering intensity\n")
+        f1.write("# Component 1 composite scattering intensity\n")
         f1.write("#     q           I(q)         sigma(I(q))\n")
         for i in range(mcavars.number_of_data_points):
             f1.write(str("%.6f" % mcavars.scattering_data[0][i][0])+"\t\t")
@@ -350,7 +440,7 @@ def get_composite_scattering_intensities(other_self):
             f1.write(str("%.6f" %composite_scattering_intensity[0][i][1])+"\n")
     f1.close()
     with io.open(mcavars.multi_component_analysis_path+mcavars.composite_intensity_file_name[1], 'w') as f2:
-        f2.write("# Inter-subunit composite scattering intensity\n")
+        f2.write("# Inter-component composite scattering intensity\n")
         f2.write("#     q           I(q)         sigma(I(q))\n")
         for i in range(mcavars.number_of_data_points):
             f2.write(str("%.6f" %mcavars.scattering_data[0][i][0])+"\t\t")
@@ -358,7 +448,7 @@ def get_composite_scattering_intensities(other_self):
             f2.write(str("%.6f" %composite_scattering_intensity[1][i][1])+"\n")
     f2.close()
     with io.open(mcavars.multi_component_analysis_path+mcavars.composite_intensity_file_name[2], 'w') as f3:
-        f3.write("# Subunit-2 composite scattering intensity\n")
+        f3.write("# Component 2 composite scattering intensity\n")
         f3.write("#     q           I(q)         sigma(I(q))\n")
         for i in range(mcavars.number_of_data_points):
             f3.write(str("%.6f" %mcavars.scattering_data[0][i][0])+"\t\t")
@@ -370,13 +460,39 @@ def get_composite_scattering_intensities(other_self):
 
 
 def do_multiple_linear_regression(delta_rho, rescaled_scattering_data, number_of_data_points, number_of_contrast_points):
-    '''
-    **Do Multiple Linear Regression** performs a multiple linear regression **at each q value** to solve the set equations defined at each contrast as,
-    I =  delta_rho1**2*I11 + delta_rho1*delta_rho2*I12 + delta_rho2**2*I22
-    using the same method as in the original MULCh program.  The matrix inversion method used is as described, for example, in Bevington (chapter 7).  
+    r'''
 
-    returns three things:
-# a) a complete list (all q, all datasets) of mean square differences, b) a numpy array containing I(q) and sigmaI(q) for the composite scattering functions, and a list of reduced_chi_squared values for each q     
+    **Do Multiple Linear Regression** performs a multiple linear regression **at each q value** to solve the set equations defined at each contrast:
+
+    :math:`I_{exp}=\Delta \rho_1^2 I_{11} + \Delta \rho_1 \Delta \rho_2 I_{12} + \Delta \rho_2^2 I_{22}`
+
+    where :math:`I_{exp}` is the **rescaled** measured scattering data and :math:`\Delta \rho_1` and :math:`\Delta \rho_2` are the contrasts of components 1 and 2, respectively. 
+
+    The matrix inversion method used is as described, for example, in Data Analysis and Error Reduction for the Physical Sciences, by Philip R. Bevington and D. Keith Robinson, McGraw-Hill, New York, NY 2003, 1992, 1969 (Chapter 7).  
+
+    Parameters
+    ----------
+    
+    number_of_contrast_points:  int
+        The number of solvent conditions with different fraction D\ :sub:`2`\ O values
+    number_of_data_points: int
+        number of data points at each fraction D\ :sub:`2`\ O  (all files have the same number of data points)
+    delta_rho:  2D float array (dimensions = number_of_contrast_points x number_of_components)
+        The contrast for each component at all fraction D\ :sub:`2`\ O values of interest in 10\ :sup:`10`\ cm\ :sup:`-2`\  (10 :sup:`-6`\ A\ :sup:`-2`\ )
+    rescaled_scattering_data:  3D array (dimensions = number_of_contrast_points x number_of_data_points x 3)
+        q, I(q) and I(q) error for the rescaled data at at each fraction D\ :sub:`2`\ O
+    
+    Returns
+    -------
+
+    mean_square_difference:  2D float array (dimensions = number_of_data_points x number_of_contrast_points)
+        a complete list (all q values, all datasets) of mean square differences
+    reduced_chi_squared_list: float array (dimension = number_of_data_points)
+        global reduced chi-squared at all q values
+    composite_scattering_intensity:  3D float array (dimensions = 3 x number_of_data_points x 2)
+        I(q) and I(q) error for each of the 3 composite scattering intensities, :math:`I_{11}`, :math:`I_{12}` and :math:`I_{22}`
+    calculated_scattering_data:  2D float array (dimensions = number_of_data_points x number_of_contrast_points)
+        calculated I(q) values from the above :math:`I_{exp}` equation at each fraction D\ :sub:`2`\ O
 
     '''
 
@@ -398,7 +514,7 @@ def do_multiple_linear_regression(delta_rho, rescaled_scattering_data, number_of
         mean_square_difference.append([])
 
 # for a given q value, build the X and Y matrices at each contrast
-# NOTE:  should these variables below become mcavar and be passed to get reduced chi squared?
+# NOTE:  should these variables below as well as composite scattering intensity become mcavar and be passed to get reduced chi squared?
         for i in range(number_of_contrast_points):
             delta_rho_xy[0] = delta_rho[i][0]*delta_rho[i][0]
             delta_rho_xy[1] = delta_rho[i][0]*delta_rho[i][1]
@@ -453,7 +569,31 @@ def do_multiple_linear_regression(delta_rho, rescaled_scattering_data, number_of
 
 def get_reduced_chi_squared(delta_rho, rescaled_scattering_data, composite_scattering_intensity, number_of_contrast_points, q):
     '''
-    **Get Reduced Chi Squared** returns the reduced_chi_squared value for all SANS contrast variation datasets at a particular q value, as well as a list of the mean square differences at that q for each dataset.
+    **Get Reduced Chi Squared** calculates the **global** reduced_chi_squared value for all SANS contrast variation datasets at a particular q value.
+    
+    Parameters
+    ----------
+    
+    q: int
+        The index of the q value for which the calculation is being performed
+    number_of_contrast_points:  int
+        The number of solvent conditions with different fraction D\ :sub:`2`\ O values
+    delta_rho:  2D float array (dimensions = number_of_contrast_points x number_of_components)
+        The contrast for each component at all fraction D\ :sub:`2`\ O values of interest in 10\ :sup:`10`\ cm\ :sup:`-2`\  (10 :sup:`-6`\ A\ :sup:`-2`\ )
+     rescaled_scattering_data:  3D array (dimensions = number_of_contrast_points x number_of_data_points x 3)
+        q, I(q) and I(q) error for the rescaled data at at each fraction D\ :sub:`2`\ O
+    composite_scattering_intensity:  3D float array (dimensions = 3 x number_of_data_points x 2)
+        I(q) and I(q) error for each of the 3 composite scattering intensities, :math:`I_{11}`, :math:`I_{12}` and :math:`I_{22}`
+    
+    Returns
+    -------
+    
+    msd_list: float array (dimension = number_of_contrast_points)
+        mean square difference at each fraction D\ :sub:`2`\ O value  at the desired q value
+    calculated_intensity: float array (dimension = number_of_contrast_points)
+        calculated scattering intensity at each fraction D\ :sub:`2`\ O value  at the desired q value
+    reduced_chi_squared: float
+        global reduced chi-squared at the desired q value
 
     '''
 

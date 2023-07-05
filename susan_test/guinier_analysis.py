@@ -38,11 +38,11 @@ import io
 import os
 import math
 import sys
+#import sassie.contrast.multi_component_analysis.polynomial_function_fit as polynomial_function_fit
 import polynomial_function_fit as polynomial_function_fit
 import numpy
 
 
-#def guinier_fit(number_of_contrast_points, number_of_data_points, scattering_data, q_rg_limit_guinier, starting_data_point_guinier, initial_points_to_use_guinier, refine_scale_factor_flag, scale_factor, delta_rho_v):
 def guinier_fit(other_self):
     r'''
 
