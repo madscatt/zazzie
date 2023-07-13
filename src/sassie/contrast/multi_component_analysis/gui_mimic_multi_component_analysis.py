@@ -39,9 +39,6 @@ import time
 import sassie.contrast.multi_component_analysis.multi_component_analysis as multi_component_analysis
 import sassie.interface.input_filter as input_filter
 import sassie.interface.multi_component_analysis.multi_component_analysis_filter as multi_component_analysis_filter
-#import multi_component_analysis as multi_component_analysis
-#import input_filter_new as input_filter
-#import multi_component_analysis_filter as multi_component_analysis_filter
 import multiprocessing
 
 
@@ -180,7 +177,6 @@ def user_variables(self, **kwargs):
         self.data_file_name = self.path+"0.dat, "+self.path+"10.dat, "+self.path+"20.dat, " + \
             self.path+"40.dat, "+self.path+"80.dat, " + \
             self.path+"90.dat, "+self.path+"100.dat"
-        #print('data file name: ', self.data_file_name)
         self.concentration = "11.9, 11.9, 11.9, 26.9, 11.9, 11.9, 11.9"
         self.concentration_error = "0.6, 0.6, 0.6, 1.3, 0.6, 0.6, 0.6"
         self.number_of_components = "2"
