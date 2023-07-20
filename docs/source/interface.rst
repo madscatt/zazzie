@@ -36,6 +36,8 @@ Submodules
 
    interface.basis_filter
    interface.input_filter
+   interface.input_filter_new
+   interface.input_filter_old
 
 Module contents
 ---------------

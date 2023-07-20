@@ -224,54 +224,54 @@ class multi_component_analysis():
         return
 
     def multi_component_analysis_initialization(self):
-        '''
+        r'''
         Method to initialize Multi-component analysis variables and write initial information to an output file.
 
         Parameters
         ----------
 
-            run_name: string
-                run name
-            output_file_name: string
-                user-specified output file name
-            stoichiometry_flag: boolean
-                flag to determine if stoichiometry analysis is being used
-            match_point_flag: boolean
-                flag to determine if match point analysis is being used 
-            stuhrmann_parallel_axis_flag: boolean
-                flag to determine if Stuhrmann and Parallel Axis methods are being used
-            decomposition_flag: boolean
-                flag to determine if decomposition analysis is being used
-            partial_specific_volume: float array (dimension = number_of_components)
-                partial specific volume of each component (used only if stuhrmann_parallel_axis_flag or decomposition_flag = True)
-            molecular_weight: float array (dimension = number_of_components)
-                molecular_weight of each component (used only if stuhrmann_parallel_axis_flag or decomposition_flag = True)
-            concentration: float array (dimension = number_of_contrast_points)
-                total concentration of the complex at each fraction D\ :sub:`2`\ O  (used only if decomposition_flag = True)
-            data_file_name: string array (dimension = number_of_contrast_points)
-                contrast variation data file name at each fraction D\ :sub:`2`\ O  (used only if decomposition_flag = True)
+        run_name: string
+            run name
+        output_file_name: string
+            user-specified output file name
+        stoichiometry_flag: boolean
+            flag to determine if stoichiometry analysis is being used
+        match_point_flag: boolean
+            flag to determine if match point analysis is being used 
+        stuhrmann_parallel_axis_flag: boolean
+            flag to determine if Stuhrmann and Parallel Axis methods are being used
+        decomposition_flag: boolean
+            flag to determine if decomposition analysis is being used
+        partial_specific_volume: float array (dimension = number_of_components)
+            partial specific volume of each component (used only if stuhrmann_parallel_axis_flag or decomposition_flag = True)
+        molecular_weight: float array (dimension = number_of_components)
+            molecular_weight of each component (used only if stuhrmann_parallel_axis_flag or decomposition_flag = True)
+        concentration: float array (dimension = number_of_contrast_points)
+            total concentration of the complex at each fraction D\ :sub:`2`\ O  (used only if decomposition_flag = True)
+        data_file_name: string array (dimension = number_of_contrast_points)
+            contrast variation data file name at each fraction D\ :sub:`2`\ O  (used only if decomposition_flag = True)
 
         Returns
         -------
 
-            multi_component_analysis_path: string
-                sub-path where output file will be written: run_name + \'multi_component_analysis\' + method-dependent sub-path
-            outfile: string
-                output file name (with full path): path + output_file_name
-            volume_fraction: float array (dimension = number_of_components)
-                volume fraction of each component (returned only if stuhrmann_parallel_axis_flag or decomposition_flag = True)
-            initial_scale_factor:  float array (dimension = number_of_contrast_points)
-                initial scale factor for the data at each fraction D\ :sub:`2`\ O  (returned only if decomposition_flag = True)
-            scale_factor:  float array (dimension = number_of_contrast_points)
-                scale factor for the data at each fraction D\ :sub:`2`\ O  that is the same as the initial scale factor before the Guinier analysis is performed (returned only if decomposition_flag = True)
-            delta_rho_v:  float array (dimension = number_of_contrast_points)
-                :math:`\Delta \rho V` at each fraction D\ :sub:`2`\ O  as defined in the Guinier analysis helper program (returned only if decomposition_flag = True)
-            composite_intensity_file_name:  string array (dimension = 3)
-                names of the composite scattering intensity output files (returned only if decomposition_flag = True)
-            rescaled_data_file_name:  string array (dimension = number_of_contrast_points)
-                names of the rescaled data output files (returned only if decomposition_flag = True)
-            calculated_data_file_name:  string array (dimension = number_of_contrast_points)
-                names of the calculated data output files (returned only if decomposition_flag = True)
+        multi_component_analysis_path: string
+            sub-path where output file will be written: run_name + \'multi_component_analysis\' + method-dependent sub-path
+        outfile: string
+            output file name (with full path): path + output_file_name
+        volume_fraction: float array (dimension = number_of_components)
+            volume fraction of each component (returned only if stuhrmann_parallel_axis_flag or decomposition_flag = True)
+        initial_scale_factor:  float array (dimension = number_of_contrast_points)
+            initial scale factor for the data at each fraction D\ :sub:`2`\ O  (returned only if decomposition_flag = True)
+        scale_factor:  float array (dimension = number_of_contrast_points)
+            scale factor for the data at each fraction D\ :sub:`2`\ O  that is the same as the initial scale factor before the Guinier analysis is performed (returned only if decomposition_flag = True)
+        delta_rho_v:  float array (dimension = number_of_contrast_points)
+            :math:`\Delta \rho V` at each fraction D\ :sub:`2`\ O  as defined in the Guinier analysis helper program (returned only if decomposition_flag = True)
+        composite_intensity_file_name:  string array (dimension = 3)
+            names of the composite scattering intensity output files (returned only if decomposition_flag = True)
+        rescaled_data_file_name:  string array (dimension = number_of_contrast_points)
+            names of the rescaled data output files (returned only if decomposition_flag = True)
+        calculated_data_file_name:  string array (dimension = number_of_contrast_points)
+            names of the calculated data output files (returned only if decomposition_flag = True)
 
         '''
 

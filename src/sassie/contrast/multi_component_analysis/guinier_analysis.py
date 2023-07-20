@@ -27,7 +27,7 @@
 #                                                                      *      **
 
 '''
-    **Guinier Analysis** performs a Guinier fit to the data in the range qR:sub:`gmin`\  to qR\:sub:`gmax`\ , where qR:sub:`gmin`\  is defined by the first data point and qR\:sub:`gmax`\  is based on the qR\:sub:`g`\  limit, both as specified by the user.
+    **Guinier Analysis** performs a Guinier fit to the data in the range qR\ :sub:`gmin`\  to qR\ :sub:`gmax`\ , where qR\ :sub:`gmin`\  is defined by the first data point and qR\ :sub:`gmax`\  is based on the qR\ :sub:`g`\  limit, both as specified by the user.
 
     Called by **Get Composite Scattering Intensities**
     
@@ -48,7 +48,7 @@ def guinier_fit(other_self):
 
     **Guinier Fit** fits a first order polynomial to the Guinier equation. The original code was written by Andrew Whitten (2/2006) as part of the MULCh program. Rewritten in Python by Kathryn Sarachan (4/2023). 
 
-    **Reference:** Whitten, A.E., et al. (2007), "MULCh: modules for the analysis of small-angle neutron contrast variation data from biomolecular assemblies", _Journal of Applied Crystallography_ **41**, 222-226. 
+    **Reference:** Whitten, A.E., Cai, S, Trewhella, J. (2008). "MULCh: modules for the analysis of small-angle neutron contrast variation data from biomolecular assemblies", *J. Appl. Cryst.* **41**, 222 - 226. 
 
 
     Note
@@ -62,11 +62,16 @@ def guinier_fit(other_self):
 
     :math:`I_{0} = \frac{cM_{w}}{N_{A}}(\Delta \rho V)^2`
 
-    where 
+    where  
+    
     :math:`M_{w}` is the total molecular weight of the complex  
-    :math:`c` is the total concentration of the complex  
-    :math:`N_{A}` is Avogadro's number  
-    and 
+    
+    :math:`c` is the total concentration of the complex
+      
+    :math:`N_{A}` is Avogadro's number
+      
+    and
+     
     :math:`\Delta \rho V = \Delta \rho_{1} V_{1} + \Delta \rho_{2} V_{2}`
 
     Taking the ratio of the concentrations between two different contrasts, :math:`i` and :math:`j`,
@@ -79,17 +84,17 @@ def guinier_fit(other_self):
     Parameters
     ----------
     number_of_contrast_points: int
-        The number of solvent conditions with different fraction D\ :sub:`2`\ O values
+        The number of solvent conditions with different fraction D\ :sub:`2`\ O values 
     number_of_data_points: int
         The number of points in the contrast variation data files
-    scattering data: 3D float array (dimension = number_of_contrast_points x number_of_data_points x 3)
-        The scattering data (q, I(q), I\ :sub: `err`\ (q)) at each fraction D\ :sub:`2`\ O
-    q_rg_limit_guinier: float array (dimension = number_of_contrast_points)
-        qR\ :sub: `g`\  limit for the Guinier analysis at each fraction D\ :sub:`2`\ O
+    scattering_data: 3D float array (dimension = number_of_contrast_points x number_of_data_points x 3)
+        The scattering data, q, I(q), I\ :sub:`err`\ (q) , at each fraction D\ :sub:`2`\ O 
+    q_rg_limit_guinier: float
+        qR\ :sub:`g`\  limit for the Guinier analysis; a single value applies for all contrasts
     starting_data_point_guinier: int array (dimension = number_of_contrast_points)
         The index of the starting data point for the Guinier fit at each fraction D\ :sub:`2`\ O  (index of the first data point = 1)
     initial_points_to_use_guinier: int array (dimension = number_of_contrast_points)
-        The number of data points to use initially for the Guinier fit at each fraction D\ :sub:`2`\ O  (the final number of points used depends on the qR\ :sub: `g`\  limit)
+        The number of data points to use initially for the Guinier fit at each fraction D\ :sub:`2`\ O  (the final number of points used depends on the qR\ :sub:`g`\  limit) 
     scale_factor: float array (dimension = number_of_contrast_points)
         The initial scale factor for the data at each fraction D\ :sub:`2`\ O 
     delta_rho_v: float array (dimension = number_of_contrast_points)
@@ -99,13 +104,13 @@ def guinier_fit(other_self):
 
     Returns
     -------
-    rg_guinier: float array( dimension = number_of_contrast_points)
+    rg_guinier: float array (dimension = number_of_contrast_points)
         The radius of gyration from the Guinier fit at each fraction D\ :sub:`2`\ O
     rg_guinier_error: float array (dimension = number_of_contrast_points)
         The error in the Gunier radius of gyration at each fraction D\ :sub:`2`\ O
-    izero_guinier: float array 
+    izero_guinier: float array (dimension = number_of_contrast_points)
         The I(0) value from the Guinier fit at each fraction D\ :sub:`2`\ O 
-    izero_error_guinier: float array
+    izero_error_guinier: float array (dimension = number_of_contrast_points)
         The error in the Guinier I(0) value at each fraction D\ :sub:`2`\ O 
     points_used_guinier: int array (dimension = number_of_contrast_points)
         The final number of points used in the Guinier fit at each fraction D\ :sub:`2`\ O 
@@ -116,9 +121,9 @@ def guinier_fit(other_self):
     q_max_guinier: float array (dimension = number_of_contrast_points)
         The maximum q value for the Guinier fit at each fraction D\ :sub:`2`\ O 
     q_rg_min_guinier: float array (dimension = number_of_contrast_points)
-        The minimum qR\ :sub: `g`\  value for the Guinier fit at each fraction D\ :sub:`2`\ O 
+        The minimum qR\ :sub:`g`\  value for the Guinier fit at each fraction D\ :sub:`2`\ O 
     q_rg_max_guinier: float array (dimension = number_of_contrast_points)
-        The maximum qR\ :sub: `g`\  value for the Guinier fit at each fraction D\ :sub:`2`\ O 
+        The maximum qR\ :sub:`g`\  value for the Guinier fit at each fraction D\ :sub:`2`\ O 
     scale_factor: float array (dimension = number_of_contrast_points)
         The final scale factor at each fraction D\ :sub:`2`\ O  (rescaling is only preformed if refine_scale_factor_flag is True) 
 

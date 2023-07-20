@@ -1,6 +1,33 @@
 # -*- coding: utf-8 -*-
+
+#    SASSIE: Copyright (C) 2011 Joseph E. Curtis, Ph.D.
+#
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+#
+#       READ DATA FILE
+#
+#       3/2023   --  Python 3 coding (in Data Interpolation:  Joseph E. Curtis
+#       5/2023   --  standalone helper program coding      :   Susan Krueger
+#
+# LC      1         2         3         4         5         6         7
+# LC4567890123456789012345678901234567890123456789012345678901234567890123456789
+#                                                                      *      **
 '''
-    **Read File** is the method to read SAS data files consisting of q, I and I error.
+    **Read Data File** contains the method to read SAS data files. It is called by the **Decomposition Analysis** method and can also be used by the **Data Interpolation** method.
+    
+    Calls **Read File**.
+    
 '''
 import os
 import io
@@ -11,7 +38,36 @@ import numpy
 
 
 def read_file(data_file):
+    '''
+    **Read File** is the method to read SAS data files consisting of q, I and I error.  
+    
+    Notes:
+    
+        If the I error column doesn't exist, the method currently returns an error defined as I * error_magnitude, where error_magnitude is currently set to 0.1.
+    
+        TODO:   Return the error message and error_magnitude back to the main program
+                Determine how to handle error values of 0.00
 
+
+    Parameters
+    ----------
+    
+    data_file: (string)
+        name of the data file
+        
+    Returns
+    -------
+    
+    nval: (int)
+        the number of data points in the data file
+    x: (float)
+        the q values read from the data file
+    y: (float)
+        the I values read from the data file
+    z: (float)
+        the I error values read from the data file
+
+    '''
     #    print('in readfile')
 
     fake_error = False

@@ -124,68 +124,68 @@ def check_data_file(data_file_name):
 
 
 def check_multi_component_analysis(variables, **kwargs):
-    """
-    Method to check the **Multi-component Analysis** variables.
+    r"""
+    Method to check the **Multi-component Analysis** variables.  
 
     Parameters
     ----------
 
-        run_name: string
-            run name
-        output_file_name: string
-            user-specified output file name
-        stoichiometry_flag: boolean
-            flag to determine if stoichiometry analysis is being used
-        match_point_flag: boolean
-            flag to determine if match point analysis is being used
-        stuhrmann_parallel_axis_flag: boolean
-            flag to determine if Stuhrmann and Parallel Axis methods are being used
-        decomposition_flag: boolean
-            flag to determine if decomposition analysis is being used
-        read_from_contrast_calculator_output_file: boolean
-            flag to determine if the contrasts (:math:`\Delta \rho`) values are read from a contrast calculator output file
-        contrast_calculator_output_file_name: string
-            user-specified contrast calculator output file name
-        number_of_contrast_points:  int
-            The number of solvent conditions with different fraction D\ :sub:`2`\ O values
-        fraction_d2o:   float array (dimension = number_of_contrast_points)
-            The fraction D\ :sub:`2`\ O values that define the contrasts
-        izero:  float array (dimension = number_of_contrast_points)
-            I(0) value at each contrast in cm\ :sup:`-1`\
-        izero_error:  float array (dimension = number_of_contrast_points)
-            I(0) error value at each contrast
-        concentration:  float array (dimension = number_of_contrast_points)
-            concentration at each contrast in mg/mL
-        concentration_error:  float array (dimension = number_of_contrast_points)
-            concentration error at each contrast
-        initial_match_point_guess:  float
-            The fraction D\ :sub:`2`\ O value to be used as initial match point guess
-        partial_specific_volume: float array (dimension = number of components)
-            partial specific volume of each component
-        molecular_weight: float array (dimension = number of components)
-            molecular_weight of each component
-        radius_of_gyration: float array (dimension = number_of_contrast_points)
-            radius of gyration at each contrast in Angstroms
-        radius_of_gyration_error: float array (dimension = number_of_contrast_points)
-            radius of gyration error at each contrast in Angstroms
-        data_file_name: string array (dimension = number_of_contrast_points)
-            contrast variation data file name at each fraction D\ :sub:`2`\ O 
-        q_rg_limit_guinier: float array (dimension = number_of_contrast_points)
-            qR\ :sub:`g`\  limit for the Guinier analysis at each fraction D\ :sub:`2`\ O
-        starting_data_point_guinier: int array (dimension = number_of_contrast_points)
-            index of the starting data point for the Guinier fit at each fraction D\ :sub:`2`\ O  (index of the first data point = 1)
-        initial_points_to_use_guinier: int array (dimension = number_of_contrast_points)
-            number of data points to use initially for the Guinier fit at each fraction D\ :sub:`2`\ O  (the final number of points used depends on the qR\ :sub:`g`\  limit)
-        refine_scale_factor_flag: boolean
-            Indicates whether the scale factor at each fraction D\ :sub:`2`\ O  will be adjusted based on the I(0) values 
-        delta_rho:  2D float array (dimensions = number_of_contrast_points x number_of_components)
-            The contrast for each component at all fraction D\ :sub:`2`\ O values of interest in 10\ :sup:`10`\ cm\ :sup:`-2`\  (10 :sup:`-6`\ A\ :sup:`-2`\ )
+    run_name: string
+        name of directory containing the outputs
+    output_file_name: string
+        user-specified output file name
+    stoichiometry_flag: boolean
+        flag to determine if stoichiometry analysis is being used
+    match_point_flag: boolean
+        flag to determine if match point analysis is being used
+    stuhrmann_parallel_axis_flag: boolean
+        flag to determine if Stuhrmann and Parallel Axis analyses are being used
+    decomposition_flag: boolean
+        flag to determine if decomposition analysis is being used
+    read_from_contrast_calculator_output_file: boolean
+        flag to determine if the contrasts (:math:`\Delta \rho`) values are read from a contrast calculator output file
+    contrast_calculator_output_file_name: string
+        user-specified contrast calculator output file name
+    number_of_contrast_points:  int
+        The number of solvent conditions with different fraction D\ :sub:`2`\ O values
+    fraction_d2o:   float array (dimension = number_of_contrast_points)
+        The fraction D\ :sub:`2`\ O values that define the contrasts
+    izero:  float array (dimension = number_of_contrast_points)
+        I(0) value at each contrast in cm\ :sup:`-1`\
+    izero_error:  float array (dimension = number_of_contrast_points)
+        I(0) error value at each contrast
+    concentration:  float array (dimension = number_of_contrast_points)
+        concentration at each contrast in mg/mL
+    concentration_error:  float array (dimension = number_of_contrast_points)
+        concentration error at each contrast
+    initial_match_point_guess:  float
+        The fraction D\ :sub:`2`\ O value to be used as initial match point guess
+    partial_specific_volume: float array (dimension = number of components)
+        partial specific volume of each component
+    molecular_weight: float array (dimension = number of components)
+        molecular weight of each component
+    radius_of_gyration: float array (dimension = number_of_contrast_points)
+        radius of gyration at each contrast in Angstroms
+    radius_of_gyration_error: float array (dimension = number_of_contrast_points)
+        radius of gyration error at each contrast in Angstroms
+    data_file_name: string array (dimension = number_of_contrast_points)
+        contrast variation data file name at each fraction D\ :sub:`2`\ O 
+    q_rg_limit_guinier: float
+        qR\ :sub:`g`\  limit for the Guinier analysis; a single value applies for all contrasts
+    starting_data_point_guinier: int array (dimension = number_of_contrast_points)
+        index of the starting data point for the Guinier fit at each fraction D\ :sub:`2`\ O  (index of the first data point = 1)
+    initial_points_to_use_guinier: int array (dimension = number_of_contrast_points)
+        number of data points to use initially for the Guinier fit at each fraction D\ :sub:`2`\ O  (the final number of points used depends on the qR\ :sub:`g`\  limit) 
+    refine_scale_factor_flag: boolean
+        Indicates whether the scale factor at each fraction D\ :sub:`2`\ O  will be adjusted based on the I(0) values 
+    delta_rho:  2D float array (dimensions = number_of_contrast_points x number_of_components)
+        The contrast for each component at all fraction D\ :sub:`2`\ O values of interest in 10\ :sup:`10`\ cm\ :sup:`-2`\  (10 :sup:`-6`\ A\ :sup:`-2`\ )
 
     Returns
     -------
 
-        error: string
-            The error message generated when a check fails. If there are no failures, the error is blank.
+    error: string
+        The error message generated when a check fails. If there are no failures, the error is blank.
 
     """
     # INPUT VARIABLES FOR ALL METHODS
