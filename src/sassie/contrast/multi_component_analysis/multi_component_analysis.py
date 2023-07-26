@@ -71,6 +71,7 @@ import sassie.util.module_utilities as module_utilities
 import sassie.util.sasconfig as sasconfig
 #import sassie.contrast.multi_component_analysis.read_contrast_output_files as read_contrast_output_files
 import sassie.contrast.multi_component_analysis.match_point as match_point
+#import match_point as match_point
 import sassie.contrast.multi_component_analysis.stoichiometry as stoichiometry
 import sassie.contrast.multi_component_analysis.stuhrmann_parallel_axis as stuhrmann_parallel_axis
 import sassie.contrast.multi_component_analysis.decomposition as decomposition
@@ -185,7 +186,6 @@ class multi_component_analysis():
             mvars.izero_error = variables['izero_error'][0]
             mvars.concentration = variables['concentration'][0]
             mvars.concentration_error = variables['concentration_error'][0]
-            mvars.initial_match_point_guess = variables['initial_match_point_guess'][0]
 
         elif mvars.stuhrmann_parallel_axis_flag == True:
             mvars.partial_specific_volume = variables['partial_specific_volume'][0]

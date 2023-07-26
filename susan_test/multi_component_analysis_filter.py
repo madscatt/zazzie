@@ -53,10 +53,10 @@
 """
 
 import numpy
-# import sassie.interface.input_filter as input_filter
-# import sassie.contrast.multi_component_analysis.read_data_file as read_data_file
-import input_filter_new as input_filter
-import read_data_file as read_data_file
+import sassie.interface.input_filter as input_filter
+import sassie.contrast.multi_component_analysis.read_data_file as read_data_file
+#import input_filter_new as input_filter
+#import read_data_file as read_data_file
 
 # this version uses the new input filter that recognizes a nested_float_array and a string array
 
@@ -76,8 +76,8 @@ def check_data_file(data_file_name):
 #    print("number of files: ", number_of_files)
 
     for item in data_file_name:
-#        print("item: ", item)
-#        print("data file: ", item)
+        #        print("item: ", item)
+        #        print("data file: ", item)
         q = []
         i = []
         ierr = []
@@ -105,7 +105,7 @@ def check_data_file(data_file_name):
             error.append(
                 "The number of data points, " + str(number_of_data_lines[i]) + ", in " + data_file_name[i] + " differs from " + str(
                     number_of_data_lines[0]) + " in the reference data file, " + data_file_name[0]
-                )
+            )
             return error
 
 # this checks that binning is identical for all data sets
@@ -114,9 +114,9 @@ def check_data_file(data_file_name):
             if scattering_data[0][j][0] != scattering_data[i][j][0]:
                 error.append(
                     "The binning for point " +
-                        str(j+1) + " in dataset " + str(i+1) +
-                            " differs from the reference"
-                    )
+                    str(j+1) + " in dataset " + str(i+1) +
+                    " differs from the reference"
+                )
                 return error
 
 #    print("error: ", error)
@@ -124,68 +124,66 @@ def check_data_file(data_file_name):
 
 
 def check_multi_component_analysis(variables, **kwargs):
-    """
-    Method to check the **Multi-component Analysis** variables.
+    r"""
+    Method to check the **Multi-component Analysis** variables.  
 
     Parameters
     ----------
 
-        run_name: string
-            run name
-        output_file_name: string
-            user-specified output file name
-        stoichiometry_flag: boolean
-            flag to determine if stoichiometry analysis is being used
-        match_point_flag: boolean
-            flag to determine if match point analysis is being used
-        stuhrmann_parallel_axis_flag: boolean
-            flag to determine if Stuhrmann and Parallel Axis methods are being used
-        decomposition_flag: boolean
-            flag to determine if decomposition analysis is being used
-        read_from_contrast_calculator_output_file: boolean
-            flag to determine if the contrasts (:math:`\Delta \rho`) values are read from a contrast calculator output file
-        contrast_calculator_output_file_name: string
-            user-specified contrast calculator output file name
-        number_of_contrast_points:  int
-            The number of solvent conditions with different fraction D\ :sub:`2`\ O values
-        fraction_d2o:   float array (dimension = number_of_contrast_points)
-            The fraction D\ :sub:`2`\ O values that define the contrasts
-        izero:  float array (dimension = number_of_contrast_points)
-            I(0) value at each contrast in cm\ :sup:`-1`\
-        izero_error:  float array (dimension = number_of_contrast_points)
-            I(0) error value at each contrast
-        concentration:  float array (dimension = number_of_contrast_points)
-            concentration at each contrast in mg/mL
-        concentration_error:  float array (dimension = number_of_contrast_points)
-            concentration error at each contrast
-        initial_match_point_guess:  float
-            The fraction D\ :sub:`2`\ O value to be used as initial match point guess
-        partial_specific_volume: float array (dimension = number of components)
-            partial specific volume of each component
-        molecular_weight: float array (dimension = number of components)
-            molecular_weight of each component
-        radius_of_gyration: float array (dimension = number_of_contrast_points)
-            radius of gyration at each contrast in Angstroms
-        radius_of_gyration_error: float array (dimension = number_of_contrast_points)
-            radius of gyration error at each contrast in Angstroms
-        data_file_name: string array (dimension = number_of_contrast_points)
-            contrast variation data file name at each fraction D\ :sub:`2`\ O 
-        q_rg_limit_guinier: float array (dimension = number_of_contrast_points)
-            qR\ :sub:`g`\  limit for the Guinier analysis at each fraction D\ :sub:`2`\ O
-        starting_data_point_guinier: int array (dimension = number_of_contrast_points)
-            index of the starting data point for the Guinier fit at each fraction D\ :sub:`2`\ O  (index of the first data point = 1)
-        initial_points_to_use_guinier: int array (dimension = number_of_contrast_points)
-            number of data points to use initially for the Guinier fit at each fraction D\ :sub:`2`\ O  (the final number of points used depends on the qR\ :sub:`g`\  limit)
-        refine_scale_factor_flag: boolean
-            Indicates whether the scale factor at each fraction D\ :sub:`2`\ O  will be adjusted based on the I(0) values 
-        delta_rho:  2D float array (dimensions = number_of_contrast_points x number_of_components)
-            The contrast for each component at all fraction D\ :sub:`2`\ O values of interest in 10\ :sup:`10`\ cm\ :sup:`-2`\  (10 :sup:`-6`\ A\ :sup:`-2`\ )
+    run_name: string
+        name of directory containing the outputs
+    output_file_name: string
+        user-specified output file name
+    stoichiometry_flag: boolean
+        flag to determine if stoichiometry analysis is being used
+    match_point_flag: boolean
+        flag to determine if match point analysis is being used
+    stuhrmann_parallel_axis_flag: boolean
+        flag to determine if Stuhrmann and Parallel Axis analyses are being used
+    decomposition_flag: boolean
+        flag to determine if decomposition analysis is being used
+    read_from_contrast_calculator_output_file: boolean
+        flag to determine if the contrasts (:math:`\Delta \rho`) values are read from a contrast calculator output file
+    contrast_calculator_output_file_name: string
+        user-specified contrast calculator output file name
+    number_of_contrast_points:  int
+        The number of solvent conditions with different fraction D\ :sub:`2`\ O values
+    fraction_d2o:   float array (dimension = number_of_contrast_points)
+        The fraction D\ :sub:`2`\ O values that define the contrasts
+    izero:  float array (dimension = number_of_contrast_points)
+        I(0) value at each contrast in cm\ :sup:`-1`\
+    izero_error:  float array (dimension = number_of_contrast_points)
+        I(0) error value at each contrast
+    concentration:  float array (dimension = number_of_contrast_points)
+        concentration at each contrast in mg/mL
+    concentration_error:  float array (dimension = number_of_contrast_points)
+        concentration error at each contrast
+    partial_specific_volume: float array (dimension = number of components)
+        partial specific volume of each component
+    molecular_weight: float array (dimension = number of components)
+        molecular weight of each component
+    radius_of_gyration: float array (dimension = number_of_contrast_points)
+        radius of gyration at each contrast in Angstroms
+    radius_of_gyration_error: float array (dimension = number_of_contrast_points)
+        radius of gyration error at each contrast in Angstroms
+    data_file_name: string array (dimension = number_of_contrast_points)
+        contrast variation data file name at each fraction D\ :sub:`2`\ O 
+    q_rg_limit_guinier: float
+        qR\ :sub:`g`\  limit for the Guinier analysis; a single value applies for all contrasts
+    starting_data_point_guinier: int array (dimension = number_of_contrast_points)
+        index of the starting data point for the Guinier fit at each fraction D\ :sub:`2`\ O  (index of the first data point = 1)
+    initial_points_to_use_guinier: int array (dimension = number_of_contrast_points)
+        number of data points to use initially for the Guinier fit at each fraction D\ :sub:`2`\ O  (the final number of points used depends on the qR\ :sub:`g`\  limit) 
+    refine_scale_factor_flag: boolean
+        Indicates whether the scale factor at each fraction D\ :sub:`2`\ O  will be adjusted based on the I(0) values 
+    delta_rho:  2D float array (dimensions = number_of_contrast_points x number_of_components)
+        The contrast for each component at all fraction D\ :sub:`2`\ O values of interest in 10\ :sup:`10`\ cm\ :sup:`-2`\  (10 :sup:`-6`\ A\ :sup:`-2`\ )
 
     Returns
     -------
 
-        error: string
-            The error message generated when a check fails. If there are no failures, the error is blank.
+    error: string
+        The error message generated when a check fails. If there are no failures, the error is blank.
 
     """
     # INPUT VARIABLES FOR ALL METHODS
@@ -202,9 +200,8 @@ def check_multi_component_analysis(variables, **kwargs):
     ][0]
     if read_from_contrast_calculator_output_file:
         contrast_calculator_output_file_name = variables[
-        "contrast_calculator_output_file_name"
-    ][0]
-
+            "contrast_calculator_output_file_name"
+        ][0]
 
     # define empty error list to return
 
@@ -241,11 +238,12 @@ def check_multi_component_analysis(variables, **kwargs):
     if number_of_true_values != 1:
         error.append(
             "one method value must be True and only one method flag can be True"
-            )
+        )
         error.append("match_point_flag = " + str(match_point_flag))
         error.append(
-            "stuhrmann_parallel_axis_flag = " + str(stuhrmann_parallel_axis_flag)
-            )
+            "stuhrmann_parallel_axis_flag = " +
+            str(stuhrmann_parallel_axis_flag)
+        )
         error.append("stoichiometry_flag = " + str(stoichiometry_flag))
         error.append("decomposition_flag = " + str(decomposition_flag))
         return error
@@ -254,10 +252,9 @@ def check_multi_component_analysis(variables, **kwargs):
     number_of_contrast_points = variables["number_of_contrast_points"][0]
     fraction_d2o = variables["fraction_d2o"][0]
 
-
     # check run_name
 
-    error=input_filter.check_name(run_name)
+    error = input_filter.check_name(run_name)
     if error != []:
         return error
 
@@ -269,7 +266,8 @@ def check_multi_component_analysis(variables, **kwargs):
 
     # check that contrast calculator output file exists
     if read_from_contrast_calculator_output_file:
-        error=input_filter.check_file_exists(contrast_calculator_output_file_name)
+        error = input_filter.check_file_exists(
+            contrast_calculator_output_file_name)
         if len(error) > 0:
             error.append(
                 contrast_calculator_output_file_name + " is not readable or does not exist"
@@ -287,11 +285,10 @@ def check_multi_component_analysis(variables, **kwargs):
             return error
 
     if match_point_flag:
-        izero=variables["izero"][0]
-        izero_error=variables["izero_error"][0]
-        concentration=variables["concentration"][0]
-        concentration_error=variables["concentration_error"][0]
-        initial_match_point_guess=variables["initial_match_point_guess"][0]
+        izero = variables["izero"][0]
+        izero_error = variables["izero_error"][0]
+        concentration = variables["concentration"][0]
+        concentration_error = variables["concentration_error"][0]
 
         # TODO: read_from_contrast_calculator_output_file = True: add option to read izero from a contrast calculator output file.  Errors must be nonzero so we need a way to handle this.
 
@@ -324,23 +321,19 @@ def check_multi_component_analysis(variables, **kwargs):
             if concentration_error[i] == 0.0:
                 error.append("concentration error[%i] cannot equal zero" % (i))
                 return error
-        # check that initial match point guess is between 0 and 1
-        if initial_match_point_guess < 0 or initial_match_point_guess > 1:
-            error.append("initial match point guess must be between 0 and 1")
-            return error
 
     elif stuhrmann_parallel_axis_flag:
-        number_of_components=variables["number_of_components"][0]
-        molecular_weight=variables["molecular_weight"][0]
-        partial_specific_volume=variables["partial_specific_volume"][0]
-        radius_of_gyration=variables["radius_of_gyration"][0]
-        radius_of_gyration_error=variables["radius_of_gyration_error"][0]
-        delta_rho=variables["delta_rho"][0]
-        read_from_sascalc_output_file=variables["read_from_sascalc_output_file"][0]
+        number_of_components = variables["number_of_components"][0]
+        molecular_weight = variables["molecular_weight"][0]
+        partial_specific_volume = variables["partial_specific_volume"][0]
+        radius_of_gyration = variables["radius_of_gyration"][0]
+        radius_of_gyration_error = variables["radius_of_gyration_error"][0]
+        delta_rho = variables["delta_rho"][0]
+        read_from_sascalc_output_file = variables["read_from_sascalc_output_file"][0]
         if read_from_sascalc_output_file:
             sascalc_output_file_name = variables[
-            "sascalc_output_file_name"
-        ][0]
+                "sascalc_output_file_name"
+            ][0]
 
         # check if number of contrast points is >= 3 to solve for R1, R2 and D
         if number_of_contrast_points < 3:
@@ -349,7 +342,7 @@ def check_multi_component_analysis(variables, **kwargs):
 
         # TODO: read_from_sascalc_output_file = True: add option to read radius_of_gyration from a sascalc output file.  Errors must be nonzero so we need a way to handle this.
         # TODO: read_from_contrast_calculator_output_file = True: add option to read delta_rho, molecular_weight and partial_specific_volume from a contrast_calculator_output file.
-        
+
         # NOTE: If either of the above flags is True, the relevant values are read from a contrast calculator or sascalc output file. If we execute the reading of the values from the file and fill them into the GUI before executing the main program, then we can perform the checks on delta_rho whether the flag is True or False and the if statement below can be removed. As of 5/2023, we aren't checking any flags before doing the molecular weight or partial specific volume checks.
 
         # delta_rho_checks if the values are input by hand
@@ -395,11 +388,11 @@ def check_multi_component_analysis(variables, **kwargs):
                 return error
 
     elif stoichiometry_flag:
-        number_of_components=variables["number_of_components"][0]
-        izero=variables["izero"][0]
-        concentration=variables["concentration"][0]
-        partial_specific_volume=variables["partial_specific_volume"][0]
-        delta_rho=variables["delta_rho"][0]
+        number_of_components = variables["number_of_components"][0]
+        izero = variables["izero"][0]
+        concentration = variables["concentration"][0]
+        partial_specific_volume = variables["partial_specific_volume"][0]
+        delta_rho = variables["delta_rho"][0]
 
         # check if number of contrast points is >= the number of components to solve for the Mw of each component
         if number_of_contrast_points < number_of_components:
@@ -408,7 +401,7 @@ def check_multi_component_analysis(variables, **kwargs):
             return error
 
         # TODO: read_from_contrast_calculator_output_file = True: add option to read izero from a contrast calculator output file.
-        
+
         # check if length of izero, concentration and delta_rho = number of contrasts
         if len(izero) != number_of_contrast_points:
             error.append("I(0) must have %i values" %
@@ -448,18 +441,18 @@ def check_multi_component_analysis(variables, **kwargs):
             return error
 
     elif decomposition_flag:
-        number_of_components=variables["number_of_components"][0]
-        molecular_weight=variables["molecular_weight"][0]
-        partial_specific_volume=variables["partial_specific_volume"][0]
-        concentration=variables["concentration"][0]
+        number_of_components = variables["number_of_components"][0]
+        molecular_weight = variables["molecular_weight"][0]
+        partial_specific_volume = variables["partial_specific_volume"][0]
+        concentration = variables["concentration"][0]
         # concentration_error is not currently used
         # concentration_error = variables["concentration_error"][0]
-        delta_rho=variables["delta_rho"][0]
-        data_file_name=variables["data_file_name"][0]
-        q_rg_limit_guinier=variables["q_rg_limit_guinier"][0]
-        starting_data_point_guinier=variables["starting_data_point_guinier"][0]
-        initial_points_to_use_guinier=variables["initial_points_to_use_guinier"][0]
-        refine_scale_factor_flag=variables["refine_scale_factor_flag"][0]
+        delta_rho = variables["delta_rho"][0]
+        data_file_name = variables["data_file_name"][0]
+        q_rg_limit_guinier = variables["q_rg_limit_guinier"][0]
+        starting_data_point_guinier = variables["starting_data_point_guinier"][0]
+        initial_points_to_use_guinier = variables["initial_points_to_use_guinier"][0]
+        refine_scale_factor_flag = variables["refine_scale_factor_flag"][0]
 
         # check if number of contrast points is >= 3 to solve for I11, I12 and I22
         if number_of_contrast_points < 3:
@@ -494,12 +487,12 @@ def check_multi_component_analysis(variables, **kwargs):
         # check if length of molecular weight = number of components
         if len(molecular_weight) != number_of_components:
             error.append("Mw must have %i values" % (number_of_components)
-            )
+                         )
             return error
         # check if length of concentration  = number of contrasts
         if len(concentration) != number_of_contrast_points:
             error.append("concentration must have %i values" % (number_of_contrast_points)
-            )
+                         )
             return error
         # check if concentration_error is non-zero
         # concentration_error is not currently used
@@ -517,38 +510,39 @@ def check_multi_component_analysis(variables, **kwargs):
             return error
         # check if data files exist
         for i in range(number_of_contrast_points):
-            error=input_filter.check_file_exists(data_file_name[i])
+            error = input_filter.check_file_exists(data_file_name[i])
             if len(error) > 0:
                 error.append(
-                data_file_name[i] + " is not readable or does not exist"
+                    data_file_name[i] + " is not readable or does not exist"
                 )
                 return error
         # check if number of points and q binning are the same for all data files
-        error=check_data_file(data_file_name)
+        error = check_data_file(data_file_name)
 #        print("error after data file check: ", error)
         if len(error) > 0:
-#            print("error = ", error)
+            #            print("error = ", error)
             return error
 
         # check if length of starting data points and points to use for the Guinier fit = number of contrasts
         if len(starting_data_point_guinier) != number_of_contrast_points:
             error.append("starting data point for Guinier analysis must have %i values" % (number_of_contrast_points)
-            )
+                         )
             return error
 
         # check if length of starting data points and points to use for the Guinier fit = number of contrasts
         if len(starting_data_point_guinier) != number_of_contrast_points:
             error.append("starting data points for Guinier analysis much have %i values" % (number_of_contrast_points)
-            )
+                         )
             return error
         if len(initial_points_to_use_guinier) != number_of_contrast_points:
             error.append("initial number of data points to use for Guinier analysis much have %i values" % (number_of_contrast_points)
-            )
+                         )
             return error
 
        # check if qRg limit for the Guinier analysis is > 0
         if q_rg_limit_guinier <= 0.0:
-            error.append("qRg limit for Guinier analysis must be greater than zero")
+            error.append(
+                "qRg limit for Guinier analysis must be greater than zero")
             return error
 
         # check if refine scale factor flag is boolean
@@ -560,92 +554,92 @@ def check_multi_component_analysis(variables, **kwargs):
 
 
 if __name__ == "__main__":
-    variables={}
+    variables = {}
 
-    # variables["match_point_flag"] = (True, "boolean")
-    variables["match_point_flag"]=(False, "boolean")
+    variables["match_point_flag"] = (True, "boolean")
+    #variables["match_point_flag"] = (False, "boolean")
     # variables["stuhrmann_parallel_axis_flag"] = (True, "boolean")
-    variables["stuhrmann_parallel_axis_flag"]=(False, "boolean")
+    variables["stuhrmann_parallel_axis_flag"] = (False, "boolean")
     # variables["stoichiometry_flag"] = (True, "boolean")
-    variables["stoichiometry_flag"]=(False, "boolean")
-    variables["decomposition_flag"]=(True, "boolean")
-    # variables["decomposition_flag"] = (False, "boolean")
+    variables["stoichiometry_flag"] = (False, "boolean")
+    #variables["decomposition_flag"] = (True, "boolean")
+    variables["decomposition_flag"] = (False, "boolean")
 
-    variables["run_name"]=("run_0", "string")
-    variables["output_file_name"]=("test.out" "string")
-    variables["contrast_calculator_output_file_name"]=("./input_contrast.txt", "string")
-    variables["read_from_contrast_calculator_output_file"]=(False, "boolean")
+    variables["run_name"] = ("run_0", "string")
+    variables["output_file_name"] = ("test.out" "string")
+    variables["contrast_calculator_output_file_name"] = (
+        "./input_contrast.txt", "string")
+    variables["read_from_contrast_calculator_output_file"] = (False, "boolean")
 
     if variables["match_point_flag"][0]:
 
-        variables["number_of_contrast_points"]=(7, "int")
-        variables["fraction_d2o"]=(
+        variables["number_of_contrast_points"] = (7, "int")
+        variables["fraction_d2o"] = (
             [1.0, 0.9, 0.8, 0.4, 0.2, 0.1, 0.0], "int_array")
 
-        variables["izero"]=([0.537, 0.332, 0.19, 0.0745,
-                            0.223, 0.352, 0.541], "float_array")
-        variables["izero_error"]=(
+        variables["izero"] = ([0.537, 0.332, 0.19, 0.0745,
+                              0.223, 0.352, 0.541], "float_array")
+        variables["izero_error"] = (
             [0.001, 0.002, 0.001, 0.002, 0.002, 0.002, 0.003], "float_array")
-        variables["concentration"]=(
+        variables["concentration"] = (
             [11.9, 11.9, 11.9, 26.9, 11.9, 11.9, 11.9], "float_array")
-        variables["concentration_error"]=(
+        variables["concentration_error"] = (
             [0.6, 0.6, 0.6, 1.3, 0.6, 0.6, 0.6], "float_array")
-        variables["initial_match_point_guess"]=(0.5, "float")
 
     elif variables["stuhrmann_parallel_axis_flag"][0]:
 
-        variables["read_from_sascalc_output_file"]=(False, "boolean")
+        variables["read_from_sascalc_output_file"] = (False, "boolean")
 
-        variables["number_of_contrast_points"]=(7, "int")
-        variables["fraction_d2o"]=(
+        variables["number_of_contrast_points"] = (7, "int")
+        variables["fraction_d2o"] = (
             [1.0, 0.9, 0.8, 0.4, 0.2, 0.1, 0.0], "int_array")
 
-        variables["number_of_components"]=(2, "int")
-        variables["partial_specific_volume"]=([0.73, 0.73], "float_array")
-        variables["molecular_weight"]=([50.7, 11.7], "float_array")
-        variables["delta_rho"]=([[-3.34, 0.41], [-2.78, 0.98], [-2.21, 1.54], [0.055, 3.8], [
-                                1.18, 4.93], [1.75, 5.49], [2.31, 6.06]], "nested_float_array")
-        variables["radius_of_gyration"]=(
+        variables["number_of_components"] = (2, "int")
+        variables["partial_specific_volume"] = ([0.73, 0.73], "float_array")
+        variables["molecular_weight"] = ([50.7, 11.7], "float_array")
+        variables["delta_rho"] = ([[-3.34, 0.41], [-2.78, 0.98], [-2.21, 1.54], [0.055, 3.8], [
+            1.18, 4.93], [1.75, 5.49], [2.31, 6.06]], "nested_float_array")
+        variables["radius_of_gyration"] = (
             [25.11, 24.16, 23.03, 23.4, 28.22, 28.33, 28.85], "float_array")
-        variables["radius_of_gyration_error"]=(
+        variables["radius_of_gyration_error"] = (
             [0.09, 0.14, 0.2, 0.7, 0.29, 0.19, 0.12], "float_array")
 
     elif variables["stoichiometry_flag"][0]:
 
-        variables["number_of_contrast_points"]=(3, "int")
-        variables["fraction_d2o"]=([0.99, 0.12, 0.41], "float_array")
-        variables["concentration"]=([3.7, 3.6, 3.1], "float_array")
-        variables["concentration_error"]=([0.18, 0.18, 0.18], "float_array")
-        variables["number_of_components"]=(2, "int")
-        variables["partial_specific_volume"]=([0.745, 0.903], "float_array")
-        variables["delta_rho"]=(
+        variables["number_of_contrast_points"] = (3, "int")
+        variables["fraction_d2o"] = ([0.99, 0.12, 0.41], "float_array")
+        variables["concentration"] = ([3.7, 3.6, 3.1], "float_array")
+        variables["concentration_error"] = ([0.18, 0.18, 0.18], "float_array")
+        variables["number_of_components"] = (2, "int")
+        variables["partial_specific_volume"] = ([0.745, 0.903], "float_array")
+        variables["delta_rho"] = (
             [[-3.2, -5.7], [1.6, 0.26], [0.031, -1.74]], "nested_float_array")
-        variables["izero"]=([8.4, 0.6, 0.17], "float_array")
-        variables["izero_error"]=([0.2, 0.04, 0.01], "float_array")
+        variables["izero"] = ([8.4, 0.6, 0.17], "float_array")
+        variables["izero_error"] = ([0.2, 0.04, 0.01], "float_array")
 
     elif variables["decomposition_flag"][0]:
 
-        variables["number_of_contrast_points"]=(7, "int")
-        variables["fraction_d2o"]=(
+        variables["number_of_contrast_points"] = (7, "int")
+        variables["fraction_d2o"] = (
             [0.0, 0.1, 0.2, 0.4, 0.8, 0.9, 1.0], "int_array")
-        variables["concentration"]=(
+        variables["concentration"] = (
             [11.9, 11.9, 11.9, 26.9, 11.9, 11.9, 11.9], "float_array")
         # variables["concentration_error"] = ([0.6, 0.6, 0.6, 1.3, 0.6, 0.6, 0.6], "float_array")
-        variables["data_file_name"]=(
+        variables["data_file_name"] = (
             ["./0.dat", "./10.dat", "./20.dat", "./40.dat", "./80.dat", "./90.dat", "./100.dat"], "string_array")
-        variables["number_of_components"]=(2, "int")
-        variables["partial_specific_volume"]=([0.73, 0.73], "float_array")
-        variables["molecular_weight"]=([50.7, 11.7], "float_array")
-        variables["delta_rho"]=([[2.31, 6.06], [1.75, 5.49], [1.18, 4.93], [
-                                0.055, 3.8], [-2.21, 1.54], [-2.78, 0.98], [-3.34, 0.41]], "nested_float_array")
-        variables["q_rg_limit_guinier"]=(1.3, "float")
-        variables["starting_data_point_guinier"]=(
+        variables["number_of_components"] = (2, "int")
+        variables["partial_specific_volume"] = ([0.73, 0.73], "float_array")
+        variables["molecular_weight"] = ([50.7, 11.7], "float_array")
+        variables["delta_rho"] = ([[2.31, 6.06], [1.75, 5.49], [1.18, 4.93], [
+            0.055, 3.8], [-2.21, 1.54], [-2.78, 0.98], [-3.34, 0.41]], "nested_float_array")
+        variables["q_rg_limit_guinier"] = (1.3, "float")
+        variables["starting_data_point_guinier"] = (
             [1, 1, 1, 1, 1, 1, 1], "int_array")
-        variables["initial_points_to_use_guinier"]=(
+        variables["initial_points_to_use_guinier"] = (
             [6, 6, 6, 6, 6, 6, 6], "int_array")
-        variables["refine_scale_factor_flag"]=(True, "boolean")
+        variables["refine_scale_factor_flag"] = (True, "boolean")
 
-    error=check_multi_component_analysis(variables)
+    error = check_multi_component_analysis(variables)
     if (len(error)) == 0:
         print("NO ERRORS FOUND")
     else:

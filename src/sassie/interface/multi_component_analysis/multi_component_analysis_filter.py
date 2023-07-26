@@ -158,8 +158,6 @@ def check_multi_component_analysis(variables, **kwargs):
         concentration at each contrast in mg/mL
     concentration_error:  float array (dimension = number_of_contrast_points)
         concentration error at each contrast
-    initial_match_point_guess:  float
-        The fraction D\ :sub:`2`\ O value to be used as initial match point guess
     partial_specific_volume: float array (dimension = number of components)
         partial specific volume of each component
     molecular_weight: float array (dimension = number of components)
@@ -291,7 +289,6 @@ def check_multi_component_analysis(variables, **kwargs):
         izero_error = variables["izero_error"][0]
         concentration = variables["concentration"][0]
         concentration_error = variables["concentration_error"][0]
-        initial_match_point_guess = variables["initial_match_point_guess"][0]
 
         # TODO: read_from_contrast_calculator_output_file = True: add option to read izero from a contrast calculator output file.  Errors must be nonzero so we need a way to handle this.
 
@@ -324,10 +321,6 @@ def check_multi_component_analysis(variables, **kwargs):
             if concentration_error[i] == 0.0:
                 error.append("concentration error[%i] cannot equal zero" % (i))
                 return error
-        # check that initial match point guess is between 0 and 1
-        if initial_match_point_guess < 0 or initial_match_point_guess > 1:
-            error.append("initial match point guess must be between 0 and 1")
-            return error
 
     elif stuhrmann_parallel_axis_flag:
         number_of_components = variables["number_of_components"][0]
@@ -563,14 +556,14 @@ def check_multi_component_analysis(variables, **kwargs):
 if __name__ == "__main__":
     variables = {}
 
-    # variables["match_point_flag"] = (True, "boolean")
-    variables["match_point_flag"] = (False, "boolean")
+    variables["match_point_flag"] = (True, "boolean")
+    #variables["match_point_flag"] = (False, "boolean")
     # variables["stuhrmann_parallel_axis_flag"] = (True, "boolean")
     variables["stuhrmann_parallel_axis_flag"] = (False, "boolean")
     # variables["stoichiometry_flag"] = (True, "boolean")
     variables["stoichiometry_flag"] = (False, "boolean")
-    variables["decomposition_flag"] = (True, "boolean")
-    # variables["decomposition_flag"] = (False, "boolean")
+    #variables["decomposition_flag"] = (True, "boolean")
+    variables["decomposition_flag"] = (False, "boolean")
 
     variables["run_name"] = ("run_0", "string")
     variables["output_file_name"] = ("test.out" "string")
@@ -592,7 +585,6 @@ if __name__ == "__main__":
             [11.9, 11.9, 11.9, 26.9, 11.9, 11.9, 11.9], "float_array")
         variables["concentration_error"] = (
             [0.6, 0.6, 0.6, 1.3, 0.6, 0.6, 0.6], "float_array")
-        variables["initial_match_point_guess"] = (0.5, "float")
 
     elif variables["stuhrmann_parallel_axis_flag"][0]:
 

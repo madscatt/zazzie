@@ -99,7 +99,6 @@ def user_variables(self, **kwargs):
     if self.match_point_flag:
         self.concentration = "11.9, 11.9, 11.9, 26.9, 11.9, 11.9, 11.9"
         self.concentration_error = "0.6, 0.6, 0.6, 1.3, 0.6, 0.6, 0.6"
-        self.initial_match_point_guess = "0.5"
 
         if self.read_from_contrast_calculator_output_file:
             # TODO NEED TO READ THESE IN; VALUES ARE HERE AS A PLACEHOLDER
@@ -285,10 +284,6 @@ def run_module(self, **kwargs):
         svariables["number_of_contrast_points"] = (
             self.number_of_contrast_points, "int")
         svariables["fraction_d2o"] = (self.fraction_d2o, "float_array")
-        svariables["initial_match_point_guess"] = (
-            self.initial_match_point_guess,
-            "float",
-        )
         svariables["concentration"] = (self.concentration, "float_array")
         svariables["concentration_error"] = (
             self.concentration_error, "float_array")

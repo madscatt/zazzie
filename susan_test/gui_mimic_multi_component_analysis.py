@@ -37,10 +37,9 @@ import shutil
 import time
 
 #import sassie.contrast.multi_component_analysis.multi_component_analysis as multi_component_analysis
-#import sassie.interface.input_filter as input_filter
-#import sassie.interface.multi_component_analysis.multi_component_analysis_filter as multi_component_analysis_filter
 import multi_component_analysis as multi_component_analysis
-import input_filter_new as input_filter
+import sassie.interface.input_filter as input_filter
+#import sassie.interface.multi_component_analysis.multi_component_analysis_filter as multi_component_analysis_filter
 import multi_component_analysis_filter as multi_component_analysis_filter
 import multiprocessing
 
@@ -63,14 +62,14 @@ def user_variables(self, **kwargs):
     #### ONLY ONE OF THE FOLLOWING FOUR SHOULD BE TRUE
 
     self.path = "./"
-    #self.match_point_flag = True
-    self.match_point_flag = False
+    self.match_point_flag = True
+    #self.match_point_flag = False
     #self.stuhrmann_parallel_axis_flag = True
     self.stuhrmann_parallel_axis_flag = False
     #self.stoichiometry_flag = True
     self.stoichiometry_flag = False
-    self.decomposition_flag = True
-    #self.decomposition_flag = False
+    #self.decomposition_flag = True
+    self.decomposition_flag = False
 
     #### INPUT VARIABLES FOR ALL METHODS
 
@@ -97,13 +96,11 @@ def user_variables(self, **kwargs):
             self.path, "test_contrast_calculator_output_file.txt"
         )
 
-
     #### MATCH POINT ANALYSIS VARIABLES
 
     if self.match_point_flag:
         self.concentration = "11.9, 11.9, 11.9, 26.9, 11.9, 11.9, 11.9"
         self.concentration_error = "0.6, 0.6, 0.6, 1.3, 0.6, 0.6, 0.6"
-        self.initial_match_point_guess = "0.5"
 
         if self.read_from_contrast_calculator_output_file:
             # TODO NEED TO READ THESE IN; VALUES ARE HERE AS A PLACEHOLDER
@@ -126,24 +123,30 @@ def user_variables(self, **kwargs):
             # TODO NEED TO READ THESE IN; VALUES ARE HERE AS A PLACEHOLDER
             self.partial_specific_volume = "0.73, 0.73"  # 1 value for each component
             self.molecular_weight = "50.7, 11.7"  # kDa; 1 value for each component
-            self.delta_rho = "-3.34, 0.41; -2.78, 0.98; -2.21, 1.54; 0.055, 3.80; 1.18, 4.93; 1.75, 5.49; 2.31, 6.06"  # 2 values for each contrast since there are 2 components.
+            # 2 values for each contrast since there are 2 components.
+            self.delta_rho = "-3.34, 0.41; -2.78, 0.98; -2.21, 1.54; 0.055, 3.80; 1.18, 4.93; 1.75, 5.49; 2.31, 6.06"
 
         else:
             self.partial_specific_volume = "0.73, 0.73"  # 1 value for each component
             self.molecular_weight = "50.7, 11.7"  # kDa; 1 value for each component
-            self.delta_rho = "-3.34, 0.41; -2.78, 0.98; -2.21, 1.54; 0.055, 3.80; 1.18, 4.93; 1.75, 5.49; 2.31, 6.06"  # 2 values for each contrast point since there are 2 components.
+            # 2 values for each contrast point since there are 2 components.
+            self.delta_rho = "-3.34, 0.41; -2.78, 0.98; -2.21, 1.54; 0.055, 3.80; 1.18, 4.93; 1.75, 5.49; 2.31, 6.06"
 
         if self.read_from_sascalc_output_file:
             # TODO NEED TO READ THESE IN; VALUES ARE HERE AS A PLACEHOLDER
             self.sascalc_output_file_name = os.path.join(
                 self.path, "test_sascalc_output_file.txt"
             )
-            self.radius_of_gyration = "25.11, 24.16, 23.03, 23.4, 28.22, 28.33, 28.85"  # 1 value for each contrast point
-            self.radius_of_gyration_error = "0.09, 0.14, 0.2, 0.7, 0.29, 0.19, 0.12"  # 1 value for each contrast point
+            # 1 value for each contrast point
+            self.radius_of_gyration = "25.11, 24.16, 23.03, 23.4, 28.22, 28.33, 28.85"
+            # 1 value for each contrast point
+            self.radius_of_gyration_error = "0.09, 0.14, 0.2, 0.7, 0.29, 0.19, 0.12"
 
         else:
-            self.radius_of_gyration = "25.11, 24.16, 23.03, 23.4, 28.22, 28.33, 28.85"  # 1 value for each contrast point
-            self.radius_of_gyration_error = "0.09, 0.14, 0.2, 0.7, 0.29, 0.19, 0.12"  # 1 value for each contrast point
+            # 1 value for each contrast point
+            self.radius_of_gyration = "25.11, 24.16, 23.03, 23.4, 28.22, 28.33, 28.85"
+            # 1 value for each contrast point
+            self.radius_of_gyration_error = "0.09, 0.14, 0.2, 0.7, 0.29, 0.19, 0.12"
 
     #### STOICHIOMETRY ANALYSIS VARIABLES
 
@@ -156,22 +159,25 @@ def user_variables(self, **kwargs):
         if self.read_from_contrast_calculator_output_file:
             # TODO NEED TO READ THESE IN; VALUES ARE HERE AS A PLACEHOLDER
             self.partial_specific_volume = "0.745, 0.903"  # 1 value for each component
-            self.delta_rho = "-3.2, -5.7; 1.6, 0.26; 0.031, -1.74"  # 2 values for each contrast point since there are 2 components.
+            # 2 values for each contrast point since there are 2 components.
+            self.delta_rho = "-3.2, -5.7; 1.6, 0.26; 0.031, -1.74"
             self.izero = "8.4, 0.6, 0.17"  # 1 value for each contrast point
             self.izero_error = "0.2, 0.04, 0.01"  # 1 value for each contrast point
 
         else:
             self.partial_specific_volume = "0.745, 0.903"  # 1 value for each component
-            self.delta_rho = "-3.2, -5.7; 1.6, 0.26; 0.031, -1.74"  # 2 values for each contrast point since there are 2 components.
+            # 2 values for each contrast point since there are 2 components.
+            self.delta_rho = "-3.2, -5.7; 1.6, 0.26; 0.031, -1.74"
             self.izero = "8.4, 0.6, 0.17"  # 1 value for each contrast point
             self.izero_error = "0.2, 0.04, 0.01"  # 1 value for each contrast point
 
     #### DECOMPOSITION ANALYSIS VARIABLES
 
     elif self.decomposition_flag:
-#NOTE: The path needs to be part of the file name so that the check as to whether each file exists will look for the files in the right place. 
-        self.data_file_name = self.path+"0.dat, "+self.path+"10.dat, "+self.path+"20.dat, "+self.path+"40.dat, "+self.path+"80.dat, "+self.path+"90.dat, "+self.path+"100.dat"
-        #print('data file name: ', self.data_file_name)
+        # NOTE: The path needs to be part of the file name so that the check as to whether each file exists will look for the files in the right place.
+        self.data_file_name = self.path+"0.dat, "+self.path+"10.dat, "+self.path+"20.dat, " + \
+            self.path+"40.dat, "+self.path+"80.dat, " + \
+            self.path+"90.dat, "+self.path+"100.dat"
         self.concentration = "11.9, 11.9, 11.9, 26.9, 11.9, 11.9, 11.9"
         self.concentration_error = "0.6, 0.6, 0.6, 1.3, 0.6, 0.6, 0.6"
         self.number_of_components = "2"
@@ -179,7 +185,7 @@ def user_variables(self, **kwargs):
         self.q_rg_limit_guinier = "1.3"
         self.starting_data_point_guinier = "1, 1, 1, 1, 1, 1, 1"
         self.initial_points_to_use_guinier = "6, 6, 6, 6, 6, 6, 6"
-        self.refine_scale_factor_flag = True 
+        self.refine_scale_factor_flag = True
         #self.refine_scale_factor_flag = False
 
         if self.read_from_contrast_calculator_output_file:
@@ -187,13 +193,14 @@ def user_variables(self, **kwargs):
 
             self.partial_specific_volume = "0.73, 0.73"  # 1 value for each component
             self.molecular_weight = "50.7, 11.7"  # kDa; 1 value for each component
-            self.delta_rho = "2.31, 6.06; 1.75, 5.49; 1.18, 4.93; 0.055, 3.8; -2.21, 1.54; -2.78, 0.98; -3.34, 0.41" # 2 values for each contrast since there are 2 components.
+            # 2 values for each contrast since there are 2 components.
+            self.delta_rho = "2.31, 6.06; 1.75, 5.49; 1.18, 4.93; 0.055, 3.8; -2.21, 1.54; -2.78, 0.98; -3.34, 0.41"
 
         else:
             self.partial_specific_volume = "0.73, 0.73"  # 1 value for each component
             self.molecular_weight = "50.7, 11.7"  # kDa; 1 value for each component
-            self.delta_rho = "2.31, 6.06; 1.75, 5.49; 1.18, 4.93; 0.055, 3.8; -2.21, 1.54; -2.78, 0.98; -3.34, 0.41" # 2 values for each contrast since there are 2 components.
-
+            # 2 values for each contrast since there are 2 components.
+            self.delta_rho = "2.31, 6.06; 1.75, 5.49; 1.18, 4.93; 0.055, 3.8; -2.21, 1.54; -2.78, 0.98; -3.34, 0.41"
 
     #### end user input ####
     #### end user input ####
@@ -221,7 +228,8 @@ def test_variables(self, paths):
     self.read_from_contrast_calculator_output_file = False
     if read_from_contrast_calculator_output_file:
         self.output_file_name = os.path.join(other_data_path, "99_12_41.out")
-    self.contrast_calculator_output_file_name = os.path.join(other_data_path, "input_contrast.txt")
+    self.contrast_calculator_output_file_name = os.path.join(
+        other_data_path, "input_contrast.txt")
     self.match_point_flag = False
     self.stuhrmann_parallel_axis_flag = False
     self.decomposition_flag = False
@@ -275,14 +283,12 @@ def run_module(self, **kwargs):
     #### MATCH POINT ANALYSIS VARIABLES
 
     if self.match_point_flag:
-        svariables["number_of_contrast_points"] = (self.number_of_contrast_points, "int")
+        svariables["number_of_contrast_points"] = (
+            self.number_of_contrast_points, "int")
         svariables["fraction_d2o"] = (self.fraction_d2o, "float_array")
-        svariables["initial_match_point_guess"] = (
-            self.initial_match_point_guess,
-            "float",
-        )
         svariables["concentration"] = (self.concentration, "float_array")
-        svariables["concentration_error"] = (self.concentration_error, "float_array")
+        svariables["concentration_error"] = (
+            self.concentration_error, "float_array")
 
         svariables["izero"] = (self.izero, "float_array")
         svariables["izero_error"] = (self.izero_error, "float_array")
@@ -290,7 +296,8 @@ def run_module(self, **kwargs):
     #### STUHRMANN PARALLEL AXIS ANALYSIS VARIABLES
 
     elif self.stuhrmann_parallel_axis_flag:
-        svariables["number_of_contrast_points"] = (self.number_of_contrast_points, "int")
+        svariables["number_of_contrast_points"] = (
+            self.number_of_contrast_points, "int")
         svariables["fraction_d2o"] = (self.fraction_d2o, "float_array")
         svariables["number_of_components"] = (self.number_of_components, "int")
         svariables["component_name"] = (self.component_name, "string_array")
@@ -302,7 +309,6 @@ def run_module(self, **kwargs):
             self.read_from_sascalc_output_file,
             "boolean",
         )
-        
 
         svariables["partial_specific_volume"] = (
             self.partial_specific_volume,
@@ -317,7 +323,8 @@ def run_module(self, **kwargs):
                 "string",
             )
 
-        svariables["radius_of_gyration"] = (self.radius_of_gyration, "float_array")
+        svariables["radius_of_gyration"] = (
+            self.radius_of_gyration, "float_array")
         svariables["radius_of_gyration_error"] = (
             self.radius_of_gyration_error,
             "float_array",
@@ -326,10 +333,12 @@ def run_module(self, **kwargs):
     #### STOICHIOMETRY ANALYSIS VARIABLES
 
     elif self.stoichiometry_flag:
-        svariables["number_of_contrast_points"] = (self.number_of_contrast_points, "int")
+        svariables["number_of_contrast_points"] = (
+            self.number_of_contrast_points, "int")
         svariables["fraction_d2o"] = (self.fraction_d2o, "float_array")
         svariables["concentration"] = (self.concentration, "float_array")
-        svariables["concentration_error"] = (self.concentration_error, "float_array")
+        svariables["concentration_error"] = (
+            self.concentration_error, "float_array")
         svariables["number_of_components"] = (self.number_of_components, "int")
         svariables["component_name"] = (self.component_name, "string_array")
         svariables["read_from_contrast_calculator_output_file"] = (
@@ -348,17 +357,22 @@ def run_module(self, **kwargs):
     #### DECOMPOSITION ANALYSIS VARIABLES
 
     elif self.decomposition_flag:
-        svariables["number_of_contrast_points"] = (self.number_of_contrast_points, "int")
+        svariables["number_of_contrast_points"] = (
+            self.number_of_contrast_points, "int")
         svariables["fraction_d2o"] = (self.fraction_d2o, "float_array")
         svariables["data_file_name"] = (self.data_file_name, "string_array")
         svariables["concentration"] = (self.concentration, "float_array")
-        svariables["concentration_error"] = (self.concentration_error, "float_array")
+        svariables["concentration_error"] = (
+            self.concentration_error, "float_array")
         svariables["number_of_components"] = (self.number_of_components, "int")
         svariables["component_name"] = (self.component_name, "string_array")
         svariables["q_rg_limit_guinier"] = (self.q_rg_limit_guinier, "float")
-        svariables["starting_data_point_guinier"] = (self.starting_data_point_guinier, "int_array")
-        svariables["initial_points_to_use_guinier"] = (self.initial_points_to_use_guinier, "int_array")
-        svariables["refine_scale_factor_flag"] = (self.refine_scale_factor_flag, "boolean")
+        svariables["starting_data_point_guinier"] = (
+            self.starting_data_point_guinier, "int_array")
+        svariables["initial_points_to_use_guinier"] = (
+            self.initial_points_to_use_guinier, "int_array")
+        svariables["refine_scale_factor_flag"] = (
+            self.refine_scale_factor_flag, "boolean")
         svariables["read_from_contrast_calculator_output_file"] = (
             self.read_from_contrast_calculator_output_file,
             "boolean",
@@ -371,14 +385,12 @@ def run_module(self, **kwargs):
         svariables["molecular_weight"] = (self.molecular_weight, "float_array")
         svariables["delta_rho"] = (self.delta_rho, "nested_float_array")
 
-
-
     error, self.variables = input_filter.type_check_and_convert(svariables)
     if len(error) > 0:
         print("error = ", error)
         return error
 
-    #print(self.variables)
+    # print(self.variables)
     #import sys; sys.exit()
 
     try:
