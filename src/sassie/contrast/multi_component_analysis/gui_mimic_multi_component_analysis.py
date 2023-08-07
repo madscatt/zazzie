@@ -60,12 +60,16 @@ def user_variables(self, **kwargs):
     #### ONLY ONE OF THE FOLLOWING FOUR SHOULD BE TRUE
 
     self.path = "./"
+
     #self.match_point_flag = True
     self.match_point_flag = False
+
     #self.stuhrmann_parallel_axis_flag = True
     self.stuhrmann_parallel_axis_flag = False
+
     #self.stoichiometry_flag = True
     self.stoichiometry_flag = False
+
     self.decomposition_flag = True
     #self.decomposition_flag = False
 
@@ -374,9 +378,7 @@ def run_module(self, **kwargs):
         svariables["read_from_contrast_calculator_output_file"] = (
             self.read_from_contrast_calculator_output_file,
             "boolean",
-        )
-
-        svariables["partial_specific_volume"] = (
+        ["partial_specific_volume"] = (
             self.partial_specific_volume,
             "float_array",
         )
