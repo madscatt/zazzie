@@ -377,11 +377,8 @@ def run_module(self, **kwargs):
             self.refine_scale_factor_flag, "boolean")
         svariables["read_from_contrast_calculator_output_file"] = (
             self.read_from_contrast_calculator_output_file,
-            "boolean",
-        ["partial_specific_volume"] = (
-            self.partial_specific_volume,
-            "float_array",
-        )
+            "boolean")
+        svariables["partial_specific_volume"] = (self.partial_specific_volume, "float_array")
         svariables["molecular_weight"] = (self.molecular_weight, "float_array")
         svariables["delta_rho"] = (self.delta_rho, "nested_float_array")
 
