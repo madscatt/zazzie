@@ -21,7 +21,7 @@ import string
 import sasmol.sasmol as sasmol
 import sassie.interface.input_filter as input_filter
 
-def hullradsas_filter(variables, eflag, monflag, **kwargs):
+def check_hullradsas(variables, eflag, monflag, **kwargs):
 
     runname = variables['runname'][0]
     path = variables['path'][0]
