@@ -53,9 +53,14 @@ except AttributeError:
 library_dirs = [os.path.join(os.sep, 'usr', 'local', 'lib')]
 
 all_packages = ['sassie', 'sassie.util',
-    'sassie.interface', 'sassie.contrast','sassie.contrast.multi_component_analysis',
-    'sassie.interface.multi_component_analysis','sassie.interface.data_interpolation',
-    'sassie.tools', 'sassie.tools.data_interpolation',
+    'sassie.contrast',
+    'sassie.contrast.multi_component_analysis',
+    'sassie.interface', 
+    'sassie.interface.multi_component_analysis',
+    'sassie.interface.data_interpolation',
+    'sassie.interface.hullradsas',
+    'sassie.tools', 
+    'sassie.tools.data_interpolation',
     'sassie.simulate', 
     'sassie.simulate.constraints',
     'sassie.simulate.energy',
@@ -69,7 +74,9 @@ all_packages = ['sassie', 'sassie.util',
     'sassie.simulate.torsion_angle_monte_carlo.monte_carlo_utilities.protein_backbone_torsion',
     'sassie.simulate.torsion_angle_monte_carlo.extensions',
     'sassie.simulate.torsion_angle_monte_carlo.extensions.overlap',
-    'sassie.simulate.torsion_angle_monte_carlo.extensions.dna_overlap'
+    'sassie.simulate.torsion_angle_monte_carlo.extensions.dna_overlap',
+    'sassie.analyze', 
+    'sassie.analyze.hullradsas'
     ]
     
 ### end user edit ###
