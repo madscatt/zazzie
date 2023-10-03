@@ -1,5 +1,5 @@
 '''
-Driver method to run the interpolate module
+Driver method to run the hullradsas module
 '''
 
 import sys
@@ -7,11 +7,10 @@ import os
 import shutil
 import time
 
-import sassie.tools.data_interpolation.data_interpolation as data_interpolation
+import sassie.analyze.hullradsas.hullradsas as hullradsas
 import sassie.interface.input_filter as input_filter
-import sassie.interface.data_interpolation.interpolate_filter as interpolate_filter
+import sassie.interface.hullradsas.hullradsas_filter as hullradsas_filter
 import multiprocessing
-
 
 def user_variables(self, **kwargs):
 
@@ -20,19 +19,8 @@ def user_variables(self, **kwargs):
     #### user input ####
 
     self.run_name = 'run_0'
-    self.expdata = 'sans_data.sub'
-#    self.expdata = 'trunc2a_saxs.sub'
-    self.ofile = 'sans_data.dat'
-#    self.ofile = 'trunc2a.dat'
-    self.io = '0.04'
-#    self.io = '0.031'
-    self.ioe = '0.001'
-    self.dq = '.02'
-#    self.dq = '0.007'
-    self.maxpoints = '16'
-#    self.maxpoints = '72'
-    self.plotflag = '0'
-
+    self.pdbfile = 'c.pdb'
+    self.ofile = 'hullradsas.dat'
     self.testflag = False
 
     #### end user input ####
@@ -126,7 +114,7 @@ class gui_mimic_data_interpolation():
     '''
     gui_mimic class contains the name of the module
     '''
-    module = 'data_interpoloation'
+    module = 'torsion_angle_monte_carlo'
 
     def __init__(self, test, paths):
 
