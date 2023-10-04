@@ -18,52 +18,36 @@ import os
 import sys
 import locale
 import string
-import sasmol.sasmol as sasmol
+import sasmol.system as system
 import sassie.interface.input_filter as input_filter
 
-def check_hullradsas(variables, eflag, monflag, **kwargs):
+def check_hullradsas(variables, **kwargs):
 
-    runname = variables['runname'][0]
-    path = variables['path'][0]
+    run_name = variables['run_name'][0]
     pdbfile = variables['pdbfile'][0]
 
     error = []
-    error = input_filter.check_name(runname)
+    error = input_filter.check_name(run_name)
     if(error != []):
         return error
 
-    if "no_file_check" not in kwargs:
-        ev, rv, wv = input_filter.check_permissions(path)
-        if(not ev or not rv or not wv):
-            error.append('permission error in input file path ' +
-                         path + '  [code = ' + str(ev) + str(rv) + str(wv) + ']')
-        if(ev == False):
-            error.append('path does not exist')
-        elif(rv == False):
-            error.append('read permission not allowed')
-        elif(wv == False):
-            error.append('write permission not allowed')
-        return error
-
-    if(path != ""):
-        if path[-1] != "/":
-            pdbfile = path + '/' + pdbfile
-        else:
-            pdbfile = path + pdbfile
-    else:
-        pdbfile = path + pdbfile
+    print('pdbfile = ',pdbfile)
 
     ev, value = input_filter.check_pdb_dcd(pdbfile, 'pdb')
+
+    print('ev = ',ev)
+    print('value = ',value)
 
     if(ev == 0):
         error.append('input pdb file, ' + pdbfile[3:] + ', does not exist')
         return error
     if(value == 0):
         error.append('input pdb file, ' +
-                     pdbfile[3:] + ', is not a valid pdb file')
+                     #pdbfile[3:] + ', is not a valid pdb file')
+                     pdbfile + ', is not a valid pdb file')
         return error
 
-    m1 = sasmol.SasMol(0)
+    m1 = system.SasMol(0)
     error = m1.read_pdb(pdbfile, fastread=True)
 
     if(len(error) > 0):

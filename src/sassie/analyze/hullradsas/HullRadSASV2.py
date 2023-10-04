@@ -486,8 +486,8 @@ if useNumpy:
     except:
         pass
 
-print('useNumpy: ', useNumpy)
-print('useScipy: ', useScipy)
+#print('useNumpy: ', useNumpy)
+#print('useScipy: ', useScipy)
 
 # Amino Acid mass, volumes,partial specific volumes and unified side chain sphere radius
 # Mass is minus water (from SEDNTERP database)
@@ -1793,7 +1793,7 @@ def HullVolume(coords):
 
 def main(pdbfile, ofile):
 
-    file = mvars.pdbfile
+    file = pdbfile
 
     # Print actual file name
     print((' %s' %  (file)))
@@ -1820,39 +1820,39 @@ def main(pdbfile, ofile):
            = Sved(all_atm_rec,num_MG,num_MN,num_K,num_Na,model_array,mesh_coords, \
                   tot_asa,prb_rad,elec_atm_rec)
 
-     # Print coefficients to screen
-     print(('  #Amino Acids    :    %9.0f' % (AA)))
-     print(('  #Nucleotides    :    %9.0f' % (NA)))
-     print(('  #Saccharides    :    %9.0f' % (GL)))
-     print(('  #Detergents     :    %9.0f' % (DT)))
-     print(('  #Potassium      :    %9.0f' % (num_K)))
-     print(('  #Sodium         :    %9.0f' % (num_Na)))
-     print(('  #Magnesium      :    %9.0f' % (num_MG)))
-     print(('  #Manganese      :    %9.0f' % (num_MN)))
-     print(('  M               :       %6.0f     g/mol' % (M)))
-     print(('  v_bar           :       %6.3f     mL/g'  % (vbar_prot)))
-     print(('  Ro(Anhydrous)   :       %6.2f     Angstroms' % (Ro)))
-     print(('  Rg(Anhydrous)   :       %6.2f     Angstroms' % (AnhRg)))
-     print(('  Rg(Hydrated)    :       %6.2f     Angstroms' % (HydRg)))
-     print(('  Dmax            :       %6.2f     Angstroms' % (Dmax)))
-     print(('  Axial Ratio     :       %6.2f' % (a_b_ratio)))
-     print(('  f/fo            :       %6.2f'  % (ffo_hyd_P)))
-     print(('  Dt              :       %6.2e   cm^2/s' % (Dt)))
-     print(('  R(Translation)  :       %6.2f     Angstroms' % (Rht)))
-     print(('  s               :       %6.2e   sec' % (s)))
-     print(('  Int. Viscosity  :       %6.2f     ml/g ' % (int_vis)))
-     print(('  ks(Non-ideal)   :       %6.2f     ml/g ' % (ks)))
-     if useNumpy:
+    # Print coefficients to screen
+    print(('  #Amino Acids    :    %9.0f' % (AA)))
+    print(('  #Nucleotides    :    %9.0f' % (NA)))
+    print(('  #Saccharides    :    %9.0f' % (GL)))
+    print(('  #Detergents     :    %9.0f' % (DT)))
+    print(('  #Potassium      :    %9.0f' % (num_K)))
+    print(('  #Sodium         :    %9.0f' % (num_Na)))
+    print(('  #Magnesium      :    %9.0f' % (num_MG)))
+    print(('  #Manganese      :    %9.0f' % (num_MN)))
+    print(('  M               :       %6.0f     g/mol' % (M)))
+    print(('  v_bar           :       %6.3f     mL/g'  % (vbar_prot)))
+    print(('  Ro(Anhydrous)   :       %6.2f     Angstroms' % (Ro)))
+    print(('  Rg(Anhydrous)   :       %6.2f     Angstroms' % (AnhRg)))
+    print(('  Rg(Hydrated)    :       %6.2f     Angstroms' % (HydRg)))
+    print(('  Dmax            :       %6.2f     Angstroms' % (Dmax)))
+    print(('  Axial Ratio     :       %6.2f' % (a_b_ratio)))
+    print(('  f/fo            :       %6.2f'  % (ffo_hyd_P)))
+    print(('  Dt              :       %6.2e   cm^2/s' % (Dt)))
+    print(('  R(Translation)  :       %6.2f     Angstroms' % (Rht)))
+    print(('  s               :       %6.2e   sec' % (s)))
+    print(('  Int. Viscosity  :       %6.2f     ml/g ' % (int_vis)))
+    print(('  ks(Non-ideal)   :       %6.2f     ml/g ' % (ks)))
+    if useNumpy:
         print(('  Asphericity     :       %6.2f     (from Gyration Tensor)' % (asphr)))
-     if a_b_ratio > 2.63:
+    if a_b_ratio > 2.63:
         print(' ')
         print('  Caution. Axial ratio too large for accurate prediction')
         print('  of following rotational properties by HullRad.')
-     print(('  Dr              :       %6.2e   s^-1' % (Dr)))
-     print(('  R(Rotation)     :       %6.2f     Angstroms' % (Rhr)))
-     print(('  tauC            :       %6.2f     ns (from R_rotation)' % (tauC)))
+    print(('  Dr              :       %6.2e   s^-1' % (Dr)))
+    print(('  R(Rotation)     :       %6.2f     Angstroms' % (Rhr)))
+    print(('  tauC            :       %6.2f     ns (from R_rotation)' % (tauC)))
     
-     return
+    return
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
@@ -1860,6 +1860,12 @@ if __name__ == "__main__":
         sys.exit()
 
     file = sys.argv[1]
+
+    ofile = 'dum.out'
+
+    main(file,ofile)
+
+'''
 
     # Print actual file name
     print((' %s' %  (file)))
@@ -1918,3 +1924,4 @@ if __name__ == "__main__":
     print(('  R(Rotation)     :       %6.2f     Angstroms' % (Rhr)))
     print(('  tauC            :       %6.2f     ns (from R_rotation)' % (tauC)))
 
+'''

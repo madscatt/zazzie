@@ -34,26 +34,21 @@ def test_variables(self, paths):
     are used for development tests
 
     this module defines variables that will be used to test the module as well as its input filter
-    variables are defined outside the gui_mimic_data_interpolation class so that they can be used by these other programs
+    variables are defined outside the gui_mimic_hullradsas class so that they can be used by these other programs
 
     '''
 
     pdb_data_path = paths['pdb_data_path']
     dcd_data_path = paths['dcd_data_path']
     module_data_path = paths['module_data_path']
-    other_data_path = paths['other_data_path']
+    #other_data_path = paths['other_data_path']
 
     self.run_name = 'run_0'
-    self.expdata = os.path.join(other_data_path, 'sans_data.sub')
-    self.ofile = 'sans_data.dat'
-    self.io = '0.04'
-    self.ioe = '0.001'
-    self.dq = '.02'
-    self.maxpoints = '16'
-    self.plotflag = '0'
+    #self.pdbfile = os.path.join(other_data_path, 'c.pdb')
+    self.pdbfile = 'c.pdb'
+    self.ofile = 'hullradsas.dat'
 
     self.testflag = True
-
 
 def run_module(self, **kwargs):
     '''
@@ -66,13 +61,8 @@ def run_module(self, **kwargs):
     svariables = {}
 
     svariables['run_name'] = (self.run_name, 'string')
-    svariables['expdata'] = (self.expdata, 'string')
+    svariables['pdbfile'] = (self.pdbfile, 'string')
     svariables['ofile'] = (self.ofile, 'string')
-    svariables['io'] = (self.io, 'float')
-    svariables['ioe'] = (self.ioe, 'float')
-    svariables['dq'] = (self.dq, 'float')
-    svariables['maxpoints'] = (self.maxpoints, 'int')
-    svariables['plotflag'] = (self.plotflag, 'int')
 
     error, self.variables = input_filter.type_check_and_convert(svariables)
     if len(error) > 0:
@@ -81,18 +71,24 @@ def run_module(self, **kwargs):
             sys.exit()
         return error
 
-    try:
-        if kwargs['file_check']:
-            error = interpolate_filter.check_interpolate(self.variables)
-    except:
-        error = interpolate_filter.check_interpolate(
-            self.variables, no_file_check="true")
+    print("pdbfile = ", self.pdbfile)
 
-    if(len(error) > 0):
-        print('error = ', error)
-        if not(self.testflag):
-            sys.exit()
-        return error
+    #import sasmol.system as system
+    #test_mol = system.Molecule(0)
+    #test_mol.read_pdb(self.pdbfile, fastread=True)
+    #flag = input_filter.check_binary(self.pdbfile)
+    #print('flag = ',flag)
+
+    #resname = test_mol.resname()
+    #print(test_mol.resname()[0])
+
+    #error = hullradsas_filter.check_hullradsas(self.variables)
+
+    #if(len(error) > 0):
+    #    print('error = ', error)
+    #    if not(self.testflag):
+    #        sys.exit()
+    #    return error
 
     try:
         if kwargs['test_filter']:
@@ -106,15 +102,16 @@ def run_module(self, **kwargs):
         shutil.rmtree(os.path.join(run_name, self.module))
 
     txtQueue = multiprocessing.JoinableQueue()
-    this_interpolate = data_interpolation.data_interpolation()
-    this_interpolate.main(self.variables, txtQueue)
+    this_hullradsas = hullradsas.hullradsas()
+    this_hullradsas.main(self.variables, txtQueue)
 
+    return
 
-class gui_mimic_data_interpolation():
+class gui_mimic_hullradsas():
     '''
     gui_mimic class contains the name of the module
     '''
-    module = 'torsion_angle_monte_carlo'
+    module = 'hullradsas'
 
     def __init__(self, test, paths):
 
@@ -129,6 +126,7 @@ class gui_mimic_data_interpolation():
 if __name__ == '__main__':
 
     test = False  # option to run with test variables not implemented in 1.0.
+    test = True  # option to run with test variables not implemented in 1.0.
     paths = None
 
 # We are thinking of defining the install path so the gui mimic can be run from anywhere as long as it is called from that particular python
@@ -145,5 +143,5 @@ if __name__ == '__main__':
                  'dcd_data_path': dcd_data_path, 'module_data_path': module_data_path}
 
     start = time.time()
-    run_gui = gui_mimic_data_interpolation(test, paths)
+    run_gui = gui_mimic_hullradsas(test, paths)
     print("time used: ", time.time() - start)
