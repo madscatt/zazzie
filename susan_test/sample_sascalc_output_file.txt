@@ -1,0 +1,10 @@
+#Information such as date, module used, sassie version, etc.
+
+#Molecule information such as PDB input files, H-D exchange, deuteration, etc.
+
+#NEUTRON contrast-dependent Rg (A):
+# frac D2O, Rg
+ 0.00	 38.8
+ 0.20	 35.1
+ 0.85	 40.7
+ 1.00	 60.0
