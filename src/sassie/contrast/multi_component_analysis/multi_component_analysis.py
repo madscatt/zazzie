@@ -20,7 +20,8 @@
 #
 #       08/09/2021       --      initial coding               :  Susan Krueger
 #       04/03/2023       --      python 3 coding              :  Joseph E. Curtis
-#       06/27/2023       --      added decomposition variables:  Susan Krueger
+#       06/27/2023       --      added decomposition variables:   Susan Krueger
+#       03.28.2024       --      added variables for model data:  Susan Krueger
 #
 # LC      1         2         3         4         5         6         7
 # LC4567890123456789012345678901234567890123456789012345678901234567890123456789
@@ -61,21 +62,19 @@
 
 import os
 import io
-import sys
-import string
-import locale
 import time
 import numpy
 
 import sassie.util.module_utilities as module_utilities
 import sassie.util.sasconfig as sasconfig
-#import sassie.contrast.multi_component_analysis.read_contrast_output_files as read_contrast_output_files
-import sassie.contrast.multi_component_analysis.match_point as match_point
-#import match_point as match_point
-import sassie.contrast.multi_component_analysis.stoichiometry as stoichiometry
-import sassie.contrast.multi_component_analysis.stuhrmann_parallel_axis as stuhrmann_parallel_axis
-import sassie.contrast.multi_component_analysis.decomposition as decomposition
-#import decomposition as decomposition
+# import sassie.contrast.multi_component_analysis.match_point as match_point
+# import sassie.contrast.multi_component_analysis.stoichiometry as stoichiometry
+# import sassie.contrast.multi_component_analysis.stuhrmann_parallel_axis as stuhrmann_parallel_axis
+# import sassie.contrast.multi_component_analysis.decomposition as decomposition
+import match_point as match_point
+import decomposition as decomposition
+import stuhrmann_parallel_axis as stuhrmann_parallel_axis
+import stoichiometry as stoichiometry
 
 
 if sasconfig.__level__ == "DEBUG":
@@ -127,10 +126,6 @@ class multi_component_analysis():
 
             match_point.get_match_point(self)
 
-        elif self.module_variables.stoichiometry_flag:
-
-            stoichiometry.get_molecular_weights(self)
-
         elif self.module_variables.stuhrmann_parallel_axis_flag:
 
             stuhrmann_parallel_axis.parallel_axis(self)
@@ -139,6 +134,10 @@ class multi_component_analysis():
         elif self.module_variables.decomposition_flag:
 
             decomposition.get_composite_scattering_intensities(self)
+
+        elif self.module_variables.stoichiometry_flag:
+
+            stoichiometry.get_molecular_weights(self)
 
         self.epilogue()
 
@@ -160,62 +159,71 @@ class multi_component_analysis():
         mvars.stuhrmann_parallel_axis_flag = variables['stuhrmann_parallel_axis_flag'][0]
         mvars.decomposition_flag = variables['decomposition_flag'][0]
         mvars.fraction_d2o = variables['fraction_d2o'][0]
-# The read_from_contrast_calculator_output_file variables won't be needed since this is going to be done at the GUI level prior to running the main program.
-        #mvars.read_from_contrast_calculator_output_file = variables['read_from_contrast_calculator_output_file'][0]
+# NOTE: the read_from_contrast_calculator_output_file variables won't be needed since this is going to be done at the GUI level prior to running the main program.
+        # mvars.read_from_contrast_calculator_output_file = variables['read_from_contrast_calculator_output_file'][0]
         # if mvars.read_from_contrast_calculator_output_file:
         #    mvars.read_from_contrast_calculator_output_file = variables['read_from_contrast_calculator_output_file'][0]
 
 # Unpack the additional variables that are unique to each method.
-        if mvars.stoichiometry_flag == True:
-            mvars.izero = variables['izero'][0]
-            mvars.concentration = variables['concentration'][0]
-            mvars.partial_specific_volume = variables['partial_specific_volume'][0]
-            mvars.number_of_components = variables['number_of_components'][0]
-
-            # if mvars.read_from_contrast_calculator_output_file == True:
-            # read_contrast_output_files.read_contrast_file(self)
-#               # print('delta rho after reading from file: ', mvars.delta_rho)
-            #log.debug('delta rho after reading from file: %s' % (str(mvars.delta_rho)))
-            # pass
-            # elif mvars.read_from_contrast_calculator_output_file == False:
-            #mvars.delta_rho = variables['delta_rho'][0]
-            mvars.delta_rho = variables['delta_rho'][0]
-
-        elif mvars.match_point_flag == True:
+        if mvars.match_point_flag == True:
             mvars.izero = variables['izero'][0]
             mvars.izero_error = variables['izero_error'][0]
             mvars.concentration = variables['concentration'][0]
             mvars.concentration_error = variables['concentration_error'][0]
+            mvars.initial_match_point_guess_flag = variables['initial_match_point_guess_flag'][0]
+            if mvars.initial_match_point_guess_flag == True:
+                mvars.initial_match_point_guess = variables['initial_match_point_guess'][0]
 
         elif mvars.stuhrmann_parallel_axis_flag == True:
             mvars.partial_specific_volume = variables['partial_specific_volume'][0]
             mvars.molecular_weight = variables['molecular_weight'][0]
             mvars.number_of_components = variables['number_of_components'][0]
+            mvars.component_name = variables['component_name'][0]
             mvars.radius_of_gyration = variables['radius_of_gyration'][0]
             mvars.radius_of_gyration_error = variables['radius_of_gyration_error'][0]
-
             # if mvars.read_from_contrast_calculator_output_file == True:
             #    #read_contrast_output_files.read_contrast_file(self)
-#           #    # print('delta rho after reading from file: ', mvars.delta_rho)
+            #    # print('delta rho after reading from file: ', mvars.delta_rho)
             #    #log.debug('delta rho after reading from file: %s' % (str(mvars.delta_rho)))
             #    pass
             # elif mvars.read_from_file == False:
             #    mvars.delta_rho = variables['delta_rho'][0]
             mvars.delta_rho = variables['delta_rho'][0]
+            mvars.initial_guess_stuhrmann = variables['initial_guess_stuhrmann'][0]
 
         elif mvars.decomposition_flag == True:
             mvars.partial_specific_volume = variables['partial_specific_volume'][0]
             mvars.molecular_weight = variables['molecular_weight'][0]
             mvars.number_of_components = variables['number_of_components'][0]
+            mvars.component_name = variables['component_name'][0]
             mvars.delta_rho = variables['delta_rho'][0]
-            mvars.concentration = variables["concentration"][0]
+            mvars.concentration = variables['concentration'][0]
             # mvars.concentration_error is not currently used
-            #mvars.concentration_error = variables["concentration_error"][0]
-            mvars.data_file_name = variables["data_file_name"][0]
-            mvars.q_rg_limit_guinier = variables["q_rg_limit_guinier"][0]
-            mvars.starting_data_point_guinier = variables["starting_data_point_guinier"][0]
-            mvars.initial_points_to_use_guinier = variables["initial_points_to_use_guinier"][0]
-            mvars.refine_scale_factor_flag = variables["refine_scale_factor_flag"][0]
+            # mvars.concentration_error = variables['concentration_error'][0]
+            mvars.data_file_name = variables['data_file_name'][0]
+            mvars.q_rg_limit_guinier = variables['q_rg_limit_guinier'][0]
+            mvars.starting_data_point_guinier = variables['starting_data_point_guinier'][0]
+            mvars.initial_points_to_use_guinier = variables['initial_points_to_use_guinier'][0]
+            mvars.refine_scale_factor_flag = variables['refine_scale_factor_flag'][0]
+            mvars.initial_guess_guinier = variables['initial_guess_guinier'][0]
+            mvars.sn_amplitude = variables['sn_amplitude'][0]
+
+        elif mvars.stoichiometry_flag == True:
+            mvars.izero = variables['izero'][0]
+            mvars.izero_error = variables['izero_error'][0]
+            mvars.concentration = variables['concentration'][0]
+            mvars.concentration_error = variables['concentration_error'][0]
+            mvars.partial_specific_volume = variables['partial_specific_volume'][0]
+            mvars.number_of_components = variables['number_of_components'][0]
+            mvars.component_name = variables['component_name'][0]
+            # if mvars.read_from_contrast_calculator_output_file == True:
+            # read_contrast_output_files.read_contrast_file(self)
+#               # print('delta rho after reading from file: ', mvars.delta_rho)
+            # log.debug('delta rho after reading from file: %s' % (str(mvars.delta_rho)))
+            # pass
+            # elif mvars.read_from_contrast_calculator_output_file == False:
+            # mvars.delta_rho = variables['delta_rho'][0]
+            mvars.delta_rho = variables['delta_rho'][0]
 
 #        print(vars(mvars))
 
@@ -250,6 +258,8 @@ class multi_component_analysis():
             total concentration of the complex at each fraction D\ :sub:`2`\ O  (used only if decomposition_flag = True)
         data_file_name: string array (dimension = number_of_contrast_points)
             contrast variation data file name at each fraction D\ :sub:`2`\ O  (used only if decomposition_flag = True)
+        sn_amplitude: float array (dimension = number_of_contrast_points)
+            amplitude of the Gaussian equation that describes the signal-to-noise (S/N) vs q behavior of SANS data; used when adding noise to model SANS data (used only if decomposition_flag = True)
 
         Returns
         -------
@@ -272,6 +282,12 @@ class multi_component_analysis():
             names of the rescaled data output files (returned only if decomposition_flag = True)
         calculated_data_file_name:  string array (dimension = number_of_contrast_points)
             names of the calculated data output files (returned only if decomposition_flag = True)
+        sn_mean: float
+            mean of the Gaussian equation that describes the signal-to-noise (S/N) vs q behavior of SANS data (returned only if decomposition_flag = True)
+        sn_stddev: float
+            standard deviation of the Gaussian equation that describes the signal-to-noise (S/N) vs q behavior of SANS data (returned only if decomposition_flag = True)
+        sn_bgd: float
+            background term in the Gaussian equation that describes the signal-to-noise (S/N) vs q behavior of SANS data (returned only if decomposition_flag = True)
 
         '''
 
@@ -284,20 +300,7 @@ class multi_component_analysis():
 
 
 # Need to ask which method is being initialized to put a sub-path for the method used.
-        if mvars.stoichiometry_flag == True:
-            if (mvars.run_name[-1] == '/'):
-                log.debug('run_name(1) = %s' % (mvars.run_name))
-                mcavars.multi_component_analysis_path = mvars.run_name + \
-                    'multi_component_analysis/stoichiometry/'
-                log.debug('multi_component_analysis_path = %s' %
-                          (mcavars.multi_component_analysis_path))
-            else:
-                log.debug('run_name(2) = %s' % (mvars.run_name))
-                mcavars.multi_component_analysis_path = mvars.run_name + \
-                    '/multi_component_analysis/stoichiometry/'
-                log.debug('multi_component_analysis_path = %s' %
-                          (mcavars.multi_component_analysis_path))
-        elif mvars.match_point_flag == True:
+        if mvars.match_point_flag == True:
             if (mvars.run_name[-1] == '/'):
                 log.debug('run_name(1) = %s' % (mvars.run_name))
                 mcavars.multi_component_analysis_path = mvars.run_name + \
@@ -336,6 +339,19 @@ class multi_component_analysis():
                     '/multi_component_analysis/decomposition/'
                 log.debug('multi_component_analysis_path = %s' %
                           (mcavars.multi_component_analysis_path))
+        elif mvars.stoichiometry_flag == True:
+            if (mvars.run_name[-1] == '/'):
+                log.debug('run_name(1) = %s' % (mvars.run_name))
+                mcavars.multi_component_analysis_path = mvars.run_name + \
+                    'multi_component_analysis/stoichiometry/'
+                log.debug('multi_component_analysis_path = %s' %
+                          (mcavars.multi_component_analysis_path))
+            else:
+                log.debug('run_name(2) = %s' % (mvars.run_name))
+                mcavars.multi_component_analysis_path = mvars.run_name + \
+                    '/multi_component_analysis/stoichiometry/'
+                log.debug('multi_component_analysis_path = %s' %
+                          (mcavars.multi_component_analysis_path))
 
 # Calculate the volume fraction of each component from the partial specific volume and molecular weight if stuhrmann_parallel_axis_flag or decomposition_flag = True
 # Note:  Avogadro's number cancels out when calculating the volume fraction, i.e., V1/(V1+V2)
@@ -355,7 +371,10 @@ class multi_component_analysis():
 
 # Additional initialization of mcavars if decomposition_flag = True
         if mvars.decomposition_flag == True:
-
+            # initialize the mean, standard deviation and background terms of the Gaussian that defines the signal-to-noise (S/N) vs q behavior of SANS data.  Used when adding random Gaussian noise to model SAS data.
+            mcavars.sn_mean = 0.035
+            mcavars.sn_bgd = 1.0
+            mcavars.sn_stddev = 0.05
             # initial and refined scale factor for each contrast based on the ratio of the concentrations. The scale factors are normalized to that of the first data set, i.e., scale_factor[i] = c[0]/c[i]. The initial scale factor is based on the input concentrations. The refined scale factor starts out the same as the initial scale factor but is refined later if refine_scale_factor_flag = True. We want to keep track of the initial scale factor to write to output file.
             # TODO: Now the normalization is to the first data set by default. Allow the user to specify which data set?
             mcavars.initial_scale_factor = []
@@ -364,7 +383,7 @@ class multi_component_analysis():
                 ratio = mvars.concentration[0]/mvars.concentration[i]
                 mcavars.initial_scale_factor.append(ratio)
                 mcavars.scale_factor.append(ratio)
-            #print('initial scale factor from concentrations: ', mcavars.initial_scale_factor)
+            # print('initial scale factor from concentrations: ', mcavars.initial_scale_factor)
 
             # calculate delta_rho_v = drho1*vf1 + drho2*vf2 for the scale factor refinement
             # I(0) = n*(delta_rho*volume)**2 is found from the Guinier analysis and then the scale factor is found using the ratio I(0)[0]/I(0)[i]; volume fraction is used here instead of volume since vf1 = v1/(v1+v2) but the denominator cancels out when calculating the ratio.
@@ -384,7 +403,7 @@ class multi_component_analysis():
 # NOTE:  run name is maybe not needed because the output files will be in the output path, which includes the run name.  But, we include it in sascalc output files, monte carlo output files, etc., so it is included here.
             mcavars.composite_intensity_file_name = [
                 'i11_'+mvars.run_name+'.dat', 'i12_'+mvars.run_name+'.dat', 'i22_'+mvars.run_name+'.dat']
-            #print('composite intensity file name: ', mcavars.composite_intensity_file_name)
+            # print('composite intensity file name: ', mcavars.composite_intensity_file_name)
 
             # define rescaled and calculated data file names based on the data file names
             # first, strip the input path from the file name since it may be different from the output file path
@@ -398,14 +417,14 @@ class multi_component_analysis():
 #                   print('groups: ', groups)
                     stripped_file = ('.'.join(groups[numslash:]))
                 stripped_data_file_name.append(stripped_file)
-            #print('stripped file name: ', stripped_data_file_name)
+            # print('stripped file name: ', stripped_data_file_name)
 
             # then, get new output file names from the stripped data file name (output path is added later)
             mcavars.rescaled_data_file_name = []
             mcavars.calculated_data_file_name = []
 # find the number of '.' in each stripped file name and locate the last one so that more characters can be added to the filename at that location
             for i in range(mvars.number_of_contrast_points):
-                #print('data file name: ', data_file_name[i])
+                # print('data file name: ', data_file_name[i])
                 numdots = stripped_data_file_name[i].count('.')
 #               print('numdots: ', numdots)
                 if numdots == 0:
@@ -423,12 +442,12 @@ class multi_component_analysis():
 #                   print('rescaled file, calculated file: ', rescaled_file, calculated_file)
                 mcavars.rescaled_data_file_name.append(rescaled_file)
                 mcavars.calculated_data_file_name.append(calculated_file)
-            #print('data file, rescaled data file: ', mvars.data_file_name, mcavars.rescaled_data_file_name)
+            # print('data file, rescaled data file: ', mvars.data_file_name, mcavars.rescaled_data_file_name)
 
         # check for existence of output file path and create if necessary
 
         direxist = os.path.exists(mcavars.multi_component_analysis_path)
-        if(direxist == 0):
+        if (direxist == 0):
             os.system('mkdir -p ' + mcavars.multi_component_analysis_path)
 
 # open the general output file for writing
@@ -451,6 +470,9 @@ class multi_component_analysis():
 
         log.debug(vars(mvars))
         log.debug(vars(mcavars))
+
+#        print(vars(mvars))
+#        print(vars(mcavars))
 
         return
 
