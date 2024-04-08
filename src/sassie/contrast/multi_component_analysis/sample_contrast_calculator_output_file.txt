@@ -1,48 +1,45 @@
 #Information such as date, module used, sassie version, etc.
 
-#Files used: protein.txt (2), dprotein.txt (2)
+#Files used: vn_seq.txt (1), pai_seq.txt (1)
 #Solvent Component, molar conc
 #	H2O	 55.51
-#	Na1Cl1	  0.20
-#	H11C4O3N1	  0.05
-#	H4C3N2	  0.15
 
-#Complex concentration:  1.0 mg/ml (needed for scaling of calculated and experimental I(0) values)
+#Complex concentration:  7.7 mg/ml (needed to scale calculated I(0) to experimental I(0))
 #Fraction of exchanged protein hydrogens: 0.95
 #Fraction of exchanged nucleic acid hydrogens: 1.00
 
-#Protein Match Point: 40.94 %D2O
-#85.0 %D Protein Match Point: 107.31 %D2O
-#Complex Match Point: 53.34 %D2O
+#Protein Match Point: 43.66 %D2O
+#60.0 %D Protein Match Point: 86.85 %D2O
+#Complex Match Point: 76.35 %D2O
 
 #Partial specific volume (cm^3/g):
-#Protein, 85.0 %D Protein
+#Protein, 60.0 %D Protein
   0.73	  0.73
-  
-#Molecular weight (kDa):
-#Protein, 85.0 %D Protein, Complex
-  50.687	  11.655	  62.343
 
-#NEUTRON Contrast (10^10 cm^-2) and I(0):
-# frac D2O, Protein, 85.0 %D Protein, Complex, I(0)
- 0.00	  2.313	  6.055	  3.012	  0.050
- 0.05	  2.031	  5.774	  2.731	  0.041
- 0.10	  1.749	  5.492	  2.449	  0.033
- 0.15	  1.467	  5.211	  2.167	  0.026
- 0.20	  1.184	  4.929	  1.885	  0.020
- 0.25	  0.902	  4.647	  1.602	  0.014
- 0.30	  0.620	  4.365	  1.320	  0.010
- 0.35	  0.337	  4.083	  1.038	  0.006
- 0.40	  0.055	  3.801	  0.755	  0.003
- 0.45	 -0.228	  3.519	  0.473	  0.001
- 0.50	 -0.511	  3.237	  0.190	  0.000
- 0.55	 -0.793	  2.955	 -0.092	  0.000
- 0.60	 -1.076	  2.672	 -0.375	  0.001
- 0.65	 -1.359	  2.390	 -0.658	  0.002
- 0.70	 -1.642	  2.107	 -0.941	  0.005
- 0.75	 -1.926	  1.825	 -1.224	  0.008
- 0.80	 -2.209	  1.542	 -1.507	  0.013
- 0.85	 -2.492	  1.259	 -1.791	  0.018
- 0.90	 -2.776	  0.976	 -2.074	  0.024
- 0.95	 -3.059	  0.693	 -2.357	  0.031
- 1.00	 -3.343	  0.410	 -2.641	  0.039
+#Molecular weight (kDa):
+#Protein, 60.0 %D Protein, Complex
+  14.259	  44.134	  58.393
+
+#NEUTRON Contrast (10^10 cm^-2):
+# frac D2O, Protein, 60.0 %D Protein, Complex, Complex I(0)
+ 0.00	  2.549	  5.101	  4.478   0.798
+ 0.05	  2.258	  4.808	  4.185   0.697
+ 0.10	  1.966	  4.515	  3.893   0.604
+ 0.15	  1.674	  4.222	  3.600   0.517
+ 0.20	  1.383	  3.929	  3.307   0.436
+ 0.25	  1.091	  3.635	  3.014   0.363
+ 0.30	  0.799	  3.342	  2.721   0.296
+ 0.35	  0.507	  3.048	  2.428   0.236
+ 0.40	  0.215	  2.754	  2.134   0.182
+ 0.45	 -0.077	  2.461	  1.841   0.136
+ 0.50	 -0.369	  2.167	  1.548   0.096
+ 0.55	 -0.661	  1.873	  1.254   0.063
+ 0.60	 -0.953	  1.579	  0.961   0.037
+ 0.65	 -1.246	  1.285	  0.667   0.018
+ 0.70	 -1.538	  0.991	  0.373   0.006
+ 0.75	 -1.831	  0.697	  0.080   0.000
+ 0.80	 -2.123	  0.403	 -0.214   0.002
+ 0.85	 -2.416	  0.108	 -0.508   0.010
+ 0.90	 -2.709	 -0.186	 -0.802   0.026
+ 0.95	 -3.001	 -0.480	 -1.096   0.048
+ 1.00	 -3.294	 -0.775	 -1.390   0.078
