@@ -18,6 +18,7 @@ Subpackages
    interface.em_to_sas
    interface.energy_minimization
    interface.extract_utilities
+   interface.hullradsas
    interface.merge_utilities
    interface.monomer_monte_carlo
    interface.multi_component_analysis

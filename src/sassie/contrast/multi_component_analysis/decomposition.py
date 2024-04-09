@@ -66,7 +66,7 @@ import sassie.contrast.multi_component_analysis.guinier_analysis as guinier_anal
 
 
 def get_composite_scattering_intensities(other_self):
-    '''
+    r'''
 
     **Get Composite Scattering Intensities** is the **Decomposition Analysis** method that calculates the composite scattering functions, :math:`I_{11}`, :math:`I_{12}`, and :math:`I_{22}` for a two-component complex from a set of SANS contrast variation data. :math:`I_{11}`, and :math:`I_{22}` are the scattering intensities of components 1 and 2, respectively, and :math:`I_{12}` is the cross-term. First, the data are rescaled with respect to each other to account for differences in concentration as a function of contrast (fraction D\ :sub:`2`\ O  in the solvent).  Then, a Guinier analysis is performed to obtain :math:`R_{g}` and :math:`I_{0}` as a function of contrast.  If desired by the user, the :math:`I_{0}` values are used to further refine the scale factors at each contrast to account for possible inaccuracies in the concentrations. See the **Guinier Analysis** helper program for details.  
 
@@ -80,13 +80,13 @@ def get_composite_scattering_intensities(other_self):
         Output file contains:
             - module variable input parameters
             - results from Guinier analysis at each fraction D\ :sub:`2`\ O value
-              - Guinier R\ :sub:`g`\ , Guinier R\ :sub:`g`\  error, Guinier I(0), Guinier I(0) error
-              - q:sub:`min`\ , q:sub:`max`\ , qR:sub:`gmin`\ , qR:sub:`gmax`\ 
-              - number of points used, reduced chi-squared, :math:`\Delta \rho^2`
-              - initial and final scale factors
+                - Guinier R\ :sub:`g`\ , Guinier R\ :sub:`g`\  error, Guinier I(0), Guinier I(0) error
+                - q\ :sub:`min`\ , q\ :sub:`max`\ , qR\ :sub:`gmin`\ , qR\ :sub:`gmax`\ 
+                - number of points used, reduced chi-squared, :math:`\Delta \rho^2` 
+                - initial and final scale factors
             - results from decomposition analysis
-              - mean square differences at each q value for all fraction D\ :sub:`2`\ O values
-              - global reduced chi-squared value at each q value
+                - mean square differences at each q value for all fraction D\ :sub:`2`\ O values
+                - global reduced chi-squared value at each q value
 
         Additional output files stored in the output file directory:
             - composition scattering intensities (3 files)
@@ -126,8 +126,8 @@ def get_composite_scattering_intensities(other_self):
         initial scale factor for the data at each fraction D\ :sub:`2`\ O 
     scale_factor:  float array (dimension = number_of_contrast_points)
         scale factor for the data at each fraction D\ :sub:`2`\ O  that is the same as the initial scale factor before the Guinier analysis is performed
-    delta_rho_v:  float array (dimension = number_of_contrast_points)
-        :math:`\Delta \rho V` at each fraction D\ :sub:`2`\ O  as defined in the Guinier analysis helper program
+    delta_rho_v: float array (dimension = number_of_contrast_points)
+        :math:`\Delta \rho V` as defined above at each fraction D\ :sub:`2`\ O  as defined in the Guinier analysis helper program
     composite_intensity_file_name:  string array (dimension = 3)
         names of the composite scattering intensity output files
     rescaled_data_file_name:  string array (dimension = number_of_contrast_points)
@@ -143,7 +143,7 @@ def get_composite_scattering_intensities(other_self):
     sn_bgd: float
         background term of the Gaussian equation that describes the signal-to-noise (S/N) vs q behavior of SANS data; used when adding noise to model SANS data  
 
-   Returns
+    Returns
     -------
     rg_guinier: float array( dimension = number_of_contrast_points)
         The radius of gyration from the Guinier fit at each fraction D\ :sub:`2`\ O
