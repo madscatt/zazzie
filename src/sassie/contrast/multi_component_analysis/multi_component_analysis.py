@@ -67,14 +67,14 @@ import numpy
 
 import sassie.util.module_utilities as module_utilities
 import sassie.util.sasconfig as sasconfig
-# import sassie.contrast.multi_component_analysis.match_point as match_point
-# import sassie.contrast.multi_component_analysis.stoichiometry as stoichiometry
-# import sassie.contrast.multi_component_analysis.stuhrmann_parallel_axis as stuhrmann_parallel_axis
-# import sassie.contrast.multi_component_analysis.decomposition as decomposition
-import match_point as match_point
-import decomposition as decomposition
-import stuhrmann_parallel_axis as stuhrmann_parallel_axis
-import stoichiometry as stoichiometry
+import sassie.contrast.multi_component_analysis.match_point as match_point
+import sassie.contrast.multi_component_analysis.stoichiometry as stoichiometry
+import sassie.contrast.multi_component_analysis.stuhrmann_parallel_axis as stuhrmann_parallel_axis
+import sassie.contrast.multi_component_analysis.decomposition as decomposition
+#import match_point as match_point
+#import decomposition as decomposition
+#import stuhrmann_parallel_axis as stuhrmann_parallel_axis
+#import stoichiometry as stoichiometry
 
 
 if sasconfig.__level__ == "DEBUG":

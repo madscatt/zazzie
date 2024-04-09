@@ -59,10 +59,10 @@
 import io
 import time
 import numpy
-# import sassie.contrast.multi_component_analysis.read_sas_data_file_add_error as read_data_file
-# import sassie.contrast.multi_component_analysis.guinier_analysis as guinier_analysis
-import read_sas_data_file_add_error as read_data_file
-import guinier_analysis as guinier_analysis
+import sassie.contrast.multi_component_analysis.read_sas_data_file_add_error as read_data_file
+import sassie.contrast.multi_component_analysis.guinier_analysis as guinier_analysis
+#import read_sas_data_file_add_error as read_data_file
+#import guinier_analysis as guinier_analysis
 
 
 def get_composite_scattering_intensities(other_self):

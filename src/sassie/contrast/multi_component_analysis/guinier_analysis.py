@@ -39,10 +39,10 @@
 import math
 import scipy.optimize
 import numpy
-# import sassie.contrast.multi_component_analysis.polynomial_fit as polynomial_fit
-# import sassie.contrast.multi_component_analysis.chi_squared_correlation as chi_squared_correlation
-import polynomial_fit as polynomial_fit
-import chi_squared_correlation as chi_squared_correlation
+import sassie.contrast.multi_component_analysis.polynomial_fit as polynomial_fit
+import sassie.contrast.multi_component_analysis.chi_squared_correlation as chi_squared_correlation
+#import polynomial_fit as polynomial_fit
+#import chi_squared_correlation as chi_squared_correlation
 
 
 def guinier_fit(other_self):

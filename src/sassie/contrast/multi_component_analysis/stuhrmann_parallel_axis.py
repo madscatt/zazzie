@@ -64,10 +64,10 @@
 import time
 import numpy
 import scipy.optimize
-# import sassie.contrast.multi_component_analysis.polynomial_fit as polynomial_fit
-# import sassie.contrast.multi_component_analysis.chi_squared_correlation as chi_squared_correlation
-import polynomial_fit as polynomial_fit
-import chi_squared_correlation as chi_squared_correlation
+import sassie.contrast.multi_component_analysis.polynomial_fit as polynomial_fit
+import sassie.contrast.multi_component_analysis.chi_squared_correlation as chi_squared_correlation
+#import polynomial_fit as polynomial_fit
+#import chi_squared_correlation as chi_squared_correlation
 
 
 def parallel_axis_function(x, r1_squared, r2_squared, cm_distance_squared):

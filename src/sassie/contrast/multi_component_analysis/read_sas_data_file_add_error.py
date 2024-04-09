@@ -34,8 +34,8 @@ import os
 import io
 import sys
 import locale
-# import sassie.contrast.multi_component_analysis.add_noise_to_sas_data as add_noise
-import add_noise_to_sas_data as add_noise
+import sassie.contrast.multi_component_analysis.add_noise_to_sas_data as add_noise
+#import add_noise_to_sas_data as add_noise
 
 # NOTE:  the passed variables can become mcavars since this version of read_file is only used by multi-component analysis; we don't want to have to provide the sn parameters when reading a data file in other modules, where experimental data is assumed.
 

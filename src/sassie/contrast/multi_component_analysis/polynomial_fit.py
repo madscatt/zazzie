@@ -40,7 +40,8 @@
 
 import numpy
 import scipy.optimize
-import chi_squared_correlation as chi_squared_correlation
+import sassie.contrast.multi_component_analysis.chi_squared_correlation as chi_squared_correlation
+#import chi_squared_correlation as chi_squared_correlation
 
 
 # define the polynomial function
