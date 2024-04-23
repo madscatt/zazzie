@@ -216,7 +216,7 @@ def user_variables(self, **kwargs):
             self.partial_specific_volume = "0.745, 0.903"  # 1 value for each component
             # 2 values for each contrast point since there are 2 components.
             self.delta_rho = "-3.2, -5.7; 1.6, 0.26; 0.031, -1.74"
-            self.izero = "8.4, 0.6, 0.17"  # 1 value for each contrast point
+            self.izero = "8.1, 0.6, 0.17"  # 1 value for each contrast point
             self.izero_error = "0.2, 0.04, 0.01"  # 1 value for each contrast point
 
     #### end user input ####
