@@ -468,6 +468,10 @@ class multi_component_analysis():
 # TODO: write out the individual input variables on separate lines to make it easier to read. Perhaps make a separate method for this?
         mcavars.outfile.write('input variables: ' + repr(vars(mvars)) + '\n')
 
+# open the json output file for writing
+        mcavars.json_outfile = io.open(
+            mcavars.multi_component_analysis_path+mvars.output_file_name+'.json', 'w')
+
         log.debug(vars(mvars))
         log.debug(vars(mcavars))
 
