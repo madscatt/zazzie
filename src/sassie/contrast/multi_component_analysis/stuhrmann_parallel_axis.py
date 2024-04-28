@@ -68,6 +68,36 @@ import sassie.contrast.multi_component_analysis.polynomial_fit as polynomial_fit
 import sassie.contrast.multi_component_analysis.chi_squared_correlation as chi_squared_correlation
 #import polynomial_fit as polynomial_fit
 #import chi_squared_correlation as chi_squared_correlation
+import json
+
+
+def save_data_to_plot_as_json(other_self, delta_rho_inverse, rg_squared, rg_squared_error, rg_squared_calculated, diff):
+
+    mvars = other_self.module_variables
+    mcavars = other_self.multi_component_analysis_variables
+
+    data_dict = {
+        '1/contrast': [],
+        'Rg^2': [],
+        'Rg^2_error': [],
+        'calculated_Rg^2': [],
+        'Rg^2-calculated_Rg^2': []
+    }
+
+    for i in range(mvars.number_of_contrast_points):
+    # Append new values to the lists in the dictionary
+        data_dict['1/contrast'].append(delta_rho_inverse[i])
+        data_dict['Rg^2'].append(rg_squared[i])
+        data_dict['Rg^2_error'].append(rg_squared_error[i])
+        data_dict['calculated_Rg^2'].append(rg_squared_calculated[i])
+        data_dict['Rg^2-calculated_Rg^2'].append(diff[i])
+
+    json_data = json.dumps(data_dict)
+
+    mcavars.json_outfile.write(json_data)
+    mcavars.json_outfile.close()
+
+    return
 
 
 def parallel_axis_function(x, r1_squared, r2_squared, cm_distance_squared):
@@ -634,6 +664,9 @@ def stuhrmann(other_self):
         mcavars.outfile.write('%9.4f\t%9.4f\t%9.4f\t%9.4f\t%9.4f\n' % (
             delta_rho_inverse[i], rg_squared[i], rg_squared_error[i], rg_squared_calculated[i], diff[i]))
     mcavars.outfile.close()
+
+    save_data_to_plot_as_json(other_self, delta_rho_inverse, rg_squared, rg_squared_error, rg_squared_calculated, diff)
+
 
     return
 
