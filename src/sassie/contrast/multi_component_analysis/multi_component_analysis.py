@@ -44,8 +44,8 @@
     
         - match_point_flag: Match Point Analysis
         - stuhrmann_parallel_axis_flag: Sturhmann and Parallel Axis Theorem Analyses
-        - decomposition_flag: Decomposition Analysis
         - stoichiometry_flag: Stoichiometry Analysis
+        - decomposition_flag: Decomposition Analysis
         
         Only one flag at a time can be True.
     

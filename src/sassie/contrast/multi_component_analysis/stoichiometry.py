@@ -44,6 +44,38 @@
 import time
 import numpy
 import scipy.optimize
+import json
+
+def save_data_to_plot_as_json(other_self, izero, izero_error, izero_calc, diff):
+
+    mvars = other_self.module_variables
+    mcavars = other_self.multi_component_analysis_variables
+
+    data_dict = {
+        'fraction_d2o': [],
+        'izero': [],
+        'izero_error': [],
+        'izero_calc': [],
+        'I(0)-calculated_I(0)': []
+    }
+
+    for i in range(mvars.number_of_contrast_points):
+    # Append new values to the lists in the dictionary
+        data_dict['fraction_d2o'].append(mvars.fraction_d2o[i])
+        data_dict['izero'].append(izero[i])
+        data_dict['izero_error'].append(izero_error[i])
+        data_dict['izero_calc'].append(izero_calc[i])
+        data_dict['I(0)-calculated_I(0)'].append(diff[i])
+
+    json_data = json.dumps(data_dict)
+
+    mcavars.json_outfile.write(json_data)
+    mcavars.json_outfile.close()
+
+    return
+
+
+
 
 
 def get_molecular_weights(other_self):
@@ -325,6 +357,11 @@ def get_molecular_weights(other_self):
             mvars.fraction_d2o[i], mvars.izero[i], izero_calc[i], diff[i]))
 
     mcavars.outfile.close()
+
+    time.sleep(0.1)
+
+    save_data_to_plot_as_json(other_self, mvars.izero, mvars.izero_error, izero_calc, diff)
+
 
     return
 
