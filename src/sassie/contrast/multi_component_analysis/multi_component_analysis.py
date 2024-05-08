@@ -71,11 +71,6 @@ import sassie.contrast.multi_component_analysis.match_point as match_point
 import sassie.contrast.multi_component_analysis.stoichiometry as stoichiometry
 import sassie.contrast.multi_component_analysis.stuhrmann_parallel_axis as stuhrmann_parallel_axis
 import sassie.contrast.multi_component_analysis.decomposition as decomposition
-#import match_point as match_point
-#import decomposition as decomposition
-#import stuhrmann_parallel_axis as stuhrmann_parallel_axis
-#import stoichiometry as stoichiometry
-
 
 if sasconfig.__level__ == "DEBUG":
     DEBUG = True
@@ -206,7 +201,7 @@ class multi_component_analysis():
             mvars.initial_points_to_use_guinier = variables['initial_points_to_use_guinier'][0]
             mvars.refine_scale_factor_flag = variables['refine_scale_factor_flag'][0]
             mvars.initial_guess_guinier = variables['initial_guess_guinier'][0]
-            mvars.sn_amplitude = variables['sn_amplitude'][0]
+            mvars.signal_to_noise_amplitude = variables['signal_to_noise_amplitude'][0]
 
         elif mvars.stoichiometry_flag == True:
             mvars.izero = variables['izero'][0]
@@ -258,7 +253,7 @@ class multi_component_analysis():
             total concentration of the complex at each fraction D\ :sub:`2`\ O  (used only if decomposition_flag = True)
         data_file_name: string array (dimension = number_of_contrast_points)
             contrast variation data file name at each fraction D\ :sub:`2`\ O  (used only if decomposition_flag = True)
-        sn_amplitude: float array (dimension = number_of_contrast_points)
+        signal_to_noise_amplitude: float array (dimension = number_of_contrast_points)
             amplitude of the Gaussian equation that describes the signal-to-noise (S/N) vs q behavior of SANS data; used when adding noise to model SANS data (used only if decomposition_flag = True)
 
         Returns
@@ -282,11 +277,11 @@ class multi_component_analysis():
             names of the rescaled data output files (returned only if decomposition_flag = True)
         calculated_data_file_name:  string array (dimension = number_of_contrast_points)
             names of the calculated data output files (returned only if decomposition_flag = True)
-        sn_mean: float
+        signal_to_noise_mean: float
             mean of the Gaussian equation that describes the signal-to-noise (S/N) vs q behavior of SANS data (returned only if decomposition_flag = True)
-        sn_stddev: float
+        signal_to_noise_standard_deviation: float
             standard deviation of the Gaussian equation that describes the signal-to-noise (S/N) vs q behavior of SANS data (returned only if decomposition_flag = True)
-        sn_bgd: float
+        signal_to_noise_background: float
             background term in the Gaussian equation that describes the signal-to-noise (S/N) vs q behavior of SANS data (returned only if decomposition_flag = True)
 
         '''
@@ -372,9 +367,9 @@ class multi_component_analysis():
 # Additional initialization of mcavars if decomposition_flag = True
         if mvars.decomposition_flag == True:
             # initialize the mean, standard deviation and background terms of the Gaussian that defines the signal-to-noise (S/N) vs q behavior of SANS data.  Used when adding random Gaussian noise to model SAS data.
-            mcavars.sn_mean = 0.035
-            mcavars.sn_bgd = 1.0
-            mcavars.sn_stddev = 0.05
+            mcavars.signal_to_noise_mean = 0.035
+            mcavars.signal_to_noise_background = 1.0
+            mcavars.signal_to_noise_standard_deviation = 0.05
             # initial and refined scale factor for each contrast based on the ratio of the concentrations. The scale factors are normalized to that of the first data set, i.e., scale_factor[i] = c[0]/c[i]. The initial scale factor is based on the input concentrations. The refined scale factor starts out the same as the initial scale factor but is refined later if refine_scale_factor_flag = True. We want to keep track of the initial scale factor to write to output file.
             # TODO: Now the normalization is to the first data set by default. Allow the user to specify which data set?
             mcavars.initial_scale_factor = []

@@ -180,8 +180,8 @@ def user_variables(self, **kwargs):
         self.initial_guess_guinier = "1.0, 1.0"
         # amplitude for the Gaussian that describes the S/N of typical SANS data; only used if there are no errors specified in the data file
         # the values below are the defaults; they can be changed by the user to vary as a function of contrast; only used for model data; treat like an advanced option?
-#        self.sn_amplitude = "50.0, 50.0, 50.0, 50.0"  # default
-        self.sn_amplitude = "400.0, 300.0, 10.0, 100.0"  # PAI-VN CV series 
+#        self.signal_to_noise_amplitude = "50.0, 50.0, 50.0, 50.0"  # default
+        self.signal_to_noise_amplitude = "400.0, 300.0, 10.0, 100.0"  # PAI-VN CV series 
 
         if self.read_from_contrast_calculator_output_file:
             # TODO NEED TO READ THESE IN; VALUES ARE HERE AS A PLACEHOLDER
@@ -382,7 +382,7 @@ def run_module(self, **kwargs):
             self.refine_scale_factor_flag, "boolean")
         svariables["initial_guess_guinier"] = (
             self.initial_guess_guinier, "float_array")
-        svariables["sn_amplitude"] = (self.sn_amplitude, "float_array")
+        svariables["signal_to_noise_amplitude"] = (self.signal_to_noise_amplitude, "float_array")
 # already defined above
 #        svariables["read_from_contrast_calculator_output_file"] = (
 #            self.read_from_contrast_calculator_output_file,

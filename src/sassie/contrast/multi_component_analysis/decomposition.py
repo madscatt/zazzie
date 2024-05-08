@@ -134,13 +134,13 @@ def get_composite_scattering_intensities(other_self):
         names of the rescaled data output files
     calculated_data_file_name:  string array (dimension = number_of_contrast_points)
         names of the calculated data output files
-    sn_amplitude: float array (dimension = number_of_contrast_points)
+    signal_to_noise_amplitude: float array (dimension = number_of_contrast_points)
         amplitude of the Gaussian equation that describes the signal-to-noise (S/N) vs q behavior of SANS data; used when adding noise to model SANS data
-    sn_mean: float
+    signal_to_noise_mean: float
         mean of the Gaussian equation that describes the signal-to-noise (S/N) vs q behavior of SANS data; used when adding noise to model SANS data    
-    sn_stddev: float
+    signal_to_noise_standard_deviation: float
         standard deviation of the Gaussian equation that describes the signal-to-noise (S/N) vs q behavior of SANS data; used when adding noise to model SANS data
-    sn_bgd: float
+    signal_to_noise_background: float
         background term of the Gaussian equation that describes the signal-to-noise (S/N) vs q behavior of SANS data; used when adding noise to model SANS data  
 
     Returns
@@ -180,7 +180,7 @@ def get_composite_scattering_intensities(other_self):
 
     '''
 
-# mvars used:  run_name, fraction_d2o, number_of_contrast_points, delta_rho, data_file_name, q_rg_limit_guinier, starting_data_point_guinier, initial_points_to_use_guinier, initial_guess_guinier, refine_scale_factor_flag, sn_amplitude, sn_mean, sn_stddev, sn_bgd
+# mvars used:  run_name, fraction_d2o, number_of_contrast_points, delta_rho, data_file_name, q_rg_limit_guinier, starting_data_point_guinier, initial_points_to_use_guinier, initial_guess_guinier, refine_scale_factor_flag, signal_to_noise_amplitude, signal_to_noise_mean, signal_to_noise_standard_deviation, signal_to_noise_background
 # mcavars used:  outfile, initial_scale_factor, scale_factor, delta_rho_v, composite_intensity_file_name, rescaled_data_file_name, calculated_data_file_name, multi_component_analysis_path
 
     log = other_self.log
@@ -220,7 +220,7 @@ def get_composite_scattering_intensities(other_self):
         ierr = []
 
         numpts, message, q, iq, ierr = read_data_file.read_file(
-            mvars.data_file_name[i], mvars.sn_amplitude[i], mcavars.sn_mean, mcavars.sn_stddev, mcavars.sn_bgd)
+            mvars.data_file_name[i], mvars.signal_to_noise_amplitude[i], mcavars.signal_to_noise_mean, mcavars.signal_to_noise_standard_deviation, mcavars.signal_to_noise_background)
 
 #        print('numpts: ', numpts)
 #        print('q: ', q)
@@ -412,7 +412,7 @@ def get_composite_scattering_intensities(other_self):
                 rfile.write("# " + error_flag_message[i])
                 if (error_flag_message[i][0:19] != "Error values of 0.0"):
                     rfile.write("#Amplitude of Gaussian used to describe S/N vs q: %f\n" %
-                                (mvars.sn_amplitude[i]))
+                                (mvars.signal_to_noise_amplitude[i]))
             rfile.write("#     q           I(q)            sigma(I(q))\n")
             for j in range(mcavars.number_of_data_points):
                 rfile.write(

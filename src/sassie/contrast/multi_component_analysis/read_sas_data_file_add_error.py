@@ -40,7 +40,7 @@ import sassie.contrast.multi_component_analysis.add_noise_to_sas_data as add_noi
 # NOTE:  the passed variables can become mcavars since this version of read_file is only used by multi-component analysis; we don't want to have to provide the sn parameters when reading a data file in other modules, where experimental data is assumed.
 
 
-def read_file(data_file, sn_amplitude, sn_mean, sn_stddev, sn_bgd):
+def read_file(data_file, signal_to_noise_amplitude, signal_to_noise_mean, signal_to_noise_standard_deviation, signal_to_noise_background):
     '''
     **Read File** is the method to read SAS data files consisting of q, I and I error.
 
@@ -57,13 +57,13 @@ def read_file(data_file, sn_amplitude, sn_mean, sn_stddev, sn_bgd):
 
     data_file: string
         name of the data file
-    sn_amplitude: float (default value can be changed as an advanced option)
+    signal_to_noise_amplitude: float (default value can be changed as an advanced option)
         amplitude of the Gaussian function that describes the signal-to-noise as a function of q
-    sn_mean: float (default value; currently can't be changed)
+    signal_to_noise_mean: float (default value; currently can't be changed)
         mean of the Gaussian function that describes the signal-to-noise as a function of q
-    sn_stddev: float (default value; currently can't be changed)
+    signal_to_noise_standard_deviation: float (default value; currently can't be changed)
         standard deviation of the Gaussian function that describes the signal-to-noise as a function of q
-    sn_bgd: float (default value; currently can't be changed)
+    signal_to_noise_background: float (default value; currently can't be changed)
         background term of the Gaussian function that describes the signal-to-noise as a function of q
 
     Returns
@@ -166,10 +166,10 @@ def read_file(data_file, sn_amplitude, sn_mean, sn_stddev, sn_bgd):
     if (add_error_flag == True):
         import numpy
 # initialize the parameters of the gaussian that describes S/N vs q as numpy scalars (numpy.float64)
-        amplitude = numpy.float64(sn_amplitude)
-        mean = numpy.float64(sn_mean)
-        stddev = numpy.float64(sn_stddev)
-        bgd = numpy.float64(sn_bgd)
+        amplitude = numpy.float64(signal_to_noise_amplitude)
+        mean = numpy.float64(signal_to_noise_mean)
+        stddev = numpy.float64(signal_to_noise_standard_deviation)
+        bgd = numpy.float64(signal_to_noise_background)
 
         noise = add_noise.get_random_gaussian_noise(
             nval, x, y, amplitude, mean, stddev, bgd)
@@ -216,12 +216,12 @@ if __name__ == "__main__":
 
 #   advance option input variable (if errors need to be added)
 #   scale factor to adjust S/N.  The higher the number, the less noisy the data. This would be useful for adding less noise to high contrast model data and more noise to low contrast model data.
-#    sn_amplitude = [50.0]   #default value
-#    sn_amplitude = [400.0]
-#    sn_amplitude= [400.0, 100.0]
-#    sn_amplitude= [400.0, 50.0]
-    sn_amplitude = [50.0, 50.0, 50.0, 50.0]  # defaults CV series test
-    sn_amplitude = [400.0, 300.0, 10.0, 100.0]  # pai-vn CV series
+#    signal_to_noise_amplitude = [50.0]   #default value
+#    signal_to_noise_amplitude = [400.0]
+#    signal_to_noise_amplitude= [400.0, 100.0]
+#    signal_to_noise_amplitude= [400.0, 50.0]
+    signal_to_noise_amplitude = [50.0, 50.0, 50.0, 50.0]  # defaults CV series test
+    signal_to_noise_amplitude = [400.0, 300.0, 10.0, 100.0]  # pai-vn CV series
 
 #   plot all data on the same plot for comparison
     plot_file_name = os.path.join((path), 'pai_vn_with_error_cv_series.png')
@@ -236,14 +236,14 @@ if __name__ == "__main__":
         print("output_file_name must have a length of " +
               str(number_of_contrast_points) + ". Stopping here.")
         sys.exit()
-    if (len(sn_amplitude) != number_of_contrast_points):
-        print("sn_amplitude must have a length of " +
+    if (len(signal_to_noise_amplitude) != number_of_contrast_points):
+        print("signal_to_noise_amplitude must have a length of " +
               str(number_of_contrast_points) + ". Stopping here.")
         sys.exit()
 # TODO:  Do we want the user to be able to change mean, stddev and bgd of the gaussian that describes S/N as a function of q as an advanced option? The bgd value of 1 should be reasonable in most cases and the mean can be set somewhere between 0.03 and 0.04. #stddev is the width of the gaussian describing S/N; the smaller the stddev, the noisier the data at higher q values since S/N decreases faster as a function of q. A default value of 0.05 worked well for all tested data
-    sn_mean = 0.035
-    sn_bgd = 1.0
-    sn_stddev = 0.05
+    signal_to_noise_mean = 0.035
+    signal_to_noise_background = 1.0
+    signal_to_noise_standard_deviation = 0.05
 
     print('data_file_name: ', data_file_name)
     print('output_file_name: ', output_file_name)
@@ -261,11 +261,11 @@ if __name__ == "__main__":
 
 # loop to read multiple files for contrast variation data
     for i in range(number_of_contrast_points):
-        #        print('i, data file, output file, plot file, sn_amplitude: ', i,
-        #              data_file_name[i], output_file_name[i], plot_file_name, sn_amplitude[i])
+        #        print('i, data file, output file, plot file, signal_to_noise_amplitude: ', i,
+        #              data_file_name[i], output_file_name[i], plot_file_name, signal_to_noise_amplitude[i])
 
         numpts, message, q, iq, ierr = read_file(
-            data_file_name[i], sn_amplitude[i], sn_mean, sn_stddev, sn_bgd)
+            data_file_name[i], signal_to_noise_amplitude[i], signal_to_noise_mean, signal_to_noise_standard_deviation, signal_to_noise_background)
 
         if (numpts == 0):
             print("Failed to read data from " +
@@ -285,7 +285,7 @@ if __name__ == "__main__":
             if (message[0:19] != "Error values of 0.0"):
                 # maybe just write the amplitude to the output file since it is the only thing that can be changed?
                 outfile.write("#Amplitude, mean, stddev of Gaussian and bgd values used to describe S/N vs q: %f\t%f\t%f\t%f\n" %
-                              (sn_amplitude[i], sn_mean, sn_stddev, sn_bgd))
+                              (signal_to_noise_amplitude[i], signal_to_noise_mean, signal_to_noise_standard_deviation, signal_to_noise_background))
         outfile.write("#q, I, I error\n")
         for j in range(numpts):
             outfile.write('%f\t%f\t%f\n' % (q[j], iq[j], ierr[j]))
