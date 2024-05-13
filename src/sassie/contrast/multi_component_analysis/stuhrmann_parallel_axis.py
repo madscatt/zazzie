@@ -206,9 +206,9 @@ def parallel_axis(other_self):
     pgui('\n%s \n' % (st))
     pgui('DATA FROM RUN: %s \n\n' % (ttxt))
 
-    pgui('results written to output file: %s' %
+    pgui('results written to output file: %s \n' %
          (mcavars.multi_component_analysis_path+mvars.output_file_name))
-    pgui('-------------------------------')
+    pgui('-------------------------------\n')
     pgui('\nNumber of points fit: ' + str(mvars.number_of_contrast_points) + '\n')
 
 # Parallel axis analysis
@@ -314,6 +314,11 @@ def parallel_axis(other_self):
     else:
         mcavars.outfile.write(
             'reduced chi-squared parallel axis: N/A (number of contrast points = number of unknowns for the parallel axis equation)\n\n')
+
+
+    pgui('\n%s \n' % (st))
+
+    time.sleep(0.5)
 
     return
 
@@ -667,6 +672,8 @@ def stuhrmann(other_self):
 
     save_data_to_plot_as_json(other_self, delta_rho_inverse, rg_squared, rg_squared_error, rg_squared_calculated, diff)
 
+
+    time.sleep(1.0)
 
     return
 

@@ -452,7 +452,7 @@ class data_interpolation():
 
         self.run_utils.clean_up(log)
 
-        pgui('INTERPOLATE IS DONE')
+        pgui('INTERPOLATE IS DONE\n')
 
         pgui("%s \n" % ('=' * 60))
         time.sleep(1.0)

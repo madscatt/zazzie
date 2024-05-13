@@ -293,9 +293,9 @@ def get_match_point(other_self):
     log.debug('match point, error: ' + str(match_point) +
               ',' + str(match_point_error) + '\n')
 
-    pgui('results written to output file: %s' %
+    pgui('results written to output file: %s \n'%
          (mcavars.multi_component_analysis_path+mvars.output_file_name))
-    pgui('-------------------------------')
+    pgui('-------------------------------\n')
     mcavars.outfile.write('--------------------------------\n')
     pgui('Final Results\n')
     mcavars.outfile.write('Final Results\n')
@@ -330,5 +330,6 @@ def get_match_point(other_self):
     
     save_data_to_plot_as_json(other_self, square_root_izero, square_root_izero_error, square_root_izero_calculated, diff)
 
+    time.sleep(0.5)
 
     return

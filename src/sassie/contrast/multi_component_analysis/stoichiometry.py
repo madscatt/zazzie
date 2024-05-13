@@ -252,9 +252,9 @@ def get_molecular_weights(other_self):
     log.debug('standard error of the mean: ' + str(standard_error) + '\n')
 # If we want a 95% confidence interval, it is defined by 1.96*standard_error
 
-    pgui('results written to output file: %s' %
+    pgui('results written to output file: %s \n' %
          (mcavars.multi_component_analysis_path+mvars.output_file_name))
-    pgui('-------------------------------')
+    pgui('-------------------------------\n')
     mcavars.outfile.write('--------------------------------\n')
     pgui('Final Results\n')
     mcavars.outfile.write('Final Results\n')
@@ -358,7 +358,7 @@ def get_molecular_weights(other_self):
 
     mcavars.outfile.close()
 
-    time.sleep(0.1)
+    time.sleep(1.0)
 
     save_data_to_plot_as_json(other_self, mvars.izero, mvars.izero_error, izero_calc, diff)
 
