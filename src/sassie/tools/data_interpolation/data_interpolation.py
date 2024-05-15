@@ -21,9 +21,6 @@ import locale
 import time
 import platform
 import numpy
-#import Gnuplot
-#import Gnuplot.PlotItems
-#import Gnuplot.funcutils
 import sassie.util.module_utilities as module_utilities
 import sassie.util.sasconfig as sasconfig
 
@@ -114,34 +111,6 @@ class data_interpolation():
         log.debug(vars(mvars))
 
         return
-
-    def wait(self, str=None, prompt='Plot will clear in 10 seconds ...\n'):
-        '''
-        WAIT is the function to prompt the user to clear a plot on a screen
-        '''
-
-        if str is not None:
-            print(str)
-        try:
-            if(platform.system() == "Linux"):
-                import curses
-                stdscr = curses.initscr()
-                stdscr.addstr('press a key to continue')
-                c = stdscr.getch()
-                curses.endwin()
-        except:
-            time.sleep(2)
-
-
-#   pgui performs this function
-#    def print_failure(message, txtOutput):
-#
-#        txtOutput.put("\n\n>>>> RUN FAILURE <<<<\n")
-#        txtOutput.put(">>>> RUN FAILURE <<<<\n")
-#        txtOutput.put(">>>> RUN FAILURE <<<<\n\n")
-#        txtOutput.put(message)
-#
-#        return
 
     def readfile(self, data_file):
         '''
@@ -346,8 +315,6 @@ class data_interpolation():
 
         '''
 
-#mvars:   run_name, expdata, ofile, io, ioe, dq, maxpoints, plotflag
-
         log = self.log
         pgui = self.run_utils.print_gui
         splint = self.splint
@@ -400,11 +367,14 @@ class data_interpolation():
         outfile2.close()
         outfile3.close()
 
-        ''' display progress '''
+#        ''' display progress '''
+#
+#        fraction_done = 1
+#        report_string = 'STATUS\t' + str(fraction_done)
+#        pgui(report_string)
 
-        fraction_done = 1
-        report_string = 'STATUS\t' + str(fraction_done)
-        pgui(report_string)
+
+        time.sleep(0.1)
 
         return
 
@@ -414,17 +384,15 @@ class data_interpolation():
         to appropriate places.
         '''
 
+        time.sleep(1.0)
+
         log = self.log
         mvars = self.module_variables
         divars = self.data_interpolation_variables
         pgui = self.run_utils.print_gui
-        wait = self.wait
 
         log.debug('in epilogue')
 
-#        print'Interpolated data were written to %s\n' % ('./' + divars.interpath + mvars.ofile)
-#        print 'Interpolated data with S/N > 2 were written to %s\n' % ('./' + divars.interpath + 'stn_' + mvars.ofile)
-#        print '\ndelta q = %f\t : number of q-points = %i\t : q-range: q = 0 to %f\n' % (mvars.dq, mvars.maxpoints, (mvars.maxpoints - 1) * mvars.dq)
         pgui("\nInterpolated data were written to %s\n" %
              ('./' + divars.interpath + mvars.ofile))
         pgui("\nInterpolated data with S/N > 2 were written to %s\n\n" %
@@ -432,29 +400,22 @@ class data_interpolation():
         pgui("\ndelta q = %f (1/A)\n\nnumber of q-points = %i\n\nq-range: 0 to %f (1/A)\n" %
              (mvars.dq, mvars.maxpoints, (mvars.maxpoints - 1) * mvars.dq))
 
-        #if(mvars.plotflag == 1):
-            #graph = Gnuplot.Gnuplot(debug=1)
-        #    graph.clear()
-        #    graph('set title "Interpolation Results"')
-        #    graph.xlabel('Q (1/A)')
-        #    graph.ylabel('I(Q)')
-        #    graph('set logscale y')
-#
-#            graph.plot(
-#                Gnuplot.Data(
-#                    divars.odata, using='1:2 w p ps 4', title='Original Data'), Gnuplot.Data(divars.io_tally, using='1:2 w lp ps 2',
-#                                                                                             title='Interpolated Data'), Gnuplot.Data(divars.cut, title='[I(Q)/(std.dev. I(Q))] < 2', using='1:2:3 w yerrorbars'))
 
-#        time.sleep(2)
+        pgui('\nDATA INTERPOLATION IS DONE\n')
 
-        if(mvars.plotflag == 1):
-            wait('\n')
+        st = ''.join(['=' for x in range(60)])
+        pgui("\n%s \n" % (st))
+
+        time.sleep(2.0)
+
+        ''' display progress '''
+
+        fraction_done = 1
+        report_string = 'STATUS\t' + str(fraction_done)
+        pgui(report_string)
+
+        time.sleep(2.0)
 
         self.run_utils.clean_up(log)
-
-        pgui('INTERPOLATE IS DONE\n')
-
-        pgui("%s \n" % ('=' * 60))
-        time.sleep(1.0)
 
         return
