@@ -64,14 +64,15 @@ def user_variables(self, **kwargs):
     # ONLY ONE OF THE FOLLOWING FOUR SHOULD BE TRUE
 
     self.path = "./"
-#    self.match_point_flag = True
     self.match_point_flag = False
-#    self.stuhrmann_parallel_axis_flag = True
     self.stuhrmann_parallel_axis_flag = False
-    self.decomposition_flag = True
 #    self.decomposition_flag = False
-#    self.stoichiometry_flag = True
     self.stoichiometry_flag = False
+
+#    self.match_point_flag = True
+#    self.stuhrmann_parallel_axis_flag = True
+#    self.stoichiometry_flag = True
+    self.decomposition_flag = True
 
     # INPUT VARIABLES FOR ALL METHODS
 
@@ -179,8 +180,8 @@ def user_variables(self, **kwargs):
         self.initial_guess_guinier = "1.0, 1.0"
         # amplitude for the Gaussian that describes the S/N of typical SANS data; only used if there are no errors specified in the data file
         # the values below are the defaults; they can be changed by the user to vary as a function of contrast; only used for model data; treat like an advanced option?
-#        self.sn_amplitude = "50.0, 50.0, 50.0, 50.0"  # default
-        self.sn_amplitude = "400.0, 300.0, 10.0, 100.0"  # PAI-VN CV series
+#        self.signal_to_noise_amplitude = "50.0, 50.0, 50.0, 50.0"  # default
+        self.signal_to_noise_amplitude = "400.0, 300.0, 10.0, 100.0"  # PAI-VN CV series
 
         if self.read_from_contrast_calculator_output_file:
             # TODO NEED TO READ THESE IN; VALUES ARE HERE AS A PLACEHOLDER
@@ -216,7 +217,7 @@ def user_variables(self, **kwargs):
             self.partial_specific_volume = "0.745, 0.903"  # 1 value for each component
             # 2 values for each contrast point since there are 2 components.
             self.delta_rho = "-3.2, -5.7; 1.6, 0.26; 0.031, -1.74"
-            self.izero = "8.4, 0.6, 0.17"  # 1 value for each contrast point
+            self.izero = "8.1, 0.6, 0.17"  # 1 value for each contrast point
             self.izero_error = "0.2, 0.04, 0.01"  # 1 value for each contrast point
 
     #### end user input ####
@@ -381,7 +382,8 @@ def run_module(self, **kwargs):
             self.refine_scale_factor_flag, "boolean")
         svariables["initial_guess_guinier"] = (
             self.initial_guess_guinier, "float_array")
-        svariables["sn_amplitude"] = (self.sn_amplitude, "float_array")
+        svariables["signal_to_noise_amplitude"] = (
+            self.signal_to_noise_amplitude, "float_array")
 # already defined above
 #        svariables["read_from_contrast_calculator_output_file"] = (
 #            self.read_from_contrast_calculator_output_file,
@@ -451,14 +453,16 @@ def run_module(self, **kwargs):
 
     run_name = self.variables["run_name"][0]
 
-    # I don't want the directory tree to be deleted since I want to be able to put more than one
-    # output file in the directory for scenarios involving different contrasts.
-    # But, then the sassie_json and sassie_log files don't get removed even if an output
-    # file is overwritten.
-    # This will eventually be handled at the GenApp level, so I am leaving it as is here.
+    # I don't always want the directory tree to be deleted since I want to be able to have subdirectories
+    # for the different methods, i.e., match point, stuhrmann_parallel_axis and decomposition are
+    # likely to be performed on the same contrast variation data set.  What is the best way to only delete
+    # directory tree if a different contrast variation data set is being analyzed? Do we need a GUI option
+    # (checkbox?) to overwrite the directory?
+    # TODO: This will ultimately be handled at the GenApp level. The default should be not to delete the
+    # directory tree.
 
-    if os.path.exists(os.path.join(run_name, self.module)):
-        shutil.rmtree(os.path.join(run_name, self.module))
+    # if os.path.exists(os.path.join(run_name, self.module)):
+    #    shutil.rmtree(os.path.join(run_name, self.module))
 
     txtQueue = multiprocessing.JoinableQueue()
     this_multi_component_analysis = multi_component_analysis.multi_component_analysis()

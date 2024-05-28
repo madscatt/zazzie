@@ -66,7 +66,7 @@ import guinier_analysis as guinier_analysis
 
 
 def get_composite_scattering_intensities(other_self):
-    '''
+    r'''
 
     **Get Composite Scattering Intensities** is the **Decomposition Analysis** method that calculates the composite scattering functions, :math:`I_{11}`, :math:`I_{12}`, and :math:`I_{22}` for a two-component complex from a set of SANS contrast variation data. :math:`I_{11}`, and :math:`I_{22}` are the scattering intensities of components 1 and 2, respectively, and :math:`I_{12}` is the cross-term. First, the data are rescaled with respect to each other to account for differences in concentration as a function of contrast (fraction D\ :sub:`2`\ O  in the solvent).  Then, a Guinier analysis is performed to obtain :math:`R_{g}` and :math:`I_{0}` as a function of contrast.  If desired by the user, the :math:`I_{0}` values are used to further refine the scale factors at each contrast to account for possible inaccuracies in the concentrations. See the **Guinier Analysis** helper program for details.  
 
@@ -80,13 +80,13 @@ def get_composite_scattering_intensities(other_self):
         Output file contains:
             - module variable input parameters
             - results from Guinier analysis at each fraction D\ :sub:`2`\ O value
-              - Guinier R\ :sub:`g`\ , Guinier R\ :sub:`g`\  error, Guinier I(0), Guinier I(0) error
-              - q:sub:`min`\ , q:sub:`max`\ , qR:sub:`gmin`\ , qR:sub:`gmax`\ 
-              - number of points used, reduced chi-squared, :math:`\Delta \rho^2`
-              - initial and final scale factors
+                - Guinier R\ :sub:`g`\ , Guinier R\ :sub:`g`\  error, Guinier I(0), Guinier I(0) error
+                - q\ :sub:`min`\ , q\ :sub:`max`\ , qR\ :sub:`gmin`\ , qR\ :sub:`gmax`\ 
+                - number of points used, reduced chi-squared, :math:`\Delta \rho^2` 
+                - initial and final scale factors
             - results from decomposition analysis
-              - mean square differences at each q value for all fraction D\ :sub:`2`\ O values
-              - global reduced chi-squared value at each q value
+                - mean square differences at each q value for all fraction D\ :sub:`2`\ O values
+                - global reduced chi-squared value at each q value
 
         Additional output files stored in the output file directory:
             - composition scattering intensities (3 files)
@@ -126,24 +126,24 @@ def get_composite_scattering_intensities(other_self):
         initial scale factor for the data at each fraction D\ :sub:`2`\ O 
     scale_factor:  float array (dimension = number_of_contrast_points)
         scale factor for the data at each fraction D\ :sub:`2`\ O  that is the same as the initial scale factor before the Guinier analysis is performed
-    delta_rho_v:  float array (dimension = number_of_contrast_points)
-        :math:`\Delta \rho V` at each fraction D\ :sub:`2`\ O  as defined in the Guinier analysis helper program
+    delta_rho_v: float array (dimension = number_of_contrast_points)
+        :math:`\Delta \rho V` as defined above at each fraction D\ :sub:`2`\ O  as defined in the Guinier analysis helper program
     composite_intensity_file_name:  string array (dimension = 3)
         names of the composite scattering intensity output files
     rescaled_data_file_name:  string array (dimension = number_of_contrast_points)
         names of the rescaled data output files
     calculated_data_file_name:  string array (dimension = number_of_contrast_points)
         names of the calculated data output files
-    sn_amplitude: float array (dimension = number_of_contrast_points)
+    signal_to_noise_amplitude: float array (dimension = number_of_contrast_points)
         amplitude of the Gaussian equation that describes the signal-to-noise (S/N) vs q behavior of SANS data; used when adding noise to model SANS data
-    sn_mean: float
+    signal_to_noise_mean: float
         mean of the Gaussian equation that describes the signal-to-noise (S/N) vs q behavior of SANS data; used when adding noise to model SANS data    
-    sn_stddev: float
+    signal_to_noise_standard_deviation: float
         standard deviation of the Gaussian equation that describes the signal-to-noise (S/N) vs q behavior of SANS data; used when adding noise to model SANS data
-    sn_bgd: float
+    signal_to_noise_background: float
         background term of the Gaussian equation that describes the signal-to-noise (S/N) vs q behavior of SANS data; used when adding noise to model SANS data  
 
-   Returns
+    Returns
     -------
     rg_guinier: float array( dimension = number_of_contrast_points)
         The radius of gyration from the Guinier fit at each fraction D\ :sub:`2`\ O
@@ -180,7 +180,7 @@ def get_composite_scattering_intensities(other_self):
 
     '''
 
-# mvars used:  run_name, fraction_d2o, number_of_contrast_points, delta_rho, data_file_name, q_rg_limit_guinier, starting_data_point_guinier, initial_points_to_use_guinier, initial_guess_guinier, refine_scale_factor_flag, sn_amplitude, sn_mean, sn_stddev, sn_bgd
+# mvars used:  run_name, fraction_d2o, number_of_contrast_points, delta_rho, data_file_name, q_rg_limit_guinier, starting_data_point_guinier, initial_points_to_use_guinier, initial_guess_guinier, refine_scale_factor_flag, signal_to_noise_amplitude, signal_to_noise_mean, signal_to_noise_standard_deviation, signal_to_noise_background
 # mcavars used:  outfile, initial_scale_factor, scale_factor, delta_rho_v, composite_intensity_file_name, rescaled_data_file_name, calculated_data_file_name, multi_component_analysis_path
 
     log = other_self.log
@@ -220,7 +220,7 @@ def get_composite_scattering_intensities(other_self):
         ierr = []
 
         numpts, message, q, iq, ierr = read_data_file.read_file(
-            mvars.data_file_name[i], mvars.sn_amplitude[i], mcavars.sn_mean, mcavars.sn_stddev, mcavars.sn_bgd)
+            mvars.data_file_name[i], mvars.signal_to_noise_amplitude[i], mcavars.signal_to_noise_mean, mcavars.signal_to_noise_standard_deviation, mcavars.signal_to_noise_background)
 
 #        print('numpts: ', numpts)
 #        print('q: ', q)
@@ -322,20 +322,20 @@ def get_composite_scattering_intensities(other_self):
             "%.2f" % mcavars.q_rg_min_guinier[j])+"\t"+str("%.2f" % mcavars.q_rg_max_guinier[j])+"\t"+str("%.2f" % mcavars.chi_squared_guinier[j])+"\t"+str("%2i" % mcavars.points_used_guinier[j])+"\t"+str("%.2f" % mcavars.initial_scale_factor[j])+"\t   "+str("%.2f" % mcavars.scale_factor[j])+"\t\t"+str("%.3f" % drho_sq))
 
 # this output is long; do we want to output it to the screen since the user will have to scroll up quite a bit to see the results of the Guinier analysis?
-    
+
     outstring = ""
     outstring1 = ""
     outstring2 = ""
-    pgui("\nDeviations between the composite scattering functions and the contrast variation series") 
-    outstring="fD2O:"
+    pgui("\nDeviations between the composite scattering functions and the contrast variation series")
+    outstring = "fD2O:"
     for i in range(mvars.number_of_contrast_points):
-        outstring = outstring+"\t"+str("%.2f" %mvars.fraction_d2o[i])
-    outstring = outstring+"\n"    
+        outstring = outstring+"\t"+str("%.2f" % mvars.fraction_d2o[i])
+    outstring = outstring+"\n"
     pgui(outstring)
 
     outstring1 = "q\t(delta_I(q)/sigma(I(q)))^2"
     tabs = mvars.number_of_contrast_points - 3
-    if(tabs > 1):
+    if (tabs > 1):
         for i in range(tabs):
             outstring1 = outstring1+"\t"
     else:
@@ -343,11 +343,11 @@ def get_composite_scattering_intensities(other_self):
     outstring1 = outstring1+"chi^2"
     pgui(outstring1)
     for j in range(mcavars.number_of_data_points):
-        outstring2 = str("%.4f" %mcavars.scattering_data[0][j][0])+"\t"
+        outstring2 = str("%.4f" % mcavars.scattering_data[0][j][0])+"\t"
         for i in range(mvars.number_of_contrast_points):
             outstring2 = outstring2+mean_square_difference[j][i]+"\t"
-        pgui(outstring2+str("%.2f" %reduced_chi_squared_list[j]))
-    
+        pgui(outstring2+str("%.2f" % reduced_chi_squared_list[j]))
+
 
 # output to files
 
@@ -412,7 +412,7 @@ def get_composite_scattering_intensities(other_self):
                 rfile.write("# " + error_flag_message[i])
                 if (error_flag_message[i][0:19] != "Error values of 0.0"):
                     rfile.write("#Amplitude of Gaussian used to describe S/N vs q: %f\n" %
-                                (mvars.sn_amplitude[i]))
+                                (mvars.signal_to_noise_amplitude[i]))
             rfile.write("#     q           I(q)            sigma(I(q))\n")
             for j in range(mcavars.number_of_data_points):
                 rfile.write(

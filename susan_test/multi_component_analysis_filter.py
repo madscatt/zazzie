@@ -62,7 +62,7 @@ import read_sas_data_file_add_error as read_data_file
 # this version uses the new input filter that recognizes a nested_float_array
 
 
-def check_data_file(data_file_name, sn_amplitude):
+def check_data_file(data_file_name, signal_to_noise_amplitude):
     """
     Method to check that the number of data points and q binning are the same for all data files in a contrast variation series.
 
@@ -73,7 +73,7 @@ def check_data_file(data_file_name, sn_amplitude):
 
         data_file_name:  string array (dimension = number_of_contrast_points)
             The names of the contrast variation data files
-        sn_amplitude: float array (dimension = number_of_contrast_points)
+        signal_to_noise_amplitude: float array (dimension = number_of_contrast_points)
             amplitude of the Gaussian equation that describes the signal-to-noise (S/N) vs q behavior of SANS data; used when adding noise to model SANS data
 
     Returns
@@ -92,16 +92,16 @@ def check_data_file(data_file_name, sn_amplitude):
     error_flag_message = []
     number_of_files = len(data_file_name)
 #    print("number of files: ", number_of_files)
-    sn_mean = 0.035
-    sn_bgd = 1.0
-    sn_stddev = 0.05
+    signal_to_noise_mean = 0.035
+    signal_to_noise_standard_deviation = 0.05
+    signal_to_noise_background = 1.0
 
     for i in range(number_of_files):
-        #        print('i, data file, output file, plot file, sn_amplitude: ', i,
-        #              data_file_name[i], output_file_name[i], plot_file_name, sn_amplitude[i])
+        #        print('i, data file, output file, plot file, signal_to_noise_amplitude: ', i,
+        #              data_file_name[i], output_file_name[i], plot_file_name, signal_to_noise_amplitude[i])
 
         numpts, message, q, iq, ierr = read_data_file.read_file(
-            data_file_name[i], sn_amplitude[i], sn_mean, sn_stddev, sn_bgd)
+            data_file_name[i], signal_to_noise_amplitude[i], signal_to_noise_mean, signal_to_noise_standard_deviation, signal_to_noise_background)
 
         if (numpts == 0):
             error.append("Failed to read data from " +
@@ -217,7 +217,7 @@ def check_multi_component_analysis(variables, **kwargs):
             radius of gyration at each contrast in Angstroms
         radius_of_gyration_error: float array (dimension = number_of_contrast_points)
             radius of gyration error at each contrast in Angstroms
-        sn_amplitude: float array (dimension = number_of_contrast_points)
+        signal_to_noise_amplitude: float array (dimension = number_of_contrast_points)
             amplitude of the Gaussian equation that describes the signal-to-noise (S/N) vs q behavior of SANS data; used when adding noise to model SANS data
         delta_rho:  2D float array (dimensions = number_of_contrast_points x number_of_components)
             The contrast for each component at all fraction D\ :sub:`2`\ O values of interest in 10\ :sup:`10`\ cm\ :sup:`-2`\  (10 :sup:`-6`\ A\ :sup:`-2`\ )
@@ -487,7 +487,7 @@ def check_multi_component_analysis(variables, **kwargs):
         initial_points_to_use_guinier = variables["initial_points_to_use_guinier"][0]
         refine_scale_factor_flag = variables["refine_scale_factor_flag"][0]
 #        initial_guess_guinier = variables["initial_guess_guinier"][0]
-        sn_amplitude = variables["sn_amplitude"][0]
+        signal_to_noise_amplitude = variables["signal_to_noise_amplitude"][0]
 
         # check if number of contrast points is >= 3 to solve for I11, I12 and I22
         if number_of_contrast_points < 3:
@@ -539,8 +539,8 @@ def check_multi_component_analysis(variables, **kwargs):
         #        error.append("concentration error[%i] cannot equal zero" % (i))
         #        return error
 
-        # check if length of sn_amplitude = number of contrasts
-        if len(sn_amplitude) != number_of_contrast_points:
+        # check if length of signal_to_noise_amplitude = number of contrasts
+        if len(signal_to_noise_amplitude) != number_of_contrast_points:
             error.append("S/N amplitude must have %i values" % (number_of_contrast_points)
                          )
             return error
@@ -562,7 +562,7 @@ def check_multi_component_analysis(variables, **kwargs):
                 return error
         # check if number of points and q binning are the same for all data files
         error = check_data_file(
-            data_file_name, sn_amplitude)
+            data_file_name, signal_to_noise_amplitude)
 #        print("error after data file check: ", error)
         if len(error) > 0:
             #            print("error = ", error)
@@ -773,7 +773,7 @@ if __name__ == "__main__":
         if variables["read_from_contrast_calculator_output_file"][0]:
             variables["contrast_calculator_output_file_name"] = (
                 "./sample_contrast_calculator_output_file.txt", "string")
-        variables["sn_amplitude"] = (
+        variables["signal_to_noise_amplitude"] = (
             [50.0, 50.0, 50.0, 50.0], "float_array")
 
     elif variables["stoichiometry_flag"][0]:

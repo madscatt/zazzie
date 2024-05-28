@@ -48,8 +48,46 @@ import numpy
 import scipy.optimize
 # import sassie.contrast.multi_component_analysis.polynomial_fit as polynomial_fit
 # import sassie.contrast.multi_component_analysis.chi_squared_correlation as chi_squared_correlation
+import json
+
 import polynomial_fit as polynomial_fit
 import chi_squared_correlation as chi_squared_correlation
+
+
+def save_data_to_plot_as_json(other_self, square_root_izero, square_root_izero_error, square_root_izero_calculated, diff, match_point, match_point_error):
+
+    mvars = other_self.module_variables
+    mcavars = other_self.multi_component_analysis_variables
+
+    data_dict = {
+        'fraction_d2o': [],
+        'sqrt[I(0)/c]': [],
+        'sqrt[I(0)/c]_error': [],
+        'sqrt[I(0)/c]_calc': [],
+        'sqrt[I(0)/c]-sqrt[I(0)/c]_calc': [],
+        'match_point': [],
+        'match_point_error': [],
+        'match_point_y_value': []
+    }
+
+    for i in range(mvars.number_of_contrast_points):
+        # Append new values to the lists in the dictionary
+        data_dict['fraction_d2o'].append(mvars.fraction_d2o[i])
+        data_dict['sqrt[I(0)/c]'].append(square_root_izero[i])
+        data_dict['sqrt[I(0)/c]_error'].append(square_root_izero_error[i])
+        data_dict['sqrt[I(0)/c]_calc'].append(square_root_izero_calculated[i])
+        data_dict['sqrt[I(0)/c]-sqrt[I(0)/c]_calc'].append(diff[i])
+
+    data_dict['match_point'].append(match_point)
+    data_dict['match_point_error'].append(match_point_error)
+    data_dict['match_point_y_value'].append(0)
+
+    json_data = json.dumps(data_dict)
+
+    mcavars.json_outfile.write(json_data)
+    mcavars.json_outfile.close()
+
+    return
 
 
 def get_match_point(other_self):
@@ -263,9 +301,9 @@ def get_match_point(other_self):
     log.debug('match point, error: ' + str(match_point) +
               ',' + str(match_point_error) + '\n')
 
-    pgui('results written to output file: %s' %
+    pgui('results written to output file: %s \n' %
          (mcavars.multi_component_analysis_path+mvars.output_file_name))
-    pgui('-------------------------------')
+    pgui('-------------------------------\n')
     mcavars.outfile.write('--------------------------------\n')
     pgui('Final Results\n')
     mcavars.outfile.write('Final Results\n')
@@ -297,5 +335,10 @@ def get_match_point(other_self):
     mcavars.outfile.close()
 
 # TODO: plot sqrt[I(0)/c] with errorbars and sqrt[I(0)/c]_calc vs fraction D2O and the residuals, i.e., diff = sqrt[I(0)/c]-sqrt[I(0)/c]_calc, with residuals on a separate plot.  The values will be read from mcavars.outfile.
+
+    save_data_to_plot_as_json(other_self, square_root_izero, square_root_izero_error,
+                              square_root_izero_calculated, diff, match_point, match_point_error)
+
+    time.sleep(0.5)
 
     return
