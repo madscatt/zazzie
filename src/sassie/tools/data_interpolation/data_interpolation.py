@@ -21,6 +21,9 @@ import locale
 import time
 import platform
 import numpy
+import io
+import json
+
 import sassie.util.module_utilities as module_utilities
 import sassie.util.sasconfig as sasconfig
 
@@ -292,6 +295,42 @@ class data_interpolation():
 
         return
 
+    def save_data_to_plot_as_json(self):
+
+        mvars = self.module_variables
+        divars = self.data_interpolation_variables
+
+        # open the json output file for writing
+        json_outfile = io.open(divars.interpath + mvars.ofile[:-3] + 'json', 'w')
+       
+        data_dict = {
+            'q': [],
+            'iq': [],
+            'iq_error': [],
+            'original_q': [],
+            'original_iq': [],
+            'original_iq_error': [],
+        }
+
+        for i in range(len(divars.io_tally)):
+        # Append new values to the lists in the dictionary
+            data_dict['q'].append(divars.io_tally[i][0])
+            data_dict['iq'].append(divars.io_tally[i][1])
+            data_dict['iq_error'].append(divars.io_tally[i][2])
+
+        for i in range(len(divars.odata)):
+            data_dict['original_q'].append(divars.odata[i][0])
+            data_dict['original_iq'].append(divars.odata[i][1])
+            data_dict['original_iq_error'].append(divars.odata[i][2])
+
+        json_data = json.dumps(data_dict)
+
+        json_outfile.write(json_data)
+        json_outfile.close()
+
+        return
+
+
     def interpolate(self):
         '''
         INTERPOLATE is the function to read in variables from GUI input and
@@ -352,6 +391,7 @@ class data_interpolation():
         divars.io_tally.append([0.0, mvars.io, mvars.ioe])
         divars.ux = 0.00
         pgui("\nSignal to noise cutoff value: %s\n" % (str(divars.cutval)))
+
         for i in range(mvars.maxpoints - 1):
             divars.ux = divars.ux + mvars.dq
             splint(divars.y, divars.y2)
@@ -367,12 +407,7 @@ class data_interpolation():
         outfile2.close()
         outfile3.close()
 
-#        ''' display progress '''
-#
-#        fraction_done = 1
-#        report_string = 'STATUS\t' + str(fraction_done)
-#        pgui(report_string)
-
+        self.save_data_to_plot_as_json()
 
         time.sleep(0.1)
 
