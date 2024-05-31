@@ -65,6 +65,44 @@ import sassie.contrast.multi_component_analysis.guinier_analysis as guinier_anal
 #import guinier_analysis as guinier_analysis
 
 
+
+
+def save_data_to_plot_as_json(other_self, square_root_izero, square_root_izero_error, square_root_izero_calculated, diff, match_point, match_point_error):
+
+    mvars = other_self.module_variables
+    mcavars = other_self.multi_component_analysis_variables
+
+    data_dict = {
+        'fraction_d2o': [],
+        'sqrt[I(0)/c]': [],
+        'sqrt[I(0)/c]_error': [],
+        'sqrt[I(0)/c]_calc': [],
+        'sqrt[I(0)/c]-sqrt[I(0)/c]_calc': [],
+        'match_point': [],
+        'match_point_error': [],
+        'match_point_y_value': []
+    }
+
+    for i in range(mvars.number_of_contrast_points):
+        # Append new values to the lists in the dictionary
+        data_dict['fraction_d2o'].append(mvars.fraction_d2o[i])
+        data_dict['sqrt[I(0)/c]'].append(square_root_izero[i])
+        data_dict['sqrt[I(0)/c]_error'].append(square_root_izero_error[i])
+        data_dict['sqrt[I(0)/c]_calc'].append(square_root_izero_calculated[i])
+        data_dict['sqrt[I(0)/c]-sqrt[I(0)/c]_calc'].append(diff[i])
+
+    data_dict['match_point'].append(match_point)
+    data_dict['match_point_error'].append(match_point_error)
+    data_dict['match_point_y_value'].append(0)
+
+    json_data = json.dumps(data_dict)
+
+    mcavars.json_outfile.write(json_data)
+    mcavars.json_outfile.close()
+
+    return
+
+
 def get_composite_scattering_intensities(other_self):
     r'''
 
@@ -98,83 +136,122 @@ def get_composite_scattering_intensities(other_self):
 
     Parameters
     ----------
+
     run_name:  string
         Name of directory containing the outputs
+
     number_of_contrast_points:  int
         The number of solvent conditions with different fraction D\ :sub:`2`\ O values
+
     fraction_d2o:   float array (dimension = number_of_contrast_points)
         The fraction D\ :sub:`2`\ O values that define the contrasts
+
     delta_rho:  2D float array (dimensions = number_of_contrast_points x number_of_components)
         The contrast for each component at all fraction D\ :sub:`2`\ O values of interest in 10\ :sup:`10`\ cm\ :sup:`-2`\  (10 :sup:`-6`\ A\ :sup:`-2`\ )
+
     data_file_name:  string array (dimension = number_of_contrast_points)
         The names of the contrast variation data files
+
     q_rg_limit_guinier: float array (dimension = number_of_contrast_points)
         qR\ :sub:`g`\  limit for the Guinier analysis at each fraction D\ :sub:`2`\ O
+
     starting_data_point_guinier: int array (dimension = number_of_contrast_points)
         The index of the starting data point for the Guinier fit at each fraction D\ :sub:`2`\ O  (index of the first data point = 1)
+
     initial_points_to_use_guinier: int array (dimension = number_of_contrast_points)
         The number of data points to use initially for the Guinier fit at each fraction D\ :sub:`2`\ O  (the final number of points used depends on the qR\ :sub:`g`\  limit)
+
     initial_guess_guinier: float array (dimension = 2 for a line fit)
         The initial guess for the Guinier fit parameters (default = [1., 1.])
-            refine_scale_factor_flag: boolean
+
+    refine_scale_factor_flag: boolean
         Indicates whether the scale factor at each fraction D\ :sub:`2`\ O  will be adjusted based on the I(0) values calculated from the Guinier fit and delta_rho_v
+
     multi_component_analysis_path: string
         sub-path where output file will be written: run_name + \'multi_component_analysis\' + method-dependent sub-path
+
     outfile: string
         output file name (with full path): path + output_file_name
+
     initial_scale_factor:  float array (dimension = number_of_contrast_points)
         initial scale factor for the data at each fraction D\ :sub:`2`\ O 
+
     scale_factor:  float array (dimension = number_of_contrast_points)
         scale factor for the data at each fraction D\ :sub:`2`\ O  that is the same as the initial scale factor before the Guinier analysis is performed
+
     delta_rho_v: float array (dimension = number_of_contrast_points)
         :math:`\Delta \rho V` as defined above at each fraction D\ :sub:`2`\ O  as defined in the Guinier analysis helper program
+
     composite_intensity_file_name:  string array (dimension = 3)
         names of the composite scattering intensity output files
+
     rescaled_data_file_name:  string array (dimension = number_of_contrast_points)
         names of the rescaled data output files
+
     calculated_data_file_name:  string array (dimension = number_of_contrast_points)
         names of the calculated data output files
+
     signal_to_noise_amplitude: float array (dimension = number_of_contrast_points)
         amplitude of the Gaussian equation that describes the signal-to-noise (S/N) vs q behavior of SANS data; used when adding noise to model SANS data
+
     signal_to_noise_mean: float
         mean of the Gaussian equation that describes the signal-to-noise (S/N) vs q behavior of SANS data; used when adding noise to model SANS data    
+
     signal_to_noise_standard_deviation: float
         standard deviation of the Gaussian equation that describes the signal-to-noise (S/N) vs q behavior of SANS data; used when adding noise to model SANS data
+
     signal_to_noise_background: float
         background term of the Gaussian equation that describes the signal-to-noise (S/N) vs q behavior of SANS data; used when adding noise to model SANS data  
 
+
     Returns
     -------
+
     rg_guinier: float array( dimension = number_of_contrast_points)
         The radius of gyration from the Guinier fit at each fraction D\ :sub:`2`\ O
+        
     rg_guinier_error: float array (dimension = number_of_contrast_points)
         The error in the Gunier radius of gyration at each fraction D\ :sub:`2`\ O
+
     izero_guinier: float array 
         The I(0) value from the Guinier fit at each fraction D\ :sub:`2`\ O 
+
     izero_error_guinier: float array
         The error in the Guinier I(0) value at each fraction D\ :sub:`2`\ O 
+
     points_used_guinier: int array (dimension = number_of_contrast_points)
         The final number of points used in the Guinier fit at each fraction D\ :sub:`2`\ O 
+
     chi_squared_guinier: float array (dimension = number_of_contrast_points)
         The chi-square value for the Guinier fit at each fraction D\ :sub:`2`\ O 
+
     q_min_guinier: float array (dimension = number_of_contrast_points)
         The minimum q value for the Guinier fit at each fraction D\ :sub:`2`\ O 
+
     q_max_guinier: float array (dimension = number_of_contrast_points)
         The maximum q value for the Guinier fit at each fraction D\ :sub:`2`\ O 
+
     q_rg_min_guinier: float array (dimension = number_of_contrast_points)
         The minimum qR\ :sub: `g`\  value for the Guinier fit at each fraction D\ :sub:`2`\ O 
+        
     q_rg_max_guinier: float array (dimension = number_of_contrast_points)
         The maximum qR\ :sub: `g`\  value for the Guinier fit at each fraction D\ :sub:`2`\ O 
+
     scale_factor: float array (dimension = number_of_contrast_points)
         The final scale factor at each fraction D\ :sub:`2`\ O  (rescaling is only preformed if refine_scale_factor_flag is True) 
+
     rescaled_scattering_data:  3D array (dimensions = number_of_contrast_points x number_of_data_points x 3)
         q, I(q) and I(q) error for the rescaled data at at each fraction D\ :sub:`2`\ O
+
     mean_square_difference:  2D float array (dimensions = number_of_data_points x number_of_contrast_points)
         a complete list (all q values, all datasets) of mean square differences
+
     reduced_chi_squared_list: float array (dimension = number_of_data_points)
         global reduced chi-squared at all q values
+
     composite_scattering_intensity:  3D float array (dimensions = 3 x number_of_data_points x 2)
         I(q) and I(q) error for each of the 3 composite scattering intensities, :math:`I_{11}`, :math:`I_{12}` and :math:`I_{22}`
+
     calculated_scattering_data:  2D float array (dimensions = number_of_data_points x number_of_contrast_points)
         calculated I(q) values from the above :math:`I_{exp}` equation at each fraction D\ :sub:`2`\ O
 
@@ -481,7 +558,16 @@ def get_composite_scattering_intensities(other_self):
                 str("%.6f" % composite_scattering_intensity[2][i][1])+"\n")
     f3.close()
 
+
+#HERE
+
+    #save_data_to_plot_as_json(other_self, square_root_izero, square_root_izero_error,
+    #                          square_root_izero_calculated, diff, match_point, match_point_error)
+
+    time.sleep(0.5)
+
     return
+
 
 # TODO: this method can be written in terms of mvars and mcavars,just passing the index, q?
 
