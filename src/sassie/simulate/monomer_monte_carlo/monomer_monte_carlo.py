@@ -22,9 +22,6 @@ import time
 import platform
 import numpy
 import random
-import Gnuplot
-import Gnuplot.PlotItems
-import Gnuplot.funcutils
 import sasmol.sasmol as sasmol
 import sassie.util.module_utilities as module_utilities
 import sassie.util.sasconfig as sasconfig
@@ -825,8 +822,9 @@ class monomer_monte_carlo():
 
             elif(avars.accepted > 0):
                 if(mvars.plotflag == 1):
-                    avars.graph.plot(Gnuplot.Data(avars.all_rg_tally, using='1:2 w p ps 4', title='all Rg'), Gnuplot.Data(
-                        avars.accepted_rg_tally, using='1:3 w lp pt 5 ps 2', title='accepted'))
+                    #avars.graph.plot(Gnuplot.Data(avars.all_rg_tally, using='1:2 w p ps 4', title='all Rg'), Gnuplot.Data(
+                    #    avars.accepted_rg_tally, using='1:3 w lp pt 5 ps 2', title='accepted'))
+                    pass
 
                 fraction_done = (float(i + 1) / float(mvars.trials))
                 report_string = 'STATUS\t' + str(fraction_done)
