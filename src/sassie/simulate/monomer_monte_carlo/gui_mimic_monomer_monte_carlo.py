@@ -64,7 +64,7 @@ def user_variables(self, **kwargs):
     self.zflag = '0'
     self.zcutoff = '-35.0'
     self.cflag = '0'
-    self.confile = 'monomer_mc_constraints.txt'    
+    self.confile = 'mmc_constraints.txt'    
     self.directedmc = '0'
     self.nonbondedflag = '0'        #nonbonded feature not currently implemented
     self.nonbondedscale = '1.0'     #used for nonbonded feature not currently implemented
@@ -119,7 +119,7 @@ def test_variables(self, paths):
     self.zflag = '0'
     self.zcutoff = '0.0'
     self.cflag = '0'
-    self.confile = os.path.join(other_data_path,'monomer_mc_constraints.txt')
+    self.confile = os.path.join(other_data_path,'mmc_constraints.txt')
     self.directedmc = '0'
     self.nonbondedflag = '0'      
     self.nonbondedscale = '1.0'    
