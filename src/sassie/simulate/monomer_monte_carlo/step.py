@@ -179,10 +179,10 @@ class Setup():
             try:
                 theta = self.check_angle(angle_value, trial_theta)
             except:
-                print 'BUG IN STEP ANGLE'
-                print 'this_theta = ', this_theta
-                print 'trial_theta = ', trial_theta
-                print '>>> setting theta to 0.0'
+                print('BUG IN STEP ANGLE')
+                print('this_theta = ', this_theta)
+                print('trial_theta = ', trial_theta)
+                print('>>> setting theta to 0.0')
                 theta = 0.0
 
             search, vdi, vdf = dihedral_energy.calc(

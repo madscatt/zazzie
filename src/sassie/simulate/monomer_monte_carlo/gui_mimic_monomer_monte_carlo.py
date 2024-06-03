@@ -181,7 +181,7 @@ def run_module(self, **kwargs):
 
 #    print 'variables: ', self.variables
     if len(error) > 0:
-        print 'error = ', error
+        print('error = ', error)
         if not(self.testflag):
             sys.exit()
         return error
@@ -196,7 +196,7 @@ def run_module(self, **kwargs):
             error = generate_filter.check_protein(self.variables, eflag, monflag, no_file_check="true")
 
     if len(error) > 0:
-        print 'error = ', error
+        print('error = ', error)
         if not(self.testflag):
             sys.exit()
         return error
@@ -256,7 +256,7 @@ if __name__ == '__main__':
 
     start = time.time()
     run_gui = gui_mimic_monomer_monte_carlo(test, paths)
-    print "time used: ", time.time() - start
+    print("time used: ", time.time() - start)
 
 
 

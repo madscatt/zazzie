@@ -171,13 +171,13 @@ def rotate_dihedral(coor, m1, frame, q0, itheta, an, indices, this_mask, first_l
                 nv = v / lv
             else:
                 result = 0
-                print 'v = ', v
-                print 'lv = ', lv
+                print('v = ', v)
+                print('lv = ', lv)
                 return result
         except:
             result = 0
-            print 'v = ', v
-            print 'lv = ', lv
+            print('v = ', v)
+            print('lv = ', lv)
             return result
 
     elif(molecule_type == 'rna'):
@@ -281,34 +281,34 @@ def rotate_dihedral(coor, m1, frame, q0, itheta, an, indices, this_mask, first_l
                 nv = v / lv
             else:
                 result = 0
-                print '>>> '
-                print 'v = ', v
-                print 'lv = ', lv
-                print '>>> '
-                print '>>> '
-                print 'an = ', an
-                print 'q0 = ', q0
-                print '>>> '
-                print 'p1 = ', p1
-                print 'o5p = ', o5p
-                print 'c5p = ', c5p
-                print 'c4p = ', c4p
-                print 'c3p = ', c3p
-                print 'o3p = ', o3p
-                print 'p2 = ', p2
-                print 'o5p2 = ', o5p2
-                print '>>> '
-                print '>>> '
+                print('>>> ')
+                print('v = ', v)
+                print('lv = ', lv)
+                print('>>> ')
+                print('>>> ')
+                print('an = ', an)
+                print('q0 = ', q0)
+                print('>>> ')
+                print('p1 = ', p1)
+                print('o5p = ', o5p)
+                print('c5p = ', c5p)
+                print('c4p = ', c4p)
+                print('c3p = ', c3p)
+                print('o3p = ', o3p)
+                print('p2 = ', p2)
+                print('o5p2 = ', o5p2)
+                print('>>> ')
+                print('>>> ')
                 return result
         except:
             result = 0
-            print 'v = ', v
-            print 'lv = ', lv
+            print('v = ', v)
+            print('lv = ', lv)
 
-            print '>>> '
-            print 'an = ', an
-            print 'q0 = ', q0
-            print '>>> '
+            print('>>> ')
+            print('an = ', an)
+            print('q0 = ', q0)
+            print('>>> ')
             return result
 
     vx = nv[0]
@@ -347,7 +347,7 @@ def rotate_dihedral(coor, m1, frame, q0, itheta, an, indices, this_mask, first_l
     qsel = numpy.arange(watch_value + 1, natoms)
 
     newa = []
-    for i in xrange(natoms):
+    for i in range(natoms):
         if(i > watch_value):
             ta = coor[frame][i]
             far = ta.tolist()

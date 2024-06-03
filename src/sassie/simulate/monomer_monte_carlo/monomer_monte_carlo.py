@@ -177,7 +177,7 @@ class monomer_monte_carlo():
         '''
 
         if sti is not None:
-         print sti
+         print(sti)
         try:
             if(platform.system() == "Linux"):
                 import curses
@@ -199,7 +199,7 @@ class monomer_monte_carlo():
 
         flexible_residues = []
         templist = []
-        for i in xrange(mvars.numranges):
+        for i in range(mvars.numranges):
             thisreslow = mvars.reslow[i]
             thisnumcont = mvars.numcont[i]
             thisrange = numpy.arange(thisnumcont) + thisreslow
@@ -230,7 +230,7 @@ class monomer_monte_carlo():
             mtype = 0
             mask = avars.m1.get_dihedral_subset_mask(avars.flexible_residues, mtype)
 
-            for i in xrange(len(mask)):
+            for i in range(len(mask)):
                 this_mask = mask[i][:]
                 q0 = avars.flexible_residues[i]
                 residue_rotation_mask[q0] = this_mask.tolist()
@@ -245,7 +245,7 @@ class monomer_monte_carlo():
             mtype = 1
             mask = avars.m1.get_dihedral_subset_mask(avars.flexible_residues, mtype)
 
-            for i in xrange(len(mask)):
+            for i in range(len(mask)):
                 this_mask = mask[i][:]
                 q0 = avars.flexible_residues[i]
                 residue_rotation_mask[q0] = this_mask.tolist()
@@ -377,7 +377,7 @@ class monomer_monte_carlo():
             else:
                 string_basis = string.split(mvars.basis, ",")
                 number_basis_types = len(string_basis)
-                for i in xrange(number_basis_types):
+                for i in range(number_basis_types):
                     if(i == 0):
                         basis_filter = 'name[i] == "' + string_basis[i] + '" '
                     else:
@@ -431,7 +431,7 @@ class monomer_monte_carlo():
             else:
                 string_basis = string.split(mvars.basis, ",")
                 number_basis_types = len(string_basis)
-                for i in xrange(number_basis_types):
+                for i in range(number_basis_types):
                     if(i == 0):
                         basis_filter = 'name[i] == "' + string_basis[i] + '" '
                     else:
@@ -477,7 +477,7 @@ class monomer_monte_carlo():
             avars.mask_a_array = []
             avars.mask_b_array = []
 
-            for i in xrange(len(avars.distance_array)):
+            for i in range(len(avars.distance_array)):
 #                print constraint_basis1_array[i]
 #                print constraint_basis2_array[i]
 #                print avars.distance_array[i]
@@ -526,12 +526,12 @@ class monomer_monte_carlo():
         avars.all_rg_tally = []
         avars.accepted_rg_tally = []
 
-        if(mvars.plotflag == 1):
-            avars.graph = Gnuplot.Gnuplot(debug=1)
-            avars.graph.clear()
-            avars.graph('set title "Rg Results"')
-            avars.graph.xlabel('Structure Number')
-            avars.graph.ylabel('Rg (Angstrom^2)')
+        #if(mvars.plotflag == 1):
+        #    avars.graph = Gnuplot.Gnuplot(debug=1)
+        #    avars.graph.clear()
+        #    avars.graph('set title "Rg Results"')
+        #    avars.graph.xlabel('Structure Number')
+        #    avars.graph.ylabel('Rg (Angstrom^2)')
 
 
         log.debug(vars(mvars))
@@ -608,7 +608,7 @@ class monomer_monte_carlo():
         acc = 0
         oofile = 'objects.txt'
 
-        lineintxtOutput = ''.join(['=' for x in xrange(60)])
+        lineintxtOutput = ''.join(['=' for x in range(60)])
 #        ttxt=time.ctime()
         ttxt = time.asctime(time.gmtime(time.time()))
         pgui("\n%s \n" % (lineintxtOutput))
@@ -672,7 +672,7 @@ class monomer_monte_carlo():
             rg_list_length = 10  # hardwired
 
         for i in range(mvars.trials):
-            print '.',
+            print('.', end=' ')
             sys.stdout.flush()
 #           print i ; sys.stdout.flush()
 
@@ -692,21 +692,21 @@ class monomer_monte_carlo():
             this_final_coor_z = avars.m1.coor()[0, -1, 2]
 
             if(this_first_coor_x == this_final_coor_x and this_first_coor_y == this_final_coor_y and this_first_coor_z == this_final_coor_z):
-                print 'this_first_coor_x = ', this_first_coor_x
-                print 'this_first_coor_y = ', this_first_coor_y
-                print 'this_first_coor_z = ', this_first_coor_z
-                print 'this_final_coor_x = ', this_final_coor_x
-                print 'this_final_coor_y = ', this_final_coor_y
-                print 'this_final_coor_z = ', this_final_coor_z
+                print('this_first_coor_x = ', this_first_coor_x)
+                print('this_first_coor_y = ', this_first_coor_y)
+                print('this_first_coor_z = ', this_first_coor_z)
+                print('this_final_coor_x = ', this_final_coor_x)
+                print('this_final_coor_y = ', this_final_coor_y)
+                print('this_final_coor_z = ', this_final_coor_z)
 
                 if(i > 0):
-                    print 'previous_first_coor = ', previous_first_coor
-                    print 'previous_final_coor = ', previous_final_coor
+                    print('previous_first_coor = ', previous_first_coor)
+                    print('previous_final_coor = ', previous_final_coor)
 
-                print 'failtally = ', failtally
-                print 'goback = ', mvars.goback
+                print('failtally = ', failtally)
+                print('goback = ', mvars.goback)
 
-                print '>>> STOPPING NOW'
+                print('>>> STOPPING NOW')
 
                 sys.stdout.flush()
 
@@ -815,8 +815,10 @@ class monomer_monte_carlo():
             if(i > 9):
                 if((i + 1) % (mvars.trials / 10) == 0 and avars.accepted > 0 and i + 1 > 10):
                     if(mvars.plotflag == 1):
-                        avars.graph.plot(Gnuplot.Data(avars.all_rg_tally, using='1:2 w p ps 4', title='all Rg'), Gnuplot.Data(
-                            avars.accepted_rg_tally, using='1:3 w lp pt 5 ps 2', title='accepted'))
+                        #avars.graph.plot(Gnuplot.Data(avars.all_rg_tally, using='1:2 w p ps 4', title='all Rg'), Gnuplot.Data(
+                        #    avars.accepted_rg_tally, using='1:3 w lp pt 5 ps 2', title='accepted'))
+                        pass
+
                 fraction_done = (float(i + 1) / float(mvars.trials))
                 report_string = 'STATUS\t' + str(fraction_done)
                 pgui(report_string)
@@ -950,7 +952,7 @@ class monomer_monte_carlo():
 
         self.run_utils.clean_up(log)
 
-        lineintxtOutput = ''.join(['=' for x in xrange(60)])
+        lineintxtOutput = ''.join(['=' for x in range(60)])
         pgui("\n%s \n" % (lineintxtOutput))
         pgui('DIHEDRAL IS DONE')
         time.sleep(1.5)
