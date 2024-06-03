@@ -310,6 +310,7 @@ class data_interpolation():
             'original_q': [],
             'original_iq': [],
             'original_iq_error': [],
+            'signal_to_noise_cutoff_value': divars.cutval
         }
 
         for i in range(len(divars.io_tally)):
