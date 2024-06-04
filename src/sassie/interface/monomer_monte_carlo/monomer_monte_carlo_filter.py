@@ -25,7 +25,7 @@ import sassie.interface.input_filter as input_filter
 
 def check_protein(variables, eflag, monflag, **kwargs):
 
-    runname = variables['runname'][0]
+    run_name = variables['run_name'][0]
     dcdfile = variables['dcdfile'][0]
     path = variables['path'][0]
     pdbfile = variables['pdbfile'][0]
@@ -57,7 +57,7 @@ def check_protein(variables, eflag, monflag, **kwargs):
     directedmc = variables['directedmc'][0]
 
     error = []
-    error = input_filter.check_name(runname)
+    error = input_filter.check_name(run_name)
     if(error != []):
         return error
 

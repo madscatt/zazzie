@@ -21,13 +21,13 @@ def user_variables(self, **kwargs):
     ### BEGIN USER INPUT ###
     ### BEGIN USER INPUT ###
 
-    self.runname = 'run_0'
+    self.run_name = 'run_0'
     self.dcdfile = 'run_0.dcd'
     self.moltype = 'protein'
 #    self.moltype = 'rna'
     self.path = './'
-    self.pdbfile = 'min3.pdb'
-    #self.pdbfile = 'gag_start.pdb'
+    #self.pdbfile = 'min3.pdb'
+    self.pdbfile = 'gag_start.pdb'
 #    self.pdbfile = 'hiv1_gag_ma.pdb'
 #    self.pdbfile = 'trunc2a_min.pdb'   #rna
     self.trials = '200'
@@ -69,7 +69,7 @@ def user_variables(self, **kwargs):
     self.nonbondedscale = '1.0'     #used for nonbonded feature not currently implemented
     self.psffilepath = './'         #used for nonbonded feature not currently implemented
     self.psffilename = 'gag_start.psf'  #used for nonbonded feature not currently implemented
-    self.parmfilepath = sasconfig.__bin_path__ + 'toppar'  #used for nonbonded feature not currently implemented
+    self.parmfilepath = sasconfig.__bin_path__ + '/toppar'  #used for nonbonded feature not currently implemented
     self.parmfilename = 'par_all27_prot_na.inp' #used for nonbonded feature not currently implemented
     self.plotflag = '1'
 #    self.seed = '0,123'
@@ -97,7 +97,7 @@ def test_variables(self, paths):
     other_data_path = paths['other_data_path']
     module_data_path = paths['module_data_path']
 
-    self.runname = 'run_0'
+    self.run_name = 'run_0'
     self.dcdfile = 'run_0.dcd'
     self.moltype = 'protein'
     self.path = ''
@@ -143,7 +143,7 @@ def run_module(self, **kwargs):
 
     svariables = {}
 
-    svariables['runname'] = (self.runname, 'string')
+    svariables['run_name'] = (self.run_name, 'string')
     svariables['dcdfile'] = (self.dcdfile, 'string')
     svariables['moltype'] = (self.moltype, 'string')
     svariables['path'] = (self.path, 'string')
@@ -206,10 +206,10 @@ def run_module(self, **kwargs):
     except:
         pass
 
-    runname = self.variables['runname'][0]
+    run_name = self.variables['run_name'][0]
 
-    if os.path.exists(os.path.join(runname, self.module)):
-        shutil.rmtree(os.path.join(runname, self.module))
+    if os.path.exists(os.path.join(run_name, self.module)):
+        shutil.rmtree(os.path.join(run_name, self.module))
 
 
     txtQueue = multiprocessing.JoinableQueue()

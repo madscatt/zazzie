@@ -393,7 +393,14 @@ def rotate(coor, m1, q0, th, an, cut, lowrg, highrg, re, taccepted, zflag, zval,
 
     if result == 1:
         error, basis_coor = m1.get_coor_using_mask(frame, basis_mask)
-
+        print('type(basis_coor) = ', type(basis_coor))
+        print('type(basis_coor[0]) = ', type(basis_coor[0]))
+        print('type(cut) = ', type(cut))
+        print('basis_coor[0] = ', basis_coor[0])
+        print('basis_coor[0][0] = ', basis_coor[0][0])
+        print('basis_coor[0][1] = ', basis_coor[0][1])
+        print('cut = ', cut)
+        
         if(len(cutoff_array) > 0):
             check = vdw_overlap.overlap(
                 basis_coor[0], cutoff_array, vdw_factor)

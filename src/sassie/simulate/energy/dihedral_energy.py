@@ -31,7 +31,7 @@ def calc(angle_index,itheta,theta,parm,beta,nonbondflag,seed_object):
 	thetarad=theta*angle_to_radians
 	ithetarad=itheta*angle_to_radians
 	ai=angle_index
-	number_of_parm = len(parm[ai])/3
+	number_of_parm = int(len(parm[ai])/3)
 
 	iv = 0.0 ; v = 0.0
 	for i in range(number_of_parm):
@@ -152,8 +152,8 @@ def getparamphi(type):
 	elif(type==99):
 		man=1				# MAN-PRO ---> placeholder
 	else:
-		print("WRONG PHI TYPE: ",type,":: BUG !!!\n\n")
-		print(3/0)
+		print(("WRONG PHI TYPE: ",type,":: BUG !!!\n\n"))
+		print((3/0))
 
 	return k,n,delta,k2,n2,delta2
 
@@ -187,8 +187,8 @@ def getparampsi(type):
 	elif(type==99):
 		man=1				# PRO-MAN ---> placeholder
 	else:
-		print("WRONG PSI TYPE: ",type,":: BUG !!!\n\n")
-		print(3/0)
+		print(("WRONG PSI TYPE: ",type,":: BUG !!!\n\n"))
+		print((3/0))
 
 	return k,n,delta,k2,n2,delta2
 
@@ -377,10 +377,10 @@ def dihedral(coor,dihedralparam):
 			n2xi=locale.atof(dihedralparam[i][2][1])	
 			t2xi=deg2rad*locale.atof(dihedralparam[i][2][2])	
 			nps=2
-			print('k1xi = ',k1xi)
-			print('n1xi = ',n1xi)
-			print('t1xi = ',t1xi)
-			print(3/0)
+			print(('k1xi = ',k1xi))
+			print(('n1xi = ',n1xi))
+			print(('t1xi = ',t1xi))
+			print((3/0))
 		else:
 			dihedralenergy=dihedralenergy+k1xi*(1.0+numpy.cos(n1xi*xi-t1xi))
 

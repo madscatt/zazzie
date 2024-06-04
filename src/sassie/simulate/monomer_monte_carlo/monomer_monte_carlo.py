@@ -84,9 +84,9 @@ class monomer_monte_carlo():
 
     def main(self, input_variables, txtOutput):
 
-        self.mvars = module_variables()
+        self.module_variables = module_variables()
 
-        self.avars = monomer_monte_carlo_input_variables()
+        self.monomer_monte_carlo_variables = monomer_monte_carlo_input_variables()
 
         self.run_utils = module_utilities.run_utils(app, txtOutput)
 
@@ -113,10 +113,10 @@ class monomer_monte_carlo():
         method to extract variables into system wise class instance
         '''
         log = self.log
-        mvars = self.mvars
+        mvars = self.module_variables
         log.debug('in unpack_variables')
 
-        mvars.runname = variables['runname'][0]
+        mvars.run_name = variables['run_name'][0]
         mvars.dcdfile = variables['dcdfile'][0]
         mvars.path = variables['path'][0]
         mvars.pdbfile = variables['pdbfile'][0]
@@ -152,7 +152,7 @@ class monomer_monte_carlo():
 
         return 
 
-#mvars: runname, dcdfile, path, pdbfile, trials, goback, temp, molecule_type, numranges, dtheta, reslow, numcont, lowres1, highres1, basis, cutoff, lowrg, highrg, zflag, zcutoff, cflag, confile, nonbondflag, nonbondscale, psffilepath, psffilename, parmfilepath, parmfilename, plotflag, directedmc, seed
+#mvars: run_name, dcdfile, path, pdbfile, trials, goback, temp, molecule_type, numranges, dtheta, reslow, numcont, lowres1, highres1, basis, cutoff, lowrg, highrg, zflag, zcutoff, cflag, confile, nonbondflag, nonbondscale, psffilepath, psffilename, parmfilepath, parmfilename, plotflag, directedmc, seed
 #avars: m1, flexible_residues, lastsasfile, dcdoutfile, first_last_resid, cutoff_array, vdw_factor, basis_atom, pairdat, all_rg_tally, accepted_rg_tally, graph, hrg, lowestrg, accepted, over, badrg, nsteps, arg, trg, badz, badc, mask_a_array, mask_b_array, beta, dihedral_parameters, basis_mask, distance_array, type_array, genpaths, minx, miny, minz, maxx, maxy, maxz
 
 
@@ -191,7 +191,7 @@ class monomer_monte_carlo():
         Method to determine residues that are going to be rotated.
         '''
         log = self.log
-        mvars = self.mvars
+        mvars = self.module_variables
         pgui = self.run_utils.print_gui
 
         flexible_residues = []
@@ -213,8 +213,8 @@ class monomer_monte_carlo():
     def get_rotation_indices(self):
 
         log = self.log
-        mvars = self.mvars
-        avars = self.avars
+        mvars = self.module_variables
+        avars = self.monomer_monte_carlo_variables
         pgui = self.run_utils.print_gui
 
         log.debug('getting rotation indices for molecule')
@@ -288,22 +288,21 @@ class monomer_monte_carlo():
         log = self.log
         log.debug('in initialization')
         pgui = self.run_utils.print_gui
-
-        mvars = self.mvars
-        avars = self.avars
+        mvars = self.module_variables
+        avars = self.monomer_monte_carlo_variables
 
         pdbfilename = mvars.pdbfile
 
-        if(mvars.runname[-1] == '/'):
-            lin = len(mvars.runname)
-            mvars.runname = mvars.runname[:lin - 1]
+        if(mvars.run_name[-1] == '/'):
+            lin = len(mvars.run_name)
+            mvars.run_name = mvars.run_name[:lin - 1]
 
 
-        direxist = os.path.exists(mvars.runname)
+        direxist = os.path.exists(mvars.run_name)
         if(direxist == 0):
-            os.system('mkdir -p ' + mvars.runname)
+            os.system('mkdir -p ' + mvars.run_name)
 
-        genpath = mvars.runname + '/monomer_monte_carlo'
+        genpath = mvars.run_name + '/monomer_monte_carlo'
         avars.genpaths = genpath + '/'
         direxist = os.path.exists(genpath)
         if(direxist == 0):
@@ -323,7 +322,7 @@ class monomer_monte_carlo():
         if(fileexist == 1):
             os.system('mv -f .last_sas .last_sas_bu')
         avars.lastsasfile = open('./.last_sas', 'w')
-        avars.lastsasfile.write('run_name\t' + mvars.runname + '\n')
+        avars.lastsasfile.write('run_name\t' + mvars.run_name + '\n')
         avars.lastsasfile.write('pdb_name\t' + mvars.pdbfile + '\n')
         avars.lastsasfile.write('dcd_name\t' + mvars.dcdfile + '\n')
 
@@ -340,8 +339,8 @@ class monomer_monte_carlo():
 #        avars.m1.read_pdb(mvars.path + mvars.pdbfile, saspdbrx_topology=True)  
         avars.m1.read_pdb(mvars.path + mvars.pdbfile)
         nf1 = avars.m1.number_of_frames()       #not used?
-        avars.m1.calccom(0)                     #not used?
-#        print avars.m1.calccom(0)
+        avars.m1.calculate_center_of_mass(0)                     #not used?
+#        print avars.m1.calculate_center_of_mass(0)
 #        print avars.m1.coor()
 
         avars.dcdoutfile = avars.m1.open_dcd_write(avars.genpaths + mvars.dcdfile)
@@ -544,7 +543,7 @@ class monomer_monte_carlo():
 
         INPUT:	variable descriptions
 
-        runname:        string      project name                          
+        run_name:        string      project name                          
         path:           string      input file path                 
         dcdfile:        string      name of output dcd file containing accepted structures       
         moltype:        string      molecule type ('protein' or 'rna')
@@ -578,7 +577,7 @@ class monomer_monte_carlo():
         parmfilename    string      name of CHARMM parameter file
         plotflag        integer     option to plot structure number vs Rg
 
-        OUTPUT: files stored in "runname"/monomer_monte_carlo directory:
+        OUTPUT: files stored in "run_name"/monomer_monte_carlo directory:
 
         original PDB file with molecular structure data
         DCD file containing accepted structures
@@ -591,8 +590,8 @@ class monomer_monte_carlo():
         pgui = self.run_utils.print_gui
         log.debug('in dihedralgenerate')
 
-        mvars = self.mvars
-        avars = self.avars
+        mvars = self.module_variables
+        avars = self.monomer_monte_carlo_variables
 
         log.debug(vars(mvars))
         log.debug(vars(avars))
@@ -640,7 +639,7 @@ class monomer_monte_carlo():
             message = 'unable to create subset molecule for align'
             pgui(message)
 
-        com_sub_m1 = sub_m1.calccom(0)
+        com_sub_m1 = sub_m1.calculate_center_of_mass(0)
         sub_m1.center(0)
         coor_sub_m1 = sub_m1.coor()[0]
 
@@ -857,7 +856,7 @@ class monomer_monte_carlo():
         log.debug(vars(mvars))
         log.debug(vars(avars))
 
-        rgplot = open('./' + mvars.runname + '/monomer_monte_carlo/' +
+        rgplot = open('./' + mvars.run_name + '/monomer_monte_carlo/' +
                   mvars.dcdfile + '.all_rg_results_data.txt', 'a')
         rgplot.write('# structure number (structure 1 = 1; not 0), Rg (all)\n')
         for ii in range(len(avars.all_rg_tally)):
@@ -865,7 +864,7 @@ class monomer_monte_carlo():
                      (avars.all_rg_tally[ii][0] + 1, avars.all_rg_tally[ii][1]))
         rgplot.close()
 
-        rgplot = open('./' + mvars.runname + '/monomer_monte_carlo/' +
+        rgplot = open('./' + mvars.run_name + '/monomer_monte_carlo/' +
                   mvars.dcdfile + '.accepted_rg_results_data.txt', 'a')
         rgplot.write(
             '# structure number (structure 1 = 1; not 0), Rg (accepted), trial number\n')
