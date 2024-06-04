@@ -17,7 +17,6 @@
 import sys
 import numpy
 import math
-import sasmol.sasmol as sasmol
 import sasmol.sasmath as sasmath
 import sassie.simulate.constraints.constraints as constraints
 import sassie.simulate.monomer_monte_carlo.vdw_overlap as vdw_overlap

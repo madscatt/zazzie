@@ -22,7 +22,7 @@ import time
 import platform
 import numpy
 import random
-import sasmol.sasmol as sasmol
+import sasmol.system as system
 import sassie.util.module_utilities as module_utilities
 import sassie.util.sasconfig as sasconfig
 import sassie.util.folder_management as folder_management
@@ -330,8 +330,8 @@ class monomer_monte_carlo():
         kb = 1.380658E-23  # J/K
         avars.beta = 1.0 / (mvars.temp * kb)
 
-        avars.m1 = sasmol.SasMol(0)
-        m2 = sasmol.SasMol(1)       #not used?
+        avars.m1 = system.Molecule(0)
+        m2 = system.Molecule(1)       #not used?
 
 #       The 2.0 version of read_pdb with the saspdbrx_topology=True option gives different result than 1.0 version with same option
 #       The last few atoms of the last residue aren't included in the coordinates if this option is True
@@ -389,7 +389,7 @@ class monomer_monte_carlo():
             setup_basis_filter = 'name[i] == "' + avars.basis_atom + '"'
             error, setup_basis_mask = avars.m1.get_subset_mask(setup_basis_filter)
 
-            basis_m1 = sasmol.SasMol(1)
+            basis_m1 = system.Molecule(1)
             error = avars.m1.copy_molecule_using_mask(basis_m1, setup_basis_mask, 0)
             basis_resname = basis_m1.resname()
             basis_resid = basis_m1.resid()
@@ -441,7 +441,7 @@ class monomer_monte_carlo():
             setup_basis_filter = 'name[i] == "' + avars.basis_atom + '"'
 
             error, setup_basis_mask = avars.m1.get_subset_mask(setup_basis_filter)
-            basis_m1 = sasmol.SasMol(1)
+            basis_m1 = system.Molecule(1)
             error = avars.m1.copy_molecule_using_mask(basis_m1, setup_basis_mask, 0)
             basis_resname = basis_m1.resname()
             basis_resid = basis_m1.resid()
@@ -633,7 +633,7 @@ class monomer_monte_carlo():
             mvars.lowres1) + ' and resid[i] <= ' + str(mvars.highres1) + ')'
         error, align_mask = avars.m1.get_subset_mask(align_filter)
 
-        sub_m1 = sasmol.SasMol(2)
+        sub_m1 = system.Molecule(2)
         error = avars.m1.copy_molecule_using_mask(sub_m1, align_mask, 0)
 
         if len(error) > 0:
@@ -644,7 +644,7 @@ class monomer_monte_carlo():
         sub_m1.center(0)
         coor_sub_m1 = sub_m1.coor()[0]
 
-        sub_m2 = sasmol.SasMol(4)
+        sub_m2 = system.Molecule(4)
         error = avars.m1.copy_molecule_using_mask(sub_m2, align_mask, 0)
 
 #       MAIN LOOP

@@ -19,7 +19,6 @@ import sys
 import random
 import locale
 import numpy
-import sasmol.sascalc as sascalc
 import sassie.simulate.energy.dihedral_energy as dihedral_energy
 import sassie.simulate.monomer_monte_carlo.dihedral_rotate as dihedral_rotate
 
@@ -165,7 +164,6 @@ class Setup():
 
         '''
 
-       # 	angle_value=sascalc.Measure.calculate_dihedral(coor,this_sub_mask)
         angle_value = dihedral_rotate.measure(
             coor, indices, an, this_mask, q0, first_last_resid, molecule_type)
         search = 1

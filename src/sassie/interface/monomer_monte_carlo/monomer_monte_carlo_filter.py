@@ -18,7 +18,7 @@ import os
 import sys
 import locale
 import string
-import sasmol.sasmol as sasmol
+import sasmol.system as system
 import sassie.simulate.constraints.constraints as constraints
 import sassie.interface.input_filter as input_filter
 
@@ -121,14 +121,14 @@ def check_protein(variables, eflag, monflag, **kwargs):
             error.append(lerr[0] + err[0])
             return error
         filter_flag = 1
-        m1 = sasmol.SasMol(0)
+        m1 = system.Molecule(0)
         m1.read_pdb(pdbfile)
         err = constraints.read_constraints(m1, confile, filter_flag)
         if(err != []):
             error.append(err[0])
             return error
 
-    m1 = sasmol.SasMol(0)
+    m1 = system.Molecule(0)
     m1.read_pdb(pdbfile, fastread=True)
     name = m1.name()
     if(m1.number_of_moltypes() != 1):
@@ -306,7 +306,7 @@ def check_protein(variables, eflag, monflag, **kwargs):
             elif(moltype == 'rna'):
                 test_atoms = ["P", "O5'", "C5'", "C3'", "O3'"]
         elif(basis.lower() == 'all'):
-            m1 = sasmol.SasMol(0)
+            m1 = system.Molecule(0)
             m1.read_pdb(pdbfile)
             m1.set_average_vdw()
             atom_vdw = m1.atom_vdw()
@@ -348,7 +348,7 @@ def check_protein(variables, eflag, monflag, **kwargs):
 
     # check residue topology and atom ordering
 
-    m1 = sasmol.SasMol(0)
+    m1 = system.Molecule(0)
     #error = m1.read_pdb(pdbfile,fastread=True,saspdbrx_topology=True)
     if(len(error) > 0):
         error.append(result)
