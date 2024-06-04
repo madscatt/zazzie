@@ -89,7 +89,8 @@ def check_protein(variables, eflag, monflag, **kwargs):
         return error
     if(value == 0):
         error.append('input pdb file, ' +
-                     pdbfile[3:] + ', is not a valid pdb file')
+                     #pdbfile[3:] + ', is not a valid pdb file')
+                     pdbfile + ', is not a valid pdb file')
         return error
 
     if(trials < 1):
@@ -172,7 +173,7 @@ def check_protein(variables, eflag, monflag, **kwargs):
 
     locvariables = ['resid']
     value, result = input_filter.get_pdb_stats(pdbfile, locvariables)
-    resid = map(int, result[0])
+    resid = list(map(int, result[0]))
 
 # if(resid[0] != 1):
 #error.append('amino acid residues in starting pdbfile '+pdbfile+' must start at resid = 1 : '+str(resid[0]))
@@ -180,16 +181,16 @@ def check_protein(variables, eflag, monflag, **kwargs):
 
     number_aa = resid[-1] - resid[0] + 1
 
-    for i in xrange(resid[0], number_aa):
+    for i in range(resid[0], number_aa):
         #	ti=i+1
         ti = i
         if ti not in resid:
             error.append('amino acid ' + str(ti) +
                          ' is missing from pdbfile' + pdbfile)
-            print 'amino acid ' + str(ti) + ' is missing from pdbfile' + pdbfile
+            print('amino acid ' + str(ti) + ' is missing from pdbfile' + pdbfile)
             return error
 
-    for j in xrange(numranges):
+    for j in range(numranges):
         if (reslow[j] not in resid):
             error.append('Input pdb file, ' + str(pdbfile) + ' does not have low residue amino acid, "' + str(
                 reslow[j]) + '" for segment number ' + str(j) + ', range = ' + str(resid[0]) + ' : ' + str(resid[-1]))
@@ -214,7 +215,7 @@ def check_protein(variables, eflag, monflag, **kwargs):
                 number_aa) + '), reslow = ' + str(reslow[j]) + ' numcont = ' + str(numcont[j]))
             return error
 
-    for i in xrange(numranges - 1):
+    for i in range(numranges - 1):
         if(reslow[i] > reslow[i + 1]):
             error.append(
                 'low residue values must increase from low to high, reslow = ' + str(reslow))
@@ -318,7 +319,7 @@ def check_protein(variables, eflag, monflag, **kwargs):
             if any(None in sub_list for sub_list in atom_vdw):          #NOT TESTED. There are no elements in the list that have "None" as a vdw parameter.
                 atom_list = ''
                 name = m1.name()
-                for i in xrange(natoms):
+                for i in range(natoms):
                     if(atom_vdw[i][0] == None):
                         atom_list += ' ' + name[i]
                 error.append(
@@ -329,7 +330,7 @@ def check_protein(variables, eflag, monflag, **kwargs):
         else:
             string_basis = string.split(basis, ",")
             test_atoms = []
-            for i in xrange(len(string_basis)):
+            for i in range(len(string_basis)):
                 test_atoms.append(string_basis[i])
 
 #        print 'check_atoms: ', check_atoms

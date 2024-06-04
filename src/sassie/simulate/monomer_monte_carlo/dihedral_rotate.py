@@ -17,7 +17,7 @@
 import sys
 import numpy
 import math
-import sasmol.sasmath as sasmath
+import sasmol.linear_algebra as linear_algebra
 import sassie.simulate.constraints.constraints as constraints
 import sassie.simulate.monomer_monte_carlo.vdw_overlap as vdw_overlap
 import sassie.simulate.monomer_monte_carlo.overlap as overlap
@@ -46,14 +46,14 @@ def measure(coor, indices, an, this_mask, q0, first_last_resid, molecule_type):
     if(molecule_type == 'protein'):
 
         if(an == 'phi'):
-            angle = sasmath.dihedral_angle(
+            angle = linear_algebra.dihedral_angle(
                 lcoor[0, :], lcoor[1, :], lcoor[2, :], lcoor[3, :])
         elif(an == 'psi'):
             if(q0 == first_last_resid[0]):
-                angle = sasmath.dihedral_angle(
+                angle = linear_algebra.dihedral_angle(
                     lcoor[0, :], lcoor[1, :], lcoor[2, :], lcoor[3, :])
             else:
-                angle = sasmath.dihedral_angle(
+                angle = linear_algebra.dihedral_angle(
                     lcoor[1, :], lcoor[2, :], lcoor[3, :], lcoor[4, :])
         else:
             angle = 0.0
@@ -66,42 +66,42 @@ def measure(coor, indices, an, this_mask, q0, first_last_resid, molecule_type):
     elif(molecule_type == 'rna'):
 
         if(an == 'alpha'):
-            angle = sasmath.dihedral_angle(
+            angle = linear_algebra.dihedral_angle(
                 lcoor[0, :], lcoor[1, :], lcoor[2, :], lcoor[3, :])
         elif(an == 'beta'):
             if(q0 == first_last_resid[0]):
-                angle = sasmath.dihedral_angle(
+                angle = linear_algebra.dihedral_angle(
                     lcoor[0, :], lcoor[1, :], lcoor[2, :], lcoor[3, :])
             else:
-                angle = sasmath.dihedral_angle(
+                angle = linear_algebra.dihedral_angle(
                     lcoor[1, :], lcoor[2, :], lcoor[3, :], lcoor[4, :])
         elif(an == 'gamma'):
             if(q0 == first_last_resid[0]):
-                angle = sasmath.dihedral_angle(
+                angle = linear_algebra.dihedral_angle(
                     lcoor[1, :], lcoor[2, :], lcoor[3, :], lcoor[4, :])
             else:
-                angle = sasmath.dihedral_angle(
+                angle = linear_algebra.dihedral_angle(
                     lcoor[2, :], lcoor[3, :], lcoor[4, :], lcoor[5, :])
         elif(an == 'delta'):
             if(q0 == first_last_resid[0]):
-                angle = sasmath.dihedral_angle(
+                angle = linear_algebra.dihedral_angle(
                     lcoor[2, :], lcoor[3, :], lcoor[4, :], lcoor[5, :])
             else:
-                angle = sasmath.dihedral_angle(
+                angle = linear_algebra.dihedral_angle(
                     lcoor[3, :], lcoor[4, :], lcoor[5, :], lcoor[6, :])
         elif(an == 'epsilon'):
             if(q0 == first_last_resid[0]):
-                angle = sasmath.dihedral_angle(
+                angle = linear_algebra.dihedral_angle(
                     lcoor[3, :], lcoor[4, :], lcoor[5, :], lcoor[6, :])
             else:
-                angle = sasmath.dihedral_angle(
+                angle = linear_algebra.dihedral_angle(
                     lcoor[4, :], lcoor[5, :], lcoor[6, :], lcoor[7, :])
         elif(an == 'eta'):
             if(q0 == first_last_resid[0]):
-                angle = sasmath.dihedral_angle(
+                angle = linear_algebra.dihedral_angle(
                     lcoor[4, :], lcoor[5, :], lcoor[6, :], lcoor[7, :])
             else:
-                angle = sasmath.dihedral_angle(
+                angle = linear_algebra.dihedral_angle(
                     lcoor[5, :], lcoor[6, :], lcoor[7, :], lcoor[8, :])
         else:
             angle = 0.0

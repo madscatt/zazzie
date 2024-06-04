@@ -11,9 +11,7 @@ import time
 import sassie.util.sasconfig as sasconfig
 import sassie.interface.input_filter as input_filter
 import sassie.simulate.monomer_monte_carlo.monomer_monte_carlo as monomer_monte_carlo
-#import monomer_monte_carlo as monomer_monte_carlo
-import sassie.interface.monomer_monte_carlo.generate_filter as generate_filter
-#import generate_filter as generate_filter
+import sassie.interface.monomer_monte_carlo.monomer_monte_carlo_filter as monomer_monte_carlo_filter
 import multiprocessing
 
 
@@ -28,7 +26,8 @@ def user_variables(self, **kwargs):
     self.moltype = 'protein'
 #    self.moltype = 'rna'
     self.path = './'
-    self.pdbfile = 'gag_start.pdb'
+    self.pdbfile = 'min3.pdb'
+    #self.pdbfile = 'gag_start.pdb'
 #    self.pdbfile = 'hiv1_gag_ma.pdb'
 #    self.pdbfile = 'trunc2a_min.pdb'   #rna
     self.trials = '200'
@@ -191,9 +190,9 @@ def run_module(self, **kwargs):
     
     try:
         if kwargs['file_check']:
-            error = generate_filter.check_protein(self.variables, eflag, monflag)
+            error = monomer_monte_carlo_filter.check_protein(self.variables, eflag, monflag)
     except:
-            error = generate_filter.check_protein(self.variables, eflag, monflag, no_file_check="true")
+            error = monomer_monte_carlo_filter.check_protein(self.variables, eflag, monflag, no_file_check="true")
 
     if len(error) > 0:
         print('error = ', error)

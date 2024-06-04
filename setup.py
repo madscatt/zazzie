@@ -58,6 +58,7 @@ all_packages = ['sassie', 'sassie.util',
     'sassie.interface', 
     'sassie.interface.multi_component_analysis',
     'sassie.interface.data_interpolation',
+    'sassie.interface.monomer_monte_carlo',
     'sassie.interface.hullradsas',
     'sassie.tools', 
     'sassie.tools.data_interpolation',
@@ -75,6 +76,11 @@ all_packages = ['sassie', 'sassie.util',
     'sassie.simulate.torsion_angle_monte_carlo.extensions',
     'sassie.simulate.torsion_angle_monte_carlo.extensions.overlap',
     'sassie.simulate.torsion_angle_monte_carlo.extensions.dna_overlap',
+    'sassie.simulate.monomer_monte_carlo',
+    'sassie.simulate.monomer_monte_carlo.extensions',
+    'sassie.simulate.monomer_monte_carlo.extensions.pairs',
+    'sassie.simulate.monomer_monte_carlo.extensions.overlap',
+    'sassie.simulate.monomer_monte_carlo.extensions.vdw_overlap',
     'sassie.analyze', 
     'sassie.analyze.hullradsas'
     ]
@@ -124,6 +130,9 @@ setup(name='sassie',
 
     ext_modules=[
         Extension('sassie.simulate.torsion_angle_monte_carlo.overlap',[os.path.join('src','sassie','simulate','torsion_angle_monte_carlo','extensions','overlap','overlap.c')],include_dirs=[numpy_include]),
+        Extension('sassie.simulate.monomer_monte_carlo.overlap',[os.path.join('src','sassie','simulate','monomer_monte_carlo','extensions','overlap','overlap.c')],include_dirs=[numpy_include]),
+        Extension('sassie.simulate.monomer_monte_carlo.vdw_overlap',[os.path.join('src','sassie','simulate','monomer_monte_carlo','extensions','vdw_overlap','vdw_overlap.c')],include_dirs=[numpy_include]),
+        Extension('sassie.simulate.monomer_monte_carlo.pairs',[os.path.join('src','sassie','simulate','monomer_monte_carlo','extensions','pairs','pairs.c')],include_dirs=[numpy_include]),
         Extension('sassie.simulate.torsion_angle_monte_carlo.dna_overlap',[os.path.join('src','sassie','simulate','torsion_angle_monte_carlo','extensions','dna_overlap','dna_overlap.f')],include_dirs=[numpy_include])
         ]
 

@@ -4,31 +4,16 @@
     This is free software, and you are welcome to redistribute it under certain
     conditions; see http://www.gnu.org/licenses/gpl-3.0.html for details.
 '''
-# System imports
-from distutils.core import *
-from distutils      import sysconfig
-
-# Third-party modules - we depend on numpy for everything
+from setuptools import setup, Extension
 import numpy
 
-from numpy.distutils.core import Extension, setup
+overlap_module = Extension('overlap',
+                           sources=['overlap.c'],
+                           include_dirs=[numpy.get_include()])
 
-# Obtain the numpy include directory.  This logic works across numpy versions.
-try:
-    numpy_include = numpy.get_include()
-except AttributeError:
-    numpy_include = numpy.get_numpy_include()
-
-# simple extension module
-overlap = Extension(name="overlap",sources=['./overlap.c'],
-                   include_dirs = [numpy_include],
-                   )
-
-# NumyTypemapTests setup
-setup(  name        = "OVERLAP",
-        description = "Module checks for atomic overlap",
-        author      = "Joseph E. Curtis",
-        version     = "0.1",
-        ext_modules = [overlap]
-        )
-
+setup(
+    name='Overlap',
+    version='1.0',
+    description='Python package with C extension for overlap calculation',
+    ext_modules=[overlap_module],
+)
