@@ -411,7 +411,8 @@ def rotate(coor, m1, q0, th, an, cut, lowrg, highrg, re, taccepted, zflag, zval,
         filename = ''
         check = 1
 
-    thisrg = m1.calcrg(frame)
+    #thisrg = m1.calcrg(frame)
+    thisrg = m1.calculate_radius_of_gyration(frame)
     if(thisrg > hrg):
         hrg = thisrg
     if(thisrg < lowestrg):

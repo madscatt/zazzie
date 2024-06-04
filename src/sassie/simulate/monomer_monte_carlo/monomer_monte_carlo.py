@@ -848,8 +848,8 @@ class monomer_monte_carlo():
         log = self.log
         pgui = self.run_utils.print_gui
 
-        mvars = self.mvars
-        avars = self.avars
+        mvars = self.module_variables
+        avars = self.monomer_monte_carlo_variables
 
         log.debug('in epilogue')
 

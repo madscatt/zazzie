@@ -26,8 +26,8 @@ def user_variables(self, **kwargs):
     self.moltype = 'protein'
 #    self.moltype = 'rna'
     self.path = './'
-    #self.pdbfile = 'min3.pdb'
-    self.pdbfile = 'gag_start.pdb'
+    self.pdbfile = 'min3.pdb'
+    #self.pdbfile = 'gag_start.pdb'
 #    self.pdbfile = 'hiv1_gag_ma.pdb'
 #    self.pdbfile = 'trunc2a_min.pdb'   #rna
     self.trials = '200'
@@ -57,6 +57,7 @@ def user_variables(self, **kwargs):
 #    self.basis = 'CA'      #do not use for rna
 #    self.cutoff = '1.0'    #for backbone
     self.cutoff = '0.8'     #for heavy and all
+    self.cutoff = '0.4'     #for heavy and all
 #    self.cutoff = '3.0'    #for 'CA'
     self.lowrg = '0.0'
     self.highrg = '400.0'

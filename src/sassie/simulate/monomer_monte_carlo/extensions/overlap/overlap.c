@@ -21,10 +21,12 @@ PyObject *overlap(PyObject *self, PyObject *args){
         PyErr_SetString(PyExc_TypeError, "array must be 2D with 3 columns");
         return NULL;
     }
-    if (PyArray_TYPE(array) != NPY_FLOAT) {
+
+    /*if (PyArray_TYPE(array) != NPY_FLOAT) {
         PyErr_SetString(PyExc_TypeError, "array must contain floats");
         return NULL;
-    }
+    }*/
+
     natoms = PyArray_DIM(array, 0);
     check=0 ;
     for (i=0; i< natoms-1 ; i++){
