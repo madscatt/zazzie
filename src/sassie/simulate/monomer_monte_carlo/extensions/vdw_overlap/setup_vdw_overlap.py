@@ -4,32 +4,18 @@
     This is free software, and you are welcome to redistribute it under certain
     conditions; see http://www.gnu.org/licenses/gpl-3.0.html for details.
 '''
-# System imports
-from distutils.core import *
-from distutils      import sysconfig
 
-# Third-party modules - we depend on numpy for everything
+
+
+from setuptools import setup, Extension
 import numpy
 
-from numpy.distutils.core import Extension, setup
 
+module = Extension('vdw_overlap', sources=['vdw_overlap.c'], include_dirs=[numpy.get_include()])
 
-# Obtain the numpy include directory.  This logic works across numpy versions.
-try:
-    numpy_include = numpy.get_include()
-except AttributeError:
-    numpy_include = numpy.get_numpy_include()
-
-# simple extension module
-vdw_overlap = Extension(name="vdw_overlap",sources=['./vdw_overlap.f'],
-                   include_dirs = [numpy_include],
-                   )
-
-# NumyTypemapTests setup
-setup(  name        = "VDW_OVERLAP",
-        description = "Module calculates self overlap",
-        author      = "Joseph E. Curtis",
-        version     = "0.1",
-        ext_modules = [vdw_overlap]
-        )
-
+setup(
+    name='OverlapModule',
+    version='1.0',
+    description='Python package with C extension',
+    ext_modules=[module],
+)
