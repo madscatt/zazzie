@@ -22,10 +22,10 @@ PyObject *overlap(PyObject *self, PyObject *args){
         return NULL;
     }
 
-    /*if (PyArray_TYPE(array) != NPY_FLOAT) {
+    if (PyArray_TYPE(array) != NPY_FLOAT) {
         PyErr_SetString(PyExc_TypeError, "array must contain floats");
         return NULL;
-    }*/
+    }
 
     natoms = PyArray_DIM(array, 0);
     check=0 ;
@@ -39,8 +39,6 @@ PyObject *overlap(PyObject *self, PyObject *args){
             z2=*(float *)(PyArray_GETPTR2(array, j, 2)) ;
             sdist=((x2-x1)*(x2-x1)+(y2-y1)*(y2-y1)+(z2-z1)*(z2-z1)) ;
             dist=sqrt(sdist) ;
-
-
             if(dist<lcut){
 				check=1 ;
 				printf(" i = %d\tj = %d\tdist = %f\n", i,j,dist) ;

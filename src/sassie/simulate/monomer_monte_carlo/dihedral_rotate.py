@@ -395,23 +395,17 @@ def rotate(coor, m1, q0, th, an, cut, lowrg, highrg, re, taccepted, zflag, zval,
         error, basis_coor = m1.get_coor_using_mask(frame, basis_mask)
         print('type(basis_coor) = ', type(basis_coor))
         print('type(basis_coor[0]) = ', type(basis_coor[0]))
-        print('type(cut) = ', type(cut))
-        print('basis_coor[0] = ', basis_coor[0])
-        print('basis_coor[0][0] = ', basis_coor[0][0])
-        print('basis_coor[0][1] = ', basis_coor[0][1])
-        print('cut = ', cut)
         
         if(len(cutoff_array) > 0):
             check = vdw_overlap.overlap(
                 basis_coor[0], cutoff_array, vdw_factor)
         else:
-            check = overlap.overlap(basis_coor[0], float(cut))
+            check = overlap.overlap(numpy.array(basis_coor[0], numpy.float32), cut)
         filename = ''
     else:
         filename = ''
         check = 1
 
-    #thisrg = m1.calcrg(frame)
     thisrg = m1.calculate_radius_of_gyration(frame)
     if(thisrg > hrg):
         hrg = thisrg
@@ -428,11 +422,12 @@ def rotate(coor, m1, q0, th, an, cut, lowrg, highrg, re, taccepted, zflag, zval,
 
             sub_m2.setCoor(sub_m2.coor)
 
-            com_sub_m2 = sub_m2.calccom(0)
+            com_sub_m2 = sub_m2.calculate_center_of_mass(0)
             sub_m2.center(0)
             coor_sub_m2 = sub_m2.coor[0]
 
             m1.align(frame, coor_sub_m2, com_sub_m2, coor_sub_m1, com_sub_m1)
+            #molecule_2.align(molecule_1, basis_1, basis_2) 
 
             if(zflag == 1):
                 error, sub_m2.coor = m1.get_coor_using_mask(frame, basis_mask)

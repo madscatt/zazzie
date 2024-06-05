@@ -30,8 +30,8 @@ def user_variables(self, **kwargs):
     #self.pdbfile = 'gag_start.pdb'
 #    self.pdbfile = 'hiv1_gag_ma.pdb'
 #    self.pdbfile = 'trunc2a_min.pdb'   #rna
-    self.trials = '200'
-    self.goback = '20'
+    self.trials = '100'
+    self.goback = '10'
     self.temp = '300.0'
     self.numranges = '5'
 #    self.numranges = '1'
@@ -73,8 +73,8 @@ def user_variables(self, **kwargs):
     self.parmfilepath = sasconfig.__bin_path__ + '/toppar'  #used for nonbonded feature not currently implemented
     self.parmfilename = 'par_all27_prot_na.inp' #used for nonbonded feature not currently implemented
     self.plotflag = '1'
-#    self.seed = '0,123'
-    self.seed = '1,123' #to use a specific random sequence each time -- use to create files for tests
+    self.seed = '0,123'
+#    self.seed = '1,123' #to use a specific random sequence each time -- use to create files for tests
     
     self.testflag = False
 
@@ -175,7 +175,6 @@ def run_module(self, **kwargs):
     svariables['parmfilename'] = (self.parmfilename, 'string')
     svariables['plotflag'] = (self.plotflag, 'int')
     svariables['seed'] = (self.seed, 'int_array')
-
 
     error, self.variables = input_filter.type_check_and_convert(svariables)
 
