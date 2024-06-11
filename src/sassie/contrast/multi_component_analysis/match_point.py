@@ -45,11 +45,10 @@ import io
 import os
 import time
 import numpy
+import json
 import scipy.optimize
 import sassie.contrast.multi_component_analysis.polynomial_fit as polynomial_fit
 import sassie.contrast.multi_component_analysis.chi_squared_correlation as chi_squared_correlation
-import json
-
 #import polynomial_fit as polynomial_fit
 #import chi_squared_correlation as chi_squared_correlation
 
