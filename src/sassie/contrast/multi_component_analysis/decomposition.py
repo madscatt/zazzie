@@ -59,44 +59,51 @@
 import io
 import time
 import numpy
+import json
 import sassie.contrast.multi_component_analysis.read_sas_data_file_add_error as read_data_file
 import sassie.contrast.multi_component_analysis.guinier_analysis as guinier_analysis
 #import read_sas_data_file_add_error as read_data_file
 #import guinier_analysis as guinier_analysis
 
 
-
-
-def save_data_to_plot_as_json(other_self, square_root_izero, square_root_izero_error, square_root_izero_calculated, diff, match_point, match_point_error):
+def save_data_to_plot_as_json(other_self, calculated_scattering_data, composite_scattering_intensity):
+    '''
+    ***Save Data to Plot as JSON*** is the method that saves the data to be plotted to a JSON file.
+    '''
 
     mvars = other_self.module_variables
     mcavars = other_self.multi_component_analysis_variables
 
     data_dict = {
-        'fraction_d2o': [],
-        'sqrt[I(0)/c]': [],
-        'sqrt[I(0)/c]_error': [],
-        'sqrt[I(0)/c]_calc': [],
-        'sqrt[I(0)/c]-sqrt[I(0)/c]_calc': [],
-        'match_point': [],
-        'match_point_error': [],
-        'match_point_y_value': []
+        'fraction_d2o': [mvars.fraction_d2o[n] for n in range(len(mvars.fraction_d2o))],
+        'q_values': [mcavars.scattering_data[0][m][0] for m in range(len(mcavars.scattering_data[0]))],
+        'scattering_data': [[mcavars.scattering_data[n][m][1] for m in range(
+            len(mcavars.scattering_data[n]))] for n in range(len(mcavars.scattering_data))],
+        'scattering_data_error': [[mcavars.scattering_data[n][m][2] for m in range(
+            len(mcavars.scattering_data[n]))] for n in range(len(mcavars.scattering_data))],
+        'rescaled_scattering_data': [[mcavars.rescaled_scattering_data[n][m][1] for m in range(
+            len(mcavars.rescaled_scattering_data[n]))] for n in range(len(mcavars.rescaled_scattering_data))],
+        'rescaled_scattering_data_error': [[mcavars.rescaled_scattering_data[n][m][2] for m in range(
+            len(mcavars.rescaled_scattering_data[n]))] for n in range(len(mcavars.rescaled_scattering_data))],
+        'calculated_scattering_data': [[calculated_scattering_data[m][n] for m in range(
+            len(calculated_scattering_data))] for n in range(len(calculated_scattering_data[0]))],
+        'component_name': [mvars.component_name[n] for n in range(len(mvars.component_name))],
+        'composite_scattering_intensity_1': [composite_scattering_intensity[0][m][0] for m in range(
+            len(composite_scattering_intensity[0]))],
+        'composite_scattering_intensity_1_error': [composite_scattering_intensity[0][m][1] for m in range(
+            len(composite_scattering_intensity[0]))],
+        'composite_scattering_intensity_12': [composite_scattering_intensity[1][m][0] for m in range(len(composite_scattering_intensity[1]))],
+        'composite_scattering_intensity_12_error': [composite_scattering_intensity[1][m][1] for m in range(len(composite_scattering_intensity[1]))],
+        'composite_scattering_intensity_2': [composite_scattering_intensity[2][m][0] for m in range(len(composite_scattering_intensity[2]))],
+        'composite_scattering_intensity_2_error': [composite_scattering_intensity[2][m][1] for m in range(len(composite_scattering_intensity[2]))],
     }
 
-    for i in range(mvars.number_of_contrast_points):
-        # Append new values to the lists in the dictionary
-        data_dict['fraction_d2o'].append(mvars.fraction_d2o[i])
-        data_dict['sqrt[I(0)/c]'].append(square_root_izero[i])
-        data_dict['sqrt[I(0)/c]_error'].append(square_root_izero_error[i])
-        data_dict['sqrt[I(0)/c]_calc'].append(square_root_izero_calculated[i])
-        data_dict['sqrt[I(0)/c]-sqrt[I(0)/c]_calc'].append(diff[i])
+#    print('data dict', data_dict)
 
-    data_dict['match_point'].append(match_point)
-    data_dict['match_point_error'].append(match_point_error)
-    data_dict['match_point_y_value'].append(0)
-
+#    print('json_outfile', mcavars.json_outfile)
     json_data = json.dumps(data_dict)
 
+# Write the result to the file
     mcavars.json_outfile.write(json_data)
     mcavars.json_outfile.close()
 
@@ -182,6 +189,9 @@ def get_composite_scattering_intensities(other_self):
     delta_rho_v: float array (dimension = number_of_contrast_points)
         :math:`\Delta \rho V` as defined above at each fraction D\ :sub:`2`\ O  as defined in the Guinier analysis helper program
 
+    component_name:  string array (dimension = number_of_components)
+        names of the components
+
     composite_intensity_file_name:  string array (dimension = 3)
         names of the composite scattering intensity output files
 
@@ -209,7 +219,7 @@ def get_composite_scattering_intensities(other_self):
 
     rg_guinier: float array( dimension = number_of_contrast_points)
         The radius of gyration from the Guinier fit at each fraction D\ :sub:`2`\ O
-        
+
     rg_guinier_error: float array (dimension = number_of_contrast_points)
         The error in the Gunier radius of gyration at each fraction D\ :sub:`2`\ O
 
@@ -233,7 +243,7 @@ def get_composite_scattering_intensities(other_self):
 
     q_rg_min_guinier: float array (dimension = number_of_contrast_points)
         The minimum qR\ :sub: `g`\  value for the Guinier fit at each fraction D\ :sub:`2`\ O 
-        
+
     q_rg_max_guinier: float array (dimension = number_of_contrast_points)
         The maximum qR\ :sub: `g`\  value for the Guinier fit at each fraction D\ :sub:`2`\ O 
 
@@ -399,20 +409,20 @@ def get_composite_scattering_intensities(other_self):
             "%.2f" % mcavars.q_rg_min_guinier[j])+"\t"+str("%.2f" % mcavars.q_rg_max_guinier[j])+"\t"+str("%.2f" % mcavars.chi_squared_guinier[j])+"\t"+str("%2i" % mcavars.points_used_guinier[j])+"\t"+str("%.2f" % mcavars.initial_scale_factor[j])+"\t   "+str("%.2f" % mcavars.scale_factor[j])+"\t\t"+str("%.3f" % drho_sq))
 
 # this output is long; do we want to output it to the screen since the user will have to scroll up quite a bit to see the results of the Guinier analysis?
-    
+
     outstring = ""
     outstring1 = ""
     outstring2 = ""
-    pgui("\nDeviations between the composite scattering functions and the contrast variation series") 
-    outstring="fD2O:"
+    pgui("\nDeviations between the composite scattering functions and the contrast variation series")
+    outstring = "fD2O:"
     for i in range(mvars.number_of_contrast_points):
-        outstring = outstring+"\t"+str("%.2f" %mvars.fraction_d2o[i])
-    outstring = outstring+"\n"    
+        outstring = outstring+"\t"+str("%.2f" % mvars.fraction_d2o[i])
+    outstring = outstring+"\n"
     pgui(outstring)
 
     outstring1 = "q\t(delta_I(q)/sigma(I(q)))^2"
     tabs = mvars.number_of_contrast_points - 3
-    if(tabs > 1):
+    if (tabs > 1):
         for i in range(tabs):
             outstring1 = outstring1+"\t"
     else:
@@ -420,11 +430,11 @@ def get_composite_scattering_intensities(other_self):
     outstring1 = outstring1+"chi^2"
     pgui(outstring1)
     for j in range(mcavars.number_of_data_points):
-        outstring2 = str("%.4f" %mcavars.scattering_data[0][j][0])+"\t"
+        outstring2 = str("%.4f" % mcavars.scattering_data[0][j][0])+"\t"
         for i in range(mvars.number_of_contrast_points):
             outstring2 = outstring2+mean_square_difference[j][i]+"\t"
-        pgui(outstring2+str("%.2f" %reduced_chi_squared_list[j]))
-    
+        pgui(outstring2+str("%.2f" % reduced_chi_squared_list[j]))
+
 
 # output to files
 
@@ -528,7 +538,8 @@ def get_composite_scattering_intensities(other_self):
 # TODO:  This could be done in a loop
 
     with io.open(mcavars.multi_component_analysis_path+mcavars.composite_intensity_file_name[0], 'w') as f1:
-        f1.write("# Component 1 composite scattering intensity\n")
+        f1.write("# "+mvars.component_name[0] +
+                 " composite scattering intensity\n")
         f1.write("#     q           I(q)         sigma(I(q))\n")
         for i in range(mcavars.number_of_data_points):
             f1.write(str("%.6f" % mcavars.scattering_data[0][i][0])+"\t\t")
@@ -538,7 +549,8 @@ def get_composite_scattering_intensities(other_self):
                 str("%.6f" % composite_scattering_intensity[0][i][1])+"\n")
     f1.close()
     with io.open(mcavars.multi_component_analysis_path+mcavars.composite_intensity_file_name[1], 'w') as f2:
-        f2.write("# Inter-component composite scattering intensity\n")
+        f2.write("# "+mvars.component_name[0] + "-" + mvars.component_name[1] +
+                 " composite scattering intensity (cross-term)\n")
         f2.write("#     q           I(q)         sigma(I(q))\n")
         for i in range(mcavars.number_of_data_points):
             f2.write(str("%.6f" % mcavars.scattering_data[0][i][0])+"\t\t")
@@ -548,7 +560,8 @@ def get_composite_scattering_intensities(other_self):
                 str("%.6f" % composite_scattering_intensity[1][i][1])+"\n")
     f2.close()
     with io.open(mcavars.multi_component_analysis_path+mcavars.composite_intensity_file_name[2], 'w') as f3:
-        f3.write("# Component 2 composite scattering intensity\n")
+        f3.write("# "+mvars.component_name[1] +
+                 " composite scattering intensity\n")
         f3.write("#     q           I(q)         sigma(I(q))\n")
         for i in range(mcavars.number_of_data_points):
             f3.write(str("%.6f" % mcavars.scattering_data[0][i][0])+"\t\t")
@@ -558,11 +571,8 @@ def get_composite_scattering_intensities(other_self):
                 str("%.6f" % composite_scattering_intensity[2][i][1])+"\n")
     f3.close()
 
-
-#HERE
-
-    #save_data_to_plot_as_json(other_self, square_root_izero, square_root_izero_error,
-    #                          square_root_izero_calculated, diff, match_point, match_point_error)
+    save_data_to_plot_as_json(
+        other_self, calculated_scattering_data, composite_scattering_intensity)
 
     time.sleep(0.5)
 
