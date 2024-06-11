@@ -31,8 +31,7 @@ def check_and_convert_formula(formula_array):
         return error, formulas
 
     for i in range(number_of_formulas):
-        error, formula_dictionary = sasutil.get_chemical_formula(
-            formula_array[i])
+        error, formula_dictionary = sasutil.get_chemical_formula(formula_array[i])
 
         if len(error) > 0:
             return error, formulas
@@ -43,8 +42,7 @@ def check_and_convert_formula(formula_array):
 
 
 def check_name(filename):
-    bad_characters = ["<", ">", "|", "\\",
-                      ":", "(", ")", "&", ";", "#", "?", "*"]
+    bad_characters = ["<", ">", "|", "\\", ":", "(", ")", "&", ";", "#", "?", "*"]
     error = []
     for i in range(len(filename)):
         character = filename[i]
@@ -124,7 +122,7 @@ def type_check_and_convert(svariables):
                     + str(svariables[key][0])
                 )
                 return error, variables
-### string array added June 2023 (sk)
+###string array added June 2023 (sk)
         elif svariables[key][1] == "string_array":
             value = svariables.get(key)
 
@@ -133,7 +131,7 @@ def type_check_and_convert(svariables):
 
                 duma = []
                 for x in range(len(lin)):
-                    # remove blank spaces from string array, i.e., 'dum1, dum2' becomes ['dum1', 'dum2'] and not ['dum1', ' dum2']
+#remove blank spaces from string array, i.e., 'dum1, dum2' becomes ['dum1', 'dum2'] and not ['dum1', ' dum2']
                     item = lin[x]
                     new_item = item.replace(" ", "")
                     duma.append(new_item)
@@ -148,8 +146,7 @@ def type_check_and_convert(svariables):
                 variables[key] = (dum, "int")
             except:
                 error.append(
-                    key + " is not a " +
-                    svariables[key][1] + " : " + svariables[key][0]
+                    key + " is not a " + svariables[key][1] + " : " + svariables[key][0]
                 )
                 return error, variables
 
@@ -280,15 +277,15 @@ def check_permissions(path):
 
     return existvalue, readvalue, writevalue
 
-def check_binary(filename):
-    textchars = bytearray({7, 8, 9, 10, 13}.union(range(0x20, 0x7f)).union(range(0x80, 0x100)))
 
+def check_binary(filename):
+    textchars = "".join(map(chr, [7, 8, 9, 10, 12, 13, 27] + range(0x20, 0x100)))
     is_binary_string = lambda bytes: bool(bytes.translate(None, textchars))
 
-    with open(filename, 'rb') as file:
-        flag = is_binary_string(file.read(1024))
+    flag = is_binary_string(open(filename).read(1024))
 
     return flag
+
 
 def check_pdb_dcd(infile, filetype):
     fileexist = 0
@@ -297,6 +294,7 @@ def check_pdb_dcd(infile, filetype):
         fileexist = os.path.isfile(infile)
         if fileexist:
             binary = check_binary(infile)
+            print("binary = ", binary)
             test_mol = system.Molecule(0)
             fileexist = 1
             if filetype == "pdb" and not binary:
@@ -563,3 +561,4 @@ def get_pdb_complex_stats(filename, segname, variables):
         result = None
 
     return value, result
+    

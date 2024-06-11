@@ -1,0 +1,231 @@
+{
+  "data": [
+    {
+      "x": [
+        0.0,
+        0.2,
+        0.85,
+        1.0
+      ],
+      "y": [
+        0.3386689935451513,
+        0.24888229975636045,
+        -0.04292445505720971,
+        -0.11026447539880285
+      ],
+      "xaxis": "x",
+      "yaxis": "y",
+      "type": "scatter",
+      "mode": "lines",
+      "name": "calculated",
+      "line": {
+        "dash": "dash",
+        "color": "red",
+        "width": 3
+      },
+      "hoverinfo": "x+y"
+    },
+    {
+      "x": [
+        0.0,
+        0.2,
+        0.85,
+        1.0
+      ],
+      "y": [
+        0.3322493196224943,
+        0.26334511453727283,
+        -0.041089070180665904,
+        -0.11107503021679688
+      ],
+      "xaxis": "x",
+      "yaxis": "y",
+      "error_y": {
+        "type": "data",
+        "array": [
+          0.008848393252122192,
+          0.01282565486395913,
+          0.004859685380840533,
+          0.003112982204714958
+        ],
+        "visible": true,
+        "thickness": 3,
+        "width": 0
+      },
+      "type": "scatter",
+      "mode": "markers",
+      "name": "data",
+      "marker": {
+        "color": "blue",
+        "size": 8,
+        "symbol": "circle"
+      },
+      "hoverinfo": "x+y"
+    },
+    {
+      "x": [
+        0.7543857096282378
+      ],
+      "y": [
+        0
+      ],
+      "xaxis": "x",
+      "yaxis": "y",
+      "error_x": {
+        "type": "data",
+        "array": [
+          0.02205988073892743
+        ],
+        "visible": true,
+        "thickness": 3,
+        "width": 0
+      },
+      "type": "scatter",
+      "mode": "markers",
+      "name": "match point",
+      "marker": {
+        "color": "green",
+        "size": "8",
+        "symbol": "circle"
+      },
+      "hoverinfo": "x+y"
+    },
+    {
+      "x": [
+        0.0,
+        0.2,
+        0.85,
+        1.0
+      ],
+      "y": [
+        -0.0064196739226569655,
+        0.01446281478091238,
+        0.0018353848765438052,
+        -0.0008105548179940247
+      ],
+      "xaxis": "x2",
+      "yaxis": "y2",
+      "type": "scatter",
+      "mode": "markers",
+      "marker": {
+        "color": "black",
+        "size": 8,
+        "symbol": "circle"
+      },
+      "name": "residuals",
+      "hoverinfo": "x+y"
+    }
+  ],
+  "layout": {
+    "height": 700,
+    "grid": {
+      "rows": 2,
+      "columns": 1,
+      "subplots": [
+        [
+          "xy"
+        ],
+        [
+          "x2y2"
+        ]
+      ]
+    },
+    "title": {
+      "text": "match point",
+      "y": 0.9,
+      "x": 0.47
+    },
+    "hovermode": "x",
+    "xaxis": {
+      "title": {
+        "text": "Fraction D<sub>2</sub>O",
+        "standoff": 5
+      },
+      "margin": {
+        "autoexpand": true
+      },
+      "autorange": true,
+      "showgrid": true,
+      "zeroline": false,
+      "showline": true,
+      "autotick": true,
+      "ticks": "inside",
+      "mirror": "ticks",
+      "showticklabels": true,
+      "tickformat": ".2r",
+      "hoverformat": ".2r"
+    },
+    "xaxis2": {
+      "title": {
+        "text": "Fraction D<sub>2</sub>O",
+        "standoff": 5
+      },
+      "margin": {
+        "autoexpand": true
+      },
+      "autorange": true,
+      "showgrid": true,
+      "zeroline": false,
+      "showline": true,
+      "autotick": true,
+      "ticks": "inside",
+      "mirror": "ticks",
+      "showticklabels": true,
+      "tickformat": ".2r",
+      "hoverformat": ".2r"
+    },
+    "yaxis": {
+      "title": "sqrt[I(0)/c]",
+      "autorange": true,
+      "showgrid": true,
+      "zeroline": true,
+      "showline": true,
+      "autotick": true,
+      "ticks": "inside",
+      "mirror": "ticks",
+      "showticklabels": true,
+      "tickformat": ".2r",
+      "hoverformat": ".2r",
+      "domain": [
+        0.47,
+        1.0
+      ]
+    },
+    "yaxis2": {
+      "title": "residuals",
+      "autorange": true,
+      "showgrid": true,
+      "zeroline": true,
+      "showline": true,
+      "autotick": true,
+      "ticks": "inside",
+      "mirror": "ticks",
+      "showticklabels": true,
+      "tickformat": ".2r",
+      "hoverformat": ".2r",
+      "domain": [
+        0,
+        0.38
+      ]
+    }
+  },
+  "config": {
+    "responsive": true,
+    "scrollZoom": true,
+    "toImageButtonOptions": {
+      "format": "png",
+      "scale": 2
+    },
+    "modeBarButtonsToRemove": [
+      "select2d",
+      "lasso2d"
+    ],
+    "modeBarButtonsToAdd": [
+      "togglespikelines",
+      "v1hovermode",
+      "hovercompare"
+    ],
+    "showLink": true,
+    "plotlyServerURL": "https://chart-studio.plotly.com"
+  }
+}

@@ -41,7 +41,7 @@ import time
 # import sassie.interface.input_filter as input_filter
 # import sassie.interface.multi_component_analysis.multi_component_analysis_filter as multi_component_analysis_filter
 import multi_component_analysis as multi_component_analysis
-import input_filter_new as input_filter
+import input_filter as input_filter
 import multi_component_analysis_filter as multi_component_analysis_filter
 import multiprocessing
 
@@ -66,7 +66,7 @@ def user_variables(self, **kwargs):
     self.path = "./"
     self.match_point_flag = False
     self.stuhrmann_parallel_axis_flag = False
-#    self.decomposition_flag = False
+    self.decomposition_flag = False
     self.stoichiometry_flag = False
 
 #    self.match_point_flag = True

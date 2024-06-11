@@ -1,0 +1,205 @@
+{
+  "data": [
+    {
+      "x": [
+        0.99,
+        0.12,
+        0.41
+      ],
+      "y": [
+        8.110427968594712,
+        0.6166885131638018,
+        0.2063798958113425
+      ],
+      "xaxis": "x",
+      "yaxis": "y",
+      "type": "scatter",
+      "mode": "markers",
+      "name": "calculated",
+      "marker": {
+        "color": "red",
+        "size": 10,
+        "symbol": "circle"
+      },
+      "hoverinfo": "x+y"
+    },
+    {
+      "x": [
+        0.99,
+        0.12,
+        0.41
+      ],
+      "y": [
+        8.1,
+        0.6,
+        0.17
+      ],
+      "xaxis": "x",
+      "yaxis": "y",
+      "error_y": {
+        "type": "data",
+        "array": [
+          0.2,
+          0.04,
+          0.01
+        ],
+        "visible": true,
+        "thickness": 3,
+        "width": 0
+      },
+      "type": "scatter",
+      "mode": "markers",
+      "name": "data",
+      "marker": {
+        "color": "blue",
+        "size": 8,
+        "symbol": "circle"
+      },
+      "hoverinfo": "x+y"
+    },
+    {
+      "x": [
+        0.99,
+        0.12,
+        0.41
+      ],
+      "y": [
+        -0.010427968594711956,
+        -0.01668851316380182,
+        -0.03637989581134249
+      ],
+      "xaxis": "x2",
+      "yaxis": "y2",
+      "type": "scatter",
+      "mode": "markers",
+      "name": "residuals",
+      "showlegend": true,
+      "marker": {
+        "color": "black",
+        "size": 8,
+        "symbol": "circle"
+      },
+      "hoverinfo": "x+y"
+    }
+  ],
+  "layout": {
+    "height": 700,
+    "grid": {
+      "rows": 2,
+      "columns": 1,
+      "subplots": [
+        [
+          "xy"
+        ],
+        [
+          "x2y2"
+        ]
+      ]
+    },
+    "title": {
+      "text": "Stoichiometry I(0) plot",
+      "y": 0.9,
+      "x": 0.47
+    },
+    "hovermode": "x",
+    "xaxis": {
+      "title": {
+        "text": "fraction D<sub>2</sub>O",
+        "standoff": 5
+      },
+      "margin": {
+        "autoexpand": true
+      },
+      "autorange": true,
+      "showgrid": true,
+      "zeroline": false,
+      "showline": true,
+      "autotick": true,
+      "ticks": "inside",
+      "mirror": "ticks",
+      "showticklabels": true,
+      "tickformat": ".2r",
+      "hoverformat": ".2r",
+      "domain": [
+        0,
+        1
+      ]
+    },
+    "xaxis2": {
+      "title": {
+        "text": "fraction D<sub>2</sub>O",
+        "standoff": 5
+      },
+      "margin": {
+        "autoexpand": true
+      },
+      "autorange": true,
+      "showgrid": true,
+      "zeroline": false,
+      "showline": true,
+      "autotick": true,
+      "ticks": "inside",
+      "mirror": "ticks",
+      "showticklabels": true,
+      "tickformat": ".2r",
+      "hoverformat": ".2r",
+      "domain": [
+        0,
+        1
+      ]
+    },
+    "yaxis": {
+      "title": "I(0)",
+      "autorange": true,
+      "showgrid": true,
+      "zeroline": false,
+      "showline": true,
+      "autotick": true,
+      "ticks": "inside",
+      "mirror": "ticks",
+      "showticklabels": true,
+      "tickformat": ".2r",
+      "hoverformat": ".2r",
+      "domain": [
+        0.47,
+        1.0
+      ]
+    },
+    "yaxis2": {
+      "title": "residuals",
+      "autorange": true,
+      "showgrid": true,
+      "zeroline": true,
+      "showline": true,
+      "autotick": true,
+      "ticks": "inside",
+      "mirror": "ticks",
+      "showticklabels": true,
+      "tickformat": ".2r",
+      "hoverformat": ".2r",
+      "domain": [
+        0,
+        0.38
+      ]
+    }
+  },
+  "config": {
+    "responsive": true,
+    "scrollZoom": true,
+    "toImageButtonOptions": {
+      "format": "png",
+      "scale": 2
+    },
+    "modeBarButtonsToRemove": [
+      "select2d",
+      "lasso2d"
+    ],
+    "modeBarButtonsToAdd": [
+      "togglespikelines",
+      "v1hovermode",
+      "hovercompare"
+    ],
+    "showLink": true,
+    "plotlyServerURL": "https://chart-studio.plotly.com"
+  }
+}

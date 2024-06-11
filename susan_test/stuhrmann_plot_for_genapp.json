@@ -1,0 +1,212 @@
+{
+  "data": [
+    {
+      "x": [
+        0.2232176074048721,
+        0.30249050515914366,
+        -1.96859005205827,
+        -0.7200691266361571
+      ],
+      "y": [
+        651.8302378389835,
+        616.6641306545422,
+        1026.0132216259103,
+        954.3791897286793
+      ],
+      "xaxis": "x",
+      "yaxis": "y",
+      "type": "scatter",
+      "mode": "markers",
+      "name": "calculated",
+      "marker": {
+        "color": "red",
+        "size": 10,
+        "symbol": "circle"
+      },
+      "hoverinfo": "x+y"
+    },
+    {
+      "x": [
+        0.2232176074048721,
+        0.30249050515914366,
+        -1.96859005205827,
+        -0.7200691266361571
+      ],
+      "y": [
+        647.7025,
+        622.5024999999999,
+        784.0,
+        982.1956
+      ],
+      "xaxis": "x",
+      "yaxis": "y",
+      "error_y": {
+        "type": "data",
+        "array": [
+          3.563,
+          4.491,
+          168.0,
+          25.072000000000003
+        ],
+        "visible": true,
+        "thickness": 3,
+        "width": 0
+      },
+      "type": "scatter",
+      "mode": "markers",
+      "name": "data",
+      "marker": {
+        "color": "blue",
+        "size": 8,
+        "symbol": "circle"
+      },
+      "hoverinfo": "x+y"
+    },
+    {
+      "x": [
+        0.2232176074048721,
+        0.30249050515914366,
+        -1.96859005205827,
+        -0.7200691266361571
+      ],
+      "y": [
+        -4.127737838983535,
+        5.83836934545775,
+        -242.01322162591032,
+        27.816410271320706
+      ],
+      "xaxis": "x2",
+      "yaxis": "y2",
+      "type": "scatter",
+      "mode": "markers",
+      "name": "residuals",
+      "showlegend": true,
+      "marker": {
+        "color": "black",
+        "size": 8,
+        "symbol": "circle"
+      },
+      "hoverinfo": "x+y"
+    }
+  ],
+  "layout": {
+    "height": 700,
+    "grid": {
+      "rows": 2,
+      "columns": 1,
+      "subplots": [
+        [
+          "xy"
+        ],
+        [
+          "x2y2"
+        ]
+      ]
+    },
+    "title": {
+      "text": "Stuhrmann plot",
+      "y": 0.9,
+      "x": 0.47
+    },
+    "hovermode": "x",
+    "xaxis": {
+      "title": {
+        "text": "1/contrast",
+        "standoff": 5
+      },
+      "margin": {
+        "autoexpand": true
+      },
+      "autorange": true,
+      "showgrid": true,
+      "zeroline": false,
+      "showline": true,
+      "autotick": true,
+      "ticks": "inside",
+      "mirror": "ticks",
+      "showticklabels": true,
+      "tickformat": ".2r",
+      "hoverformat": ".2r",
+      "domain": [
+        0,
+        1
+      ]
+    },
+    "xaxis2": {
+      "title": {
+        "text": "1/contrast",
+        "standoff": 5
+      },
+      "margin": {
+        "autoexpand": true
+      },
+      "autorange": true,
+      "showgrid": true,
+      "zeroline": false,
+      "showline": true,
+      "autotick": true,
+      "ticks": "inside",
+      "mirror": "ticks",
+      "showticklabels": true,
+      "tickformat": ".2r",
+      "hoverformat": ".2r",
+      "domain": [
+        0,
+        1
+      ]
+    },
+    "yaxis": {
+      "title": "R<sub>g</sub> <sup>2</sup>",
+      "autorange": true,
+      "showgrid": true,
+      "zeroline": false,
+      "showline": true,
+      "autotick": true,
+      "ticks": "inside",
+      "mirror": "ticks",
+      "showticklabels": true,
+      "tickformat": ".2r",
+      "hoverformat": ".2r",
+      "domain": [
+        0.47,
+        1.0
+      ]
+    },
+    "yaxis2": {
+      "title": "residuals",
+      "autorange": true,
+      "showgrid": true,
+      "zeroline": true,
+      "showline": true,
+      "autotick": true,
+      "ticks": "inside",
+      "mirror": "ticks",
+      "showticklabels": true,
+      "tickformat": ".2r",
+      "hoverformat": ".2r",
+      "domain": [
+        0,
+        0.38
+      ]
+    }
+  },
+  "config": {
+    "responsive": true,
+    "scrollZoom": true,
+    "toImageButtonOptions": {
+      "format": "png",
+      "scale": 2
+    },
+    "modeBarButtonsToRemove": [
+      "select2d",
+      "lasso2d"
+    ],
+    "modeBarButtonsToAdd": [
+      "togglespikelines",
+      "v1hovermode",
+      "hovercompare"
+    ],
+    "showLink": true,
+    "plotlyServerURL": "https://chart-studio.plotly.com"
+  }
+}
