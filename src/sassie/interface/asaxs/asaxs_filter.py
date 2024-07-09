@@ -112,8 +112,9 @@ def check_asaxs(variables, **kwargs):
 
     run_name = variables['run_name'][0]
 
+    error = []
 
-    return
+    return error
 
     expdata = variables['expdata'][0]
     io = variables['io'][0]

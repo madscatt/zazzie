@@ -1,5 +1,5 @@
 '''
-Driver method to run the interpolate module
+Driver method to run the asaxs module
 '''
 
 import sys
@@ -7,9 +7,9 @@ import os
 import shutil
 import time
 
-import sassie.tools.data_interpolation.data_interpolation as data_interpolation
+import sassie.analyze.asaxs.asaxs as asaxs
 import sassie.interface.input_filter as input_filter
-import sassie.interface.data_interpolation.interpolate_filter as interpolate_filter
+import sassie.interface.asaxs.asaxs_filter as asaxs_filter
 import multiprocessing
 
 
@@ -20,17 +20,21 @@ def user_variables(self, **kwargs):
     #### user input ####
 
     self.run_name = 'run_0'
+    self.pdb_name = "min3.pdb"
+    self.dcd_name = "run_0.dcd"
+
+    self.crysol_file_flag = True
+    self.sascalc_flag = False
+
+
+
+
     self.expdata = 'sans_data.sub'
-#    self.expdata = 'trunc2a_saxs.sub'
     self.ofile = 'sans_data.dat'
-#    self.ofile = 'trunc2a.dat'
     self.io = '0.04'
-#    self.io = '0.031'
     self.ioe = '0.001'
     self.dq = '.02'
-#    self.dq = '0.007'
     self.maxpoints = '16'
-#    self.maxpoints = '72'
     self.plotflag = '0'
 
     self.testflag = False
@@ -46,7 +50,7 @@ def test_variables(self, paths):
     are used for development tests
 
     this module defines variables that will be used to test the module as well as its input filter
-    variables are defined outside the gui_mimic_data_interpolation class so that they can be used by these other programs
+    variables are defined outside the gui_mimic_asaxs class so that they can be used by these other programs
 
     '''
 
@@ -56,6 +60,9 @@ def test_variables(self, paths):
     other_data_path = paths['other_data_path']
 
     self.run_name = 'run_0'
+
+
+
     self.expdata = os.path.join(other_data_path, 'sans_data.sub')
     self.ofile = 'sans_data.dat'
     self.io = '0.04'
@@ -78,6 +85,9 @@ def run_module(self, **kwargs):
     svariables = {}
 
     svariables['run_name'] = (self.run_name, 'string')
+
+
+
     svariables['expdata'] = (self.expdata, 'string')
     svariables['ofile'] = (self.ofile, 'string')
     svariables['io'] = (self.io, 'float')
@@ -95,9 +105,9 @@ def run_module(self, **kwargs):
 
     try:
         if kwargs['file_check']:
-            error = interpolate_filter.check_interpolate(self.variables)
+            error = asaxs_filter.check_asaxs(self.variables)
     except:
-        error = interpolate_filter.check_interpolate(
+        error = asaxs_filter.check_asaxs(
             self.variables, no_file_check="true")
 
     if(len(error) > 0):
@@ -118,15 +128,15 @@ def run_module(self, **kwargs):
         shutil.rmtree(os.path.join(run_name, self.module))
 
     txtQueue = multiprocessing.JoinableQueue()
-    this_interpolate = data_interpolation.data_interpolation()
-    this_interpolate.main(self.variables, txtQueue)
+    this_asaxs = asaxs.asaxs()
+    this_asaxs.main(self.variables, txtQueue)
 
 
-class gui_mimic_data_interpolation():
+class gui_mimic_asaxs():
     '''
     gui_mimic class contains the name of the module
     '''
-    module = 'data_interpoloation'
+    module = 'asaxs'
 
     def __init__(self, test, paths):
 
@@ -157,5 +167,5 @@ if __name__ == '__main__':
                  'dcd_data_path': dcd_data_path, 'module_data_path': module_data_path}
 
     start = time.time()
-    run_gui = gui_mimic_data_interpolation(test, paths)
+    run_gui = gui_mimic_asaxs(test, paths)
     print("time used: ", time.time() - start)
