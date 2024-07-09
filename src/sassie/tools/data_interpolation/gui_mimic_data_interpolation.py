@@ -51,7 +51,6 @@ def test_variables(self, paths):
     '''
 
     pdb_data_path = paths['pdb_data_path']
-    dcd_data_path = paths['dcd_data_path']
     module_data_path = paths['module_data_path']
     other_data_path = paths['other_data_path']
 
@@ -148,13 +147,11 @@ if __name__ == '__main__':
     if test:
         pdb_data_path = os.path.join(os.path.dirname(os.path.realpath(
             __file__)), '..', '..', 'data', 'pdb_common') + os.path.sep
-        dcd_data_path = os.path.join(os.path.dirname(os.path.realpath(
-            __file__)), '..', '..', 'data', 'dcd_common') + os.path.sep
         module_data_path = os.path.join(os.path.dirname(os.path.realpath(
             __file__)), '..', '..', 'data', 'interface', 'align') + os.path.sep
 
         paths = {'pdb_data_path': pdb_data_path,
-                 'dcd_data_path': dcd_data_path, 'module_data_path': module_data_path}
+                 'module_data_path': module_data_path}
 
     start = time.time()
     run_gui = gui_mimic_data_interpolation(test, paths)
