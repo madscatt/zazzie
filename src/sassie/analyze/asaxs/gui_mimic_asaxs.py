@@ -28,7 +28,6 @@ def user_variables(self, **kwargs):
 
 
 
-
     self.expdata = 'sans_data.sub'
     self.ofile = 'sans_data.dat'
     self.io = '0.04'
@@ -69,6 +68,7 @@ def test_variables(self, paths):
     self.ioe = '0.001'
     self.dq = '.02'
     self.maxpoints = '16'
+
     self.plotflag = '0'
 
     self.testflag = True
@@ -87,13 +87,12 @@ def run_module(self, **kwargs):
     svariables['run_name'] = (self.run_name, 'string')
 
 
-
-    svariables['expdata'] = (self.expdata, 'string')
-    svariables['ofile'] = (self.ofile, 'string')
-    svariables['io'] = (self.io, 'float')
-    svariables['ioe'] = (self.ioe, 'float')
-    svariables['dq'] = (self.dq, 'float')
-    svariables['maxpoints'] = (self.maxpoints, 'int')
+#    svariables['expdata'] = (self.expdata, 'string')
+#    svariables['ofile'] = (self.ofile, 'string')
+#    svariables['io'] = (self.io, 'float')
+#    svariables['ioe'] = (self.ioe, 'float')
+#    svariables['dq'] = (self.dq, 'float')
+#    svariables['maxpoints'] = (self.maxpoints, 'int')
     svariables['plotflag'] = (self.plotflag, 'int')
 
     error, self.variables = input_filter.type_check_and_convert(svariables)
@@ -131,6 +130,7 @@ def run_module(self, **kwargs):
     this_asaxs = asaxs.asaxs()
     this_asaxs.main(self.variables, txtQueue)
 
+    return
 
 class gui_mimic_asaxs():
     '''
