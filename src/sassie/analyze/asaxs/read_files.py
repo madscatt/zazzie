@@ -62,13 +62,17 @@ def read_crysol_files(other_self):
 
             # Check if the line has the correct number of components (5)
             if len(components) == 5:
-                # Convert the first component to float and name it 'q'
-                q = float(components[0])
+                # Convert the first component to float and name it 's' after dividing by 2*PI
+                s = float(components[0])/(2.0*numpy.pi)
                 # Convert the remaining components to float and store them as intensities
                 intensities = [float(component) for component in components[1:]]
-                # Append the 'q' and intensities as a tuple to the data list
-                data.append((q, *intensities))
+                # Append the 's' and intensities as a tuple to the data list
+                data.append((s, *intensities))
 
     # Example: Print the first few rows to verify
     for row in data[:5]:
-        print(f"q: {row[0]}, intensity_1: {row[1]}, intensity_2: {row[2]}, intensity_3: {row[3]}, intensity_4: {row[4]}")
+        print(f"s: {row[0]}, intensity_1: {row[1]}, intensity_2: {row[2]}, intensity_3: {row[3]}, intensity_4: {row[4]}")
+
+
+    # use q*2Pi, intensity_1 (total scattering with hydration), intensity_2 (vacuum scattering)
+
