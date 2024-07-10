@@ -107,6 +107,7 @@ class asaxs():
         log.debug('in unpack_variables')
 
         mvars.run_name = variables['run_name'][0]
+        mvars.pdb_file_name = variables['pdb_file_name'][0]
 
 #        mvars.expdata = variables['expdata'][0]
 #        mvars.ofile = variables['ofile'][0]

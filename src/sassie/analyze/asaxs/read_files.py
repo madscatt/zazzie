@@ -29,9 +29,14 @@ def read_structure_files(other_self):
     log = other_self.log
     pgui = other_self.run_utils.print_gui
     log.debug('in read_structure_files')
+    mvars = other_self.module_variables
     avars = other_self.asaxs_variables
 
-    mol = system.Molecule()
+    pdb_file_name = mvars.pdb_file_name
+
+    mol = system.Molecule(pdb_file_name)
+
+    print("natoms = ", mol.natoms())
 
     return
 
