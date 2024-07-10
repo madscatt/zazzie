@@ -27,7 +27,7 @@ import json
 import sassie.util.module_utilities as module_utilities
 import sassie.util.sasconfig as sasconfig
 
-import sassie.analyze.asaxs.read_structures as read_structures
+import sassie.analyze.asaxs.read_files as read_files
 
 '''
         ASAXS is the module that carries out a calculation of
@@ -48,6 +48,7 @@ import sassie.analyze.asaxs.read_structures as read_structures
 
 '''
 
+DEBUG = True
 
 if sasconfig.__level__ == "DEBUG":
     DEBUG = True
@@ -241,7 +242,7 @@ class asaxs():
         mvars = self.module_variables
         avars = self.asaxs_variables
 
-        read_structures.read_structure_files(self)        
+        read_files.read_structure_files(self)        
 
         #outfile2 = open(divars.interpath + mvars.ofile, 'w')
 
@@ -274,7 +275,7 @@ class asaxs():
         st = ''.join(['=' for x in range(60)])
         pgui("\n%s \n" % (st))
 
-        time.sleep(2.0)
+        time.sleep(1.0)
 
         ''' display progress '''
 
@@ -282,7 +283,7 @@ class asaxs():
         report_string = 'STATUS\t' + str(fraction_done)
         pgui(report_string)
 
-        time.sleep(2.0)
+        time.sleep(1.0)
 
         self.run_utils.clean_up(log)
 

@@ -21,12 +21,21 @@ def user_variables(self, **kwargs):
 
     self.run_name = 'run_0'
     self.pdb_name = "min3.pdb"
+
+    self.dcd_file_flag = False
     self.dcd_name = "run_0.dcd"
 
     self.crysol_file_flag = True
+    self.crysol_file_name = "test_crysol.txt"
+
     self.sascalc_flag = False
 
 
+
+    self.plot_flag = False
+    self.test_flag = False
+
+#
 
     self.expdata = 'sans_data.sub'
     self.ofile = 'sans_data.dat'
@@ -34,9 +43,6 @@ def user_variables(self, **kwargs):
     self.ioe = '0.001'
     self.dq = '.02'
     self.maxpoints = '16'
-    self.plotflag = '0'
-
-    self.testflag = False
 
     #### end user input ####
     #### end user input ####
@@ -69,9 +75,9 @@ def test_variables(self, paths):
     self.dq = '.02'
     self.maxpoints = '16'
 
-    self.plotflag = '0'
+    self.plot_flag = False
 
-    self.testflag = True
+    self.test_flag = True
 
 
 def run_module(self, **kwargs):
@@ -85,6 +91,14 @@ def run_module(self, **kwargs):
     svariables = {}
 
     svariables['run_name'] = (self.run_name, 'string')
+    svariables['pdb_file_name'] = (self.pdb_file_name, 'string')
+
+    svariables['dcd_file_flag'] = (self.dcd_file_flag, 'boolean')
+
+    if(self.dcd_file_flag):
+        svariables['dcd_file_name'] = (self.dcd_file_name, 'string')
+
+    svariables['dcd_file_flag'] = (self.dcd_file_flag, 'boolean')
 
 
 #    svariables['expdata'] = (self.expdata, 'string')
@@ -93,12 +107,13 @@ def run_module(self, **kwargs):
 #    svariables['ioe'] = (self.ioe, 'float')
 #    svariables['dq'] = (self.dq, 'float')
 #    svariables['maxpoints'] = (self.maxpoints, 'int')
-    svariables['plotflag'] = (self.plotflag, 'int')
+
+    svariables['plot_flag'] = (self.plot_flag, 'boolean')
 
     error, self.variables = input_filter.type_check_and_convert(svariables)
     if len(error) > 0:
         print('error = ', error)
-        if not(self.testflag):
+        if not(self.test_flag):
             sys.exit()
         return error
 
@@ -111,7 +126,7 @@ def run_module(self, **kwargs):
 
     if(len(error) > 0):
         print('error = ', error)
-        if not(self.testflag):
+        if not(self.test_flag):
             sys.exit()
         return error
 

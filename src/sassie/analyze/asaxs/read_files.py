@@ -29,7 +29,6 @@ def read_structure_files(other_self):
     log = other_self.log
     pgui = other_self.run_utils.print_gui
     log.debug('in read_structure_files')
-    pgui('in read_structure_files')
     avars = other_self.asaxs_variables
 
     mol = system.Molecule()
