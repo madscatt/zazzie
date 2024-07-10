@@ -108,6 +108,10 @@ class asaxs():
 
         mvars.run_name = variables['run_name'][0]
         mvars.pdb_file_name = variables['pdb_file_name'][0]
+        mvars.crysol_file_flag = variables['crysol_file_flag'][0]
+        if mvars.crysol_file_flag:
+            mvars.crysol_file_name = variables['crysol_file_name'][0]
+
 
 #        mvars.expdata = variables['expdata'][0]
 #        mvars.ofile = variables['ofile'][0]
@@ -244,6 +248,9 @@ class asaxs():
         avars = self.asaxs_variables
 
         read_files.read_structure_files(self)        
+
+        if(mvars.crysol_file_flag):
+            read_files.read_crysol_files(self)        
 
         #outfile2 = open(divars.interpath + mvars.ofile, 'w')
 

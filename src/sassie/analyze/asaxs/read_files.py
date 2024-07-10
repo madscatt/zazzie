@@ -41,4 +41,34 @@ def read_structure_files(other_self):
     return
 
 
+def read_crysol_files(other_self):
 
+    log = other_self.log
+    pgui = other_self.run_utils.print_gui
+    log.debug('in read_structure_files')
+    mvars = other_self.module_variables
+
+    crysol_file_name = mvars.crysol_file_name
+
+# Open the file for reading
+    with open(crysol_file_name, 'r') as file:
+        # Initialize an empty list to store the data
+        data = []
+
+        # Read the file line by line
+        for line in file:
+            # Split the line into components based on whitespace
+            components = line.split()
+
+            # Check if the line has the correct number of components (5)
+            if len(components) == 5:
+                # Convert the first component to float and name it 'q'
+                q = float(components[0])
+                # Convert the remaining components to float and store them as intensities
+                intensities = [float(component) for component in components[1:]]
+                # Append the 'q' and intensities as a tuple to the data list
+                data.append((q, *intensities))
+
+    # Example: Print the first few rows to verify
+    for row in data[:5]:
+        print(f"q: {row[0]}, intensity_1: {row[1]}, intensity_2: {row[2]}, intensity_3: {row[3]}, intensity_4: {row[4]}")

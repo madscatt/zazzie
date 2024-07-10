@@ -20,16 +20,15 @@ def user_variables(self, **kwargs):
     #### user input ####
 
     self.run_name = 'run_0'
-    self.pdb_file_name = os.path.join("test_inputs", "1E3B_label.pdb")
+    self.pdb_file_name = os.path.join("test_pdb_inputs", "1E3B_label.pdb")
 
     self.dcd_file_flag = False
     self.dcd_name = "run_0.dcd"
 
     self.crysol_file_flag = True
-    self.crysol_file_name = "test_crysol.txt"
+    self.crysol_file_name = os.path.join("test_crysol_inputs", "DNA10Au2.int")
 
     self.sascalc_flag = False
-
 
 
     self.plot_flag = False
@@ -100,6 +99,10 @@ def run_module(self, **kwargs):
 
     svariables['dcd_file_flag'] = (self.dcd_file_flag, 'boolean')
 
+    svariables['crysol_file_flag'] = (self.crysol_file_flag, 'boolean')
+
+    if self.crysol_file_flag:
+        svariables['crysol_file_name'] = (self.crysol_file_name, 'string')
 
 #    svariables['expdata'] = (self.expdata, 'string')
 #    svariables['ofile'] = (self.ofile, 'string')
