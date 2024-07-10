@@ -20,7 +20,7 @@ def user_variables(self, **kwargs):
     #### user input ####
 
     self.run_name = 'run_0'
-    self.pdb_name = "min3.pdb"
+    self.pdb_name = os.join("test_inputs", "1E3B_label.pdb")
 
     self.dcd_file_flag = False
     self.dcd_name = "run_0.dcd"
