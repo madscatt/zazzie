@@ -76,7 +76,7 @@ all_packages = ['sassie', 'sassie.util',
     'sassie.simulate.torsion_angle_monte_carlo.monte_carlo_utilities.protein_backbone_torsion',
     'sassie.simulate.torsion_angle_monte_carlo.extensions',
     'sassie.simulate.torsion_angle_monte_carlo.extensions.overlap',
-    #'sassie.simulate.torsion_angle_monte_carlo.extensions.dna_overlap',
+    'sassie.simulate.torsion_angle_monte_carlo.extensions.dna_overlap',
     'sassie.simulate.monomer_monte_carlo',
     'sassie.simulate.monomer_monte_carlo.extensions',
     'sassie.simulate.monomer_monte_carlo.extensions.pairs',
@@ -134,9 +134,8 @@ setup(name='sassie',
         Extension('sassie.simulate.torsion_angle_monte_carlo.overlap',[os.path.join('src','sassie','simulate','torsion_angle_monte_carlo','extensions','overlap','overlap.c')],include_dirs=[numpy_include]),
         Extension('sassie.simulate.monomer_monte_carlo.overlap',[os.path.join('src','sassie','simulate','monomer_monte_carlo','extensions','overlap','overlap.c')],include_dirs=[numpy_include]),
         Extension('sassie.simulate.monomer_monte_carlo.vdw_overlap',[os.path.join('src','sassie','simulate','monomer_monte_carlo','extensions','vdw_overlap','vdw_overlap.c')],include_dirs=[numpy_include]),
-        #Extension('sassie.simulate.monomer_monte_carlo.pairs',[os.path.join('src','sassie','simulate','monomer_monte_carlo','extensions','pairs','pairs.c')],include_dirs=[numpy_include]),
-        Extension('sassie.simulate.monomer_monte_carlo.pairs',[os.path.join('src','sassie','simulate','monomer_monte_carlo','extensions','pairs','pairs.c')],include_dirs=[numpy_include])
-        #Extension('sassie.simulate.torsion_angle_monte_carlo.dna_overlap',[os.path.join('src','sassie','simulate','torsion_angle_monte_carlo','extensions','dna_overlap','dna_overlap.f')],include_dirs=[numpy_include])
+        Extension('sassie.simulate.monomer_monte_carlo.pairs',[os.path.join('src','sassie','simulate','monomer_monte_carlo','extensions','pairs','pairs.c')],include_dirs=[numpy_include]),
+        Extension('sassie.simulate.torsion_angle_monte_carlo.dna_overlap',[os.path.join('src','sassie','simulate','torsion_angle_monte_carlo','extensions','dna_overlap','dna_overlap.c')],include_dirs=[numpy_include])
         ]
 
     )
