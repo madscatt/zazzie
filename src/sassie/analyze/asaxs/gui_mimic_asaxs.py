@@ -48,7 +48,7 @@ def user_variables(self, **kwargs):
     self.energy_range = "800"
     self.number_of_energy_values = "5"
 
-    self.nunber_of_d_values_for_pair_distribution = "60"
+    self.number_of_d_values_for_pair_distribution = "60"
     self.maximum_d_value_for_pair_distribution = "60"
 
     self.alternative_scattering_calculator_flag = False
@@ -59,8 +59,8 @@ def user_variables(self, **kwargs):
         self.sascalc_flag = False
         self.experimental_data_flag = False
 
-    if self.crysol_file_flag:
-        self.crysol_file_name = os.path.join("test_crysol_inputs", "DNA10Au2.int")
+        if self.crysol_file_flag:
+            self.crysol_file_name = os.path.join("test_crysol_inputs", "DNA10Au2.int")
 
 
     self.plot_flag = False
@@ -92,13 +92,6 @@ def test_variables(self, paths):
 
 
 
-    self.expdata = os.path.join(other_data_path, 'sans_data.sub')
-    self.ofile = 'sans_data.dat'
-    self.io = '0.04'
-    self.ioe = '0.001'
-    self.dq = '.02'
-    self.maxpoints = '16'
-
     self.plot_flag = False
 
     self.test_flag = True
@@ -116,25 +109,50 @@ def run_module(self, **kwargs):
 
     svariables['run_name'] = (self.run_name, 'string')
     svariables['pdb_file_name'] = (self.pdb_file_name, 'string')
-
     svariables['dcd_file_flag'] = (self.dcd_file_flag, 'boolean')
 
     if(self.dcd_file_flag):
         svariables['dcd_file_name'] = (self.dcd_file_name, 'string')
 
-    svariables['dcd_file_flag'] = (self.dcd_file_flag, 'boolean')
+    svariables['gaussian_noise_fraction'] = (self.gaussian_noise_fraction, 'float')
 
-    svariables['crysol_file_flag'] = (self.crysol_file_flag, 'boolean')
+    svariables['number_of_q_values'] = (self.number_of_q_values, 'integer')
+    svariables['maximum_q_value'] = (self.maximum_q_value, 'float')
 
-    if self.crysol_file_flag:
-        svariables['crysol_file_name'] = (self.crysol_file_name, 'string')
+    svariables['number_of_d_values'] = (self.number_of_d_values, 'integer')
+    svariables['maximum_d_value'] = (self.maximum_d_value, 'float')
 
-#    svariables['expdata'] = (self.expdata, 'string')
-#    svariables['ofile'] = (self.ofile, 'string')
-#    svariables['io'] = (self.io, 'float')
-#    svariables['ioe'] = (self.ioe, 'float')
-#    svariables['dq'] = (self.dq, 'float')
-#    svariables['maxpoints'] = (self.maxpoints, 'int')
+
+
+    svariables['self.nanocluster_flag'] = (self.nanocluster_flag, 'boolean')
+
+    if self.nanocluster_flag:
+        # choice 1
+        svariables['self.nanocluster_atom_name'] = (self.nanocluster_atom_name, 'string')
+        svariables['self.nanocluster_radius'] = (self.nanocluster_radius, 'float')
+
+    svariables['self.central_energy_value'] = (self.central_energy_value, 'float')
+    svariables['self.energy_range'] = (self.energy_range, 'float')
+    svariables['self.number_of_energy_values'] = (self.number_of_energy_values, 'integer')
+
+    svariables['self.number_of_d_values_for_pair_distribution'] = (self.number_of_d_values_for_pair_distribution, 'integer')
+    svariables['self.maximum_d_value_for_pair_distribution'] = (self.maximum_d_value_for_pair_distribution, 'float')
+
+    svariables['self.alternative_scattering_calculator_flag'] = (self.alternative_scattering_calculator_flag, 'boolean')
+
+    if self.alternative_scattering_calculator_flag:
+        # choice 1
+        svariables['crysol_file_flag'] = (self.crysol_file_flag, 'boolean')
+        svariables['sascalc_file_flag'] = (self.sascalc_file_flag, 'boolean')
+        svariables['experimental_data_flag'] = (self.experimental_data_flag, 'boolean')
+
+        if self.crysol_file_flag:
+            svariables['crysol_file_name'] = (self.crysol_file_name, 'string')
+        elif self.sascalc_file_flag:
+            svariables['experimenal_data_file_name'] = (self.experimenal_data_file_name, 'string')
+        elif self.sascalc_file_flag:
+            svariables['sascalc_file_name'] = (self.sascalc_file_name, 'string')
+
 
     svariables['plot_flag'] = (self.plot_flag, 'boolean')
 
@@ -171,6 +189,11 @@ def run_module(self, **kwargs):
 
     txtQueue = multiprocessing.JoinableQueue()
     this_asaxs = asaxs.asaxs()
+
+
+#HERE
+    import sys ; sys.exit()
+
     this_asaxs.main(self.variables, txtQueue)
 
     return
