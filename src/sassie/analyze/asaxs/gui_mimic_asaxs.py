@@ -20,28 +20,53 @@ def user_variables(self, **kwargs):
     #### user input ####
 
     self.run_name = 'run_0'
+    
     self.pdb_file_name = os.path.join("test_pdb_inputs", "1E3B_label.pdb")
 
     self.dcd_file_flag = False
-    self.dcd_name = "run_0.dcd"
 
-    self.crysol_file_flag = True
-    self.crysol_file_name = os.path.join("test_crysol_inputs", "DNA10Au2.int")
+    if self.dcd_file_flag:
+        self.dcd_name = "run_0.dcd"
 
-    self.sascalc_flag = False
+    self.gaussian_noise_fraction = "0.001"
+
+    self.number_of_q_values = "31"
+    self.maximum_q_value = "1.0"
+
+    self.number_of_d_values = "31"
+    self.maximum_d_value = "1.0"
+
+    self.nanocluster_flag = True
+
+    if self.nanocluster_flag:
+        # choice 1
+        self.nanocluster_atom_name = "Au"
+
+        self.nanocluster_radius = "7.0"
+
+    self.central_energy_value = "12000"
+    self.energy_range = "800"
+    self.number_of_energy_values = "5"
+
+    self.nunber_of_d_values_for_pair_distribution = "60"
+    self.maximum_d_value_for_pair_distribution = "60"
+
+    self.alternative_scattering_calculator_flag = False
+
+    if self.alternative_scattering_calculator_flag:
+        # choice 1
+        self.crysol_flag = True
+        self.sascalc_flag = False
+        self.experimental_data_flag = False
+
+    if self.crysol_file_flag:
+        self.crysol_file_name = os.path.join("test_crysol_inputs", "DNA10Au2.int")
 
 
     self.plot_flag = False
     self.test_flag = False
 
 #
-
-    self.expdata = 'sans_data.sub'
-    self.ofile = 'sans_data.dat'
-    self.io = '0.04'
-    self.ioe = '0.001'
-    self.dq = '.02'
-    self.maxpoints = '16'
 
     #### end user input ####
     #### end user input ####
