@@ -84,6 +84,7 @@ all_packages = ['sassie', 'sassie.util',
     'sassie.simulate.monomer_monte_carlo.extensions.vdw_overlap',
     'sassie.analyze', 
     'sassie.analyze.asaxs', 
+    'sassie.analyze.asaxs.asaxs_methods',
     'sassie.analyze.hullradsas'
     ]
     
