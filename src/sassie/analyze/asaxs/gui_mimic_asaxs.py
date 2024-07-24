@@ -122,23 +122,21 @@ def run_module(self, **kwargs):
     svariables['number_of_d_values'] = (self.number_of_d_values, 'integer')
     svariables['maximum_d_value'] = (self.maximum_d_value, 'float')
 
-
-
-    svariables['self.nanocluster_flag'] = (self.nanocluster_flag, 'boolean')
+    svariables['nanocluster_flag'] = (self.nanocluster_flag, 'boolean')
 
     if self.nanocluster_flag:
         # choice 1
-        svariables['self.nanocluster_atom_name'] = (self.nanocluster_atom_name, 'string')
-        svariables['self.nanocluster_radius'] = (self.nanocluster_radius, 'float')
+        svariables['nanocluster_atom_name'] = (self.nanocluster_atom_name, 'string')
+        svariables['nanocluster_radius'] = (self.nanocluster_radius, 'float')
 
-    svariables['self.central_energy_value'] = (self.central_energy_value, 'float')
-    svariables['self.energy_range'] = (self.energy_range, 'float')
-    svariables['self.number_of_energy_values'] = (self.number_of_energy_values, 'integer')
+    svariables['central_energy_value'] = (self.central_energy_value, 'float')
+    svariables['energy_range'] = (self.energy_range, 'float')
+    svariables['number_of_energy_values'] = (self.number_of_energy_values, 'integer')
 
-    svariables['self.number_of_d_values_for_pair_distribution'] = (self.number_of_d_values_for_pair_distribution, 'integer')
-    svariables['self.maximum_d_value_for_pair_distribution'] = (self.maximum_d_value_for_pair_distribution, 'float')
+    svariables['number_of_d_values_for_pair_distribution'] = (self.number_of_d_values_for_pair_distribution, 'integer')
+    svariables['maximum_d_value_for_pair_distribution'] = (self.maximum_d_value_for_pair_distribution, 'float')
 
-    svariables['self.alternative_scattering_calculator_flag'] = (self.alternative_scattering_calculator_flag, 'boolean')
+    svariables['alternative_scattering_calculator_flag'] = (self.alternative_scattering_calculator_flag, 'boolean')
 
     if self.alternative_scattering_calculator_flag:
         # choice 1
@@ -152,7 +150,6 @@ def run_module(self, **kwargs):
             svariables['experimenal_data_file_name'] = (self.experimenal_data_file_name, 'string')
         elif self.sascalc_file_flag:
             svariables['sascalc_file_name'] = (self.sascalc_file_name, 'string')
-
 
     svariables['plot_flag'] = (self.plot_flag, 'boolean')
 

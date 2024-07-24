@@ -108,18 +108,57 @@ class asaxs():
 
         mvars.run_name = variables['run_name'][0]
         mvars.pdb_file_name = variables['pdb_file_name'][0]
-        mvars.crysol_file_flag = variables['crysol_file_flag'][0]
+
+        mvars.dcd_file_flag = variables['dcd_file_flag'][0]
+
+        mvars.dcd_file_name = None
+
+        if mvars.dcd_file_flag:
+            mvars.dcd_file_name = variables['dcd_file_name'][0]
+
+        mvars.gaussian_noise_fraction = variables['gaussian_noise_fraction'][0]
+
+        mvars.number_of_q_values = variables['number_of_q_values'][0]
+        mvars.maximum_q_value = variables['maximum_q_value'][0]
+
+        mvars.number_of_d_values = variables['number_of_d_values'][0]
+        mvars.maximum_d_value = variables['maximum_d_value'][0]
+
+        mvars.nanocluster_flag = variables['nanocluster_flag'][0]
+
+        if mvars.nanocluster_flag:
+        # choice 1
+            mvars.nanocluster_atom_name = variables['nanocluster_atom_name'][0]
+            mvars.nanocluster_radius = variables['nanocluster_radius'][0]
+
+        mvars.central_energy_value = variables['central_energy_value'][0]
+        mvars.energy_range = variables['energy_range'][0]
+        mvars.number_of_energy_values = variables['number_of_energy_values'][0]
+
+        mvars.number_of_d_values_for_pair_distribution = svariables['number_of_d_values_for_pair_distribution'][0]
+        mvars.maximum_d_value_for_pair_distribution = svariables['maximum_d_value_for_pair_distribution'][0]
+
+        mvars.alternative_scattering_calculator_flag = svariables['alternative_scattering_calculator_flag'][0]
+
+        mvars.crysol_file_name = None
+        mvars.sascalc_file_name = None
+        mvars.experimental_data_file_name = None
+
+        if mvars.alternative_scattering_calculator_flag:
+        # choice 1
+            mvars.crysol_flag = svariables['crysol_file_flag'][0]
+            mvars.sascalc_file_flag = svariables['sascalc_file_flag'][0]
+            mvars.experimental_data_flag = svariables['experimental_data_flag'][0]
+
+
         if mvars.crysol_file_flag:
-            mvars.crysol_file_name = variables['crysol_file_name'][0]
+            mvars.crysol_file_name = svariables['crysol_file_name'][0]
+        elif mvars.sascalc_file_flag:
+            mvars.sascalc_file_name = svariables['sascalc_file_name'][0]
+        elif mvars.sascalc_file_flag:
+            mvars.experimental_data_file_name = svariables['experimenal_data_file_name'][0] 
 
-
-#        mvars.expdata = variables['expdata'][0]
-#        mvars.ofile = variables['ofile'][0]
-#        mvars.io = variables['io'][0]
-#        mvars.ioe = variables['ioe'][0]
-#        mvars.dq = variables['dq'][0]
-#        mvars.maxpoints = variables['maxpoints'][0]
-#        mvars.plotflag = variables['plotflag'][0]
+        mvars.plotflag = variables['plotflag'][0]
 
         log.debug(vars(mvars))
 
