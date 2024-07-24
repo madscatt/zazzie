@@ -21,7 +21,11 @@ import locale
 import numpy
 import io
 
+import re
+
 import sasmol.system as system
+
+local_debug = True
 
 def process_pdb_file(other_self):
 
@@ -34,6 +38,57 @@ def process_pdb_file(other_self):
     mol = avars.mol
 
     print("in process_pdb_file: natoms = ", mol.natoms())
+
+    index = mol.index()
+    name = mol.name()
+    resname = mol.resname()
+    segname = mol.segname()
+
+    x = mol.coor()[0,:,0]
+    y = mol.coor()[0,:,1]
+    z = mol.coor()[0,:,2]
+
+
+    # matlab variables
+    
+    if local_debug:
+        output_filename = 'temp_pdb_output.txt'
+        outfile = open(output_filename, 'w')
+        outfile.write('Atom Data:\n') 
+
+    labels = []
+    atom_set = ['C', 'N', 'O', 'S', 'P', 'H', 'ZN', 'AU', 'AN', 'TB', 'PT', 'TT']
+
+    for i in range(mol.natoms()):
+        atom_type = 0
+        for atom_set_item in atom_set:
+            n_char = len(atom_set_item)
+            alt_name = re.sub(r'\d+', '', name[i][:n_char])
+        
+            if re.sub(r'\d+', '', name[i])[:n_char] == atom_set_item:
+                atom_type = atom_set.index(atom_set_item) + 1  # +1 to match MATLAB's 1-based indexing
+                break
+        if atom_type == 0:
+            raise ValueError("Error: Atom type not found.")
+
+        #Replace with alt_name
+        if segname[i] == "LBL":
+            labels.append([alt_name, atom_type, resname[i], x[i], y[i], z[i]])
+        elif atom_type != 6: # Skip hydrogen atoms
+            outfile.write(f'{alt_name} {atom_type} {resname[i]} {x[i]} {y[i]} {z[i]}\n')
+
+    outfile.write('Label Data:\n')
+    for i in range(len(labels)):
+        for j in range(len(labels[i])):
+            outfile.write(f'{labels[i][j]} ')
+        outfile.write('\n')
+
+
+    if local_debug:
+        outfile.close()
+
+    print("in process_pdb_file: atom_set = ", atom_set)
+
 
     return
 

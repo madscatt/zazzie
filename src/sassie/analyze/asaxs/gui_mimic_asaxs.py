@@ -21,7 +21,7 @@ def user_variables(self, **kwargs):
 
     self.run_name = 'run_0'
     
-    self.pdb_file_name = os.path.join("test_pdb_inputs", "1E3B_label.pdb")
+    self.pdb_file_name = os.path.join("test_pdb_inputs", "DNA10Au2.pdb")
 
     self.dcd_file_flag = False
 
