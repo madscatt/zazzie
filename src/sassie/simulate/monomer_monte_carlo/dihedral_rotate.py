@@ -121,8 +121,8 @@ def rotate_dihedral(coor, m1, frame, q0, itheta, an, indices, this_mask, first_l
     this_frame_coor = coor[0, :, :]
     lcoor = numpy.take(this_frame_coor[:, :], indices, 0)
 
-    v = numpy.zeros(3, numpy.float)
-    tee = numpy.identity(4, numpy.float)
+    v = numpy.zeros(3, numpy.float32)
+    tee = numpy.identity(4, numpy.float32)
 
     if(molecule_type == 'protein'):
 
@@ -318,7 +318,7 @@ def rotate_dihedral(coor, m1, frame, q0, itheta, an, indices, this_mask, first_l
     vz2 = vz * vz
     cot = math.cos(theta)
     sit = math.sin(theta)
-    r = numpy.zeros((4, 4), numpy.float)
+    r = numpy.zeros((4, 4), numpy.float32)
 
     r[0][0] = cot + (1.0 - cot) * vx2
     r[0][1] = (1.0 - cot) * vx * vy - sit * vz
