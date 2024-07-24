@@ -21,8 +21,6 @@ import locale
 import numpy
 import io
 
-import re
-
 import sasmol.system as system
 
 local_debug = True
@@ -63,9 +61,11 @@ def process_pdb_file(other_self):
         atom_type = 0
         for atom_set_item in atom_set:
             n_char = len(atom_set_item)
-            alt_name = re.sub(r'\d+', '', name[i][:n_char])
         
-            if re.sub(r'\d+', '', name[i])[:n_char] == atom_set_item:
+            # Manually remove digits from the name
+            alt_name = ''.join([char for char in name[i][:n_char] if not char.isdigit()])
+        
+            if ''.join([char for char in name[i] if not char.isdigit()])[:n_char] == atom_set_item:
                 atom_type = atom_set.index(atom_set_item) + 1  # +1 to match MATLAB's 1-based indexing
                 break
         if atom_type == 0:
@@ -75,16 +75,15 @@ def process_pdb_file(other_self):
         if segname[i] == "LBL":
             labels.append([alt_name, atom_type, resname[i], x[i], y[i], z[i]])
         elif atom_type != 6: # Skip hydrogen atoms
-            outfile.write(f'{alt_name} {atom_type} {resname[i]} {x[i]} {y[i]} {z[i]}\n')
-
-    outfile.write('Label Data:\n')
-    for i in range(len(labels)):
-        for j in range(len(labels[i])):
-            outfile.write(f'{labels[i][j]} ')
-        outfile.write('\n')
-
+            if local_debug:
+                outfile.write(f'{alt_name} {atom_type} {resname[i]} {x[i]} {y[i]} {z[i]}\n')
 
     if local_debug:
+        outfile.write('Label Data:\n')
+        for i in range(len(labels)):
+            for j in range(len(labels[i])):
+                outfile.write(f'{labels[i][j]} ')
+            outfile.write('\n')
         outfile.close()
 
     print("in process_pdb_file: atom_set = ", atom_set)
