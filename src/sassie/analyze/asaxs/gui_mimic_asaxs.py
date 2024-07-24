@@ -116,10 +116,10 @@ def run_module(self, **kwargs):
 
     svariables['gaussian_noise_fraction'] = (self.gaussian_noise_fraction, 'float')
 
-    svariables['number_of_q_values'] = (self.number_of_q_values, 'integer')
+    svariables['number_of_q_values'] = (self.number_of_q_values, 'int')
     svariables['maximum_q_value'] = (self.maximum_q_value, 'float')
 
-    svariables['number_of_d_values'] = (self.number_of_d_values, 'integer')
+    svariables['number_of_d_values'] = (self.number_of_d_values, 'int')
     svariables['maximum_d_value'] = (self.maximum_d_value, 'float')
 
     svariables['nanocluster_flag'] = (self.nanocluster_flag, 'boolean')
@@ -131,9 +131,9 @@ def run_module(self, **kwargs):
 
     svariables['central_energy_value'] = (self.central_energy_value, 'float')
     svariables['energy_range'] = (self.energy_range, 'float')
-    svariables['number_of_energy_values'] = (self.number_of_energy_values, 'integer')
+    svariables['number_of_energy_values'] = (self.number_of_energy_values, 'int')
 
-    svariables['number_of_d_values_for_pair_distribution'] = (self.number_of_d_values_for_pair_distribution, 'integer')
+    svariables['number_of_d_values_for_pair_distribution'] = (self.number_of_d_values_for_pair_distribution, 'int')
     svariables['maximum_d_value_for_pair_distribution'] = (self.maximum_d_value_for_pair_distribution, 'float')
 
     svariables['alternative_scattering_calculator_flag'] = (self.alternative_scattering_calculator_flag, 'boolean')
@@ -187,10 +187,7 @@ def run_module(self, **kwargs):
     txtQueue = multiprocessing.JoinableQueue()
     this_asaxs = asaxs.asaxs()
 
-
 #HERE
-    import sys ; sys.exit()
-
     this_asaxs.main(self.variables, txtQueue)
 
     return

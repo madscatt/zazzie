@@ -135,28 +135,32 @@ class asaxs():
         mvars.energy_range = variables['energy_range'][0]
         mvars.number_of_energy_values = variables['number_of_energy_values'][0]
 
-        mvars.number_of_d_values_for_pair_distribution = svariables['number_of_d_values_for_pair_distribution'][0]
-        mvars.maximum_d_value_for_pair_distribution = svariables['maximum_d_value_for_pair_distribution'][0]
+        mvars.number_of_d_values_for_pair_distribution = variables['number_of_d_values_for_pair_distribution'][0]
+        mvars.maximum_d_value_for_pair_distribution = variables['maximum_d_value_for_pair_distribution'][0]
 
-        mvars.alternative_scattering_calculator_flag = svariables['alternative_scattering_calculator_flag'][0]
+        mvars.alternative_scattering_calculator_flag = variables['alternative_scattering_calculator_flag'][0]
 
+        mvars.crysol_file_flag = False
         mvars.crysol_file_name = None
+
+        mvars.sascalc_file_flag = False
         mvars.sascalc_file_name = None
+
+        mvars.experimental_data_file_flag = False
         mvars.experimental_data_file_name = None
 
         if mvars.alternative_scattering_calculator_flag:
         # choice 1
-            mvars.crysol_flag = svariables['crysol_file_flag'][0]
-            mvars.sascalc_file_flag = svariables['sascalc_file_flag'][0]
-            mvars.experimental_data_flag = svariables['experimental_data_flag'][0]
+            mvars.crysol_file_flag = variables['crysol_file_flag'][0]
+            mvars.sascalc_file_flag = variables['sascalc_file_flag'][0]
+            mvars.experimental_data_flag = variables['experimental_data_flag'][0]
 
-
-        if mvars.crysol_file_flag:
-            mvars.crysol_file_name = svariables['crysol_file_name'][0]
-        elif mvars.sascalc_file_flag:
-            mvars.sascalc_file_name = svariables['sascalc_file_name'][0]
-        elif mvars.sascalc_file_flag:
-            mvars.experimental_data_file_name = svariables['experimenal_data_file_name'][0] 
+            if mvars.crysol_file_flag:
+                mvars.crysol_file_name = variables['crysol_file_name'][0]
+            elif mvars.sascalc_file_flag:
+                mvars.sascalc_file_name = variables['sascalc_file_name'][0]
+            elif mvars.sascalc_file_flag:
+                mvars.experimental_data_file_name = variables['experimenal_data_file_name'][0] 
 
         mvars.plot_flag = variables['plot_flag'][0]
 
@@ -298,7 +302,7 @@ class asaxs():
 
         read_files.read_structure_files(self)        
 
-        if(mvars.crysol_file_flag):
+        if mvars.crysol_file_flag:
             read_files.read_crysol_files(self)        
 
         #outfile2 = open(divars.interpath + mvars.ofile, 'w')
