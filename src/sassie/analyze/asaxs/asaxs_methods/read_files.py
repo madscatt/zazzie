@@ -34,9 +34,9 @@ def read_structure_files(other_self):
 
     pdb_file_name = mvars.pdb_file_name
 
-    mol = system.Molecule(pdb_file_name)
+    avars.mol = system.Molecule(pdb_file_name)
 
-    print("natoms = ", mol.natoms())
+    pgui("natoms = %s\n" % avars.mol.natoms())
 
     return
 

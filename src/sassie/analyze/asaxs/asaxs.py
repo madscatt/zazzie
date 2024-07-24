@@ -28,6 +28,7 @@ import sassie.util.module_utilities as module_utilities
 import sassie.util.sasconfig as sasconfig
 
 import sassie.analyze.asaxs.asaxs_methods.read_files as read_files
+import sassie.analyze.asaxs.asaxs_methods.asaxs_initialization as asaxs_initialization
 
 '''
         ASAXS is the module that carries out a calculation of
@@ -302,8 +303,18 @@ class asaxs():
 
         read_files.read_structure_files(self)        
 
+        asaxs_initialization.process_pdb_file(self)
+
+
+
         if mvars.crysol_file_flag:
             read_files.read_crysol_files(self)        
+
+        elif mvars.sascalc_file_flag:
+            pgui('sascalc not supported') 
+
+        elif mvars.experimental_data_file_flag:
+            pgui('experimental_data not supported') 
 
         #outfile2 = open(divars.interpath + mvars.ofile, 'w')
 
