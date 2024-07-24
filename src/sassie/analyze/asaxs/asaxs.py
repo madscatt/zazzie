@@ -158,7 +158,7 @@ class asaxs():
         elif mvars.sascalc_file_flag:
             mvars.experimental_data_file_name = svariables['experimenal_data_file_name'][0] 
 
-        mvars.plotflag = variables['plotflag'][0]
+        mvars.plot_flag = variables['plot_flag'][0]
 
         log.debug(vars(mvars))
 
@@ -169,13 +169,9 @@ class asaxs():
         method to prepare for asaxs 
         '''
 
-#mvars:    run_name, expdata, ofile, io, ioe, dq, maxpoints, plotflag
-
         log = self.log
         log.debug('in initialization')
         
-        #readfile = self.readfile
-
         pgui = self.run_utils.print_gui
         mvars = self.module_variables
         avars = self.asaxs_variables
@@ -185,38 +181,12 @@ class asaxs():
         if(direxist == 0):
             os.system('mkdir -p ' + avars.interpath)
 
-        # ttxt=time.ctime()
         ttxt = time.asctime(time.gmtime(time.time()))
         st = ''.join(['=' for x in range(60)])
 
         pgui("\n%s \n" % (st))
         pgui("DATA FROM RUN: %s \n\n" % (ttxt))
         
-       # pgui("Input file used : %s\n" % (mvars.expdata))
-
-        #data_file = open(mvars.expdata, 'r').readlines()
-#       #data_file=open(mvars.expdata,'r').read().splitlines()
-
-    #   #following line replaces control M (\r) with \n
-
-        #data_file = [x.replace("\r", "\n") for x in data_file]
-
-        #readfile(data_file)
-#
-#        divars.odata = []
-#        flag = 0
-#        divars.cut = []
-#        for i in range(divars.nval):
-#            divars.odata.append([divars.x[i], divars.y[i], divars.z[i]])
-#            if(divars.y[i] / divars.z[i] < 2.0 and flag == 0):
-#                divars.cut.append([divars.x[i - 1], divars.y[i - 1], mvars.io])
-#                divars.cutval = divars.x[i - 1]
-#                flag = 1
-#            elif((i == divars.nval - 1) and flag == 0):
-#                divars.cut.append([divars.x[i - 1], divars.y[i - 1], mvars.io])
-#                divars.cutval = divars.x[i - 1]
-#                flag = 1
-
         return
 
     def save_data_to_plot_as_json(self):
@@ -263,13 +233,53 @@ class asaxs():
 
         INPUT:  variable descriptions:
 
-                run_name:		    project name
+            run_name:		    project name
 
-                #expdata:        input NCNR data file (*.sub)
-                #io:             I(0)
-                #ioe:            Error in I(0)
-                #dq:             new delta q
-                #maxpoints:      number of new points
+            pdb_file_name:      name of reference PDB file
+
+            dcd_file_flag:      boolean to indicate use of DCD trajectory file
+            
+            dcd_file_name:      (optional) name of DCD trajectory file
+
+            gaussian_noise_fraction: amount of noise to represent experimental uncertainty
+
+            number_of_q_values: number of q-values used in scattering intensity calculations
+
+            maximum_q_value: maximum q-value used in scattering intensity calculations (1/Angstrom)
+
+            number_of_d_values: number of D-values used in scattering intensity calculations 
+
+            maximum_D_value: maximum D-value used in scattering intensity calculations (Angstrom)
+
+            nanocluster_flag:   boolean to indicate modeling single atom in PDB file as a cluster
+
+            nanocluster_atom_name: atom name to define scattering and cluster positions
+
+            nanocluster_radius: user supplied radius (Angstrom)
+
+            central_energy_value: energy near absorption edge (eV)
+
+            energy_range: range of energies to model (+/- energy_range / 2)
+
+            number_of_energy_values: number of energy values to use
+
+            number_of_d_values_for_pair_distribution: number of D-values to consider in final inversion 
+
+            maximum_d_value_for_pair_distribution: maximum D-value to use in final inversion (Angstrom)
+
+            alternative_scattering_calculator_flag: boolean to indicate using calcuated or measured scattering data 
+
+            crysol_file_flag: boolean to use a Crysol file 
+            crysol_file_name: (optional) name of Crysol file
+
+            sascalc_file_flag: boolean to use a SasCalc file
+            sascalc_file_name: (optional) name of SasCalc file
+
+            experimental_data_file_flag: boolean to use an experimental data file 
+            experimental_data_file_name: (optional) name of experimental data file
+
+            plot_flag: (optional) create plot data to save to file 
+
 
         OUTPUT:
 
