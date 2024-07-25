@@ -85,6 +85,8 @@ all_packages = ['sassie', 'sassie.util',
     'sassie.analyze', 
     'sassie.analyze.asaxs', 
     'sassie.analyze.asaxs.asaxs_methods',
+    'sassie.analyze.asaxs.asaxs_methods.prototype_testing_data',
+    'sassie.analyze.asaxs.asaxs_methods.prototype_testing_data.scattering_label_and_sum_data',
     'sassie.analyze.hullradsas'
     ]
     
