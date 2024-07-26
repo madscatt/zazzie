@@ -27,7 +27,8 @@ import json
 import sassie.util.module_utilities as module_utilities
 import sassie.util.sasconfig as sasconfig
 
-import sassie.calculate.asaxs.asaxs_methods as asaxs_methods
+import sassie.calculate.asaxs.asaxs_methods.read_files as read_files
+import sassie.calculate.asaxs.asaxs_methods.asaxs_initialization as asaxs_initialization
 
 '''
         ASAXS is the module that carries out a calculation of
@@ -300,15 +301,15 @@ class asaxs():
         mvars = self.module_variables
         avars = self.asaxs_variables
 
-        asaxs_methods.read_files.read_structure_files(self)        
+        read_files.read_structure_files(self)        
 
-        asaxs_methods.asaxs_initialization.process_pdb_file(self)
+        asaxs_initialization.process_pdb_file(self)
 
-        #asaxs_methods.scattering_label_and_sum()
+        #scattering_label_and_sum()
 
-        #asaxs_methods.construct_t_and_obtain_g()
+        #construct_t_and_obtain_g()
 
-        #asaxs_methods.obtain_pr()
+        #obtain_pr()
 
         if mvars.crysol_file_flag:
             read_files.read_crysol_files(self)        
