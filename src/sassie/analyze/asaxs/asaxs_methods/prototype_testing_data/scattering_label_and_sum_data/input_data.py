@@ -72,7 +72,7 @@ def initialize_input_data():
     handles['setRad'] = 7
     handles['setNum'] = 78
 
-# HARDCODED, SHOULD BE OFFERED AS OPTIONS IN GUI
+    # HARDCODED, SHOULD BE OFFERED AS OPTIONS IN GUI
     handles['lblXal'] = True
     handles['CRY'] = False
     handles['chk_addErr'] = False
@@ -165,6 +165,12 @@ def readCRYSOL(handles):
     handles['I_SCRYatSolv'] = np.array([row[1] for row in data]).reshape(1, nS)
     handles['I_SCRYatVac'] = np.array([row[2] for row in data]).reshape(1, nS)
     # handles['nS'] = nS
+
+
+
+
+
+
 
     return handles
 

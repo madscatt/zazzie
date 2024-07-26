@@ -46,7 +46,6 @@ def process_pdb_file(other_self):
     y = mol.coor()[0,:,1]
     z = mol.coor()[0,:,2]
 
-
     # matlab variables
     
     if local_debug:
@@ -87,7 +86,6 @@ def process_pdb_file(other_self):
         outfile.close()
 
     print("in process_pdb_file: atom_set = ", atom_set)
-
 
     return
 

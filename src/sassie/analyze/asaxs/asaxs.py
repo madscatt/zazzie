@@ -306,7 +306,6 @@ class asaxs():
         asaxs_initialization.process_pdb_file(self)
 
 
-
         if mvars.crysol_file_flag:
             read_files.read_crysol_files(self)        
 
