@@ -118,6 +118,73 @@ def pairScattFacs(energy, handles):
 
     return f, fPair, meanfAtoms
 
+## GITHUB COPILOT CONVERSION (JEC):
+
+#import numpy as np
+#from scipy.interpolate import interp1d
+
+def pair_scatt_facs(energy, handles):
+    """
+    Create an array of 2*Re(fi*conj(fj) and fi for all possible atom types, atom types pairs, and energies.
+    Input 'energy' is an array of energy values in keV.
+    Uses the fData array of scattering factors held in the handles structure.
+    Outputs fPair(energy, iType, jType) for each pair of atoms and energy,
+    and f(iEn, iType) and meanfAtoms(iEn, 2) (an average atom pair-scattering factor, 1:pdb data, 2:est).
+    """
+    nEn = len(energy)
+    nTypes = len(handles['fData'])
+    f = numpy.zeros((nEn, nTypes), dtype=complex)
+    fPair = numpy.zeros((nEn, nTypes, nTypes))
+
+    for iEn in range(nEn):
+        for iType in range(nTypes):  # Calculate the f at the required energy for each type
+            real_interp = interp1d(handles['fData'][iType][0], handles['fData'][iType][1], kind='linear', bounds_error=True)
+            imag_interp = interp1d(handles['fData'][iType][0], handles['fData'][iType][2], kind='linear', bounds_error=True)
+            f[iEn, iType] = complex(real_interp(energy[iEn]), imag_interp(energy[iEn]))
+
+        # Now calculate the combined scattering factors of all possible pairs
+        for iType in range(nTypes):
+            for jType in range(nTypes):
+                fPair[iEn, iType, jType] = 2 * numpy.real(f[iEn, iType] * numpy.conj(f[iEn, jType]))
+
+    # Calculate the mean abs(f)*abs(f) for self-scattering by all types of atom in molecule weighted by numbers of atoms of that type
+    meanfAtoms = numpy.zeros((nEn, 2))
+    numType = handles['tbl_numType']
+    numEstSet = True
+    numSet = True
+
+    if not numType[0][2]:
+        numEstSet = False
+        meanfAtoms[:, 1] = 1.0
+
+    if not numType[0][1]:
+        numSet = False
+        meanfAtoms[:, 0] = 1.0
+
+    for iEn in range(nEn):
+        for iType in range(len(handles['atomSet'])):
+            if numSet:
+                meanfAtoms[iEn, 0] += numType[iType][1] * abs(f[iEn, iType]) * abs(f[iEn, iType])
+                #pprint.pp(numType[iType][1])
+
+            elif numEstSet:
+                meanfAtoms[iEn, 1] += numType[iType][2] * abs(f[iEn, iType]) * abs(f[iEn, iType])
+                #pprint(numType[iType][1])
+
+            # meanfAtoms[iEn, 1] is averaged over the counted number of each type
+            # meanfAtoms[iEn, 2] is averaged over the estimated number of each type (user input)
+
+    # Ratio each value by the value at the first energy
+    for iEn in range(1, nEn):
+        meanfAtoms[iEn, 0] = meanfAtoms[iEn, 0] / meanfAtoms[0, 0]
+        meanfAtoms[iEn, 1] = meanfAtoms[iEn, 1] / meanfAtoms[0, 1]
+
+    meanfAtoms[0, :] = 1.0
+    fPairsCalc = True
+
+    return f, fPair, meanfAtoms, fPairsCalc  # Adjust the return values as needed
+
+
 def calcI_Satoms(handles):
     errorlg = False
     nEn = handles['nEnCalc']
@@ -397,21 +464,41 @@ def calculate_scattering_and_sum(handles):
     handles['lblNumCalc'] = handles['lblNum']
 
     # Calculate combined scattering factor
-    handles['fCalc'], handles['fPairCalc'], handles['meanfAtCalc'] = pairScattFacs(handles['EnCalc'], handles)
+#    handles['fCalc'], handles['fPairCalc'], handles['meanfAtCalc'] = pairScattFacs(handles['EnCalc'], handles)
 
-#    """
+    handles['fCalc'], handles['fPairCalc'], handles['meanfAtCalc'], handles['fPairsCalc'] = pair_scatt_facs(handles['EnCalc'], handles)
+
+    import pprint
+
+    print('fCalc')
+
+    pprint.pp(handles['fCalc'])
+
+    print('fPairCalc')
+
+    pprint.pp(handles['fPairCalc'])
+
+    print('meanfAtCalc')
+
+    pprint.pp(handles['meanfAtCalc'])
+
     # Calculate the atom-atom scattering I(S)
     handles, errorlg = calcI_Satoms(handles)
     if errorlg:
         raise Exception('Atom scatter intensity calc error')
-#    """
+
+    #print('I_Satoms')
+
+    #pprint.pp(handles['I_Satoms'][-1:])
+
+    #print('DONE')
 
     # Calculate the label-atom scattering I(S)
     handles, errorlg = calcI_SlblAtoms(handles)
     if errorlg:
         raise Exception('Label-scatter intensity calc error')
 
-    #"""
+
     # Calculate the label-label scattering I(S)
     handles, errorlg = calcI_SlblLbl(handles)
     if errorlg:
