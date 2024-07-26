@@ -83,11 +83,12 @@ all_packages = ['sassie', 'sassie.util',
     'sassie.simulate.monomer_monte_carlo.extensions.overlap',
     'sassie.simulate.monomer_monte_carlo.extensions.vdw_overlap',
     'sassie.analyze', 
-    'sassie.analyze.asaxs', 
-    'sassie.analyze.asaxs.asaxs_methods',
-    'sassie.analyze.asaxs.asaxs_methods.prototype_testing_data',
-    'sassie.analyze.asaxs.asaxs_methods.prototype_testing_data.scattering_label_and_sum_data',
-    'sassie.analyze.hullradsas'
+    'sassie.analyze.hullradsas',
+    'sassie.calculate', 
+    'sassie.calculate.asaxs', 
+    'sassie.calculate.asaxs.asaxs_methods',
+    'sassie.calculate.asaxs.asaxs_methods.prototype_testing_data',
+    'sassie.calculate.asaxs.asaxs_methods.prototype_testing_data.scattering_label_and_sum_data'
     ]
     
 ### end user edit ###

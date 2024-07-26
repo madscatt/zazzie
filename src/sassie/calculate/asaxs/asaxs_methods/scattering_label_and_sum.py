@@ -528,7 +528,7 @@ def calculate_scattering_and_sum(handles):
 
 if __name__ == "__main__":
 
-    import sassie.analyze.asaxs.asaxs_methods.prototype_testing_data.scattering_label_and_sum_data.input_data as input_data
+    import sassie.calculate.asaxs.asaxs_methods.prototype_testing_data.scattering_label_and_sum_data.input_data as input_data
 
     crysol_file_flag = False
 

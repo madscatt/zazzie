@@ -27,7 +27,7 @@ import json
 import sassie.util.module_utilities as module_utilities
 import sassie.util.sasconfig as sasconfig
 
-import sassie.analyze.asaxs.asaxs_methods as asaxs_methods
+import sassie.calculate.asaxs.asaxs_methods as asaxs_methods
 
 '''
         ASAXS is the module that carries out a calculation of

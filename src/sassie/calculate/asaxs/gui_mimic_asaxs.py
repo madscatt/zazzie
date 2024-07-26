@@ -7,7 +7,7 @@ import os
 import shutil
 import time
 
-import sassie.analyze.asaxs.asaxs as asaxs
+import sassie.calculate.asaxs.asaxs as asaxs
 import sassie.interface.input_filter as input_filter
 import sassie.interface.asaxs.asaxs_filter as asaxs_filter
 import multiprocessing
