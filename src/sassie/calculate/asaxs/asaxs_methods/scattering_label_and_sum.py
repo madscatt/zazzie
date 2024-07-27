@@ -240,6 +240,10 @@ def calcI_Satoms(handles):
                 SD = 2 * handles['SCalc'] * iD * handles['deltaD']
                 handles['I_Satoms'][iEn,:] += amplDatoms[iEn, iD] * numpy.sinc(SD)
 
+
+    numpy.savetxt('poutput.txt', amplDatoms, fmt='%f')
+    numpy.savetxt('poutput2.txt', handles['I_Satoms'], fmt='%f')
+
     handles['actDMax'] = actDMax
     return handles, errorlg
 
@@ -469,7 +473,7 @@ def calculate_scattering_and_sum(handles):
     handles['fCalc'], handles['fPairCalc'], handles['meanfAtCalc'], handles['fPairsCalc'] = pair_scatt_facs(handles['EnCalc'], handles)
 
     import pprint
-
+    '''
     print('fCalc')
 
     pprint.pp(handles['fCalc'])
@@ -481,18 +485,20 @@ def calculate_scattering_and_sum(handles):
     print('meanfAtCalc')
 
     pprint.pp(handles['meanfAtCalc'])
+    '''
 
     # Calculate the atom-atom scattering I(S)
+    sys.path.append('/Users/byc1/Documents/GitHub/asaxs_code/src/scat_label_and_sum/python_prototype')
+    import write_input_data_for_calcI_Satoms as satoms_input_data
+    satoms_input_data.write_input_data(handles)
+
     handles, errorlg = calcI_Satoms(handles)
     if errorlg:
         raise Exception('Atom scatter intensity calc error')
 
-    #print('I_Satoms')
+    print('DONE')
 
-    #pprint.pp(handles['I_Satoms'][-1:])
-
-    #print('DONE')
-
+    """
     # Calculate the label-atom scattering I(S)
     handles, errorlg = calcI_SlblAtoms(handles)
     if errorlg:
@@ -511,7 +517,6 @@ def calculate_scattering_and_sum(handles):
     handles['I_StotDone'] = True
     handles['I_SCRYtotDone'] = True
 
-    """
     
     # WRITEI_S METHOD WORKS ONLY FOR THE CASE WHEN CRYSOL DATA IS USED, ADD ADDITIONAL CASE WHEN NECESSARY
 
