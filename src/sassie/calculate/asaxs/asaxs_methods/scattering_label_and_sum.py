@@ -200,46 +200,43 @@ def calcI_Satoms(handles):
     amplDatoms = numpy.zeros((nEn, nD + 1))  # all atoms with each other (incl D=0 -> nD+1)
     handles['I_Satoms'] = numpy.zeros((nEn, nS + 1))  # all atoms with each other
 
-    for iAtom in range(nAtoms):  # for each atom
-        iType = handles['atomData'][iAtom][1]
-        coordsi = handles['atomData'][iAtom][3]
-        xi, yi, zi = coordsi
+    if not errorlg:
+        for iAtom in range(nAtoms):  # for each atom
+            if not errorlg:
+                iType = handles['atomData'][iAtom][1]
+                coordsi = handles['atomData'][iAtom][3]
+                xi, yi, zi = coordsi
 
-        for iEn in range(nEn):  # assign to 1st D-bin for each energy
-            amplDatoms[iEn, 0] += fPairs[iEn, iType, iType]
+                for iEn in range(nEn):  # assign to 1st D-bin for each energy
+                    amplDatoms[iEn, 0] += fPairs[iEn, iType, iType]  # assign the scattering to the relevant D bin
 
-        # For testing purposes
-        # print(f"amplDatoms: {amplDatoms[:,0]}")
+                # Prints out 1st D-bin for each energy for each atom
+                print(amplDatoms[:, 0])
 
-        for jAtom in range(iAtom + 1, nAtoms):  # count pairs EXcluding self-scatter
-            coordsj = handles['atomData'][jAtom][3]
-            jType = handles['atomData'][jAtom][1]
+                for jAtom in range(iAtom + 1, nAtoms):  # count pairs together excluding self-scatter
+                    coordsj = handles['atomData'][jAtom][3]
+                    jType = handles['atomData'][jAtom][1]
 
-            D = math.sqrt((coordsj[0] - xi)**2 + (coordsj[1] - yi)**2 + (coordsj[2] - zi)**2)
-            actDMax = max(actDMax, D)
+                    # Calculate distance
+                    D = ((coordsj[0] - xi) ** 2 + (coordsj[1] - yi) ** 2 + (coordsj[2] - zi) ** 2) ** 0.5
+                    actDMax = max(actDMax, D)  # save the biggest value
 
-            iD = math.ceil(D / deltaD)  # the element number for the D bin
+                    iD = int(D / handles['deltaD'])  # the element number for the D bin
+                    if iD > nD:
+                        errorlg = True
+                        print('DMax needs to be increased')
+                    else:
+                        for iEn in range(nEn):  # assign to D-bin for each energy
+                            amplDatoms[iEn, iD + 1] += fPairs[iEn, iType, jType]  # assign the scattering to the relevant D bin
 
-            if iD > nD:
-                errorlg = True
-                raise Exception('DMax needs to be increased')
-                # Replace with appropriate error handling
-            else:
-                for iEn in range(nEn):  # assign to D-bin for each energy
-                    amplDatoms[iEn, iD+1] += fPairs[iEn, iType, jType]
-
-            if errorlg:
-                break
-
-        if errorlg:
-            break
+                    if errorlg:
+                        break
 
     if not errorlg:
         for iEn in range(nEn):
             for iD in range(nD + 1):
                 SD = 2 * handles['SCalc'] * iD * handles['deltaD']
                 handles['I_Satoms'][iEn,:] += amplDatoms[iEn, iD] * numpy.sinc(SD)
-
 
     numpy.savetxt('poutput.txt', amplDatoms, fmt='%f')
     numpy.savetxt('poutput2.txt', handles['I_Satoms'], fmt='%f')

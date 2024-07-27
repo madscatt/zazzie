@@ -35,4 +35,6 @@ def compare_files(file1, file2):
 # Example usage
 file1 = '/Users/curtisj/git_working_copies/zazzie/src/sassie/calculate/asaxs/asaxs_methods/poutput.txt'
 file2 = '/Users/curtisj/git_working_copies/asaxs_code/src/scat_label_and_sum/matlab/output.txt'
+print('file1 = ', file1)
+print('file2 = ', file2)
 compare_files(file1, file2)
