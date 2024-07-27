@@ -211,7 +211,7 @@ def calcI_Satoms(handles):
                     amplDatoms[iEn, 0] += fPairs[iEn, iType, iType]  # assign the scattering to the relevant D bin
 
                 # Prints out 1st D-bin for each energy for each atom
-                print(amplDatoms[:, 0])
+                #print(amplDatoms[:, 0])
 
                 for jAtom in range(iAtom + 1, nAtoms):  # count pairs together excluding self-scatter
                     coordsj = handles['atomData'][jAtom][3]
@@ -265,8 +265,12 @@ def f_Ssphere(S, R, n):
 
     return f_fac
 
-
 def calcI_SlblAtoms(handles):
+    """
+    Calculate the intensity for the scattering between all atoms in the
+    molecule and each label type.
+    Output: handles['I_SlblAtoms'][iEn, ilblTypeCount, iS]
+    """
     errorlg = False
     nEn = handles['nEnCalc']
     nD = handles['nDCalc']
@@ -274,54 +278,63 @@ def calcI_SlblAtoms(handles):
     nlblTypes = handles['nlblTypes']
     nLabels = handles['nLabels']
 
-    amplDlblAt = numpy.zeros((nEn, nlblTypes, nD+1))
-    handles['I_SlblAtoms'] = numpy.zeros((nEn, nlblTypes, nS+1))
-
+    # First calculate the scattering amplitude/distance distributions for
+    # different combinations of atoms and labels
+    amplDlblAt = numpy.zeros((nEn, nlblTypes, nD + 1))  # all atoms with each label type (incl D=0 -> nD+1)
+    handles['I_SlblAtoms'] = numpy.zeros((nEn, nlblTypes, nS + 1))
     actDMax = handles['actDMax']
     fPairs = handles['fPairCalc']
-    deltaD = handles['deltaD']
-    SCalc = handles['SCalc']
 
     if not errorlg:
-        for iLabel in range(nLabels):
-            ilblCount = handles['labelData'][iLabel][4]
-            iType = handles['labelData'][iLabel][1]
-            coordsi = handles['labelData'][iLabel][3]
+        for iLabel in range(nLabels):  # for each label
+            print(f"iLabel = {iLabel}")
+            ilblCount = handles['labelData'][iLabel][5]  # assign according to the label type count e.g. label types 1 =AU, label type 2=TB
+            iType = handles['labelData'][iLabel][2]
+            coordsi = handles['labelData'][iLabel][4]
             xi, yi, zi = coordsi
-            for iEn in range(nEn):
-                amplDlblAt[iEn, ilblCount, 0] += fPairs[iEn, iType, iType]
 
-            for jAtom in range(handles['nAtoms']):
-                coordsj = handles['atomData'][jAtom][3]
-                jType = handles['atomData'][jAtom][1]
-                D = numpy.sqrt((coordsj[0] - xi)**2 + (coordsj[1] - yi)**2 + (coordsj[2] - zi)**2)
-                actDMax = max(actDMax, D)
-                iD = math.ceil(D / deltaD)
-                if iD > nD:
-                    errorlg = True
-                    print('DMax needs to be increased')
-                    break
-                else:
-                    for iEn in range(nEn):
-                        amplDlblAt[iEn, ilblCount, iD] += fPairs[iEn, iType, jType]
+            for iEn in range(nEn):  # assign to 1st D-bin for each energy
+                amplDlblAt[iEn, ilblCount, 0] += fPairs[iEn, iType, iType]  # assign the scattering to the relevant D bin
+
+            if not errorlg:
+                for jAtom in range(handles['nAtoms']):  # each atom with each label
+                    if not errorlg:
+                        coordsj = handles['atomData'][jAtom][4]
+                        jType = handles['atomData'][jAtom][2]
+                        xj, yj, zj = coordsj
+                        D = numpy.sqrt((coordsj[0] - xi)**2 + (coordsj[1] - yi)**2 + (coordsj[2] - zi)**2)
+                        
+                        actDMax = max(actDMax, D)  # save the biggest value
+                        iD = int(numpy.ceil(D / handles['deltaD']))  # the element number for the D bin
+                        if iD > nD:
+                            errorlg = True
+                            print('DMax needs to be increased')
+                        else:
+                            for iEn in range(nEn):  # assign to D-bin for each energy
+                                amplDlblAt[iEn, ilblCount, iD + 1] += fPairs[iEn, iType, jType]  # assign the scattering to the relevant D bin
+
+                    if errorlg:
+                        break
 
     handles['actDMax'] = actDMax
 
-    f_shape = numpy.ones((nlblTypes, len(SCalc)))
-    #print(numpy.shape(f_shape))
+    # Set the S-dependent scattering factor for nanocrystal labels of finite size
+    f_shape = numpy.ones((handles['nlblTypes'], len(handles['SCalc'])))
     if handles['lblXal']:
-        for ilbl in range(nlblTypes):
-            f_shape[ilbl, :] = f_Ssphere(SCalc, handles['lblRadCalc'][ilbl], handles['lblNumCalc'][ilbl])
+        for ilbl in range(handles['nlblTypes']):
+            f_shape[ilbl, :] = f_Ssphere(handles['SCalc'], handles['lblRadCalc'][ilbl], handles['lblNumCalc'][ilbl])
 
     if not errorlg:
+        # Now add together all the sinc functions for different distances
         for iEn in range(nEn):
-            for ilblCount in range(nlblTypes):
-                for iD in range(nD+1):
-                    SD = 2 * SCalc * iD * deltaD
-                    # did not know how to implement the reshape method, works without it but will result in errors with it. Shape may already match?
-                    handles['I_SlblAtoms'][iEn, ilblCount, :] += amplDlblAt[iEn, ilblCount, iD] * sinc(SD) * f_shape[ilblCount, :]
+            for ilblTypeCount in range(nlblTypes):
+                for iD in range(nD + 1):
+                    SD = 2 * handles['SCalc'] * iD * handles['deltaD']
+                    handles['I_SlblAtoms'][iEn, ilblTypeCount, :] += amplDlblAt[iEn, ilblTypeCount, iD] * numpy.sinc(SD / numpy.pi)
 
-    return handles, errorlg
+    return 
+
+
 
 def distPairs(nEn, iType, jType, coordsi, coordsj, fPair, amplD, handles):
     """
@@ -495,13 +508,12 @@ def calculate_scattering_and_sum(handles):
 
     print('DONE')
 
-    """
     # Calculate the label-atom scattering I(S)
     handles, errorlg = calcI_SlblAtoms(handles)
     if errorlg:
         raise Exception('Label-scatter intensity calc error')
 
-
+    """
     # Calculate the label-label scattering I(S)
     handles, errorlg = calcI_SlblLbl(handles)
     if errorlg:
