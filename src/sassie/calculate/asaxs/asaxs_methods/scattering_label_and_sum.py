@@ -498,7 +498,7 @@ def calculate_scattering_and_sum(handles):
     '''
 
     # Calculate the atom-atom scattering I(S)
-    sys.path.append('/Users/byc1/Documents/GitHub/asaxs_code/src/scat_label_and_sum/python_prototype')
+    #sys.path.append('/Users/byc1/Documents/GitHub/asaxs_code/src/scat_label_and_sum/python_prototype')
     import write_input_data_for_calcI_Satoms as satoms_input_data
     satoms_input_data.write_input_data(handles)
 
@@ -507,6 +507,9 @@ def calculate_scattering_and_sum(handles):
         raise Exception('Atom scatter intensity calc error')
 
     print('DONE')
+
+    import write_input_data_for_calcI_Slblatoms as slblatoms_input_data
+    slblatoms_input_data.write_input_data(handles)
 
     # Calculate the label-atom scattering I(S)
     handles, errorlg = calcI_SlblAtoms(handles)
