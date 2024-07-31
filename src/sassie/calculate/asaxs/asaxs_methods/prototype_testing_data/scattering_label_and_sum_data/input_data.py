@@ -66,8 +66,19 @@ def initialize_input_data():
     handles['pdbFile'] = 'python_output_read_pdb_DNA10Au2.txt'
     handles['CRYSOLFile'] = developer_path + '/asaxs_code/src/scat_label_and_sum/python_prototype/test_CRYSOL_inputs/matlab_output_read_crysol_DNA10Au2.txt'
     handles['fDataPath'] = developer_path + '/asaxs_code/src/scat_label_and_sum/matlab/scattering_factors/'
-    handles['output_file_path'] = developer_path + '/asaxs_code/src/scat_label_and_sum/python_prototype/python_prototype_test_scat_label_sum_outputs/'
+
+    #handles['output_file_path'] = developer_path + '/asaxs_code/src/scat_label_and_sum/python_prototype/python_prototype_test_scat_label_sum_outputs/'
+    #handles['output_file_name'] = f"python_prototype_output_calc_tot_I_{handles['pdbFile'].replace('python_output_read_pdb_', '')}"
+
+    handles['output_file_path'] = '.'
     handles['output_file_name'] = f"python_prototype_output_calc_tot_I_{handles['pdbFile'].replace('python_output_read_pdb_', '')}"
+
+
+    #handles['output_vars_file_path'] = developer_path + '/asaxs_code/src/scat_label_and_sum/python_prototype/python_prototype_test_scat_label_sum_outputs/'
+    handles['output_vars_file_path'] = '.'
+    #handles['output_vars_file_name'] = f"python_used_vars_{handles['pdbFile'].replace('python_output_read_pdb_', '')}"
+    handles['output_vars_file_name'] = f"python_used_vars_{handles['pdbFile'].replace('python_output_read_pdb_', '')}"
+
 
     handles['setRad'] = 7
     handles['setNum'] = 78
@@ -78,6 +89,37 @@ def initialize_input_data():
     handles['chk_addErr'] = False
 
     return handles
+
+
+
+def readPDB(handles):
+    # root = tk.Tk()
+    # root.withdraw()
+    # handles['pdbFile'] = filedialog.askopenfilename(initialdir = os.getcwd(), title = 'Select PDB file', filetypes = (('txt files', '*.txt'), ('all files', '*.*')))
+    # if handles['pdbFile'] == '':
+    #     raise Exception('No file selected')
+    # BENSON, HARDCODED FOR TESTING
+
+    handles['atomData'] = []
+    handles['labelData'] = []
+
+    #handles['output_vars_file_path'] = developer_path + '/asaxs_code/src/scat_label_and_sum/python_prototype/python_prototype_test_scat_label_sum_outputs/'
+    handles['output_vars_file_path'] = '.'
+    #handles['output_vars_file_name'] = f"python_used_vars_{handles['pdbFile'].replace('python_output_read_pdb_', '')}"
+    handles['output_vars_file_name'] = f"python_used_vars_{handles['pdbFile'].replace('python_output_read_pdb_', '')}"
+
+
+    handles['setRad'] = 7
+    handles['setNum'] = 78
+
+    # HARDCODED, SHOULD BE OFFERED AS OPTIONS IN GUI
+    handles['lblXal'] = True
+    handles['CRY'] = False
+    handles['chk_addErr'] = False
+
+    return handles
+
+
 
 def readPDB(handles):
     # root = tk.Tk()
@@ -94,11 +136,13 @@ def readPDB(handles):
     handles['lblType'] = []
     handles['nAtoms'] = 0
     handles['numlblType'] = []
+    iAtom = 0
 
     with open((handles['pdbFilePath'] + handles['pdbFile']), 'r') as fid:
         next(fid)
         for line in fid:
             if line != 'Label Data:\n':
+                iAtom+=1
                 parts = line.split()
                 if len(parts) == 6:
                     handles['atomData'].append([parts[0], int(parts[1])-1, parts[2], [float(parts[3]), float(parts[4]), float(parts[5])]])
@@ -108,6 +152,7 @@ def readPDB(handles):
             else:
                 break
 
+        handles['nAtoms'] = iAtom
         iLabel = 0
         for line in fid:
             parts = line.split()
@@ -162,8 +207,8 @@ def readCRYSOL(handles):
                 raise Exception('Invalid format')
     nS = len(data)
     handles['CRYSOL_S'] = [row[0] for row in data]
-    handles['I_SCRYatSolv'] = np.array([row[1] for row in data]).reshape(1, nS)
-    handles['I_SCRYatVac'] = np.array([row[2] for row in data]).reshape(1, nS)
+    handles['I_SCRYatSolv'] = numpy.array([row[1] for row in data]).reshape(1, nS)
+    handles['I_SCRYatVac'] = numpy.array([row[2] for row in data]).reshape(1, nS)
     # handles['nS'] = nS
 
 

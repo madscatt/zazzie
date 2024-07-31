@@ -44,84 +44,7 @@ def readfData(handles):
 
     return handles
 
-def pairScattFacs(energy, handles):
-    nEn = len(energy)
-    nTypes = len(handles['fData'])
-    f = numpy.zeros((nEn, nTypes), dtype=complex)
-    fPair = numpy.zeros((nEn, nTypes, nTypes))
-    meanfAtoms = numpy.zeros((nEn, 2))
-
-    for iEn in range(nEn):
-        for iType in range(nTypes):
-            # real_interp = interp1d(handles['fData'][iType][0], handles['fData'][iType][1])
-            # imag_interp = interp1d(handles['fData'][iType][0], handles['fData'][iType][2])
-            # f[iEn, iType] = complex(real_interp(energy[iEn]), imag_interp(energy[iEn]))
-            real_interp_value = numpy.interp(energy[iEn], handles['fData'][iType][0], handles['fData'][iType][1])
-            imag_interp_value = numpy.interp(energy[iEn], handles['fData'][iType][0], handles['fData'][iType][2])
-            f[iEn, iType] = complex(real_interp_value, imag_interp_value)
-
-        for iType in range(nTypes):
-            for jType in range(nTypes):
-                fPair[iEn, iType, jType] = round(2 * numpy.real(f[iEn, iType] * numpy.conj(f[iEn, jType])), 6)
-
-    numType = handles['tbl_numType']
-    numEstSet = True
-    numSet = True
-    if numType[0][2] is None:
-        numEstSet = False
-        meanfAtoms[:, 1] = 1.0
-    if numType[0][1] is None:
-        numSet = False
-        meanfAtoms[:, 0] = 1.0
-
-    for iEn in range(nEn):
-        for iType in range(len(handles['atomSet'])):
-            if numSet:
-                meanfAtoms[iEn, 0] += numType[iType][1] * abs(f[iEn, iType])**2
-            if numEstSet:
-                meanfAtoms[iEn, 1] += numType[iType][2] * abs(f[iEn, iType])**2
-
-        for iEn in range(1, nEn):
-            meanfAtoms[iEn, 0] /= meanfAtoms[0, 0]
-            meanfAtoms[iEn, 1] /= meanfAtoms[0, 1]
-    meanfAtoms[0, :] = 1.0
-
-    handles['fPairsCalc'] = True
-
-    #output
-    # output_file_path = '/Users/byc1/Documents/GitHub/asaxs_code/src/scat_label_and_sum/python_prototype/'
-    # output_file_name = f"fMeanAtomsTest"
-
-
-    # if not output_file_name.endswith('.txt'):
-    #     output_file_name += '.txt'
-
-    # # For f
-    # with open(os.path.join(output_file_path, output_file_name), 'w') as file:
-    #     for iEn in range(len(f)):
-    #         for iType in range(len(f[iEn])):
-    #             file.write(f"f[{iEn}, {iType}] = {f[iEn, iType]}\n")
-
-
-    # # For fPair
-    # with open(os.path.join(output_file_path, output_file_name), 'w') as file:
-    #     for iEn in range(fPair.shape[0]):  # Energy index
-    #         for iType in range(fPair.shape[1]):  # Type index for the first atom
-    #             for jType in range(fPair.shape[2]):  # Type index for the second atom
-    #                 # Step 4: Write the value to the file
-    #                 file.write(f"fPair[{iEn}, {iType}, {jType}] = {fPair[iEn, iType, jType]}\n")
-
-    # # For meanfAtoms
-    # with open(os.path.join(output_file_path, output_file_name), 'w') as file:
-    #     for iEn in range(meanfAtoms.shape[0]):
-    #         file.write(f"meanfAtoms[{iEn}, {0}] = {meanfAtoms[iEn, 0]}, meanfAtoms[{iEn}, {1} = {meanfAtoms[iEn, 1]}\n")
-
-    return f, fPair, meanfAtoms
-
-## GITHUB COPILOT CONVERSION (JEC):
-
-#import numpy as np
-#from scipy.interpolate import interp1d
+## (JEC):
 
 def pair_scatt_facs(energy, handles):
     """
@@ -266,11 +189,6 @@ def f_Ssphere(S, R, n):
     return f_fac
 
 def calcI_SlblAtoms(handles):
-    """
-    Calculate the intensity for the scattering between all atoms in the
-    molecule and each label type.
-    Output: handles['I_SlblAtoms'][iEn, ilblTypeCount, iS]
-    """
     errorlg = False
     nEn = handles['nEnCalc']
     nD = handles['nDCalc']
@@ -278,62 +196,53 @@ def calcI_SlblAtoms(handles):
     nlblTypes = handles['nlblTypes']
     nLabels = handles['nLabels']
 
-    # First calculate the scattering amplitude/distance distributions for
-    # different combinations of atoms and labels
-    amplDlblAt = numpy.zeros((nEn, nlblTypes, nD + 1))  # all atoms with each label type (incl D=0 -> nD+1)
-    handles['I_SlblAtoms'] = numpy.zeros((nEn, nlblTypes, nS + 1))
+    amplDlblAt = numpy.zeros((nEn, nlblTypes, nD+1))
+    handles['I_SlblAtoms'] = numpy.zeros((nEn, nlblTypes, nS+1))
+
     actDMax = handles['actDMax']
     fPairs = handles['fPairCalc']
+    deltaD = handles['deltaD']
+    SCalc = handles['SCalc']
 
     if not errorlg:
-        for iLabel in range(nLabels):  # for each label
-            print(f"iLabel = {iLabel}")
-            ilblCount = handles['labelData'][iLabel][5]  # assign according to the label type count e.g. label types 1 =AU, label type 2=TB
-            iType = handles['labelData'][iLabel][2]
-            coordsi = handles['labelData'][iLabel][4]
+        for iLabel in range(nLabels):
+            ilblCount = handles['labelData'][iLabel][4]
+            iType = handles['labelData'][iLabel][1]
+            coordsi = handles['labelData'][iLabel][3]
             xi, yi, zi = coordsi
+            for iEn in range(nEn):
+                amplDlblAt[iEn, ilblCount, 0] += fPairs[iEn, iType, iType]
 
-            for iEn in range(nEn):  # assign to 1st D-bin for each energy
-                amplDlblAt[iEn, ilblCount, 0] += fPairs[iEn, iType, iType]  # assign the scattering to the relevant D bin
-
-            if not errorlg:
-                for jAtom in range(handles['nAtoms']):  # each atom with each label
-                    if not errorlg:
-                        coordsj = handles['atomData'][jAtom][4]
-                        jType = handles['atomData'][jAtom][2]
-                        xj, yj, zj = coordsj
-                        D = numpy.sqrt((coordsj[0] - xi)**2 + (coordsj[1] - yi)**2 + (coordsj[2] - zi)**2)
-                        
-                        actDMax = max(actDMax, D)  # save the biggest value
-                        iD = int(numpy.ceil(D / handles['deltaD']))  # the element number for the D bin
-                        if iD > nD:
-                            errorlg = True
-                            print('DMax needs to be increased')
-                        else:
-                            for iEn in range(nEn):  # assign to D-bin for each energy
-                                amplDlblAt[iEn, ilblCount, iD + 1] += fPairs[iEn, iType, jType]  # assign the scattering to the relevant D bin
-
-                    if errorlg:
-                        break
+            for jAtom in range(handles['nAtoms']):
+                coordsj = handles['atomData'][jAtom][3]
+                jType = handles['atomData'][jAtom][1]
+                D = numpy.sqrt((coordsj[0] - xi)**2 + (coordsj[1] - yi)**2 + (coordsj[2] - zi)**2)
+                actDMax = max(actDMax, D)
+                iD = math.ceil(D / deltaD)
+                if iD > nD:
+                    errorlg = True
+                    print('DMax needs to be increased')
+                    break
+                else:
+                    for iEn in range(nEn):
+                        amplDlblAt[iEn, ilblCount, iD] += fPairs[iEn, iType, jType]
 
     handles['actDMax'] = actDMax
 
-    # Set the S-dependent scattering factor for nanocrystal labels of finite size
-    f_shape = numpy.ones((handles['nlblTypes'], len(handles['SCalc'])))
+    f_shape = numpy.ones((nlblTypes, len(SCalc)))
+    #print(numpy.shape(f_shape))
     if handles['lblXal']:
-        for ilbl in range(handles['nlblTypes']):
-            f_shape[ilbl, :] = f_Ssphere(handles['SCalc'], handles['lblRadCalc'][ilbl], handles['lblNumCalc'][ilbl])
+        for ilbl in range(nlblTypes):
+            f_shape[ilbl, :] = f_Ssphere(SCalc, handles['lblRadCalc'][ilbl], handles['lblNumCalc'][ilbl])
 
     if not errorlg:
-        # Now add together all the sinc functions for different distances
         for iEn in range(nEn):
-            for ilblTypeCount in range(nlblTypes):
-                for iD in range(nD + 1):
-                    SD = 2 * handles['SCalc'] * iD * handles['deltaD']
-                    handles['I_SlblAtoms'][iEn, ilblTypeCount, :] += amplDlblAt[iEn, ilblTypeCount, iD] * numpy.sinc(SD / numpy.pi)
-
-    return 
-
+            for ilblCount in range(nlblTypes):
+                for iD in range(nD+1):
+                    SD = 2 * SCalc * iD * deltaD
+                    # did not know how to implement the reshape method, works without it but will result in errors with it. Shape may already match?
+                    handles['I_SlblAtoms'][iEn, ilblCount, :] += amplDlblAt[iEn, ilblCount, iD] * sinc(SD) * f_shape[ilblCount, :]
+    return handles, errorlg
 
 
 def distPairs(nEn, iType, jType, coordsi, coordsj, fPair, amplD, handles):
@@ -354,7 +263,7 @@ def distPairs(nEn, iType, jType, coordsi, coordsj, fPair, amplD, handles):
     """
     errorlg = False
     # Calculate distance between coordsi and coordsj
-    D = numpy.sqrt((coordsj[0] - coordsi[0])**2 + (coordsj[1] - coordsi[1])**2 + (coordsj[2] - coordsi[2])**2)
+    D = ((coordsj[0] - coordsi[0])**2 + (coordsj[1] - coordsi[1])**2 + (coordsj[2] - coordsi[2])**2)**0.5
     handles['actDMax'] = max(handles['actDMax'], D)  # Save the biggest value
 
     if handles['actDMax'] > handles['DMaxCalc']:
@@ -372,44 +281,6 @@ def distPairs(nEn, iType, jType, coordsi, coordsj, fPair, amplD, handles):
 
     return handles, amplD, errorlg
 
-
-
-def calcI_SlblLbl(handles):
-    errorlg = False
-    nEn = handles['nEnCalc']
-    nD = handles['nDCalc']
-    nS = handles['nSCalc']
-    nlblTypes = handles['nlblTypes']
-    nLabels = handles['nLabels']
-
-    amplDlbl = numpy.zeros((nEn, nlblTypes, nlblTypes, nD + 1))  # each label with another label
-    handles['I_SlblLbl'] = numpy.zeros((nEn, nlblTypes, nlblTypes, nS + 1))
-
-    if not errorlg:
-        for iLabel in range(nLabels):
-            ilblCount = handles['labelData'][iLabel][4]  # Adjusted for 0-based indexing
-            for jLabel in range(iLabel, nLabels):
-                jlblCount = handles['labelData'][jLabel][4]  # Adjusted for 0-based indexing
-                ordLblCount = sorted([ilblCount, jlblCount])
-                ilbl, jlbl = ordLblCount
-                handles, amplDlbl[:, ilbl, jlbl, :], errorlg = distPairs(nEn, handles['labelData'][iLabel][1], handles['labelData'][jLabel][1], handles['labelData'][iLabel][3], handles['labelData'][jLabel][3], handles['fPairCalc'], amplDlbl[:, ilbl, jlbl, :], handles)
-                if errorlg:
-                    break
-
-    f_shape = numpy.ones((nlblTypes, len(handles['SCalc'])))
-    if handles['lblXal']:
-        for ilbl in range(nlblTypes):
-            f_shape[ilbl, :] = f_Ssphere(handles['SCalc'], handles['lblRadCalc'][ilbl], handles['lblNumCalc'][ilbl])
-
-    if not errorlg:
-        for iEn in range(nEn):
-            for ilblCount in range(nlblTypes):
-                for jlblCount in range(ilblCount, nlblTypes):
-                    for iD in range(nD + 1):
-                        SD = 2 * handles['SCalc'] * iD * handles['deltaD']
-                        handles['I_SlblLbl'][iEn, ilblCount, jlblCount, :] += amplDlbl[iEn, ilblCount, jlblCount, iD] * numpy.sinc(SD) * f_shape[ilblCount, :]
-
-    return handles, errorlg
 
 def calcI_Stotal(handles):
     try:
@@ -440,6 +311,68 @@ def calcI_Stotal(handles):
         errorlg = True
 
     return handles, errorlg
+
+
+def calcI_SlblLbl(handles):
+    errorlg = False
+    nEn = handles['nEnCalc']
+    nD = handles['nDCalc']
+    nS = handles['nSCalc']
+    nlblTypes = handles['nlblTypes']
+    nLabels = handles['nLabels']
+
+    amplDlbl = numpy.zeros((nEn, nlblTypes, nlblTypes, nD + 1))  # each label with another label
+    handles['I_SlblLbl'] = numpy.zeros((nEn, nlblTypes, nlblTypes, nS + 1))
+
+    if not errorlg:
+        for iLabel in range(nLabels):
+            ilblCount = handles['labelData'][iLabel][4]  # Adjusted for 0-based indexing
+            if not errorlg:
+                for jLabel in range(iLabel, nLabels):
+                    jlblCount = handles['labelData'][jLabel][4]  # Adjusted for 0-based indexing
+                    ordLblCount = sorted([ilblCount, jlblCount])
+                    ilbl, jlbl = ordLblCount
+                    handles, amplDlbl[:, ilbl, jlbl, :], errorlg = distPairs(nEn, handles['labelData'][iLabel][1], handles['labelData'][jLabel][1], handles['labelData'][iLabel][3], handles['labelData'][jLabel][3], handles['fPairCalc'], amplDlbl[:, ilbl, jlbl, :], handles)
+                    if errorlg:
+                        break
+    # with open('python_amplDlbl.txt', 'w') as file:
+    #     for i in range(len(amplDlbl)):
+    #         for j in range(len(amplDlbl[i])):
+    #             for k in range(len(amplDlbl[i][j])):
+    #                 for n in range(len(amplDlbl[i][j][k])):
+    #                     file.write(f"{amplDlbl[i,j,k,n]}\n")
+
+    f_shape = numpy.ones((nlblTypes, len(handles['SCalc'])))
+    if handles['lblXal']:
+        for ilbl in range(nlblTypes):
+            f_shape[ilbl, :] = f_Ssphere(handles['SCalc'], handles['lblRadCalc'][ilbl], handles['lblNumCalc'][ilbl])
+    # with open('python_f_shape.txt', 'w') as file:
+    #     for i in range(len(f_shape)):
+    #         for j in range(len(f_shape[i])):
+    #             file.write(f"{f_shape[i][j]:.6f}\n")
+
+    # This part distorts data
+    if not errorlg:
+        for iEn in range(nEn):
+            for ilblCount in range(nlblTypes):
+                for jlblCount in range(ilblCount, nlblTypes):
+                    for iD in range(nD + 1):
+                        SD = 2 * handles['SCalc'] * iD * handles['deltaD']
+                        for iS in range (nS + 1):
+                            handles['I_SlblLbl'][iEn, ilblCount, jlblCount, iS] += amplDlbl[iEn, ilblCount, jlblCount, iD] * sinc(SD[iS]) * f_shape[ilblCount, iS] * f_shape[jlblCount, iS]
+
+    return handles, errorlg
+
+def addErrors(I_Stot, I_SCRYtot, errI0, CRYtrue):
+    nEn = I_Stot.shape[0]
+    for iEn in range(nEn):
+        I_Stot[iEn, :] += errI0*I_Stot[iEn, 0]*np.random.randn(*I_Stot[iEn,:].shape)/100
+    if CRYtrue:
+        nEn = I_SCRYtot.shape[0]
+        for iEn in range(nEn):
+            I_SCRYtot[iEn,:] += errI0*I_SCRYtot[iEn, 0]*np.random.randn(*I_SCRYtot[iEn,:].shape)/100
+    return I_Stot, I_SCRYtot
+
 
 
 def calculate_scattering_and_sum(handles):
@@ -478,12 +411,12 @@ def calculate_scattering_and_sum(handles):
     handles['lblNumCalc'] = handles['lblNum']
 
     # Calculate combined scattering factor
-#    handles['fCalc'], handles['fPairCalc'], handles['meanfAtCalc'] = pairScattFacs(handles['EnCalc'], handles)
 
     handles['fCalc'], handles['fPairCalc'], handles['meanfAtCalc'], handles['fPairsCalc'] = pair_scatt_facs(handles['EnCalc'], handles)
 
+    """
     import pprint
-    '''
+
     print('fCalc')
 
     pprint.pp(handles['fCalc'])
@@ -495,7 +428,8 @@ def calculate_scattering_and_sum(handles):
     print('meanfAtCalc')
 
     pprint.pp(handles['meanfAtCalc'])
-    '''
+
+    """
 
     # Calculate the atom-atom scattering I(S)
     #sys.path.append('/Users/byc1/Documents/GitHub/asaxs_code/src/scat_label_and_sum/python_prototype')
@@ -508,6 +442,7 @@ def calculate_scattering_and_sum(handles):
 
     print('DONE')
 
+
     import write_input_data_for_calcI_Slblatoms as slblatoms_input_data
     slblatoms_input_data.write_input_data(handles)
 
@@ -516,7 +451,8 @@ def calculate_scattering_and_sum(handles):
     if errorlg:
         raise Exception('Label-scatter intensity calc error')
 
-    """
+#### ORIGINALLY STOPPED HERE
+
     # Calculate the label-label scattering I(S)
     handles, errorlg = calcI_SlblLbl(handles)
     if errorlg:
@@ -532,12 +468,18 @@ def calculate_scattering_and_sum(handles):
     
     # WRITEI_S METHOD WORKS ONLY FOR THE CASE WHEN CRYSOL DATA IS USED, ADD ADDITIONAL CASE WHEN NECESSARY
 
+
+    import writeI_S
+    writeI_S.writeI_S(handles)
+    writeI_S.write_used_vars(handles)
+    print('Finished')
+
     #if handles['chk_addErr']:
         #handles['I_Stot'], handles['I_SCRYtot']=addErrors(handles['I_Stot'], handles['I_SCRYtot'], handles['err'], handles['CRY'])
     #writeI_S(handles)
     #print('Finished')
 
-    """
+
 
     return
 
