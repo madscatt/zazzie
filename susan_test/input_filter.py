@@ -1,19 +1,37 @@
-"""
-    SASSIE: Copyright (C) 2011 Joseph E. Curtis, Ph.D. 
+# -*- coding: utf-8 -*-
 
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
+#    SASSIE: Copyright (C) 2011 Joseph E. Curtis, Ph.D.
+#
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+#
+#       INPUT FILTER
+#
+#                     Initial coding                :   Joseph E. Curtis
+#       6/2023        Added string array            :   Susan Krueger
+#       8/2024        Fixed string array issue      :   Susan Krueger
+#
+# LC      1         2         3         4         5         6         7
+# LC4567890123456789012345678901234567890123456789012345678901234567890123456789
+#                                                                      *      **
+'''
+    **Input Filter** is the method that checks the input variables and converts
+    them to the correct type (string, integer, etc.) to be used by all SASSIE
+    modules. It also converts chemical formulas to a dictionary format, checks 
+    file and path names for incorrect characters, checks that files exist,
+    and checks that PDB and DCD files are readable and compatible with each other.
 
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-"""
+'''
 import os
 import locale
 import sasmol.system as system
@@ -124,19 +142,17 @@ def type_check_and_convert(svariables):
                     + str(svariables[key][0])
                 )
                 return error, variables
-### string array added June 2023 (sk)
+# string array added June 2023 (sk)
         elif svariables[key][1] == "string_array":
             value = svariables.get(key)
 
             try:
                 lin = value[0].split(",")
-
                 duma = []
                 for x in range(len(lin)):
-                    # remove blank spaces from string array, i.e., 'dum1, dum2' becomes ['dum1', 'dum2'] and not ['dum1', ' dum2']
-                    item = lin[x]
-                    new_item = item.replace(" ", "")
-                    duma.append(new_item)
+                    # remove blank spaces from the beginning and end of the string array, i.e., 'dum1, dum2' becomes ['dum1', 'dum2'] and not ['dum1', ' dum2']; 'segname seg1, segname seg2' becomes ['segname seg1', 'segname seg2'] and not ['segname seg1', ' segname seg2'] August 2024 (sk)
+                    item = lin[x].strip()
+                    duma.append(item)
                 variables[key] = (duma, "string_array")
             except:
                 error.append(key + ": could not read array of values")
@@ -280,15 +296,18 @@ def check_permissions(path):
 
     return existvalue, readvalue, writevalue
 
-def check_binary(filename):
-    textchars = bytearray({7, 8, 9, 10, 13}.union(range(0x20, 0x7f)).union(range(0x80, 0x100)))
 
-    is_binary_string = lambda bytes: bool(bytes.translate(None, textchars))
+def check_binary(filename):
+    textchars = bytearray({7, 8, 9, 10, 13}.union(
+        range(0x20, 0x7f)).union(range(0x80, 0x100)))
+
+    def is_binary_string(bytes): return bool(bytes.translate(None, textchars))
 
     with open(filename, 'rb') as file:
         flag = is_binary_string(file.read(1024))
 
     return flag
+
 
 def check_pdb_dcd(infile, filetype):
     fileexist = 0
