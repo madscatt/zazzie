@@ -40,7 +40,7 @@
 import shlex
 
 DEBUG = False
-DEBUG = True
+# DEBUG = True
 
 # NOTE: <, >, and ! must be included individually in the ignore_list; otherwise, !=, >=, <=, and == will not be parsed correctly (SK)
 ignore_list = ['>', '<', '!', '=', '!=', '==', '>=', '<=',
@@ -55,6 +55,7 @@ def parse_basis(basis):
     '''
 
     kd = {}
+    # the 'atom' keyword currently doesn't work (8/2024) (SK)
     kd['atom'] = ['atom[i] == ', 'atom[i] ']
     kd['index'] = ['index[i] == ', 'index[i] ']
     kd['name'] = ['name[i] == ', 'name[i] ']
@@ -136,7 +137,7 @@ def parse_basis(basis):
 
             elif (this_token not in kd and not this_token.isdigit()):
                 # added this if statement to handle the case where the token is in "" but is not the last token in the list
-                # not name "CA" and resid > 2 (SK)
+                # example: not name "CA" and resid > 2 (SK)
                 if (this_token[0] != '"' and this_token not in ignore_list):
                     tokenlist.append('"'+this_token+'"')
                 else:
@@ -230,7 +231,8 @@ def clean_up_weight_basis(basis_string):
     python_basis = []
 
     for basis in new_basis_string:
-        basis = basis.replace('=', '==')
+        # the following line is no longer needed due to changes in parse_basis to handle ==, !=, >=, <= (SK)
+        #        basis = basis.replace('=', '==')
         this_python_basis = parse_basis(basis)
         this_python_basis = this_python_basis.replace('"', '')
         this_python_basis = concatenate_decimal(this_python_basis)
@@ -244,14 +246,14 @@ if __name__ == '__main__':
     import sys
 
     basis = []
-#    basis.append('(name CA and name NH) or resid > 43')
-#    basis.append('(name CA and name NH) or resid > 43 and resid < 57')
+    basis.append('(name CA and name NH) or resid > 43')
+    basis.append('(name CA and name NH) or resid > 43 and resid < 57')
     basis.append('segname HC1 and (resid >= 210 and resid <=214)')
-#    basis.append('segname TEST and resid < 210')
+    basis.append('segname TEST and resid < 210')
     basis.append('resname TIP3')
     basis.append('resname GLY and index != 1')
     basis.append('index = 523')
-    # the quotes are needed for the entry to be recognized as a string
+    # "1+": the quotes are needed for the entry to be recognized as a string
     basis.append('charge "1+"')
     basis.append('name "CA" and resid > 43')
     basis.append('not name "CA" and resid > 43')
@@ -261,9 +263,10 @@ if __name__ == '__main__':
     basis.append('moltype protein')
     basis.append('not moltype nucleic')
     basis.append('occupancy < "1.00"')
-    basis.append('occupancy = "1.00"')
-    basis.append('occupancy "1.00"')
     basis.append('occupancy <= "1.00"')
+    basis.append('occupancy = "1.00"')
+    # this results in occupancy == "1.00" as well, but the basis_to_python_filter requires the = sign, so there won't be mix ups when using !=, >=, <=, ==, etc. (SK)
+    basis.append('occupancy "1.00"')
 
     for i in range(len(basis)):
         print('#####')
@@ -279,10 +282,9 @@ if __name__ == '__main__':
     import sasmol.system as system
     m = system.Molecule(0)
     m.read_pdb('min3.pdb')
-#    m.read_pdb('pai_vn_start.pdb')
-#    m.read_pdb('pfvu5_fit.pdb')
 
-#    basis = '(resid > 23 and resid < 68) and name "CA"'
+#    basis = 'not name "CA" and (resid >= 23 and resid <= 68) and resid != 43'
+# manually input test basis string
     basis = input('test basis: ')
     print('test basis = ', basis)
     python_basis = parse_basis(basis)
@@ -294,7 +296,9 @@ if __name__ == '__main__':
     error, mask = m.get_subset_mask(python_basis)
 
     if (len(error) > 0):
-        print('error = ', error)
+        print('error getting mask = ', error)
+    else:
+        print('mask = ', mask)
 
     import numpy
     print(numpy.sum(mask))
@@ -303,7 +307,7 @@ if __name__ == '__main__':
         error = m.copy_molecule_using_mask(sub_mol, mask, frame)
 
     if (len(error) > 0):
-        print('error = ', error)
+        print('error copying molecule using mask = ', error)
     else:
         sub_mol.write_pdb('test.pdb', frame, 'w')
         print('new PDB file written')
@@ -313,13 +317,13 @@ if __name__ == '__main__':
 
     # The following is for testing the weight basis in chi_square filter
     # The syntax of this basis is different from that used for Sascalc, TAMC and Build Utilities
-    # !=, <=, >= and == don't work (8/2024)
 
     rg = [float(x) for x in range(20)]
     x2 = [0.1*float(x) for x in range(20)]
 
-    basis_string = 'rg != 0.5'  # doesn't work
-    basis_string = 'rg = 0.5 or rg = 1.2, rg < 2.5'
+#    basis_string = 'rg != 0.5'
+#    basis_string = 'rg = 0.5 or rg = 1.2, rg < 2.5'
+    basis_string = 'rg >= 0.5, rg <= 2.5'
 
     print('\n\nbasis_string = ', basis_string)
     python_basis = clean_up_weight_basis(basis_string)
