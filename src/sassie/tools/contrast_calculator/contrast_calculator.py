@@ -22,16 +22,17 @@ import time
 import math
 import platform
 import numpy as np
-import sasmol as sasmol
+import sasmol.system as system
 import sassie.util.sasconfig as sasconfig
 import sassie.util.module_utilities as module_utilities
 import sassie.tools.contrast_calculator.contrast_helper as contrast_helper
+#import contrast_helper as contrast_helper
 from scipy import stats
 
-#-------------------
+# -------------------
 # for formula parser
 from re import findall
-#-------------------
+# -------------------
 
 #    CONTRAST
 #
@@ -116,12 +117,13 @@ class contrast_calculator():
 
 
 #   for plotting
+
     def wait(str=None, prompt='Plot will clear in 10 seconds ...\n'):
         if str is not None:
             print(str)
 
         try:
-            if(platform.system() == "Linux"):
+            if (platform.system() == "Linux"):
                 import curses
                 stdscr = curses.initscr()
                 stdscr.addstr('press a key to continue')
@@ -141,6 +143,7 @@ class contrast_calculator():
 #    txtOutput.put(message)
 #
 #    return
+
 
     def unpack_variables(self, variables):
 
@@ -266,11 +269,12 @@ class contrast_calculator():
         mvars = self.mvars
         avars = self.avars
 
-        print('numfiles, numsolv, numformulas :', mvars.numfiles, mvars.numsolv, mvars.numformulas)
+        print('numfiles, numsolv, numformulas :',
+              mvars.numfiles, mvars.numsolv, mvars.numformulas)
 
         avars.contpath = os.path.join(mvars.run_name, 'contrast_calculator')
         direxist = os.path.exists(avars.contpath)
-        if(direxist == 0):
+        if (direxist == 0):
             os.system('mkdir -p ' + avars.contpath)
 
         prefix = mvars.outfile.find('.')
@@ -571,7 +575,7 @@ class contrast_calculator():
             rdsolvtot = bdsolvtot * 100 / volsolvtot
             rxsolvtot = bxsolvtot * 100 / volsolvtot
 
-#		     print rhsolvtot, rdsolvtot, rxsolvtot
+# print rhsolvtot, rdsolvtot, rxsolvtot
 
             rsx = rxsolvtot
             rsd2o = rdsolvtot
@@ -640,7 +644,7 @@ class contrast_calculator():
 #                print numberarray
                 formulamatrix.append([elementarray, numberarray])
 
-#		     print formulamatrix
+# print formulamatrix
 
 # calculate Mw and total x-ray and neutron scattering lengths for each formula
 # the calculations assume D is explicitely listed in the chemical formula
@@ -826,7 +830,7 @@ class contrast_calculator():
 
                     # not thisIsFasta
                     if proteinbins[i][j][3] != '1':
-                        m1 = sasmol.SasMol(0)
+                        m1 = system.Molecule(0)
                         m1.read_pdb(thisfile)
 
                         resids = m1.resid()
@@ -943,7 +947,7 @@ class contrast_calculator():
                     thisfile = os.path.join(mvars.inpath, filename)
 
                     if dnabins[i][j][3] != '1':                             # not thisIsFasta
-                        m1 = sasmol.SasMol(0)
+                        m1 = system.Molecule(0)
                         m1.read_pdb(thisfile)
 
                         resids = m1.resid()
@@ -1058,7 +1062,7 @@ class contrast_calculator():
                     thisfile = os.path.join(mvars.inpath, filename)
 
                     if rnabins[i][j][3] != '1':                             # not thisIsFasta
-                        m1 = sasmol.SasMol(0)
+                        m1 = system.Molecule(0)
                         m1.read_pdb(thisfile)
 
                         resids = m1.resid()
@@ -2204,7 +2208,7 @@ class contrast_calculator():
             pgui(
                 "\n\nResults are not plotted for complexes with more than 2 components.")
 
-        if(mvars.plotflag == 1):
+        if (mvars.plotflag == 1):
             pass
 
         return

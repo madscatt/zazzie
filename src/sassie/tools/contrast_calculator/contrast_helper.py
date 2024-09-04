@@ -184,10 +184,11 @@ def protein_sl():
 
     return residue_scattering
 
+
 if __name__ == "__main__":
 
-    import sasmol.sasmol as sasmol
-    
+    import sasmol.system as system
+
     protein_dict = protein_sl()
     nuc_dict = nucleotide_sl()
     dna_dict = dna_sl()
@@ -205,7 +206,7 @@ if __name__ == "__main__":
     seq = FASTA_sequence('protein_sequence.txt')
     print(seq)
 
-    m1 = sasmol.SasMol(0)
+    m1 = system.Molecule(0)
     m1.read_pdb('hiv1_gag.pdb')
 
     resids = m1.resid()
@@ -213,6 +214,3 @@ if __name__ == "__main__":
 
     seq = sequence(resids, resnames)
     print(seq)
-
-
-    
