@@ -194,16 +194,16 @@ if __name__ == "__main__":
     rna_dict = rna_sl()
     atomic_dict = element_sl()
 
-    print atomic_dict['H']
-    print atomic_dict['D']
-    print atomic_dict['O']
-    print protein_dict['A']
-    print dna_dict['THY']
-    print rna_dict['URA']
-    print nuc_dict['DG']
+    print(atomic_dict['H'])
+    print(atomic_dict['D'])
+    print(atomic_dict['O'])
+    print(protein_dict['A'])
+    print(dna_dict['THY'])
+    print(rna_dict['URA'])
+    print(nuc_dict['DG'])
 
     seq = FASTA_sequence('protein_sequence.txt')
-    print seq
+    print(seq)
 
     m1 = sasmol.SasMol(0)
     m1.read_pdb('hiv1_gag.pdb')
@@ -212,7 +212,7 @@ if __name__ == "__main__":
     resnames = m1.resname()
 
     seq = sequence(resids, resnames)
-    print seq
+    print(seq)
 
 
     

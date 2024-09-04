@@ -22,20 +22,16 @@ import time
 import math
 import platform
 import numpy as np
-import sasmol.sasmol as sasmol
+import sasmol as sasmol
 import sassie.util.sasconfig as sasconfig
 import sassie.util.module_utilities as module_utilities
 import sassie.tools.contrast_calculator.contrast_helper as contrast_helper
-#import contrast_helper as contrast_helper
 from scipy import stats
 
 #-------------------
 # for formula parser
 from re import findall
 #-------------------
-import Gnuplot
-import Gnuplot.PlotItems
-import Gnuplot.funcutils  # for plotting
 
 #    CONTRAST
 #
@@ -88,7 +84,9 @@ class contrast_calculator():
 
     def main(self, input_variables, ivariables, solvvariables, chemvariables, txtOutput):
 
-        self.mvars = module_variables()
+        self.module_variables = module_variables()
+
+        self.mvars = self.module_variables
 
         self.avars = contrast_calculator_input_variables()
 
@@ -120,7 +118,7 @@ class contrast_calculator():
 #   for plotting
     def wait(str=None, prompt='Plot will clear in 10 seconds ...\n'):
         if str is not None:
-            print str
+            print(str)
 
         try:
             if(platform.system() == "Linux"):
@@ -150,7 +148,7 @@ class contrast_calculator():
         mvars = self.mvars
         log.debug('in unpack_variables')
 
-        mvars.runname = variables['runname'][0]
+        mvars.run_name = variables['run_name'][0]
         mvars.inpath = variables['inpath'][0]
         mvars.outfile = variables['outfile'][0]
         mvars.solute_conc = variables['solute_conc'][0]
@@ -211,7 +209,7 @@ class contrast_calculator():
                 mvars.numsolv = 0
             else:
                 chemical_string = ''
-                for key, value in solvvariables[i][0].items():
+                for key, value in list(solvvariables[i][0].items()):
                     chemical_string += key + str(value)
 #           print 'solvent_string = ',chemical_string
             mvars.solv_comp.append(chemical_string)
@@ -244,7 +242,7 @@ class contrast_calculator():
                 mvars.numformulas = 0
             else:
                 chemical_string = ''
-                for key, value in chemical_variables[i][0].items():
+                for key, value in list(chemical_variables[i][0].items()):
                     chemical_string += key + str(value)
 #           print 'chemical_string = ',chemical_string
             mvars.chem_comp.append(chemical_string)
@@ -268,9 +266,9 @@ class contrast_calculator():
         mvars = self.mvars
         avars = self.avars
 
-        print 'numfiles, numsolv, numformulas :', mvars.numfiles, mvars.numsolv, mvars.numformulas
+        print('numfiles, numsolv, numformulas :', mvars.numfiles, mvars.numsolv, mvars.numformulas)
 
-        avars.contpath = os.path.join(mvars.runname, 'contrast_calculator')
+        avars.contpath = os.path.join(mvars.run_name, 'contrast_calculator')
         direxist = os.path.exists(avars.contpath)
         if(direxist == 0):
             os.system('mkdir -p ' + avars.contpath)
@@ -303,7 +301,7 @@ class contrast_calculator():
 
         INPUT:
 
-            runname:                            project name
+            run_name:                            project name
             inpath:                             path name for input files (pdb or sequence)
             numfiles:                           number of input files (protein, rna or dna)
             solute_conc:                        concentration of solute
@@ -334,7 +332,7 @@ class contrast_calculator():
             outfile_izero.txt
             '''
 
-    # mvars: runname, inpath, outfile, solute_conc, d2ostep, fexchp, fexchn, plotflag,
+    # mvars: run_name, inpath, outfile, solute_conc, d2ostep, fexchp, fexchn, plotflag,
     #        numfiles, seqfiles, numunits, fracdeut, moltype, isFasta, numfiles, solv_comp, solv_conc, numsolv
     #        chem_comp, hexchem, fexchchem, chem_density, numformulas
 
@@ -350,7 +348,7 @@ class contrast_calculator():
 
         # ttxt=time.ctime()
         ttxt = time.asctime(time.gmtime(time.time()))
-        st = ''.join(['=' for x in xrange(60)])
+        st = ''.join(['=' for x in range(60)])
         pgui("\n%s \n" % (st))
         pgui("DATA FROM RUN: %s \n\n" % (ttxt))
 
@@ -844,7 +842,7 @@ class contrast_calculator():
                     bh2oprot = 0.0
                     bxprot = 0.0
 
-                    for m in protein_dict.keys():
+                    for m in list(protein_dict.keys()):
                         nres = seq.count(m)
                         aastats = protein_dict[m]
                         mwprot = mwprot + \
@@ -961,7 +959,7 @@ class contrast_calculator():
                     bh2odna = 0.0
                     bxdna = 0.0
 
-                    for m in dna_dict.keys():
+                    for m in list(dna_dict.keys()):
                         nres = seq.count(m)
                         aastats = dna_dict[m]
                         mwdna = mwdna + dnabins[i][j][2] * \
@@ -1076,7 +1074,7 @@ class contrast_calculator():
                     bh2orna = 0.0
                     bxrna = 0.0
 
-                    for m in rna_dict.keys():
+                    for m in list(rna_dict.keys()):
                         nres = seq.count(m)
                         aastats = rna_dict[m]
                         mwrna = mwrna + rnabins[i][j][2] * \
@@ -2207,198 +2205,7 @@ class contrast_calculator():
                 "\n\nResults are not plotted for complexes with more than 2 components.")
 
         if(mvars.plotflag == 1):
-            graph = Gnuplot.Gnuplot(debug=1)
-            graph.clear()
-            graph('set title "SqrtI(0) vs D2O Fraction"')
-            graph('set zeroaxis')
-            graph('set xtics 0,.05,1')
-            graph.xlabel('D2O Fraction')
-            graph.ylabel('sqrtI(0)')
-            graph2 = Gnuplot.Gnuplot(debug=1)
-            graph2.clear()
-            graph2('set title "Scattering Length Density vs D2O Fraction"')
-            graph2('set zeroaxis')
-            graph2('set xtics 0,.05,1')
-            graph2.xlabel('D2O Fraction')
-            graph2.ylabel('SLD x 10^10 cm^-2')
-            graph3 = Gnuplot.Gnuplot(debug=1)
-            graph3.clear()
-            graph3('set title "Contrast vs D2O Fraction"')
-            graph3('set zeroaxis')
-            graph3('set xtics 0,.05,1')
-            graph3.xlabel('D2O Fraction')
-            graph3.ylabel('Contrast x 10^10 cm^-2')
-            graph4 = Gnuplot.Gnuplot(debug=1)
-            graph4.clear()
-            graph4('set title "I(0) vs D2O Fraction"')
-            graph4('set xtics 0,.05,1')
-            graph4.xlabel('D2O Fraction')
-            graph4.ylabel('I(0) cm^-1')
-
-# arrays for plots
-            izerocoords = []
-            sizerocoords = []
-            rscoords = []
-            rcomp1coords = []
-            rcomp2coords = []
-            ccomp1coords = []
-            ccomp2coords = []
-            rcomplexcoords = []
-            ccomplexcoords = []
-
-            for j in range(len(fd2o)):
-                izerocoords.append([fd2o[j], izerocomp[j]])
-                sizerocoords.append([fd2o[j], sqrtizerocomp[j]])
-                rscoords.append([fd2o[j], rs[j]])
-                rcomplexcoords.append([fd2o[j], sldcomp[j]])
-                ccomplexcoords.append([fd2o[j], contrastcomp[j]])
-
-                if len(mwprotarray) == 2:
-                    rcomp1coords.append([fd2o[j], protsld[j][0]])
-                    ccomp1coords.append([fd2o[j], protcontrast[j][0]])
-                    comp1contrasttitle = protcontrasttitle[0]
-                    comp1sldtitle = protsldtitle[0]
-                    rcomp2coords.append([fd2o[j], protsld[j][1]])
-                    ccomp2coords.append([fd2o[j], protcontrast[j][1]])
-                    comp2contrasttitle = protcontrasttitle[1]
-                    comp2sldtitle = protsldtitle[1]
-                    continue
-                elif len(mwprotarray) == 1:
-                    rcomp1coords.append([fd2o[j], protsld[j][0]])
-                    ccomp1coords.append([fd2o[j], protcontrast[j][0]])
-                    comp1contrasttitle = protcontrasttitle[0]
-                    comp1sldtitle = protsldtitle[0]
-                    if len(mwdnaarray) == 1:
-                        rcomp2coords.append([fd2o[j], dnasld[j][0]])
-                        ccomp2coords.append([fd2o[j], dnacontrast[j][0]])
-                        comp2contrasttitle = dnacontrasttitle[0]
-                        comp2sldtitle = dnasldtitle[0]
-                    elif len(mwrnaarray) == 1:
-                        rcomp2coords.append([fd2o[j], rnasld[j][0]])
-                        ccomp2coords.append([fd2o[j], rnacontrast[j][0]])
-                        comp2contrasttitle = rnacontrasttitle[0]
-                        comp2sldtitle = rnasldtitle[0]
-                    elif len(mwchemarray) == 1:
-                        rcomp2coords.append([fd2o[j], chemsld[j][0]])
-                        ccomp2coords.append([fd2o[j], chemcontrast[j][0]])
-                        comp2contrasttitle = chemcontrasttitle[0]
-                        comp2sldtitle = chemsldtitle[0]
-                    else:
-                        rcomp2coords.append([fd2o[j], 0.0])
-                        ccomp2coords.append([fd2o[j], 0.0])
-                        comp2contrasttitle = 'None'
-                        comp2sldtitle = 'None'
-                    continue
-                elif len(mwdnaarray) == 2:
-                    rcomp1coords.append([fd2o[j], dnasld[j][0]])
-                    ccomp1coords.append([fd2o[j], dnacontrast[j][0]])
-                    comp1contrasttitle = dnacontrasttitle[0]
-                    comp1sldtitle = dnasldtitle[0]
-                    rcomp2coords.append([fd2o[j], dnasld[j][1]])
-                    ccomp2coords.append([fd2o[j], dnacontrast[j][1]])
-                    comp2contrasttitle = dnacontrasttitle[1]
-                    comp2sldtitle = dnasldtitle[1]
-                    continue
-                elif len(mwdnaarray) == 1:
-                    rcomp1coords.append([fd2o[j], dnasld[j][0]])
-                    ccomp1coords.append([fd2o[j], dnacontrast[j][0]])
-                    comp1contrasttitle = dnacontrasttitle[0]
-                    comp1sldtitle = dnasldtitle[0]
-                    if len(mwrnaarray) == 1:
-                        rcomp2coords.append([fd2o[j], rnasld[j][0]])
-                        ccomp2coords.append([fd2o[j], rnacontrast[j][0]])
-                        comp2contrasttitle = rnacontrasttitle[0]
-                        comp2sldtitle = rnasldtitle[0]
-                    elif len(mwchemarray) == 1:
-                        rcomp2coords.append([fd2o[j], chemsld[j][0]])
-                        ccomp2coords.append([fd2o[j], chemcontrast[j][0]])
-                        comp2contrasttitle = chemcontrasttitle[0]
-                        comp2sldtitle = chemsldtitle[0]
-                    else:
-                        rcomp2coords.append([fd2o[j], 0.0])
-                        ccomp2coords.append([fd2o[j], 0.0])
-                        comp2contrasttitle = 'None'
-                        comp2sldtitle = 'None'
-                    continue
-                elif len(mwrnaarray) == 2:
-                    rcomp1coords.append([fd2o[j], rnasld[j][0]])
-                    ccomp1coords.append([fd2o[j], rnacontrast[j][0]])
-                    comp1contrasttitle = rnacontrasttitle[0]
-                    comp1sldtitle = rnasldtitle[0]
-                    rcomp2coords.append([fd2o[j], rnasld[j][1]])
-                    ccomp2coords.append([fd2o[j], rnacontrast[j][1]])
-                    comp2contrasttitle = rnacontrasttitle[1]
-                    comp2sldtitle = rnasldtitle[1]
-                elif len(mwrnaarray) == 1:
-                    rcomp1coords.append([fd2o[j], rnasld[j][0]])
-                    ccomp1coords.append([fd2o[j], rnacontrast[j][0]])
-                    comp1contrasttitle = rnacontrasttitle[0]
-                    comp1sldtitle = rnasldtitle[0]
-                    if len(mwchemarray) == 1:
-                        rcomp2coords.append([fd2o[j], chemsld[j][0]])
-                        ccomp2coords.append([fd2o[j], chemcontrast[j][0]])
-                        comp2contrasttitle = chemcontrasttitle[0]
-                        comp2sldtitle = chemsldtitle[0]
-                    else:
-                        rcomp2coords.append([fd2o[j], 0.0])
-                        ccomp2coords.append([fd2o[j], 0.0])
-                        comp2contrasttitle = 'None'
-                        comp2sldtitle = 'None'
-                    continue
-                elif len(mwchemarray) == 2:
-                    rcomp1coords.append([fd2o[j], chemsld[j][0]])
-                    ccomp1coords.append([fd2o[j], chemcontrast[j][0]])
-                    comp1contrasttitle = chemcontrasttitle[0]
-                    comp1sldtitle = chemsldtitle[0]
-                    rcomp2coords.append([fd2o[j], chemsld[j][1]])
-                    ccomp2coords.append([fd2o[j], chemcontrast[j][1]])
-                    comp2contrasttitle = chemcontrasttitle[1]
-                    comp2sldtitle = chemsldtitle[1]
-                    continue
-                elif len(mwchemarray) == 1:
-                    rcomp1coords.append([fd2o[j], chemsld[j][0]])
-                    ccomp1coords.append([fd2o[j], chemcontrast[j][0]])
-                    comp1contrasttitle = chemcontrasttitle[0]
-                    comp1sldtitle = chemsldtitle[0]
-                    rcomp2coords.append([fd2o[j], 0.0])
-                    ccomp2coords.append([fd2o[j], 0.0])
-                    comp2contrasttitle = 'None'
-                    comp2sldtitle = 'None'
-
-            try:
-                graph.plot(Gnuplot.Data(
-                    sizerocoords, using='1:2 w lines lw 2', title=''))
-            except:
-                message = 'error trying to plot sqrtI(0) vs D2O Fraction data'
-                message += ' :  stopping here'
-                pgui(message)
-
-            try:
-                graph2.plot(Gnuplot.Data(rscoords, using='1:2 w lines lw 2', title='Solvent'), Gnuplot.Data(rcomp1coords, using='1:2 w lines lw 2',
-                                                                                                            title=comp1sldtitle), Gnuplot.Data(rcomp2coords, using='1:2 w lines lw 2', title=comp2sldtitle),
-                            Gnuplot.Data(rcomplexcoords, using='1:2 w lines lw 2', title='Complex'))
-            except:
-                message = 'error trying plot Scattering Length Density vs D2O Fraction data'
-                message += ' :  stopping here'
-                pgui(message)
-
-            try:
-                graph3.plot(Gnuplot.Data(ccomp1coords, using='1:2 w lines lw 2', title=comp1contrasttitle),
-                            Gnuplot.Data(
-                                ccomp2coords, using='1:2 w lines lw 2', title=comp2contrasttitle),
-                            Gnuplot.Data(ccomplexcoords, using='1:2 w lines lw 2', title='Complex'))
-            except:
-                message = 'error trying plot Contrast vs D2O Fraction data'
-                message += ' :  stopping here'
-                pgui(message)
-
-            try:
-                graph4.plot(Gnuplot.Data(
-                    izerocoords, using='1:2 w lp pt 5 lw 2', title=''))
-            except:
-                message = 'error trying plot I(0) vs D2O Fraction data'
-                message += ' :  stopping here'
-                pgui(message)
+            pass
 
         return
 
@@ -2415,7 +2222,7 @@ class contrast_calculator():
 
         self.run_utils.clean_up(log)
 
-        st = ''.join(['=' for x in xrange(60)])
+        st = ''.join(['=' for x in range(60)])
         pgui("\n%s \n\n" % (st))
         fraction_done = 1
         report_string = 'STATUS\t' + str(fraction_done)

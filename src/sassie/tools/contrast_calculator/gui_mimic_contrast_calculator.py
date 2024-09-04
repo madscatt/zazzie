@@ -20,7 +20,7 @@ def user_variables(self, **kwargs):
     #### user input ####
     #### user input ####
 
-    self.runname = 'run_0'
+    self.run_name = 'run_0'
     self.inpath = './'
     self.outfile = 'test'
 #    self.numfiles = '2'
@@ -100,7 +100,7 @@ def test_variables(self,paths):
     module_data_path = paths['module_data_path']
     other_data_path = paths['other_data_path']
 
-    self.runname = 'run_0'
+    self.run_name = 'run_0'
     self.inpath = other_data_path
     self.outfile = 'test'
     self.numfiles = '1' 
@@ -138,7 +138,7 @@ def run_module(self, **kwargs):
 
     svariables={}
 
-    svariables['runname'] = (self.runname,'string')
+    svariables['run_name'] = (self.run_name,'string')
     svariables['inpath'] = (self.inpath,'string')
     svariables['outfile'] = (self.outfile,'string')
     svariables['numfiles'] = (self.numfiles,'int')
@@ -155,7 +155,7 @@ def run_module(self, **kwargs):
 #    print 'variables in run module: ', self.variables
 
     if len(error) > 0:
-        print 'error = ', error
+        print('error = ', error)
         if not(self.testflag):
             sys.exit()
         return error
@@ -166,7 +166,7 @@ def run_module(self, **kwargs):
     error3 = contrast_calculator_filter.check_numchemcomp(self.variables['number_of_chemicals'][0])
     if len(error1) > 0 or len(error2) > 0 or len(error3) > 0:
         error = error1 + error2 + error3
-        print 'error = ', error
+        print('error = ', error)
         if not(self.testflag):
             sys.exit()
         return error    
@@ -175,7 +175,7 @@ def run_module(self, **kwargs):
     
         error = contrast_calculator_filter.check_contrast(self.variables)
         if len(error) > 0:
-            print 'error = ', error
+            print('error = ', error)
             if not(self.testflag):
                 sys.exit()
             return error
@@ -183,11 +183,11 @@ def run_module(self, **kwargs):
 
     self.ivariables = []
     if(int(self.numfiles) > 0):
-        for i in xrange(int(self.numfiles)):       
+        for i in range(int(self.numfiles)):       
             self.ivariables.append([self.seqfiles[i], self.numunits[i], self.fracdeut[i], self.moltype[i], self.isFasta[i]])
         error = contrast_calculator_filter.check_ivariables(self.inpath,self.ivariables)   
         if len(error) > 0:
-            print 'error = ', error
+            print('error = ', error)
             if not(self.testflag):
                 sys.exit()
             return error
@@ -197,19 +197,19 @@ def run_module(self, **kwargs):
     if(int(self.numsolv) > 0):         
         error, self.solv_formula = input_filter.check_and_convert_formula(self.solv_comp)
         if(len(error) > 0):
-            print 'error = ', str(error)
+            print('error = ', str(error))
             if not(self.testflag):
                 sys.exit()
             return error
 
         else:
 
-            for i in xrange(int(self.numsolv)):
+            for i in range(int(self.numsolv)):
 #                self.solvvariables.append([self.solv_comp[i],self.solv_conc[i]])
                 self.solvvariables.append([self.solv_formula[i], self.solv_conc[i]])
             error = contrast_calculator_filter.check_solvvariables(self.solvvariables)
             if len(error) > 0:
-                print 'error = ', error
+                print('error = ', error)
                 if not(self.testflag):
                     sys.exit()
                 return error
@@ -219,14 +219,14 @@ def run_module(self, **kwargs):
     if(int(self.number_of_chemicals) > 0):
         error, self.formulas = input_filter.check_and_convert_formula(self.formula_array)
         if(len(error) > 0):
-            print 'error = ', str(error)
+            print('error = ', str(error))
             if not(self.testflag):
                 sys.exit()
             return error
            
         else:
 
-            for i in xrange(int(self.number_of_chemicals)):
+            for i in range(int(self.number_of_chemicals)):
                 this_chemical_formula = self.formulas[i]
                 this_number_exchangeable_hydrogens = self.number_exchangeable_hydrogens[i]
                 this_fraction_exchangeable_hydrogens = self.fraction_exchangeable_hydrogens[i]
@@ -234,7 +234,7 @@ def run_module(self, **kwargs):
                 self.chemvariables.append([this_chemical_formula, this_number_exchangeable_hydrogens, this_fraction_exchangeable_hydrogens, this_mass_density])
             error = contrast_calculator_filter.check_chemvariables(self.chemvariables)
             if(len(error) > 0):
-                print 'error = ', str(error)
+                print('error = ', str(error))
                 if not(self.testflag):
                     sys.exit()
                 return error                   
@@ -245,10 +245,10 @@ def run_module(self, **kwargs):
     except:
         pass
 
-    runname = self.variables['runname'][0]
+    run_name = self.variables['run_name'][0]
 
-    if os.path.exists(os.path.join(runname, self.module)):
-        shutil.rmtree(os.path.join(runname, self.module))
+    if os.path.exists(os.path.join(run_name, self.module)):
+        shutil.rmtree(os.path.join(run_name, self.module))
 
     txtQueue = multiprocessing.JoinableQueue()
     this_contrast_calculator = contrast_calculator.contrast_calculator()
@@ -292,6 +292,6 @@ if __name__ == '__main__':
 
     start = time.time()
     run_gui = gui_mimic_contrast_calculator(test, paths)
-    print 'time used: ', time.time() - start
+    print('time used: ', time.time() - start)
 
 

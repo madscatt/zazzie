@@ -30,7 +30,7 @@ import sasmol.properties as properties
 import string
    
 
-NAME, NUM, LPAREN, RPAREN, EOS = range(5)
+NAME, NUM, LPAREN, RPAREN, EOS = list(range(5))
 import re
 _lexer = re.compile(r"[A-Z][a-z]*|\d+|[()]|<EOS>").match
 del re
@@ -44,7 +44,7 @@ def get_full_filename(path,filename,**kwargs):
 	if 'web_path' in kwargs:				# dict kwarg['web_path'] = web_path
 		web_flag = True
 		web_path = kwargs['web_path']
-		print('web_path = ',web_path)		
+		print(('web_path = ',web_path))		
 
 	return
 
@@ -173,9 +173,8 @@ class Element:
             result[self.sym] = result.get(self.sym, 0) + weight
 
 def build_dict(s):
-    import string
     answer = {}
-    for line in string.split(s, "\n"):
+    for line in s.split("\n"):
         symbol, name, num, weight = eval(line)
         answer[symbol] = Element(symbol, name, num, weight)
     return answer
@@ -208,10 +207,10 @@ class ElementSequence:
         def displaysyms(self,sym2elt):
             result = {}
             self.addsyms(1, result)
-            items = result.items()
+            items = list(result.items())
             items.sort()
             for sym, count in items:
-                print(sym, " : ",count)
+                print((sym, " : ",count))
 
 
 class Tokenizer:
@@ -267,7 +266,7 @@ def parse_sequence(sym2elt):
                 t.gettoken()
             else:
                 assert ttype == NAME
-                if sym2elt.has_key(tvalue):
+                if tvalue in sym2elt:
                     thisguy = ElementSequence(sym2elt[tvalue])
                 else:
                     t.error("'" + tvalue + "' is not an element symbol")
@@ -302,14 +301,14 @@ def get_chemical_formula(formula_string):
         seq = parse(formula_string.strip(" "),sym2elt)
         #seq.displaysyms(sym2elt)
         seq.addsyms(1,formula_dictionary)
-        items = formula_dictionary.items()
+        items = list(formula_dictionary.items())
         items.sort()
 
         #for sym, count in items:
         #    print sym," :: ",count
 
     except (ValueError, detail):
-        print(str(detail))
+        print((str(detail)))
         error.append(detail)
 
     return error,formula_dictionary

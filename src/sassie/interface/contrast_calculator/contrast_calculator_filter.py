@@ -16,7 +16,7 @@
 '''
 import os,sys,locale,string
 import sassie.interface.input_filter as input_filter
-import sasmol.sasmol as sasmol
+import sasmol as sasmol
 import sassie.tools.contrast_calculator.contrast_helper as contrast_helper
 #import contrast_helper as contrast_helper
 
@@ -113,7 +113,7 @@ def check_ivariables(inpath,ivariables):
             return error
 
         pdbfile=os.path.join(inpath,filename)
-        print 'pdbfile: ', pdbfile
+        print('pdbfile: ', pdbfile)
         ev,value=input_filter.check_pdb_dcd(pdbfile,'pdb')
 
         if(ev == 0):
@@ -131,7 +131,7 @@ def check_ivariables(inpath,ivariables):
             resname=m1.resnames()
 
 #           necessary catch, with 3-letter codes, for the ambiguous DNA/RNA case
-            print sorted(resname)
+            print(sorted(resname))
             if sorted(resname) == ['ADE','CYT','GUA']:
 #           if ambiguity, trust the user
                 moltypes=[allmoltype[i]]
@@ -311,7 +311,7 @@ def check_contrast(variables):
 
     error=[]
 
-    runname=variables['runname'][0]
+    run_name=variables['run_name'][0]
     inpath=variables['inpath'][0]
     outfile=variables['outfile'][0]
     solute_conc=variables['solute_conc'][0]
@@ -333,7 +333,7 @@ def check_contrast(variables):
         error.append("You must enter either one file (PDB or Fasta) or one chemical formula")
         return error
 
-    if (not runname) or (runname == "Enter project name"):
+    if (not run_name) or (run_name == "Enter project name"):
         error.append("Please enter a project name")
         return error
 
