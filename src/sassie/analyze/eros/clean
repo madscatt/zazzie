@@ -1,0 +1,12 @@
+# customized for developer
+# use with caution
+set +e
+#unalias rm 
+rm -f *_json *_log
+rm -r .last*
+find ./ -name "*.pyc" -exec rm -f {} \;
+find ./ -name "*~" -exec rm -f {} \;
+rm -rf run_0
+echo ""
+echo "removed *_json *_log .last* *.pyc *~ files and run_0 directory"
+echo ""
