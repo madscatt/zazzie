@@ -40,9 +40,9 @@ import time
 import sassie.contrast.multi_component_analysis.multi_component_analysis as multi_component_analysis
 import sassie.interface.input_filter as input_filter
 import sassie.interface.multi_component_analysis.multi_component_analysis_filter as multi_component_analysis_filter
-#import multi_component_analysis as multi_component_analysis
-#import input_filter_new as input_filter
-#import multi_component_analysis_filter as multi_component_analysis_filter
+# import multi_component_analysis as multi_component_analysis
+# import input_filter_new as input_filter
+# import multi_component_analysis_filter as multi_component_analysis_filter
 import multiprocessing
 
 
@@ -181,7 +181,7 @@ def user_variables(self, **kwargs):
         # amplitude for the Gaussian that describes the S/N of typical SANS data; only used if there are no errors specified in the data file
         # the values below are the defaults; they can be changed by the user to vary as a function of contrast; only used for model data; treat like an advanced option?
 #        self.signal_to_noise_amplitude = "50.0, 50.0, 50.0, 50.0"  # default
-        self.signal_to_noise_amplitude = "400.0, 300.0, 10.0, 100.0"  # PAI-VN CV series 
+        self.signal_to_noise_amplitude = "400.0, 300.0, 10.0, 100.0"  # PAI-VN CV series
 
         if self.read_from_contrast_calculator_output_file:
             # TODO NEED TO READ THESE IN; VALUES ARE HERE AS A PLACEHOLDER
@@ -382,7 +382,8 @@ def run_module(self, **kwargs):
             self.refine_scale_factor_flag, "boolean")
         svariables["initial_guess_guinier"] = (
             self.initial_guess_guinier, "float_array")
-        svariables["signal_to_noise_amplitude"] = (self.signal_to_noise_amplitude, "float_array")
+        svariables["signal_to_noise_amplitude"] = (
+            self.signal_to_noise_amplitude, "float_array")
 # already defined above
 #        svariables["read_from_contrast_calculator_output_file"] = (
 #            self.read_from_contrast_calculator_output_file,
@@ -453,7 +454,7 @@ def run_module(self, **kwargs):
     run_name = self.variables["run_name"][0]
 
     # I don't always want the directory tree to be deleted since I want to be able to have subdirectories
-    # for the different methods, i.e., match point, stuhrmann_parallel_axis and decomposition are 
+    # for the different methods, i.e., match point, stuhrmann_parallel_axis and decomposition are
     # likely to be performed on the same contrast variation data set.  What is the best way to only delete
     # directory tree if a different contrast variation data set is being analyzed? Do we need a GUI option
     # (checkbox?) to overwrite the directory?
