@@ -14,17 +14,17 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
-import os,locale
+import os,string,locale
 
 def getparms(parameter_file):
-	print('\nreading parameters from file : ',parameter_file)
+	print '\nreading parameters from file : ',parameter_file
 	pbonds=[] ; pangles=[] ; pdihedrals=[] ; pimpropers=[] ; pnonbond=[]
 
 	infile=open(parameter_file,'r').readlines()
 	nlines=len(infile)
 
-	for i in range(nlines):
-		lin=infile[i].split()
+	for i in xrange(nlines):
+		lin=string.split(infile[i])
 		if(len(lin)>0):
 			if(lin[0]=='BONDS'):
 				bondoffset=i
@@ -37,18 +37,18 @@ def getparms(parameter_file):
 			if(lin[0]=='NONBONDED'):
 				nonbondoffset=i
 	
-	for i in range(bondoffset,angleoffset):
-		tbl=infile[i].split()
+	for i in xrange(bondoffset,angleoffset):
+		tbl=string.split(infile[i])
 		if(len(tbl)>0 and tbl[0][0]!="!"):
 			if(len(tbl)>3):
 				pbonds.append([tbl[0],tbl[1],tbl[2],tbl[3]])
 
-	for i in range(angleoffset,dihedraloffset):
-		tal=infile[i].split()
+	for i in xrange(angleoffset,dihedraloffset):
+		tal=string.split(infile[i])
 		if(len(tal)>0 and tal[0][0]!="!"):
 			if(len(tal)>4):
 				good=0
-				for j in range(len(tal)):
+				for j in xrange(len(tal)):
 					if(tal[j][0]=='!'):
 						good=j
 						break
@@ -56,28 +56,28 @@ def getparms(parameter_file):
 						good=j+1
 						break
 				loc=[]
-				for j in range(0,good):
+				for j in xrange(0,good):
 					loc.append(tal[j])
 				if(len(loc)>4): pangles.append(loc)
 
-	for i in range(dihedraloffset,improperoffset):
-		tdl=infile[i].split()
+	for i in xrange(dihedraloffset,improperoffset):
+		tdl=string.split(infile[i])
 		if(len(tdl)>0 and tdl[0][0]!="!"):
 			if(len(tdl)>6):
 				pdihedrals.append([tdl[0],tdl[1],tdl[2],tdl[3],tdl[4],tdl[5],tdl[6]])
 
-	for i in range(improperoffset,nonbondoffset):
-		til=infile[i].split()
+	for i in xrange(improperoffset,nonbondoffset):
+		til=string.split(infile[i])
 		if(len(til)>0 and til[0][0]!="!"):
 			if(len(til)>6):
 				pimpropers.append([til[0],til[1],til[2],til[3],til[4],til[5],til[6]])
 
-	for i in range(nonbondoffset+8,nlines):
-		tnl=infile[i].split()
+	for i in xrange(nonbondoffset+8,nlines):
+		tnl=string.split(infile[i])
 		if(len(tnl)>0 and tnl[0][0]!="!"):
 			if(len(tnl)>3):
 				good=0
-				for j in range(len(tnl)):
+				for j in xrange(len(tnl)):
 					if(tnl[j][0]=='!'):
 						good=j
 						break
@@ -85,14 +85,14 @@ def getparms(parameter_file):
 						good=j+1
 						break
 				loc=[]
-				for j in range(0,good):
+				for j in xrange(0,good):
 					loc.append(tnl[j])
 				if(len(loc)>3): pnonbond.append(loc)
-	print('found ',len(pbonds),' bond parameters')
-	print('found ',len(pangles),' angle parameters')
-	print('found ',len(pdihedrals),' dihedral parameters')
-	print('found ',len(pimpropers),' improper parameters')
-	print('found ',len(pnonbond),' non-bonded parameters\n')
+	print 'found ',len(pbonds),' bond parameters'
+	print 'found ',len(pangles),' angle parameters'
+	print 'found ',len(pdihedrals),' dihedral parameters'
+	print 'found ',len(pimpropers),' improper parameters'
+	print 'found ',len(pnonbond),' non-bonded parameters\n'
 		
 	return pbonds,pangles,pdihedrals,pimpropers,pnonbond
 

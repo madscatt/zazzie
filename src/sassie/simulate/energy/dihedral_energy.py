@@ -14,7 +14,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
-import os,sys,locale,random
+import os,sys,string,locale,random
 import numpy,math
 
 #       dihedral_energy.py:  deal with dihedral energies
@@ -31,10 +31,10 @@ def calc(angle_index,itheta,theta,parm,beta,nonbondflag,seed_object):
 	thetarad=theta*angle_to_radians
 	ithetarad=itheta*angle_to_radians
 	ai=angle_index
-	number_of_parm = int(len(parm[ai])/3)
+	number_of_parm = len(parm[ai])/3
 
 	iv = 0.0 ; v = 0.0
-	for i in range(number_of_parm):
+	for i in xrange(number_of_parm):
 		offset = i*3
 		k_ang = parm[ai][0+offset]
 		n_ang = parm[ai][1+offset]
@@ -152,8 +152,8 @@ def getparamphi(type):
 	elif(type==99):
 		man=1				# MAN-PRO ---> placeholder
 	else:
-		print(("WRONG PHI TYPE: ",type,":: BUG !!!\n\n"))
-		print((3/0))
+		print "WRONG PHI TYPE: ",type,":: BUG !!!\n\n"
+		print 3/0
 
 	return k,n,delta,k2,n2,delta2
 
@@ -187,8 +187,8 @@ def getparampsi(type):
 	elif(type==99):
 		man=1				# PRO-MAN ---> placeholder
 	else:
-		print(("WRONG PSI TYPE: ",type,":: BUG !!!\n\n"))
-		print((3/0))
+		print "WRONG PSI TYPE: ",type,":: BUG !!!\n\n"
+		print 3/0
 
 	return k,n,delta,k2,n2,delta2
 
@@ -219,7 +219,7 @@ def rna_initialization(resalpha,resbeta,resgamma,resdelta,resepsilon,reseta,resi
 	first_resid = first_last_resid[0]
 	last_resid = first_last_resid[1]
 
-	for i in range(numranges):
+	for i in xrange(numranges):
 
 		first=rlow[i]		# i.e. 23
 		last=rlow[i]+rnum[i]	# i.e. 28=23+5 (5 in this range)
@@ -229,7 +229,7 @@ def rna_initialization(resalpha,resbeta,resgamma,resdelta,resepsilon,reseta,resi
 
 		alpha = [] ; beta = [] ; gamma = [] ; delta = [] ; epsilon = [] ; eta = []
 		
-		for j in range(totres):
+		for j in xrange(totres):
 			null_alpha = 0 ; null_epsilon = 0 ; null_eta = 0
 			thisres=first+j
 			if(thisres==first_resid):
@@ -273,7 +273,7 @@ def protein_initialization(respsi,resphi,resid,resname,numranges,rlow,rnum,first
 #	rnum[] = array of number of amino acids in each range
 
 #	testoutput=open("test.txt",'w')
-	for i in range(numranges):
+	for i in xrange(numranges):
 
 		first=rlow[i]		# i.e. 23
 		last=rlow[i]+rnum[i]	# i.e. 28=23+5 (5 in this range)
@@ -291,7 +291,7 @@ def protein_initialization(respsi,resphi,resid,resname,numranges,rlow,rnum,first
 		#
 		#txtOutput.insert(END,"first = "+str(first)+" last = "+str(last)+"\n")
 		phi=[] ; psi=[]
-		for j in range(totres):
+		for j in xrange(totres):
 			thisres=first+j
 			residue_offset = thisres - first_resid
 			# first == 1-based count up
@@ -339,11 +339,11 @@ def protein_initialization(respsi,resphi,resid,resname,numranges,rlow,rnum,first
 
 #	outphi=open("junk_phi","w")
 #	outpsi=open("junk_psi","w")
-#	for i in range(numranges):
+#	for i in xrange(numranges):
 #		first=rlow[i]		# i.e. 23
 #		nres=rnum[i]+1
 #		this_phi=resphi[i] ; this_psi=respsi[i]
-#		for j in range(nres):
+#		for j in xrange(nres):
 #			thisres=first+j
 #			outphi.write("%i: %f\t%f\t%f\t%f\t%f\t%f\n" % (thisres,this_phi[1][j][0],this_phi[1][j][1],this_phi[1][j][2],this_phi[1][j][3],this_phi[1][j][4],this_phi[1][j][5]))
 #			outpsi.write("%i: %f\t%f\t%f\t%f\t%f\t%f\n" % (thisres,this_psi[1][j][0],this_psi[1][j][1],this_psi[1][j][2],this_psi[1][j][3],this_psi[1][j][4],this_psi[1][j][5]))
@@ -359,7 +359,7 @@ def dihedral(coor,dihedralparam):
 	dihedralenergy=0.0
 	deg2rad=numpy.pi/180.0
 
-	for i in range(len(dihedralparam)):
+	for i in xrange(len(dihedralparam)):
 		nps=1	
 		tquad=dihedralparam[i][0]	
 		atm1=locale.atoi(tquad[0])	
@@ -377,10 +377,10 @@ def dihedral(coor,dihedralparam):
 			n2xi=locale.atof(dihedralparam[i][2][1])	
 			t2xi=deg2rad*locale.atof(dihedralparam[i][2][2])	
 			nps=2
-			print(('k1xi = ',k1xi))
-			print(('n1xi = ',n1xi))
-			print(('t1xi = ',t1xi))
-			print((3/0))
+			print 'k1xi = ',k1xi
+			print 'n1xi = ',n1xi
+			print 't1xi = ',t1xi
+			print 3/0
 		else:
 			dihedralenergy=dihedralenergy+k1xi*(1.0+numpy.cos(n1xi*xi-t1xi))
 
