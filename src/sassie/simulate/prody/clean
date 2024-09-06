@@ -1,0 +1,7 @@
+rm -Rf hivr_anm*
+
+rm -Rf *_log *_json
+rm -Rf traverse*dcd model*
+rm -Rf run_0
+rm -f .last_sas*
+
