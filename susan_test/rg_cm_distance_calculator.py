@@ -51,8 +51,8 @@ import numpy
 import sasmol.system as system
 import sassie.util.module_utilities as module_utilities
 import sassie.util.sasconfig as sasconfig
-# import sassie.util.basis_to_python as basis_to_python
-import basis_to_python as basis_to_python
+import sassie.util.basis_to_python as basis_to_python
+# import basis_to_python as basis_to_python
 
 if sasconfig.__level__ == "DEBUG":
     DEBUG = True

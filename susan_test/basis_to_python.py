@@ -265,7 +265,7 @@ if __name__ == '__main__':
     basis.append('occupancy < "1.00"')
     basis.append('occupancy <= "1.00"')
     basis.append('occupancy = "1.00"')
-    # this results in occupancy == "1.00" as well, but the basis_to_python_filter requires the = sign, so there won't be mix ups when using !=, >=, <=, ==, etc. (SK)
+    # the following results in occupancy == "1.00" as well, but the basis_to_python_filter requires the = sign, so there won't be mix ups when using !=, >=, <=, ==, etc. (SK)
     basis.append('occupancy "1.00"')
 
     for i in range(len(basis)):

@@ -44,12 +44,12 @@
 """
 
 import sasmol.system as system
-import input_filter as input_filter
-import basis_to_python_filter as basis_to_python_filter
-import basis_to_python as basis_to_python
-# import sassie.interface.input_filter as input_filter # for checking the run name and file permissions
-# import sassie.interface.basis_to_python_filter as basis_to_python_filter
-# import sassie.util.basis_to_python as basis_to_python
+# import input_filter as input_filter
+# import basis_to_python_filter as basis_to_python_filter
+# import basis_to_python as basis_to_python
+# import sassie.interface.input_filter as input_filter
+import sassie.interface.basis_to_python_filter as basis_to_python_filter
+import sassie.util.basis_to_python as basis_to_python
 
 
 def check_rg_cm_distance_calculator(variables, **kwargs):
@@ -242,7 +242,7 @@ def check_rg_cm_distance_calculator(variables, **kwargs):
 #            print('python_basis: ', this_python_basis)
         except:
             error.append(
-                'unable to convert input string ' + basis_string[i] + ' to python readable string')
+                'unable to convert input string #' + basis_string[i] + '# to python readable string')
             return error
 
     return error

@@ -36,12 +36,12 @@ import os
 import shutil
 import time
 import multiprocessing
-# import sassie.contrast.rg_cm_distance_calculator as rg_cm_distance_calculator
-# import sassie.interface.input_filter as input_filter
-# import sassie.interface.rg_cm_distance_calculator_filter as rg_cm_distance_calculator_filter
-import rg_cm_distance_calculator as rg_cm_distance_calculator
-import rg_cm_distance_calculator_filter as rg_cm_distance_calculator_filter
-import input_filter as input_filter
+import sassie.contrast.rg_cm_distance_calculator.rg_cm_distance_calculator as rg_cm_distance_calculator
+import sassie.interface.input_filter as input_filter
+import sassie.interface.rg_cm_distance_calculator.rg_cm_distance_calculator_filter as rg_cm_distance_calculator_filter
+# import rg_cm_distance_calculator as rg_cm_distance_calculator
+# import rg_cm_distance_calculator_filter as rg_cm_distance_calculator_filter
+# import input_filter as input_filter
 
 
 def user_variables(self, **kwargs):
@@ -94,8 +94,7 @@ def test_variables(self, paths):
     self.run_name = 'run_0'
     self.path = './'
     self.pdb_file_name = os.path.join((self.path), 'pai_vn_start.pdb')
-    self.trajectory_file_name = os.path.join(
-        (self.path), 'pai_vn_2_frames.pdb')
+#    self.trajectory_file_name = os.path.join((self.path), 'pai_vn_2_frames.pdb')
     self.trajectory_file_name = os.path.join((self.path), 'best_all.dcd')
     self.number_of_components = "2"  # hardwired at this time
     self.component_name = 'VN, PAI'
