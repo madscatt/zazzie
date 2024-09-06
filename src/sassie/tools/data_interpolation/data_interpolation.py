@@ -138,7 +138,7 @@ class data_interpolation():
         divars.z.append(mvars.ioe)
 
         for line in data_file:
-            #this_line = string.split(line)
+            # this_line = string.split(line)
             this_line = line.split()
             try:
                 qval = locale.atof(this_line[0])
@@ -162,7 +162,8 @@ class data_interpolation():
                 pass
 
         if fake_error:
-            message = 'Error values in I(q) were set to be ' + str(100 * error_magnitude) + '% of I(0) values since appropriate values were not found'
+            message = 'Error values in I(q) were set to be ' + str(
+                100 * error_magnitude) + '% of I(0) values since appropriate values were not found'
             pgui(message)
 
         return
@@ -182,23 +183,24 @@ class data_interpolation():
         divars.array2 = numpy.zeros(divars.nval)
         maxval = 0.99E30
         nmax = 500
-        if(divars.yp1 > maxval):
+        if (divars.yp1 > maxval):
             divars.array2[0] = 0.0
             u[0] = 0.0
         else:
             divars.array2[0] = -0.5
             u[0] = (3.0 / (divars.x[1] - divars.x[0])) * ((array[
-                    1] - array[0]) / (divars.x[1] - divars.x[0]) - divars.yp1)
+                1] - array[0]) / (divars.x[1] - divars.x[0]) - divars.yp1)
         for i in range(1, divars.nval - 2):
             sig = (divars.x[i] - divars.x[i - 1]) / (divars.x[
-                   i + 1] - divars.x[i - 1])
+                i + 1] - divars.x[i - 1])
             p = sig * divars.array2[i - 1] + 2.0
             divars.array2[i] = (sig - 1.0) / p
-            u[i] = (array[i + 1] - array[i]) / (divars.x[i + 1] - divars.x[i]) - (array[i] - array[i - 1]) / (divars.x[i] - divars.x[i - 1])
+            u[i] = (array[i + 1] - array[i]) / (divars.x[i + 1] - divars.x[i]) - \
+                (array[i] - array[i - 1]) / (divars.x[i] - divars.x[i - 1])
             u[i] = (6.0 * u[i] / (divars.x[i + 1] - divars.x[
                     i - 1]) - sig * u[i - 1]) / p
 
-        if(divars.ypn > maxval):
+        if (divars.ypn > maxval):
             qn = 0.0
             un = 0.0
         else:
@@ -225,15 +227,15 @@ class data_interpolation():
 
         klo = 0
         khi = divars.nval - 1
-        while(khi - klo > 1):
-            if((khi - klo) > 1.0):
+        while (khi - klo > 1):
+            if ((khi - klo) > 1.0):
                 k = int((khi + klo) / 2)
-                if(divars.x[k] > divars.ux):
+                if (divars.x[k] > divars.ux):
                     khi = k
                 else:
                     klo = k
         h = divars.x[khi] - divars.x[klo]
-        if(h == 0.0):
+        if (h == 0.0):
             pgui('ERROR: BAD INPUT TO ROUTINE SPLINT')
         a = (divars.x[khi] - divars.ux) / h
         b = (divars.ux - divars.x[klo]) / h
@@ -248,7 +250,7 @@ class data_interpolation():
         method to prepare for data interpolation
         '''
 
-#mvars:    run_name, expdata, ofile, io, ioe, dq, maxpoints, plotflag
+# mvars:    run_name, expdata, ofile, io, ioe, dq, maxpoints, plotflag
 
         log = self.log
         log.debug('in initialization')
@@ -259,7 +261,7 @@ class data_interpolation():
 
         divars.interpath = mvars.run_name + '/data_interpolation/'
         direxist = os.path.exists(divars.interpath)
-        if(direxist == 0):
+        if (direxist == 0):
             os.system('mkdir -p ' + divars.interpath)
 
         # ttxt=time.ctime()
@@ -284,11 +286,11 @@ class data_interpolation():
         divars.cut = []
         for i in range(divars.nval):
             divars.odata.append([divars.x[i], divars.y[i], divars.z[i]])
-            if(divars.y[i] / divars.z[i] < 2.0 and flag == 0):
+            if (divars.y[i] / divars.z[i] < 2.0 and flag == 0):
                 divars.cut.append([divars.x[i - 1], divars.y[i - 1], mvars.io])
                 divars.cutval = divars.x[i - 1]
                 flag = 1
-            elif((i == divars.nval - 1) and flag == 0):
+            elif ((i == divars.nval - 1) and flag == 0):
                 divars.cut.append([divars.x[i - 1], divars.y[i - 1], mvars.io])
                 divars.cutval = divars.x[i - 1]
                 flag = 1
@@ -301,8 +303,9 @@ class data_interpolation():
         divars = self.data_interpolation_variables
 
         # open the json output file for writing
-        json_outfile = io.open(divars.interpath + mvars.ofile[:-3] + 'json', 'w')
-       
+        json_outfile = io.open(
+            divars.interpath + mvars.ofile[:-3] + 'json', 'w')
+
         data_dict = {
             'q': [],
             'iq': [],
@@ -314,7 +317,7 @@ class data_interpolation():
         }
 
         for i in range(len(divars.io_tally)):
-        # Append new values to the lists in the dictionary
+            # Append new values to the lists in the dictionary
             data_dict['q'].append(divars.io_tally[i][0])
             data_dict['iq'].append(divars.io_tally[i][1])
             data_dict['iq_error'].append(divars.io_tally[i][2])
@@ -331,20 +334,24 @@ class data_interpolation():
 
         return
 
-
     def interpolate(self):
-        '''
+        r'''
         INTERPOLATE is the function to read in variables from GUI input and
         calculate an approximate data set to be used in subsequent modeling
         steps.
 
         INPUT:  variable descriptions:
 
-                run_name:		    project name
-                expdata:        input NCNR data file (*.sub)
+                run_name:       project name
+
+                expdata:        input NCNR data file (\*.sub)
+
                 io:             I(0)
+
                 ioe:            Error in I(0)
+
                 dq:             new delta q
+
                 maxpoints:      number of new points
 
         OUTPUT:
@@ -401,7 +408,7 @@ class data_interpolation():
             divars.nz = divars.nyval
             divars.io_tally.append([divars.ux, divars.ny, divars.nz])
             outfile2.write('%f\t%f\t%f\n' % (divars.ux, divars.ny, divars.nz))
-            if(divars.ux <= divars.cutval):
+            if (divars.ux <= divars.cutval):
                 outfile3.write(
                     '%f\t%f\t%f\n' % (divars.ux, divars.ny, divars.nz))
 
@@ -435,7 +442,6 @@ class data_interpolation():
              ('./' + divars.interpath + 'stn_' + mvars.ofile))
         pgui("\ndelta q = %f (1/A)\n\nnumber of q-points = %i\n\nq-range: 0 to %f (1/A)\n" %
              (mvars.dq, mvars.maxpoints, (mvars.maxpoints - 1) * mvars.dq))
-
 
         pgui('\nDATA INTERPOLATION IS DONE\n')
 

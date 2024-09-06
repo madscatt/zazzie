@@ -47,7 +47,7 @@ import sasmol.system as system
 # import input_filter as input_filter
 # import basis_to_python_filter as basis_to_python_filter
 # import basis_to_python as basis_to_python
-# import sassie.interface.input_filter as input_filter
+import sassie.interface.input_filter as input_filter
 import sassie.interface.basis_to_python_filter as basis_to_python_filter
 import sassie.util.basis_to_python as basis_to_python
 

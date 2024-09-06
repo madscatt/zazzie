@@ -41,8 +41,8 @@ import scipy.optimize
 import numpy
 import sassie.contrast.multi_component_analysis.polynomial_fit as polynomial_fit
 import sassie.contrast.multi_component_analysis.chi_squared_correlation as chi_squared_correlation
-#import polynomial_fit as polynomial_fit
-#import chi_squared_correlation as chi_squared_correlation
+# import polynomial_fit as polynomial_fit
+# import chi_squared_correlation as chi_squared_correlation
 
 
 def guinier_fit(other_self):
@@ -50,7 +50,7 @@ def guinier_fit(other_self):
 
     **Guinier Fit** fits a first order polynomial to the Guinier equation. The original code was written by Andrew Whitten (2/2006) as part of the MULCh program. Rewritten in Python by Kathryn Sarachan (4/2023). 
 
-    **Reference:** Whitten, A.E., et al. (2007), "MULCh: modules for the analysis of small-angle neutron contrast variation data from biomolecular assemblies", _Journal of Applied Crystallography_ **41**, 222-226. 
+    **Reference:** Whitten, A.E., et al. (2007), "MULCh: modules for the analysis of small-angle neutron contrast variation data from biomolecular assemblies", *J. Appl. Cryst.* **41**, 222-226. 
 
 
     Note

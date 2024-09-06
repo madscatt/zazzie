@@ -64,7 +64,6 @@ def user_variables(self, **kwargs):
     self.trajectory_file_name = self.path+'pai_vn_2_frames.pdb'
 #   self.trajectory_file_name = self.path+'pai_vn_20_frames.dcd'
 #    self.trajectory_file_name = self.path+'best_all.dcd'
-#    self.trajectory_file_name = self.path+'struct_k6_dimer.dcd'  # this should fail
     self.number_of_components = '2'
     self.component_name = 'VN, PAI'
     self.basis_string = 'segname VN1, segname PAI1'

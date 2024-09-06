@@ -56,8 +56,8 @@
 import numpy
 import sassie.interface.input_filter as input_filter
 import sassie.contrast.multi_component_analysis.read_sas_data_file_add_error as read_data_file
-#import input_filter_new as input_filter
-#import read_sas_data_file_add_error as read_data_file
+# import input_filter_new as input_filter
+# import read_sas_data_file_add_error as read_data_file
 
 # this version uses the new input filter that recognizes a nested_float_array
 
@@ -66,7 +66,7 @@ def check_data_file(data_file_name, signal_to_noise_amplitude):
     """
     Method to check that the number of data points and q binning are the same for all data files in a contrast variation series.
 
-    Calls *Read Data File**
+    Calls **Read Data File**
 
     Parameters
     ----------

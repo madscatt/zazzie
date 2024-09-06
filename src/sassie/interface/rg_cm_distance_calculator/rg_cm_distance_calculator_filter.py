@@ -61,9 +61,6 @@ def check_rg_cm_distance_calculator(variables, **kwargs):
     Parameters
     ----------
 
-        Parameters
-        ----------
-
         run_name: string
             run name
         pdb_file_name: string

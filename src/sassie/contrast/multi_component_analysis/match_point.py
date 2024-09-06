@@ -49,11 +49,14 @@ import json
 import scipy.optimize
 import sassie.contrast.multi_component_analysis.polynomial_fit as polynomial_fit
 import sassie.contrast.multi_component_analysis.chi_squared_correlation as chi_squared_correlation
-#import polynomial_fit as polynomial_fit
-#import chi_squared_correlation as chi_squared_correlation
+# import polynomial_fit as polynomial_fit
+# import chi_squared_correlation as chi_squared_correlation
 
 
 def save_data_to_plot_as_json(other_self, square_root_izero, square_root_izero_error, square_root_izero_calculated, diff, match_point, match_point_error):
+    '''
+    **Save Data to Plot as JSON** is the method that saves the data to be plotted to a JSON file.
+    '''
 
     mvars = other_self.module_variables
     mcavars = other_self.multi_component_analysis_variables

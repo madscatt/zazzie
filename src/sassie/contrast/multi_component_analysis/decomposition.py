@@ -62,13 +62,13 @@ import numpy
 import json
 import sassie.contrast.multi_component_analysis.read_sas_data_file_add_error as read_data_file
 import sassie.contrast.multi_component_analysis.guinier_analysis as guinier_analysis
-#import read_sas_data_file_add_error as read_data_file
-#import guinier_analysis as guinier_analysis
+# import read_sas_data_file_add_error as read_data_file
+# import guinier_analysis as guinier_analysis
 
 
 def save_data_to_plot_as_json(other_self, calculated_scattering_data, composite_scattering_intensity):
     '''
-    ***Save Data to Plot as JSON*** is the method that saves the data to be plotted to a JSON file.
+    **Save Data to Plot as JSON** is the method that saves the data to be plotted to a JSON file.
     '''
 
     mvars = other_self.module_variables
@@ -595,7 +595,7 @@ def calculate_reduced_chi_squared(delta_rho, rescaled_scattering_data, composite
         The number of solvent conditions with different fraction D\ :sub:`2`\ O values
     delta_rho:  2D float array (dimensions = number_of_contrast_points x number_of_components)
         The contrast for each component at all fraction D\ :sub:`2`\ O values of interest in 10\ :sup:`10`\ cm\ :sup:`-2`\  (10 :sup:`-6`\ A\ :sup:`-2`\ )
-     rescaled_scattering_data:  3D array (dimensions = number_of_contrast_points x number_of_data_points x 3)
+    rescaled_scattering_data:  3D array (dimensions = number_of_contrast_points x number_of_data_points x 3)
         q, I(q) and I(q) error for the rescaled data at at each fraction D\ :sub:`2`\ O
     composite_scattering_intensity:  3D float array (dimensions = 3 x number_of_data_points x 2)
         I(q) and I(q) error for each of the 3 composite scattering intensities, :math:`I_{11}`, :math:`I_{12}` and :math:`I_{22}`

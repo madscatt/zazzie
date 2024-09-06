@@ -66,12 +66,15 @@ import numpy
 import scipy.optimize
 import sassie.contrast.multi_component_analysis.polynomial_fit as polynomial_fit
 import sassie.contrast.multi_component_analysis.chi_squared_correlation as chi_squared_correlation
-#import polynomial_fit as polynomial_fit
-#import chi_squared_correlation as chi_squared_correlation
+# import polynomial_fit as polynomial_fit
+# import chi_squared_correlation as chi_squared_correlation
 import json
 
 
 def save_data_to_plot_as_json(other_self, delta_rho_inverse, rg_squared, rg_squared_error, rg_squared_calculated, diff):
+    '''
+    **Save Data to Plot as JSON** is the method that saves the data to be plotted to a JSON file.
+    '''
 
     mvars = other_self.module_variables
     mcavars = other_self.multi_component_analysis_variables
@@ -85,7 +88,7 @@ def save_data_to_plot_as_json(other_self, delta_rho_inverse, rg_squared, rg_squa
     }
 
     for i in range(mvars.number_of_contrast_points):
-    # Append new values to the lists in the dictionary
+        # Append new values to the lists in the dictionary
         data_dict['1/contrast'].append(delta_rho_inverse[i])
         data_dict['Rg^2'].append(rg_squared[i])
         data_dict['Rg^2_error'].append(rg_squared_error[i])
@@ -315,7 +318,6 @@ def parallel_axis(other_self):
         mcavars.outfile.write(
             'reduced chi-squared parallel axis: N/A (number of contrast points = number of unknowns for the parallel axis equation)\n\n')
 
-
     pgui('\n%s \n' % (st))
 
     time.sleep(0.5)
@@ -531,7 +533,7 @@ def stuhrmann(other_self):
     pgui('1/delta_rho\t Rg^2 exp\t Rg^2err\t Rg^2 calc\t diff\n')
     for i in range(mvars.number_of_contrast_points):
         pgui('%9.4f\t%9.4f\t%9.4f\t%9.4f\t%9.4f\n' % (
-            delta_rho_inverse[i], rg_squared[i], rg_squared_error[i], rg_squared_calculated[i], diff[i]))        
+            delta_rho_inverse[i], rg_squared[i], rg_squared_error[i], rg_squared_calculated[i], diff[i]))
 
 # Now solve for R1, R2 and D using alpha, beta and Rm**2
 # B is the RHS of the equations 5a-c given by Olah 1994; we are solving 3 equations in 3 unknowns using numpy.linalg.solve.  Since this is an exact solution (3 equations and 3 unknowns), the errors on alpha, beta and Rm will be propagated using a MC error analysis.
@@ -670,8 +672,8 @@ def stuhrmann(other_self):
             delta_rho_inverse[i], rg_squared[i], rg_squared_error[i], rg_squared_calculated[i], diff[i]))
     mcavars.outfile.close()
 
-    save_data_to_plot_as_json(other_self, delta_rho_inverse, rg_squared, rg_squared_error, rg_squared_calculated, diff)
-
+    save_data_to_plot_as_json(other_self, delta_rho_inverse,
+                              rg_squared, rg_squared_error, rg_squared_calculated, diff)
 
     time.sleep(1.0)
 

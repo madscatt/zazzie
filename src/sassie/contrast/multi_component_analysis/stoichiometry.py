@@ -46,7 +46,11 @@ import numpy
 import scipy.optimize
 import json
 
+
 def save_data_to_plot_as_json(other_self, izero, izero_error, izero_calc, diff):
+    '''
+    **Save Data to Plot as JSON** is the method that saves the data to be plotted to a JSON file.
+    '''
 
     mvars = other_self.module_variables
     mcavars = other_self.multi_component_analysis_variables
@@ -60,7 +64,7 @@ def save_data_to_plot_as_json(other_self, izero, izero_error, izero_calc, diff):
     }
 
     for i in range(mvars.number_of_contrast_points):
-    # Append new values to the lists in the dictionary
+        # Append new values to the lists in the dictionary
         data_dict['fraction_d2o'].append(mvars.fraction_d2o[i])
         data_dict['izero'].append(izero[i])
         data_dict['izero_error'].append(izero_error[i])
@@ -75,16 +79,13 @@ def save_data_to_plot_as_json(other_self, izero, izero_error, izero_calc, diff):
     return
 
 
-
-
-
 def get_molecular_weights(other_self):
     r'''
     **Get Molecular Weights** is the **Stoichiometry Analysis** method that calculates the molecular weights of the components in a complex containing multiple copies of two components.
 
     Executed if stoichiometry_flag == True.
 
-    This method calls **Molecular Weight Function**, **Get MC Errors** and **scipy.optimize.curve_fit.
+    This method calls **Molecular Weight Function**, **Get MC Errors** and **scipy.optimize.curve_fit**.
 
     Notes:
 
@@ -228,7 +229,7 @@ def get_molecular_weights(other_self):
         molecular_weight_function, x, y)
 
     log.debug('initial calculated molecular_weight_1,molecular_weight_2: ' +
-         str(optimized_molecular_weights)+'\n')
+              str(optimized_molecular_weights)+'\n')
 
 # Now recalculate m1 and m2 using coefficients that randomly vary within their errors and save them in an array
 # TODO:  Do we want number of MC trials to be a user input?
@@ -360,8 +361,8 @@ def get_molecular_weights(other_self):
 
     time.sleep(1.0)
 
-    save_data_to_plot_as_json(other_self, mvars.izero, mvars.izero_error, izero_calc, diff)
-
+    save_data_to_plot_as_json(other_self, mvars.izero,
+                              mvars.izero_error, izero_calc, diff)
 
     return
 
