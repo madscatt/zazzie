@@ -87,9 +87,9 @@ class extract_utilities():
 
     def main(self, input_variables, txtOutput):
 
-        self.mvars = module_variables()
+        self.module_variables = module_variables()
 
-        self.avars = extract_utilities_input_variables()
+        self.extract_utilities_input_variables = extract_utilities_input_variables()
 
         self.run_utils = module_utilities.run_utils(app, txtOutput)
 
@@ -126,10 +126,10 @@ class extract_utilities():
         '''
 
         log = self.log
-        mvars = self.mvars
+        mvars = self.module_variables 
         log.debug('in unpack_variables')
         
-        mvars.runname = variables['runname'][0]
+        mvars.run_name = variables['run_name'][0]
         mvars.path = variables['path'][0]
         mvars.pdb_filename = variables['pdb_filename'][0]
         mvars.trajectory_filename = variables['trajectory_filename'][0]
@@ -149,8 +149,8 @@ class extract_utilities():
     def copy_spec_files(self,sas_files,suffix):
 
         log = self.log
-        mvars = self.mvars
-        avars = self.avars
+        mvars = self.module_variables
+        avars = self.extract_utilities_input_variables
 
         string_fill = 5
         number = 1
@@ -160,7 +160,7 @@ class extract_utilities():
             if str(number) in avars.mask:
                 number_of_saved_files += 1
                 numst = str(number_of_saved_files).zfill(string_fill)
-                runst = mvars.runname + '_' + numst + suffix[1:]
+                runst = mvars.run_name + '_' + numst + suffix[1:]
                 log.debug('runst: '+ runst)
                 this_file = os.path.join(avars.sas_output_path, runst)
                 cpst = 'cp  ' + name + ' ' + this_file
@@ -174,7 +174,7 @@ class extract_utilities():
 
     def get_range_sas(self):
 
-        mvars = self.mvars   
+        mvars = self.module_variables
 
         local_values = string.split(mvars.local_value, '-')
         first = locale.atoi(local_values[0])
@@ -185,7 +185,7 @@ class extract_utilities():
 
     def get_text_file_sas(self):
 
-        mvars = self.mvars    
+        mvars = self.module_variables
 
         infile = open(mvars.local_value, 'r').readlines()
         mask = []
@@ -200,7 +200,7 @@ class extract_utilities():
     def get_weight_file_sas(self):
 
         log = self.log
-        mvars = self.mvars
+        mvars = self.module_variables
 
         mask = []
         weights = numpy.loadtxt(mvars.local_value)
@@ -220,7 +220,7 @@ class extract_utilities():
     def get_frequency(self, number_of_spec_files, **kwargs):
 
         log = self.log
-        mvars = self.mvars
+        mvars = self.module_variables
 
         mask = []
         log.debug('nspecfil: '+ str(number_of_spec_files))
@@ -249,7 +249,7 @@ class extract_utilities():
     def get_sas_mask(self,**kwargs):
 
         log = self.log
-        mvars = self.mvars
+        mvars = self.module_variables
         log.debug('getting SAS mask')
 
         mask = []
@@ -277,7 +277,7 @@ class extract_utilities():
 
     def get_single_frame(self):
 
-        mvars = self.mvars
+        mvars = self.module_variables
     
         frame = locale.atoi(mvars.local_value) - 1
         return [frame]
@@ -285,7 +285,7 @@ class extract_utilities():
 
     def get_range(self):
 
-        mvars = self.mvars
+        mvars = self.module_variables
 
         local_values = string.split(mvars.local_value, '-')
         first = locale.atoi(local_values[0]) - 1
@@ -296,7 +296,7 @@ class extract_utilities():
     def get_text_file(self):
 
         log = self.log
-        mvars = self.mvars
+        mvars = self.module_variables
         
         infile = open(mvars.local_value, 'r').readlines()
 
@@ -314,7 +314,7 @@ class extract_utilities():
     def get_weight_file(self):
 
         log = self.log
-        mvars = self.mvars
+        mvars = self.module_variables
     
         weights = numpy.loadtxt(mvars.local_value)
         fweights = weights[:, 2]
@@ -330,8 +330,8 @@ class extract_utilities():
 
     def get_number_of_frames(self):
 
-        mvars = self.mvars
-        avars = self.avars
+        mvars = self.module_variables
+        avars = self.extract_utilities_input_variables
 
         m = system.Molecule(0)
 
@@ -355,8 +355,8 @@ class extract_utilities():
         log.debug('in initialization')
         pgui = self.run_utils.print_gui
 
-        mvars = self.mvars
-        avars = self.avars
+        mvars = self.module_variables
+        avars = extract_utilities_input_variables
 
         log.debug(vars(mvars))
         log.debug(vars(avars))
@@ -368,7 +368,7 @@ class extract_utilities():
         avars.trajectory_filename = mvars.path + mvars.trajectory_filename
         log.debug('trajectory filename: '+avars.trajectory_filename)
 
-        avars.output_path = mvars.runname + '/extract_utilities/'
+        avars.output_path = mvars.run_name + '/extract_utilities/'
         log.debug('output_path: '+avars.output_path)
 
 #        vers = 'version 0.2 : 04/23/15 : jc'
@@ -458,7 +458,7 @@ class extract_utilities():
 
 	    INPUT:  variable descriptions
 	
-        runname:                string      project name
+        run_name:                string      project name
         path:                   string      input/output filepath      
         pdb_filename            string      input pdb file
         trajectory_filename     string      input pdb or dcd file                          
@@ -471,7 +471,7 @@ class extract_utilities():
         sas_path:               string      path to SAS files 
 
 
-	    OUTPUT: files stored in "runname"/extract_utilities directory:
+	    OUTPUT: files stored in "run_name"/extract_utilities directory:
         	
         PDB or DCD file with requested coordinates
             and/or
@@ -483,8 +483,8 @@ class extract_utilities():
         pgui = self.run_utils.print_gui
         log.debug('in extract_utilities')
 
-        mvars = self.mvars
-        avars = self.avars
+        mvars = self.module_variables
+        avars = self.extract_utilities_input_variables
 
         log.debug(vars(mvars))
         log.debug(vars(avars))
@@ -536,8 +536,8 @@ class extract_utilities():
         pgui = self.run_utils.print_gui
         log.debug('extracting coords')
 
-        mvars = self.mvars
-        avars = self.avars
+        mvars = self.module_variables
+        avars = extract_utilities_input_variables
 
         log.debug(vars(mvars))
         log.debug(vars(avars))
@@ -679,8 +679,8 @@ class extract_utilities():
         pgui = self.run_utils.print_gui
         log.debug('extracting SAS')
 
-        mvars = self.mvars
-        avars = self.avars        
+        mvars = self.module_variables
+        avars = extract_utilities_input_variables
 
         log.debug(vars(mvars))
         log.debug(vars(avars))

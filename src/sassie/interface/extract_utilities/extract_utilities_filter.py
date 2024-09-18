@@ -27,7 +27,7 @@ import sassie.interface.input_filter as input_filter
 
 def check_extract_utilities(variables, **kwargs):
 
-    runname = variables['runname'][0]
+    run_name = variables['run_name'][0]
     pdb_filename = variables['pdb_filename'][0]
     trajectory_filename = variables['trajectory_filename'][0]
     option = variables['option'][0]
@@ -40,7 +40,7 @@ def check_extract_utilities(variables, **kwargs):
     sas_paths = variables['sas_paths'][0]
 
     error = []
-    error = input_filter.check_name(runname)
+    error = input_filter.check_name(run_name)
     if(error != []):
         return error
 

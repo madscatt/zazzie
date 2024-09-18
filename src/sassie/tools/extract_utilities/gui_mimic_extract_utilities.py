@@ -20,7 +20,7 @@ def user_variables(self, **kwargs):
     ### BEGIN USER INPUT ###
     ### BEGIN USER INPUT ###
 
-    self.runname = 'run_0'
+    self.run_name = 'run_0'
     self.path = './'
     self.pdb_filename = os.path.join(self.path, 'hiv1_gag.pdb')
     self.trajectory_filename = os.path.join(self.path, 'hiv1_gag_20_frames.dcd')
@@ -42,7 +42,7 @@ def user_variables(self, **kwargs):
 #    self.output_filename = 'chosen_range.dcd'
 #    self.output_filename = 'single_frame.dcd' 
 #    self.output_filename = 'periodic.dcd'    
-#    self.output_filename = 'all.dcd'
+    self.output_filename = 'all.dcd'
 
     self.extract_trajectory = True
     self.extract_sas = True
@@ -52,7 +52,7 @@ def user_variables(self, **kwargs):
 #    self.sas_type = '1'
 #    self.sas_type = '2'
 #    self.sas_type = '3'
-#    self.sas_paths = os.path.join(self.path, 'hiv1_gag_0', 'sascalc', 'neutron_D2Op_100')
+    self.sas_paths = os.path.join(self.path, 'hiv1_gag_0', 'sascalc', 'neutron_D2Op_100')
 
 ##    self.sas_paths = os.path.join(self.path, 'hiv1_gag_0', 'sascalc', 'neutron_D2Op_100')+','+os.path.join(self.path, 'hiv1_gag_0', 'sascalc', 'neutron_D2Op_0') 
 
@@ -82,7 +82,7 @@ def test_variables(self, paths):
     other_data_path = paths['other_data_path']
     module_data_path = paths['module_data_path']
 
-    self.runname = 'run_0'
+    self.run_name = 'run_0'
     self.path = ''
     self.pdb_filename = os.path.join(pdb_data_path, 'hiv1_gag.pdb')
     self.trajectory_filename = os.path.join(dcd_data_path, 'hiv1_gag_20_frames.dcd')
@@ -108,7 +108,7 @@ def run_module(self, **kwargs):
 
     svariables = {}
 
-    svariables['runname'] = (self.runname, 'string')
+    svariables['run_name'] = (self.run_name, 'string')
     svariables['pdb_filename'] = (self.pdb_filename, 'string')
     svariables['trajectory_filename'] = (self.trajectory_filename, 'string')
     svariables['option'] = (self.option, 'string')
@@ -148,10 +148,10 @@ def run_module(self, **kwargs):
     except:
         pass
 
-    runname = self.variables['runname'][0]
+    run_name = self.variables['run_name'][0]
 
-    if os.path.exists(os.path.join(runname, self.module)):
-        shutil.rmtree(os.path.join(runname, self.module))
+    if os.path.exists(os.path.join(run_name, self.module)):
+        shutil.rmtree(os.path.join(run_name, self.module))
 
     txtQueue = multiprocessing.JoinableQueue()
     this_extract_utilities = extract_utilities.extract_utilities()
@@ -181,7 +181,6 @@ if __name__ == '__main__':
 
     test = False  # option to run with test variables not implemented in 1.0.
     paths = None
-
 
 # We are thinking of defining the install path so the gui mimic can be run from anywhere as long as it is called from that particular python
 # That way, the test files will always be available to the user.

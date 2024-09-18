@@ -70,7 +70,6 @@ class run_utils():
             input_variables[var] = getattr(module_variables, var)
 
         self.v = input_variables
-
         self.write_json_file()
         run_name = self.v['run_name']
         self.run_path = os.path.join(run_name,self.__application__)
