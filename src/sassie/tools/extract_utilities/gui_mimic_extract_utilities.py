@@ -24,30 +24,38 @@ def user_variables(self, **kwargs):
     self.path = './'
     self.pdb_filename = os.path.join(self.path, 'hiv1_gag.pdb')
     self.trajectory_filename = os.path.join(self.path, 'hiv1_gag_20_frames.dcd')
-    self.option = 'weight_file'
+    self.trajectory_filename = os.path.join(self.path, 'hiv1_gag.pdb')
+#    self.option = 'weight_file'
 #    self.option = 'text_file'
-#    self.option ='single_frame'
+    self.option ='single_frame'
 #    self.option ='sampling_frequency'
 #    self.option ='all'
 #    self.option ='range'
-#    self.local_value = '1'
+    self.local_value = '1'
 #    self.local_value = '2-5'
-    self.local_value = os.path.join(self.path, 'hiv1_gag_weight_file.txt')
+#    self.local_value = os.path.join(self.path, 'hiv1_gag_weight_file.txt')
 #    self.local_value = os.path.join(self.path, 'hiv1_gag_text_file.txt')
-    self.output_filename = 'chosen_weights.dcd'
+
+#    self.output_filename = 'chosen_weights.dcd'
+
 #    self.output_filename = 'chosen_text.dcd'
 #    self.output_filename = 'chosen_range.dcd'
 #    self.output_filename = 'single_frame.dcd' 
 #    self.output_filename = 'periodic.dcd'    
 #    self.output_filename = 'all.dcd'
+
     self.extract_trajectory = True
     self.extract_sas = True
+    self.extract_sas = False
+
     self.sas_type = '0'
 #    self.sas_type = '1'
 #    self.sas_type = '2'
 #    self.sas_type = '3'
 #    self.sas_paths = os.path.join(self.path, 'hiv1_gag_0', 'sascalc', 'neutron_D2Op_100')
-    self.sas_paths = os.path.join(self.path, 'hiv1_gag_0', 'sascalc', 'neutron_D2Op_100')+','+os.path.join(self.path, 'hiv1_gag_0', 'sascalc', 'neutron_D2Op_0') 
+
+##    self.sas_paths = os.path.join(self.path, 'hiv1_gag_0', 'sascalc', 'neutron_D2Op_100')+','+os.path.join(self.path, 'hiv1_gag_0', 'sascalc', 'neutron_D2Op_0') 
+
 #    self.sas_paths = os.path.join(self.path,'hiv1_gag_0','xtal2sas')
 #    self.sas_paths = os.path.join(self.path,'hiv1_gag_0','cryson')
 #    self.sas_paths = os.path.join(self.path,'hiv1_gag_0','crysol')
@@ -115,7 +123,7 @@ def run_module(self, **kwargs):
     error, self.variables = input_filter.type_check_and_convert(svariables)
 
     if(len(error) > 0):
-        print 'error = ', error
+        print('error = ', error)
         if not(self.testflag):
             sys.exit()
         return error
@@ -129,7 +137,7 @@ def run_module(self, **kwargs):
             self.variables, no_file_check="true")
 
     if(len(error) > 0):
-        print 'error = ', error
+        print('error = ', error)
         if not(self.testflag):
             sys.exit()
         return error
@@ -192,4 +200,4 @@ if __name__ == '__main__':
 
     start = time.time()
     run_gui = gui_mimic_extract_utilities(test, paths)
-    print "time used: ", time.time() - start
+    print("time used: ", time.time() - start)

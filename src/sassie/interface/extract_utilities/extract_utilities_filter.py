@@ -20,7 +20,7 @@ import locale
 import string
 import glob
 import re
-import sasmol.sasmol as sasmol
+import sasmol.system as system
 import sassie.simulate.constraints.constraints as constraints
 import sassie.interface.input_filter as input_filter
 
@@ -90,10 +90,10 @@ def check_extract_utilities(variables, **kwargs):
 # exception below not tested since other tests failed before reaching this point; if this point is reached, file is read successfully
 # kept exception just in case
         try:
-            m1 = sasmol.SasMol(0)
+            m1 = system.Molecule(0)
             m1.read_pdb(pdb_filename)
             number_of_frames = m1.number_of_frames()
-            print '> found ' + str(number_of_frames) + ' frames in PDB file'
+            print('> found ' + str(number_of_frames) + ' frames in PDB file')
         except:
             error.append('could not read frames in pdb file ', + pdb_filename)
             return error
@@ -140,7 +140,7 @@ def check_extract_utilities(variables, **kwargs):
 # note that number_of_frames is used later to compare to number of sas
 # files in cases where both trajectory and sas files are extracted
         try:
-            m1 = sasmol.SasMol(0)
+            m1 = system.Molecule(0)
             if(infile_type == 'dcd'):
                 dcdinputfile = m1.open_dcd_read(trajectory_filename)
                 number_of_frames = dcdinputfile[2]
@@ -159,7 +159,7 @@ def check_extract_utilities(variables, **kwargs):
             return error
         sas_paths = [x.strip() for x in sas_paths.split(',')]
         for sas_path in sas_paths:
-            print 'sas_path: ', sas_path
+            print('sas_path: ', sas_path)
             ev, rv, wv = input_filter.check_permissions(sas_path)
             if(not ev or not rv):
                 error.append('permission error in input file path ' +
@@ -293,7 +293,7 @@ def check_extract_utilities(variables, **kwargs):
         try:
             infile = open(local_value, 'r').readlines()
             data = []
-            for i in xrange(len(infile)):
+            for i in range(len(infile)):
                 lin = string.split(infile[i])
                 if(len(lin) > 0):
                     this_value = locale.atoi(lin[0])

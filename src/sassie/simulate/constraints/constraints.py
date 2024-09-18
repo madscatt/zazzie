@@ -18,7 +18,7 @@ import sys
 import string
 import locale
 import numpy
-import sasmol.sasmol as sasmol
+import sasmol.system as system
 
 '''
   	Format for constraints between two object definitions:
@@ -103,7 +103,7 @@ import sasmol.sasmol as sasmol
 
 def get_index(seq, f):
 	ret = None
-	for i in xrange(len(seq)):
+	for i in range(len(seq)):
 		if(seq[i] == f):
 			ret=i
 	return ret
@@ -128,7 +128,7 @@ def read_constraints(m1,confile,filter_flag):
 	if(filter_flag == 1):
 		unique_seg = []
 		unique_name = []
-		for i in xrange(len(segname)):
+		for i in range(len(segname)):
 			tsegname = segname[i]
 			tname = name[i]
 			if(tsegname not in unique_seg):
@@ -138,10 +138,10 @@ def read_constraints(m1,confile,filter_flag):
 
 		resid_seg = []
 
-		for i in xrange(len(unique_seg)):
+		for i in range(len(unique_seg)):
 			tsegname = unique_seg[i]
 			local_res = []
-			for j in xrange(len(resid)):	
+			for j in range(len(resid)):	
 				tresid = resid[j]	
 				tseg = segname[j]
 				if(tseg == tsegname):
@@ -149,17 +149,17 @@ def read_constraints(m1,confile,filter_flag):
 
 			resid_seg.append(local_res)
 
-		print 'unique segnames = ',unique_seg
+		print('unique segnames = ',unique_seg)
 	
-	for i in xrange(number_of_constraints):
-		print 'i = ',i
+	for i in range(number_of_constraints):
+		print('i = ',i)
 		lin = string.split(input[i])
 		seg1 = [] ; resid1 = [] ; name1 = []
 		seg2 = [] ; resid2 = [] ; name2 = []
 		loc_type_array = []
 		colon_count = 0 ; seg_count = 0 ; resid_count = 0 ; type_count = 0
-		for j in xrange(len(lin)):
-			print 'lin[j] = ',lin[j]
+		for j in range(len(lin)):
+			print('lin[j] = ',lin[j])
 			if(lin[j] == ":"):
 				if(colon_count == 0):
 					element1.append([seg1,resid1,name1])
@@ -227,7 +227,7 @@ def read_constraints(m1,confile,filter_flag):
 						
 			elif(colon_count == 3):
 				type1 = lin[j]
-				print 'type1 = ',type1
+				print('type1 = ',type1)
 				if(filter_flag == 1):
 					if (type1 != "ATM" and type1 != "COM"):
 						error.append(" : LINE "+str(i+1)+" TYPE1 is not valid (ATM OR COM): "+lin[j])
@@ -237,7 +237,7 @@ def read_constraints(m1,confile,filter_flag):
 		
 			elif(colon_count == 4):
 				type2 = lin[j]
-				print 'type2 = ',type2
+				print('type2 = ',type2)
 				if(filter_flag == 1):
 					if (type2 != "ATM" and type2 != "COM"):
 						error.append(" : LINE "+str(i+1)+" TYPE2 is not valid (ATM OR COM): "+lin[j])
@@ -254,7 +254,7 @@ def read_constraints(m1,confile,filter_flag):
 	constraint_basis1_array = []
 	constraint_basis2_array = []
 
-	for i in xrange(number_of_constraints):
+	for i in range(number_of_constraints):
 		st1 = 'segname[i] == "'+str(element1[i][0][0])+'"'
 		st2 = 'segname[i] == "'+str(element2[i][0][0])+'"'
 		if(element1[i][1] != []):
@@ -310,7 +310,7 @@ def read_constraints(m1,confile,filter_flag):
 		constraint_basis1_array.append(st1)
 		constraint_basis2_array.append(st2)
 
-	print
+	print()
 	
 	if(filter_flag == 1):
 		return error
@@ -325,7 +325,7 @@ def check_constraints(m1,mask_a_array,mask_b_array,distance_array,type_array):
 
 	number_of_constraints = len(distance_array)
 
-	for i in xrange(number_of_constraints):
+	for i in range(number_of_constraints):
 
 		type_a = type_array[i][0]
 		type_b = type_array[i][1]
@@ -334,20 +334,20 @@ def check_constraints(m1,mask_a_array,mask_b_array,distance_array,type_array):
 
 		if(type_a == 'COM'):
 
-			sub_m1a=sasmol.SasMol(2)
+			sub_m1a=system.Molecule(2)
 			error = m1.copy_molecule_using_mask(sub_m1a,mask_a_array[i],0)
 			coor_a = sub_m1a.calccom(frame)
 		else:
-			sub_m1a=sasmol.SasMol(2)
+			sub_m1a=system.Molecule(2)
 			error = m1.copy_molecule_using_mask(sub_m1a,mask_a_array[i],0)
 			coor_a = sub_m1a.coor()[0:]
 			
 		if(type_b == 'COM'):
-			sub_m1b=sasmol.SasMol(3)
+			sub_m1b=system.Molecule(3)
 			error = m1.copy_molecule_using_mask(sub_m1b,mask_b_array[i],0)
 			coor_b = sub_m1b.calccom(frame)
 		else:
-			sub_m1b=sasmol.SasMol(3)
+			sub_m1b=system.Molecule(3)
 			error = m1.copy_molecule_using_mask(sub_m1b,mask_b_array[i],0)
 			coor_b = sub_m1b.coor()[0:]
 
@@ -361,9 +361,9 @@ def check_constraints(m1,mask_a_array,mask_b_array,distance_array,type_array):
 			natoms_a = sub_m1a.natoms()	
 			natoms_b = sub_m1b.natoms()	
 
-			for j in xrange(natoms_a):
+			for j in range(natoms_a):
 				this_coor_a = coor_a[0][j]
-				for k in xrange(natoms_b):
+				for k in range(natoms_b):
 					this_coor_b = coor_b[0][k]
 					delta_distance = numpy.sqrt(numpy.sum((this_coor_a - this_coor_b)**2.0))
 					if(delta_distance > this_distance):
@@ -373,7 +373,7 @@ def check_constraints(m1,mask_a_array,mask_b_array,distance_array,type_array):
 		elif(type_a == 'ATM' and type_b == 'COM'):
 			natoms_a = sub_m1a.natoms()	
 			
-			for j in xrange(natoms_a):
+			for j in range(natoms_a):
 				this_coor_a = coor_a[0][j]
 				delta_distance = numpy.sqrt(numpy.sum((this_coor_a - coor_b)**2.0))
 				if(delta_distance > this_distance):
@@ -383,7 +383,7 @@ def check_constraints(m1,mask_a_array,mask_b_array,distance_array,type_array):
 		elif(type_a == 'COM' and type_b == 'ATM'):
 			natoms_b = sub_m1b.natoms()	
 			
-			for j in xrange(natoms_b):
+			for j in range(natoms_b):
 				this_coor_b = coor_b[0][j]
 				delta_distance = numpy.sqrt(numpy.sum((coor_a - this_coor_b)**2.0))
 				if(delta_distance > this_distance):
@@ -395,7 +395,7 @@ def check_constraints(m1,mask_a_array,mask_b_array,distance_array,type_array):
 
 if __name__=='__main__':
 
-	m1=sasmol.SasMol(0)
+	m1=system.Molecule(0)
 	m1.read_pdb('complex0.pdb')
 	confile = 'constraints.txt'  
 	confile = 'int_constraints.txt'  
@@ -404,14 +404,14 @@ if __name__=='__main__':
 	if(filter_flag == 1):
 		error = read_constraints(m1,confile,filter_flag)
 		if(error != []):
-			print 'CONSTRAINT ERROR: '+str(error[0])
+			print('CONSTRAINT ERROR: '+str(error[0]))
 		else:
-			print 'NO ERRORS FOUND'
+			print('NO ERRORS FOUND')
 	else:
 		error,cb1a,cb2a,sd,type_array = read_constraints(m1,confile,filter_flag)
-		for i in xrange(len(cb1a)):
-			print cb1a[i]
-			print cb2a[i]
-			print sd[i]
-			print type_array[i]
-			print
+		for i in range(len(cb1a)):
+			print(cb1a[i])
+			print(cb2a[i])
+			print(sd[i])
+			print(type_array[i])
+			print()

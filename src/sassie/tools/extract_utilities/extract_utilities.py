@@ -35,7 +35,7 @@ import string
 import time
 import glob
 import sassie.interface.input_filter as input_filter
-import sasmol.sasmol as sasmol
+import sasmol.system as system
 import sassie.util.module_utilities as module_utilities
 import sassie.util.sasconfig as sasconfig
 import sassie.util.folder_management as folder_management
@@ -180,7 +180,7 @@ class extract_utilities():
         first = locale.atoi(local_values[0])
         last = locale.atoi(local_values[1])
 
-        return range(first, last + 1)
+        return list(range(first, last + 1))
 
 
     def get_text_file_sas(self):
@@ -189,7 +189,7 @@ class extract_utilities():
 
         infile = open(mvars.local_value, 'r').readlines()
         mask = []
-        for i in xrange(len(infile)):
+        for i in range(len(infile)):
             lin = string.split(infile[i])
             if(len(lin) > 0):
                 mask.append(lin[0])
@@ -207,7 +207,7 @@ class extract_utilities():
         fweights = weights[:, 2]
         file_numbers = weights[:, 0]
         x2 = weights[:, 1]
-        for i in xrange(len(x2)):
+        for i in range(len(x2)):
             if(fweights[i] == 1):
                 log.debug('st = '+str(weights[i][0])+' : x2 = '+str(x2[i]))
                 pass
@@ -227,20 +227,20 @@ class extract_utilities():
 
         try:
             coordinate_flag = kwargs['coordinate_flag']
-            print 'coordinate flag: ',coordinate_flag
-            print 'extracting coordinates: local_value = ', mvars.local_value
+            print('coordinate flag: ',coordinate_flag)
+            print('extracting coordinates: local_value = ', mvars.local_value)
             coordinate_flag = True
 
         except:
             coordinate_flag = False
 
-        print 'coordinate flag after check: ', coordinate_flag
+        print('coordinate flag after check: ', coordinate_flag)
 
         if not coordinate_flag:
-            for number in xrange(1, number_of_spec_files + 1, int(mvars.local_value)):
+            for number in range(1, number_of_spec_files + 1, int(mvars.local_value)):
                 mask.append(str(number))
         elif coordinate_flag:
-            for number in xrange(0, number_of_spec_files, int(mvars.local_value)):
+            for number in range(0, number_of_spec_files, int(mvars.local_value)):
                 mask.append(number)
 
         return mask
@@ -290,7 +290,7 @@ class extract_utilities():
         local_values = string.split(mvars.local_value, '-')
         first = locale.atoi(local_values[0]) - 1
         last = locale.atoi(local_values[1]) - 1
-        return range(first, last + 1)
+        return list(range(first, last + 1))
 
 
     def get_text_file(self):
@@ -301,7 +301,7 @@ class extract_utilities():
         infile = open(mvars.local_value, 'r').readlines()
 
         frame_list = []
-        for i in xrange(len(infile)):
+        for i in range(len(infile)):
             lin = string.split(infile[i])
             if(len(lin) > 0):
                 this_value = locale.atoi(lin[0]) - 1
@@ -319,7 +319,7 @@ class extract_utilities():
         weights = numpy.loadtxt(mvars.local_value)
         fweights = weights[:, 2]
         x2 = weights[:, 1]
-        for i in xrange(len(x2)):
+        for i in range(len(x2)):
             if(fweights[i] == 1):
                 log.debug('st = '+str(weights[i][0])+' : x2 = '+str(x2[i]))
                 pass
@@ -333,7 +333,7 @@ class extract_utilities():
         mvars = self.mvars
         avars = self.avars
 
-        m = sasmol.SasMol(0)
+        m = system.Molecule(0)
 
         if avars.infile_type == 'pdb':
             m.read_pdb(avars.trajectory_filename)
@@ -491,7 +491,7 @@ class extract_utilities():
 
         # ttxt=time.ctime()
         ttxt = time.asctime(time.gmtime(time.time()))
-        st = ''.join(['=' for x in xrange(60)])
+        st = ''.join(['=' for x in range(60)])
 
         pgui("\n%s \n" % (st))
         pgui("DATA FROM RUN: %s \n\n" % (ttxt))
@@ -542,7 +542,7 @@ class extract_utilities():
         log.debug(vars(mvars))
         log.debug(vars(avars))
 
-        m1 = sasmol.SasMol(0)
+        m1 = system.Molecule(0)
         m1.read_pdb(avars.pdb_filename)
         natoms = m1.natoms()
 
@@ -556,7 +556,7 @@ class extract_utilities():
             if(output_filename[-3:] == 'dcd'):
                 pgui('> output file is a dcd file')
                 j = 0
-                m2 = sasmol.SasMol(1)
+                m2 = system.Molecule(1)
                 m2.read_pdb(avars.pdb_filename, fastread=True)
                 coor = numpy.zeros((1, natoms, 3), numpy.float32)
                 dcdfile = m1.open_dcd_read(avars.trajectory_filename)
@@ -565,11 +565,11 @@ class extract_utilities():
 
                 log.debug('rangelist: '+ str(avars.rangelist))
                 log.debug('max(rangelist): '+ str(max(avars.rangelist)))
-                print 'rangelist: ', avars.rangelist
-                print 'max(rangelist): ', max(avars.rangelist)
+                print('rangelist: ', avars.rangelist)
+                print('max(rangelist): ', max(avars.rangelist))
                 dcdoutfile = m2.open_dcd_write(output_filename)
                 for i in range(number_of_frames):
-                    print '.', 
+                    print('.', end=' ') 
                     sys.stdout.flush()                  
                     m1.read_dcd_step(dcdfile, i)
                     if i in avars.rangelist:
@@ -586,14 +586,14 @@ class extract_utilities():
 
             elif(output_filename[-3:] == 'pdb'):
                 pgui('> output file is a pdb file')
-                m2 = sasmol.SasMol(1)
+                m2 = system.Molecule(1)
                 m2.read_pdb(avars.pdb_filename)  # ,fastread = True)
                 j = 0
                 dcdfile = m1.open_dcd_read(avars.trajectory_filename)
                 number_of_frames = dcdfile[2]
                 pgui('number_of_frames: '+ str(number_of_frames))
                 for i in range(number_of_frames):
-                    print '.',
+                    print('.', end=' ')
                     sys.stdout.flush()
                     m1.read_dcd_step(dcdfile, i)
                     coor[0, :, :] = m1.coor()[0]
@@ -622,15 +622,15 @@ class extract_utilities():
             if(output_filename[-3:] == 'dcd'):
                 pgui('> output file is a dcd file')
                 j = 0
-                m2 = sasmol.SasMol(1)
+                m2 = system.Molecule(1)
                 m2.read_pdb(avars.trajectory_filename, fastread=True)
                 log.debug('rangelist: '+ str(avars.rangelist))
                 log.debug('max(rangelist): '+ str(max(avars.rangelist)))
-                print 'rangelist: ', avars.rangelist
-                print 'max(rangelist): ', max(avars.rangelist)                
+                print('rangelist: ', avars.rangelist)
+                print('max(rangelist): ', max(avars.rangelist))                
                 dcdoutfile = m2.open_dcd_write(output_filename)
                 for i in range(number_of_frames):
-                    print '.',
+                    print('.', end=' ')
                     sys.stdout.flush()
                     if i in avars.rangelist:
                         pgui('\nextracting coordinates from frame: '+str(i))
@@ -643,11 +643,11 @@ class extract_utilities():
 
             elif(output_filename[-3:] == 'pdb'):
                 pgui('> output file is a pdb file')
-                m2 = sasmol.SasMol(1)
+                m2 = system.Molecule(1)
                 m2.read_pdb(avars.pdb_filename, fastread=True)
                 j = 0
                 for i in range(number_of_frames):
-                    print '.',
+                    print('.', end=' ')
                     sys.stdout.flush()
                     if i in avars.rangelist:
                         pgui('\nextracting coordinates from frame = '+str(i))
@@ -754,7 +754,7 @@ class extract_utilities():
             pgui('num_log_files: ' + str(num_log_files))
 
             if(copy_extras == True):
-                for j in xrange(len(avars.extra)):
+                for j in range(len(avars.extra)):
                     avars.num_ex_files[j] = self.copy_spec_files(extra_files[j],avars.extra[j])
                 pgui('num_ex_files = '+ str(avars.num_ex_files))     
 
