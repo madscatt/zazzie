@@ -1,5 +1,5 @@
 '''
-    SASSIE: Copyright (C) 2011 Joseph E. Curtis, Ph.D. 
+    SASSIE: Copyright (C) 2011 Joseph E. Curtis, Ph.D.
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -15,18 +15,17 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 import os
-import sys
-import string
-import locale
+import io
 import time
 import math
-import platform
+import json
+import copy
 import numpy as np
 import sasmol.system as system
 import sassie.util.sasconfig as sasconfig
 import sassie.util.module_utilities as module_utilities
 import sassie.tools.contrast_calculator.contrast_helper as contrast_helper
-#import contrast_helper as contrast_helper
+# import contrast_helper as contrast_helper
 from scipy import stats
 
 # -------------------
@@ -54,7 +53,7 @@ from re import findall
 
 
 '''
-    CONTRAST_CALCULATOR is the module that calculates SLD, I(0) and contrast v. %D2O 
+    CONTRAST_CALCULATOR is the module that calculates SLD, I(0) and contrast v. %D2O
 	for a given molecule or complex based only on sequence or chemical formula.  It will
 	read the sequence from a FASTA or PDB file.
 
@@ -72,7 +71,7 @@ class module_variables():
         self.app = app
 
 
-class contrast_calculator_input_variables():
+class contrast_calculator_variables():
 
     def __init__(self, parent=None):
         pass
@@ -87,9 +86,11 @@ class contrast_calculator():
 
         self.module_variables = module_variables()
 
-        self.mvars = self.module_variables
+        self.contrast_calculator_variables = contrast_calculator_variables()
 
-        self.avars = contrast_calculator_input_variables()
+#        self.mvars = self.module_variables
+
+#        self.ccvars = contrast_calculator_variables()
 
         self.run_utils = module_utilities.run_utils(app, txtOutput)
 
@@ -115,50 +116,20 @@ class contrast_calculator():
 
         return
 
-
-#   for plotting
-
-    def wait(str=None, prompt='Plot will clear in 10 seconds ...\n'):
-        if str is not None:
-            print(str)
-
-        try:
-            if (platform.system() == "Linux"):
-                import curses
-                stdscr = curses.initscr()
-                stdscr.addstr('press a key to continue')
-                c = stdscr.getch()
-                curses.endwin()
-#               raw_input(prompt)
-        except:
-            time.sleep(1)
-
-
-#    pgui performs this function
-#    def print_failure(message,txtOutput):
-#
-#    txtOutput.put("\n\n>>>> RUN FAILURE <<<<\n")
-#    txtOutput.put(">>>> RUN FAILURE <<<<\n")
-#    txtOutput.put(">>>> RUN FAILURE <<<<\n\n")
-#    txtOutput.put(message)
-#
-#    return
-
-
     def unpack_variables(self, variables):
 
         log = self.log
-        mvars = self.mvars
+        mvars = self.module_variables
         log.debug('in unpack_variables')
 
         mvars.run_name = variables['run_name'][0]
-        mvars.inpath = variables['inpath'][0]
+        mvars.path = variables['path'][0]
         mvars.outfile = variables['outfile'][0]
         mvars.solute_conc = variables['solute_conc'][0]
         mvars.d2ostep = variables['d2ostep'][0]
         mvars.fexchp = variables['fexchp'][0]
         mvars.fexchn = variables['fexchn'][0]
-        mvars.plotflag = variables['plotflag'][0]  # for plotting
+#        mvars.plotflag = variables['plotflag'][0]  # for plotting
 
         log.debug(vars(mvars))
 
@@ -167,7 +138,7 @@ class contrast_calculator():
     def unpack_ivariables(self, ivariables):
 
         log = self.log
-        mvars = self.mvars
+        mvars = self.module_variables
         log.debug('in unpack_ivariables')
 
         mvars.seqfiles = []
@@ -178,7 +149,7 @@ class contrast_calculator():
 
         log.debug('len(ivariables): %i' % len(ivariables))
         mvars.numfiles = len(ivariables)
-#       print 'numfiles = ', mvars.numfiles
+#       print('numfiles = ', mvars.numfiles)
 
         for i in range(mvars.numfiles):
             mvars.seqfiles.append(ivariables[i][0])
@@ -194,7 +165,7 @@ class contrast_calculator():
     def unpack_solvvariables(self, solvvariables):
 
         log = self.log
-        mvars = self.mvars
+        mvars = self.module_variables
         log.debug('in unpack_solvvariables')
 
         mvars.solv_comp = []  # chemical formula (see below)
@@ -202,9 +173,9 @@ class contrast_calculator():
 
         log.debug('len(solvvariables): %i' % len(solvvariables))
         mvars.numsolv = len(solvvariables)
-#       print 'numsolv = ', mvars.numsolv
+#       print('numsolv = ', mvars.numsolv)
 #       for i in range(mvars.numsolv):
-#           print solvvariables[i]
+#           print(solvvariables[i])
 
         for i in range(mvars.numsolv):
             if solvvariables[i][0] == "":
@@ -214,7 +185,7 @@ class contrast_calculator():
                 chemical_string = ''
                 for key, value in list(solvvariables[i][0].items()):
                     chemical_string += key + str(value)
-#           print 'solvent_string = ',chemical_string
+#           print('solvent_string = ',chemical_string)
             mvars.solv_comp.append(chemical_string)
             mvars.solv_conc.append(solvvariables[i][1])
 
@@ -225,7 +196,7 @@ class contrast_calculator():
     def unpack_chemvariables(self, chemical_variables):
 
         log = self.log
-        mvars = self.mvars
+        mvars = self.module_variables
         log.debug('in unpack_chemvariables')
 
         mvars.chem_comp = []     # chemical formula (see below)
@@ -235,9 +206,9 @@ class contrast_calculator():
 
         log.debug('len(chemical_variables): %i' % len(chemical_variables))
         mvars.numformulas = len(chemical_variables)
-#       print 'numformulas = ', mvars.numformulas
+#       print('numformulas = ', mvars.numformulas)
 #       for i in range(mvars.numformulas):
-#           print chemical_variables[i]
+#           print(chemical_variables[i])
 
         for i in range(mvars.numformulas):
             if chemical_variables[i][0] == "":
@@ -247,7 +218,7 @@ class contrast_calculator():
                 chemical_string = ''
                 for key, value in list(chemical_variables[i][0].items()):
                     chemical_string += key + str(value)
-#           print 'chemical_string = ',chemical_string
+#           print('chemical_string = ',chemical_string)
             mvars.chem_comp.append(chemical_string)
             mvars.hexchem.append(chemical_variables[i][1])
             mvars.fexchchem.append(chemical_variables[i][2])
@@ -266,16 +237,28 @@ class contrast_calculator():
         log.debug('in initialization')
         pgui = self.run_utils.print_gui
 
-        mvars = self.mvars
-        avars = self.avars
+        mvars = self.module_variables
+        ccvars = self.contrast_calculator_variables
 
-        print('numfiles, numsolv, numformulas :',
-              mvars.numfiles, mvars.numsolv, mvars.numformulas)
+#        print('numfiles, numsolv, numformulas :',
+#              mvars.numfiles, mvars.numsolv, mvars.numformulas)
 
-        avars.contpath = os.path.join(mvars.run_name, 'contrast_calculator')
-        direxist = os.path.exists(avars.contpath)
+# output file path
+        if (mvars.run_name[-1] == '/'):
+            log.debug('run_name(1) = %s' % (mvars.run_name))
+            ccvars.contpath = mvars.run_name + 'contrast_calculator/'
+            log.debug('output_file_path = %s' %
+                      (ccvars.contpath))
+        else:
+            log.debug('run_name(2) = %s' % (mvars.run_name))
+            ccvars.contpath = mvars.run_name + '/contrast_calculator/'
+            log.debug('output_file_path = %s' %
+                      (ccvars.contpath))
+
+#        ccvars.contpath = os.path.join(mvars.run_name, 'contrast_calculator')
+        direxist = os.path.exists(ccvars.contpath)
         if (direxist == 0):
-            os.system('mkdir -p ' + avars.contpath)
+            os.system('mkdir -p ' + ccvars.contpath)
 
         prefix = mvars.outfile.find('.')
         if prefix == -1:
@@ -283,19 +266,91 @@ class contrast_calculator():
         else:
             coreoutfile = mvars.outfile[0:prefix]
 
-        avars.izerofile = coreoutfile + '_izero.txt'
-        avars.izfile = open(os.path.join(avars.contpath, avars.izerofile), 'w')
+        ccvars.izerofile = coreoutfile + '_izero.txt'
+        ccvars.izfile = io.open(os.path.join(
+            ccvars.contpath, ccvars.izerofile), 'w')
 
-        avars.contrastfile = coreoutfile + '_contrast.txt'
-        avars.cotfile = open(os.path.join(
-            avars.contpath, avars.contrastfile), 'w')
+        ccvars.contrastfile = coreoutfile + '_contrast.txt'
+        ccvars.cotfile = io.open(os.path.join(
+            ccvars.contpath, ccvars.contrastfile), 'w')
 
-        avars.scatlendenfile = coreoutfile + '_sld.txt'
-        avars.sldfile = open(os.path.join(
-            avars.contpath, avars.scatlendenfile), 'w')
+        ccvars.scatlendenfile = coreoutfile + '_sld.txt'
+        ccvars.sldfile = io.open(os.path.join(
+            ccvars.contpath, ccvars.scatlendenfile), 'w')
+
+        ccvars.general_output_file = coreoutfile + '_general.txt'
+        ccvars.genfile = io.open(os.path.join(
+            ccvars.contpath, ccvars.general_output_file), 'w')
+
+        ccvars.izfile.write('#input variables: ' + repr(vars(mvars)) + '\n')
+        ccvars.cotfile.write('#input variables: ' + repr(vars(mvars)) + '\n')
+        ccvars.sldfile.write('#input variables: ' + repr(vars(mvars)) + '\n')
+        ccvars.genfile.write(
+            '#input variables: ' + repr(vars(mvars)) + '\n')
+
+# open the json output file for writing
+        ccvars.json_outfile = io.open(
+            ccvars.contpath + ccvars.general_output_file + '.json', 'w')
 
         log.debug(vars(mvars))
-        log.debug(vars(avars))
+        log.debug(vars(ccvars))
+
+    def save_data_to_plot_as_json(self, fd2o, izerocomp, sqrtizerocomp, rs, contrastcomp, sldcomp, protsld, protcontrast, protcontrasttitle, protsldtitle, dnasld, dnacontrast,
+                                  dnacontrasttitle, dnasldtitle, rnasld, rnacontrast, rnacontrasttitle, rnasldtitle, chemsld, chemcontrast, chemcontrasttitle, chemsldtitle):
+        '''
+        **Save Data to Plot as JSON** is the method that saves the data to be plotted to a JSON file.
+        '''
+
+        log = self.log
+        log.debug('in save data to plot as json')
+        pgui = self.run_utils.print_gui
+
+        mvars = self.module_variables
+        ccvars = self.contrast_calculator_variables
+
+        if ccvars.plotflag == 0:
+            log.debug('no plot')
+            data_dict = {'plotflag': [ccvars.plotflag]}
+        elif ccvars.plotflag == 1:
+            log.debug('plot for two components')
+            data_dict = {'plotflag': [ccvars.plotflag],
+                         'concentration': [mvars.solute_conc],
+                         'fraction_d2o': [fd2o[n] for n in range(len(fd2o))],
+                         'izero_complex': [izerocomp[n] for n in range(len(izerocomp))],
+                         'sqrt_izero_complex': [sqrtizerocomp[n] for n in range(len(sqrtizerocomp))],
+                         'solvent_sld': [rs[n] for n in range(len(rs))],
+                         'complex_contrast': [contrastcomp[n] for n in range(len(contrastcomp))],
+                         'complex_sld': [sldcomp[n] for n in range(len(sldcomp))],
+                         'protein_sld': [[protsld[n][m] for n in range(len(protsld))] for m in range(len(protsld[0]))],
+                         'protein_contrast': [[protcontrast[n][m] for n in range(len(protcontrast))] for m in range(len(protcontrast[0]))],
+                         'protein_contrast_title': [protcontrasttitle[n] for n in range(len(protcontrasttitle))],
+                         'protein_sld_title': [protsldtitle[n] for n in range(len(protsldtitle))],
+                         'dna_sld': [[dnasld[n][m] for n in range(len(dnasld))] for m in range(len(dnasld[0]))],
+                         'dna_contrast': [[dnacontrast[n][m] for n in range(len(dnacontrast))] for m in range(len(dnacontrast[0]))],
+                         'dna_contrast_title': [dnacontrasttitle[n] for n in range(len(dnacontrasttitle))],
+                         'dna_sld_title': [dnasldtitle[n] for n in range(len(dnasldtitle))],
+                         'rna_sld': [[rnasld[n][m] for n in range(len(rnasld))] for m in range(len(rnasld[0]))],
+                         'rna_contrast': [[rnacontrast[n][m] for n in range(len(rnacontrast))] for m in range(len(rnacontrast[0]))],
+                         'rna_contrast_title': [rnacontrasttitle[n] for n in range(len(rnacontrasttitle))],
+                         'rna_sld_title': [rnasldtitle[n] for n in range(len(rnasldtitle))],
+                         'chemformula_sld': [[chemsld[n][m] for n in range(len(chemsld))] for m in range(len(chemsld[0]))],
+                         'chemformula_contrast': [[chemcontrast[n][m] for n in range(len(chemcontrast))] for m in range(len(chemcontrast[0]))],
+                         'chemformula_contrast_title': [chemcontrasttitle[n] for n in range(len(chemcontrasttitle))],
+                         'chemformula_sld_title': [chemsldtitle[n] for n in range(len(chemsldtitle))], }
+        else:
+            log.debug('error creating data dictionary for plotting')
+            return
+
+#        print('data dict', data_dict)
+
+#        print('json_outfile', ccvars.json_outfile)
+        json_data = json.dumps(data_dict)
+
+# Write the result to the file
+        ccvars.json_outfile.write(json_data)
+        ccvars.json_outfile.close()
+
+        return
 
     def contrast(self):
         '''
@@ -306,7 +361,7 @@ class contrast_calculator():
         INPUT:
 
             run_name:                            project name
-            inpath:                             path name for input files (pdb or sequence)
+            path:                             path name for input files (pdb or sequence)
             numfiles:                           number of input files (protein, rna or dna)
             solute_conc:                        concentration of solute
             d2ostep:                            step in fraction D2O used when calculating SLD, contrast and I(0)
@@ -325,7 +380,7 @@ class contrast_calculator():
             formula_array:                      chemical formulas for the solute components
             number_exchangeable_hydrogens:      the number of exchangeable hydrogen atoms in the solute component
             fraction_exchangeable_hydrogens:    fraction of exchangeable hydrogens that exchange in the solute compoent
-            mass_density:                       mass density of solute component   
+            mass_density:                       mass density of solute component
 
 
         OUTPUT:
@@ -336,19 +391,19 @@ class contrast_calculator():
             outfile_izero.txt
             '''
 
-    # mvars: run_name, inpath, outfile, solute_conc, d2ostep, fexchp, fexchn, plotflag,
+    # mvars: run_name, path, outfile, solute_conc, d2ostep, fexchp, fexchn, plotflag,
     #        numfiles, seqfiles, numunits, fracdeut, moltype, isFasta, numfiles, solv_comp, solv_conc, numsolv
     #        chem_comp, hexchem, fexchchem, chem_density, numformulas
 
-    # avars: contpath, izfile, cotfile, sldfile, izerofile, contrastfile, scatlendenfile
+    # ccvars: contpath, izfile, cotfile, sldfile, izerofile, contrastfile, scatlendenfile
     #
 
         log = self.log
         pgui = self.run_utils.print_gui
         log.debug('in contrast')
 
-        mvars = self.mvars
-        avars = self.avars
+        mvars = self.module_variables
+        ccvars = self.contrast_calculator_variables
 
         # ttxt=time.ctime()
         ttxt = time.asctime(time.gmtime(time.time()))
@@ -371,10 +426,10 @@ class contrast_calculator():
 
         working_conc = mvars.solute_conc / 1000  # convert mg/ml to g/ml
 
-# test if this works once program is running in 2.0 format
+# TODO: test if this works once program is running in 3.0 format
 # if working, use sasproperties dictionaries for all dictionaries
-# except atomic_dict since we are still adding elements to it
-# and the sasproperties dictionary is not up to date
+# except atomic_dict (since we are still adding elements to it
+# and the sasproperties dictionary is not up to date)?
 
 #       atomic = sasmol.sasproperties.Atomic()
 #       protein_dict = atomic.protein_sl()
@@ -403,14 +458,14 @@ class contrast_calculator():
         bh2o = bh * 2 + bo
         bd2o = bd * 2 + bo
         bxh2o = bxh * 2 + bxo
-#       print bh, bd, bxh, bh2o, bd2o, bxh2o
+#       print(bh, bd, bxh, bh2o, bd2o, bxh2o)
 
         h2o_conc = 1.00e3 / (hstats[0] * 2 + ostats[0])  # molar conc of water
         d2o_conc = 1.00e3 / (dstats[0] * 2 + ostats[0])
         h2o_vol = 1.0e-3 / na / h2o_conc * 1e30          # Ang^3 (10^-24 cm^3)
         d2o_vol = 1.0e-3 / na / d2o_conc * 1e30
 
-#       print h2o_conc, d2o_conc, h2o_vol, d2o_vol
+#       print(h2o_conc, d2o_conc, h2o_vol, d2o_vol)
 
 
 # determine if there are additional components in solvent
@@ -422,7 +477,7 @@ class contrast_calculator():
 
         elementmatrix = []
 
-#        print 'numsolv = ', mvars.numsolv
+#        print('numsolv = ', mvars.numsolv)
 
         # What if nothing was entered initially? This takes care of that
         # possibility.
@@ -430,17 +485,17 @@ class contrast_calculator():
             if mvars.solv_conc[0] == "":
                 mvars.numsolv = 0
                 usesolventinfo = 0
-#        print 'numsolv = ', mvars.numsolv
+#        print('numsolv = ', mvars.numsolv)
 
 # parse the solvent composition to get the total number of each element
-# formula can't have parenthesis at this stage
+# formula can't have parenthesis at this stage; this should have been taken care of in the input filter
 
         for m in range(mvars.numsolv):
-            #            print 'm = ', m
+            #            print('m = ', m)
             thissolv_comp = mvars.solv_comp[m]
 
-#            print thissolv_comp
-#            print 'length = ', len(thissolv_comp)
+#            print(thissolv_comp)
+#            print (length = ', len(thissolv_comp))
 
             elements = []
             elementarray = []
@@ -448,13 +503,13 @@ class contrast_calculator():
 
             elements = [k for k in findall(
                 r'([A-Z][a-z]*)(\d*)', thissolv_comp) if k]
-#            print elements
-#            print len(elements)
+#            print(elements)
+#            print(len(elements))
 
             for i in range(len(elements)):
-                #                print len(elements[i])
+                #                print(len(elements[i]))
                 for j in range(len(elements[i])):
-                    #                print i,j,elements[i][j]
+                    #                print(i,j,elements[i][j])
                     if j == 0:
                         elementarray.append(elements[i][j])
                     if j == 1:
@@ -462,11 +517,11 @@ class contrast_calculator():
                             numberarray.append('1')
                         else:
                             numberarray.append(elements[i][j])
-#            print elementarray
-#            print numberarray
+#            print(elementarray)
+#            print(numberarray)
             elementmatrix.append([elementarray, numberarray])
 
-#        print elementmatrix
+#        print(elementmatrix)
 
 # arrays for solvent components
 
@@ -491,7 +546,7 @@ class contrast_calculator():
             rsx = rxh2o
             rsd2o = rd2o
             rsh2o = rh2o
-#            print rsh2o, rsd2o, rsx
+#            print(rsh2o, rsd2o, rsx)
 
 # calculate solute properties if usesolventinfo=1
 # H-D exchange between water and small solute molecules in the solvent is
@@ -504,6 +559,10 @@ class contrast_calculator():
 
             soluteconc = 0.0
 
+# TODO: here is where the mass density of the solute needs to be used to obtain the solute volumes, rather than the solute volumes from the element table
+# The volumes in the element tables are not giving the correct SLD values for the solute components at higher concentrations
+# The mass density method was tested in MULCH and gave the correct SLD values for the solute components at higher concentrations
+# Note that the inputs will need to be changed to be the same as those for the chemical formula components of the complex
             for i in range(mvars.numsolv):
 
                 mwsolv = 0.0
@@ -515,20 +574,22 @@ class contrast_calculator():
 
                     element = elementmatrix[i][0][j]
                     number = int(elementmatrix[i][1][j])
-#                    print 'element, number: ', element,number
+#                    print('element, number: ', element,number)
 
                     estats = atomic_dict[element]
 
                     mwsolv = mwsolv + estats[0] * number
+# TODO: remove volsolv and replace with mass density method
                     volsolv = volsolv + estats[1] * number
                     bhsolv = bhsolv + estats[3] * number
                     bxsolv = bxsolv + estats[2] * number
-#                    print mwsolv,volsolv,bhsolv,bxsolv
+#                    print(mwsolv,volsolv,bhsolv,bxsolv)
 
                 concsolvarray.append(float(mvars.solv_conc[i]))
                 bxsolvarray.append(bxsolv)
                 bhsolvarray.append(bhsolv)
                 mwsolvarray.append(mwsolv)
+# TODO:  replace volsolv with the mass density method
                 volsolvarray.append(volsolv)
 
                 rxsolvarray.append(
@@ -539,28 +600,28 @@ class contrast_calculator():
                 soluteconc = soluteconc + \
                     (concsolvarray[i] * volsolvarray[i] * na)
 
-#            print concsolvarray
-#            print bxsolvarray
-#            print bhsolvarray
-#            print mwsolvarray
-#            print volsolvarray
-#            print rxsolvarray
-#            print rhsolvarray
-#            print 'solute conc: ', soluteconc
+#            print(concsolvarray)
+#            print(bxsolvarray)
+#            print(bhsolvarray)
+#            print(mwsolvarray)
+#            print(volsolvarray)
+#            print(rxsolvarray)
+#            print(rhsolvarray)
+#            print('solute conc: ', soluteconc)
 
 # adjust water concentration due to presence of solutes
 
             # 1e27 is the number of A^3 per liter
             newh2o_conc = h2o_conc * (1e27 - soluteconc) / 1e27
 
-#            print 'new h2o conc: ', newh2o_conc
+#            print('newh2o_conc: ', newh2o_conc)
 
             bxsolvtot = bxh2o * newh2o_conc
             bhsolvtot = bh2o * newh2o_conc
             bdsolvtot = bd2o * newh2o_conc
             volsolvtot = h2o_vol * newh2o_conc
 
-#            print bhsolvtot, bdsolvtot, bxsolvtot, volsolvtot
+#            print(bhsolvtot, bdsolvtot, bxsolvtot, volsolvtot)
 
             for i in range(mvars.numsolv):
 
@@ -569,24 +630,24 @@ class contrast_calculator():
                 bdsolvtot = bdsolvtot + concsolvarray[i] * bhsolvarray[i]
                 volsolvtot = volsolvtot + concsolvarray[i] * volsolvarray[i]
 
-#            print bh, bd, bhsolvtot, bdsolvtot, bxsolvtot, volsolvtot
+#            print(bh, bd, bhsolvtot, bdsolvtot, bxsolvtot, volsolvtot)
 
             rhsolvtot = bhsolvtot * 100 / volsolvtot                # 10^10 cm^-2
             rdsolvtot = bdsolvtot * 100 / volsolvtot
             rxsolvtot = bxsolvtot * 100 / volsolvtot
 
-# print rhsolvtot, rdsolvtot, rxsolvtot
+#            print(rhsolvtot, rdsolvtot, rxsolvtot)
 
             rsx = rxsolvtot
             rsd2o = rdsolvtot
             rsh2o = rhsolvtot
 
-#            print rsh2o, rsd2o, rsx
+#            print(rsh2o, rsd2o, rsx)
 
 
 # Get the properties of the COMPLEX.
 
-# First, determine if there are any chemical forumlas, which indicates that there are components
+# First, determine if there are any chemical formulas, which indicates that there are components
 # of the complex that are not protein, dna or rna.
 
         formulamatrix = []
@@ -600,15 +661,16 @@ class contrast_calculator():
         denschemarray = []
         btotchemarray = []
         bxtotchemarray = []
+        chempsv = []
 
-#        print 'numformulas =', mvars.numformulas
+#        print('numformulas =', mvars.numformulas)
 
 
 # Each chemical formula is treated as a separate component regardless of the amount of deuteration
 # because the mass densities could be different
 
         if mvars.numformulas > 0:
-            #            print 'CHEMICAL FORMULA'
+            #            print('CHEMICAL FORMULA')
 
             # parse the chemical formula to get the total number of each
             # element
@@ -617,8 +679,8 @@ class contrast_calculator():
                 thischem_comp = mvars.chem_comp[i]
                 allformulas.append(thischem_comp)
 
-#                print thischem_comp
-#                print 'length = ', len(thischem_comp)
+#                print(thischem_comp)
+#                print('length = ', len(thischem_comp))
 
                 elements = []
                 elementarray = []
@@ -626,13 +688,13 @@ class contrast_calculator():
 
                 elements = [k for k in findall(
                     r'([A-Z][a-z]*)(\d*)', thischem_comp) if k]
-#                print elements
-#                print len(elements)
+#                print(elements)
+#                print(len(elements))
 
                 for i in range(len(elements)):
-                    #                    print len(elements[i])
+                    #                    print(len(elements[i]))
                     for j in range(len(elements[i])):
-                        #                        print i,j,elements[i][j]
+                        #                        print(i,j,elements[i][j])
                         if j == 0:
                             elementarray.append(elements[i][j])
                         if j == 1:
@@ -640,11 +702,11 @@ class contrast_calculator():
                                 numberarray.append('1')
                             else:
                                 numberarray.append(elements[i][j])
-#                print elementarray
-#                print numberarray
+#                print(elementarray)
+#                print(numberarray)
                 formulamatrix.append([elementarray, numberarray])
 
-# print formulamatrix
+# print(formulamatrix)
 
 # calculate Mw and total x-ray and neutron scattering lengths for each formula
 # the calculations assume D is explicitely listed in the chemical formula
@@ -661,7 +723,7 @@ class contrast_calculator():
 
                     elementname = formulamatrix[i][0][j]
                     elementnumber = int(formulamatrix[i][1][j])
-#                    print 'element, number: ', elementname,elementnumber
+#                    print('element, number: ', elementname,elementnumber)
 
                     estats = atomic_dict[elementname]
 
@@ -672,7 +734,7 @@ class contrast_calculator():
                         hchem = hchem + elementnumber
                     if elementname == 'D':
                         dchem = dchem + elementnumber
-#                print mwchem,bh2chem,bxchem,hchem,dchem
+#                print(mwchem, bh2chem, bxchem, hchem, dchem)
 
                 mwchemarray.append(mwchem)
                 hchemarray.append(hchem)
@@ -686,16 +748,19 @@ class contrast_calculator():
             for i in range(len(mwchemarray)):
                 vol = mwchemarray[i] / (denschemarray[i] * na)
                 vxchemarray.append(vol)
+                partial_vol = 1.0 / denschemarray[i]
+                chempsv.append(partial_vol)
+#            print('chempsv: ', chempsv)
 
-#            print mwchemarray
-#            print hchemarray
-#            print dchemarray
-#            print hexchemarray
-#            print fexchchemarray
-#            print denschemarray
-#            print btotchemarray
-#            print bxtotchemarray
-#            print vxchemarray
+#            print(mwchemarray)
+#            print(hchemarray)
+#            print(dchemarray)
+#            print(hexchemarray)
+#            print(fexchchemarray)
+#            print(denschemarray)
+#            print(btotchemarray)
+#            print(bxtotchemarray)
+#            print(vxchemarray)
 
 
 # Get the properties of protein, dna and/or rna in the complex.
@@ -721,15 +786,14 @@ class contrast_calculator():
         btotrnaarray = []
         bxtotrnaarray = []
 
-#        print 'numfiles =', mvars.numfiles
+#        print('numfiles = ', mvars.numfiles)
 
-        if mvars.numfiles > 0:
-            # In case 0 files was entered initially but "Then Click Here"
-            # wasn't clicked
-            if mvars.seqfiles[0] == "":
-                mvars.numfiles = 0
-
-#       print 'numfiles =', mvars.numfiles
+# this was needed for the original sassie gui version.  No longer needed.
+#        if mvars.numfiles > 0:
+#            # In case 0 files was entered initially but "Then Click Here"
+#            # wasn't clicked
+#            if mvars.seqfiles[0] == "":
+#                mvars.numfiles = 0
 
         for index in range(mvars.numfiles):
 
@@ -738,21 +802,23 @@ class contrast_calculator():
             thisfracdeut = float(mvars.fracdeut[index])
             thisIsFasta = mvars.isFasta[index]
             thisfilename = mvars.seqfiles[index]
-# print
-# thisfilename,thisfracdeut,thisnumunits,thisIsFasta,thismoltype,index
+#        print(thisfilename,thisfracdeut,thisnumunits,thisIsFasta,thismoltype,index)
 
             if thismoltype == "protein":
+                thispsv = vprot
                 proteinmatrix.append(
-                    [thisfilename, thisfracdeut, thisnumunits, thisIsFasta])
+                    [thisfilename, thisfracdeut, thisnumunits, thisIsFasta, thispsv])
             elif thismoltype == "dna":
+                thispsv = vdna
                 dnamatrix.append([thisfilename, thisfracdeut,
-                                  thisnumunits, thisIsFasta])
+                                  thisnumunits, thisIsFasta, thispsv])
             elif thismoltype == "rna":
+                thispsv = vdna
                 rnamatrix.append([thisfilename, thisfracdeut,
-                                  thisnumunits, thisIsFasta])
-#            else:
-# print("Molecule type is neither protein nor dna nor rna.")      # this
-# issue should be caught in the contrast_calculator_filter
+                                  thisnumunits, thisIsFasta, thispsv])
+
+
+#            print(thisfilename, thisfracdeut, thisnumunits,thisIsFasta, thismoltype, thispsv, index)
 
 # First calculate the contrast parameters for the protein components.
 # Sort the protein values by fract deut and bin accordingly.  Then go
@@ -764,15 +830,19 @@ class contrast_calculator():
         rnafdval = []
         allfiles = []
         allnumunits = []
+        protpsv = []
+        dnapsv = []
+        rnapsv = []
 
         if len(proteinmatrix) > 0:
-            #            print 'PROTEIN'
-            #            print proteinmatrix
+            #            print('PROTEIN')
+            #            print(proteinmatrix)
             newproteinmatrix = sorted(proteinmatrix, key=lambda x: x[
                 1])                                     # sort by fract deut
-#            print newproteinmatrix
+#            print('newproteinmatrix: ', newproteinmatrix)
 
             current = newproteinmatrix[0][1]
+#            print('current matrix: ', current)
             proteinfdval.append(newproteinmatrix[0][1])
             numvalues = 1
 
@@ -782,9 +852,8 @@ class contrast_calculator():
                     numvalues = numvalues + 1
                     proteinfdval.append(newproteinmatrix[i][1])
                     current = newproteinmatrix[i][1]
-#            print 'numvalues = ', numvalues                                #number of components
-# print 'proteinfdval = ', proteinfdval                          #value of
-# fract deut
+#            print('numvalues = ', numvalues)  # number of components
+#            print('proteinfdval = ', proteinfdval)  # value of fract deut
 
             proteinbins = [[[] for x in range(len(newproteinmatrix))]
                            for y in range(numvalues)]
@@ -801,7 +870,7 @@ class contrast_calculator():
                     else:
                         j = j + 1
                         k = 0
-#            print proteinbins
+#            print('proteinbins after sort: ', proteinbins)
 
 # calculate Mw, number of hydrogens, number of exchangeable hydrogens and
 # total x-ray and neutron scattering lengths for each protein component
@@ -815,8 +884,12 @@ class contrast_calculator():
 
                 # eliminate empty spaces in bins
                 proteinbins[i] = [e for e in proteinbins[i] if e]
-#                print proteinbins[i]
-#                print len(proteinbins[i])
+#                print('i, proteinbins after eliminating spaces: ',
+#                      i, proteinbins[i])
+#                print(len(proteinbins[i]))
+#                print('proteinbins[i][0][4] ', proteinbins[i][0][4])
+                psv = proteinbins[i][0][4]
+                protpsv.append(psv)
 
                 for j in range(len(proteinbins[i])):
                     # read the file
@@ -825,8 +898,8 @@ class contrast_calculator():
                     # for printing to output files
                     allfiles.append(filename)
                     allnumunits.append(nunits)
-#                    print 'protein filename: ', filename
-                    thisfile = os.path.join(mvars.inpath, filename)
+#                    print ('protein filename', filename)
+                    thisfile = os.path.join(mvars.path, filename)
 
                     # not thisIsFasta
                     if proteinbins[i][j][3] != '1':
@@ -878,19 +951,21 @@ class contrast_calculator():
                 btotprotarray.append(btotprot)
                 bxtotprotarray.append(bxtotprot)
 
-#            print mwprotarray
-#            print hexprotarray
-#            print btotprotarray
-#            print bxtotprotarray
+#            print(mwprotarray)
+#            print(hprotarray)
+#            print(hexprotarray)
+#            print(btotprotarray)
+#            print(bxtotprotarray)
+#            print('protpsv: ', protpsv)
 
 # Now repeat for the DNA contrast parameters
 
         if len(dnamatrix) > 0:
-            #            print 'DNA'
-            #            print dnamatrix
+            #            print('DNA')
+            #            print(dnamatrix)
             newdnamatrix = sorted(dnamatrix, key=lambda x: x[
                 1])                                           # sort by fract deut
-#            print newdnamatrix
+#            print(newdnamatrix)
 
             current = newdnamatrix[0][1]
             dnafdval.append(newdnamatrix[0][1])
@@ -902,9 +977,8 @@ class contrast_calculator():
                     numdnavalues = numdnavalues + 1
                     dnafdval.append(newdnamatrix[i][1])
                     current = newdnamatrix[i][1]
-#            print 'numdnavalues = ', numdnavalues                          #number of components
-# print 'dnafdval = ', dnafdval                                  #value of
-# fract deut
+#            print('numdnavalues = ', numdnavalues)                          #number of components
+#            print('dnafdval = ', dnafdval   )                               #value of fract deut
 
             dnabins = [[[] for x in range(len(newdnamatrix))]
                        for y in range(numdnavalues)]
@@ -921,7 +995,7 @@ class contrast_calculator():
                     else:
                         j = j + 1
                         k = 0
-#            print dnabins
+#            print(dnabins)
 
 # calculate Mw, number of hydrogens, number of exchangeable hydrogens and
 # total x-ray and neutron scattering lengths for each DNA component
@@ -935,16 +1009,18 @@ class contrast_calculator():
 
                 # eliminate empty spaces in bins
                 dnabins[i] = [e for e in dnabins[i] if e]
-#                print dnabins[i]
-#                print len(dnabins[i])
+#                print(dnabins[i])
+#                print(len(dnabins[i]))
+                psv = dnabins[i][0][4]
+                dnapsv.append(psv)
                 for j in range(len(dnabins[i])):
                     # read the file
                     filename = dnabins[i][j][0]
                     nunits = dnabins[i][j][2]
                     allfiles.append(filename)
                     allnumunits.append(nunits)
-#                    print 'DNA filename', filename
-                    thisfile = os.path.join(mvars.inpath, filename)
+#                    print('DNA filename', filename)
+                    thisfile = os.path.join(mvars.path, filename)
 
                     if dnabins[i][j][3] != '1':                             # not thisIsFasta
                         m1 = system.Molecule(0)
@@ -992,20 +1068,21 @@ class contrast_calculator():
                 btotdnaarray.append(btotdna)
                 bxtotdnaarray.append(bxtotdna)
 
-#            print mwdnaarray
-#            print hdnaarray
-#            print hexdnaarray
-#            print btotdnaarray
-#            print bxtotdnaarray
+#            print(mwdnaarray)
+#            print(hdnaarray)
+#            print(hexdnaarray)
+#            print(btotdnaarray)
+#            print(bxtotdnaarray)
+#            print('dnapsv: ', dnapsv)
 
 # Now repeat for RNA contrast parameters
 
         if len(rnamatrix) > 0:
-            #            print 'RNA'
-            #            print rnamatrix
+            #            print('RNA')
+            #            print(rnamatrix)
             newrnamatrix = sorted(rnamatrix, key=lambda x: x[
                 1])                                       # sort by fract deut
-#            print newrnamatrix
+#            print(newrnamatrix)
 
             current = newrnamatrix[0][1]
             rnafdval.append(newrnamatrix[0][1])
@@ -1017,9 +1094,8 @@ class contrast_calculator():
                     numrnavalues = numrnavalues + 1
                     rnafdval.append(newrnamatrix[i][1])
                     current = newrnamatrix[i][1]
-#            print 'numrnavalues = ', numrnavalues                          #number of components
-# print 'rnafdval = ', rnafdval                                  #value of
-# fract deut
+#            print('numrnavalues = ', numrnavalues)                          #number of components
+#            print('rnafdval = ', rnafdval)                                  #value of fract deut
 
             rnabins = [[[] for x in range(len(newrnamatrix))]
                        for y in range(numrnavalues)]
@@ -1036,7 +1112,7 @@ class contrast_calculator():
                     else:
                         j = j + 1
                         k = 0
-#            print rnabins
+#            print(rnabins)
 
 # calculate Mw, number of hydrogens, number of exchangeable hydrogens and
 # total x-ray and neutron scattering lengths for each RNA component
@@ -1050,16 +1126,18 @@ class contrast_calculator():
 
                 # eliminate empty spaces in bins
                 rnabins[i] = [e for e in rnabins[i] if e]
-#                print rnabins[i]
-#                print len(rnabins[i])
+#                print(rnabins[i])
+#                print(len(rnabins[i]))
+                psv = rnabins[i][0][4]
+                rnapsv.append(psv)
                 for j in range(len(rnabins[i])):
                     # read the file
                     filename = rnabins[i][j][0]
                     nunits = rnabins[i][j][2]
                     allfiles.append(filename)
                     allnumunits.append(nunits)
-#                    print 'RNA filename', filename
-                    thisfile = os.path.join(mvars.inpath, filename)
+#                    print('RNA filename', filename)
+                    thisfile = os.path.join(mvars.path, filename)
 
                     if rnabins[i][j][3] != '1':                             # not thisIsFasta
                         m1 = system.Molecule(0)
@@ -1107,18 +1185,19 @@ class contrast_calculator():
                 btotrnaarray.append(btotrna)
                 bxtotrnaarray.append(bxtotrna)
 
-#            print mwrnaarray
-#            print hrnaarray
-#            print hexrnaarray
-#            print btotrnaarray
-#            print bxtotrnaarray
-
+#            print(mwrnaarray)
+#            print(hrnaarray)
+#            print(hexrnaarray)
+#            print(btotrnaarray)
+#            print(bxtotrnaarray)
+#            print('rnapsv: ', rnapsv)
 
 # print date and list of filenames and chemical formulas used to output files
 
-        avars.izfile.write('#Date: ' + ttxt + '\n\n')
-        avars.cotfile.write('#Date: ' + ttxt + '\n\n')
-        avars.sldfile.write('#Date: ' + ttxt + '\n\n')
+        ccvars.izfile.write('\n#Date: ' + ttxt + '\n\n')
+        ccvars.cotfile.write('\n#Date: ' + ttxt + '\n\n')
+        ccvars.sldfile.write('\n#Date: ' + ttxt + '\n\n')
+        ccvars.genfile.write('\n#Date: ' + ttxt + '\n\n')
 
         for i in range(len(allfiles)):
             if i == 0:
@@ -1127,10 +1206,11 @@ class contrast_calculator():
                 files = files + ', ' + \
                     str(allfiles[i]) + ' (' + str(allnumunits[i]) + ')'
         if len(allfiles) > 0:
-            #            print 'Files used: ', files
-            avars.izfile.write('#Files used: ' + files + '\n\n')
-            avars.cotfile.write('#Files used: ' + files + '\n\n')
-            avars.sldfile.write('#Files used: ' + files + '\n\n')
+            #            print('Files used: ', files)
+            ccvars.izfile.write('#Files used: ' + files + '\n\n')
+            ccvars.cotfile.write('#Files used: ' + files + '\n\n')
+            ccvars.sldfile.write('#Files used: ' + files + '\n\n')
+            ccvars.genfile.write('#Files used: ' + files + '\n\n')
 
         for i in range(len(allformulas)):
             if i == 0:
@@ -1139,27 +1219,33 @@ class contrast_calculator():
                 formulas = formulas + ', ' + \
                     str(i + 1) + '. ' + str(allformulas[i])
         if len(allformulas) > 0:
-            #            print 'Chemical formulas used: ', formulas
-            avars.izfile.write('#Chemical formulas used: ' + formulas + '\n\n')
-            avars.cotfile.write(
+            #            print('Chemical formulas used: ', formulas)
+            ccvars.izfile.write(
                 '#Chemical formulas used: ' + formulas + '\n\n')
-            avars.sldfile.write(
+            ccvars.cotfile.write(
+                '#Chemical formulas used: ' + formulas + '\n\n')
+            ccvars.sldfile.write(
+                '#Chemical formulas used: ' + formulas + '\n\n')
+            ccvars.genfile.write(
                 '#Chemical formulas used: ' + formulas + '\n\n')
 
 
 # print description of the solvent components and their parameters
 # Solvent component, molar conc, volume, mass, bhtot, bxtot, rxtot, rhtot
 
-        avars.izfile.write('#Solvent Components:\n')
-        avars.cotfile.write('#Solvent Components:\n')
-        avars.sldfile.write('#Solvent Components:\n')
+        ccvars.izfile.write('#Solvent Components:\n')
+        ccvars.cotfile.write('#Solvent Components:\n')
+        ccvars.sldfile.write('#Solvent Components:\n')
+        ccvars.genfile.write('#Solvent Components:\n')
 
-        avars.izfile.write(
+        ccvars.izfile.write(
             '#Component, molar conc, volume (A^3), Mw (kDA), x-ray SL, neutron SL (10^-12 cm), x-ray SLD, neutron SLD (10^10 cm^-2)\n')
-        avars.cotfile.write(
+        ccvars.cotfile.write(
             '#Component, molar conc, volume (A^3), Mw (kDA), x-ray SL, neutron SL (10^-12 cm), x-ray SLD, neutron SLD (10^10 cm^-2)\n')
-        avars.sldfile.write(
+        ccvars.sldfile.write(
             '#Component, molar conc, volume (A^3), Mw (kDA), x-ray SL, neutron SL (10^-12 cm), x-ray SLD, neutron SLD (10^10 cm^-2)\n')
+        ccvars.genfile.write(
+            '#Component, molar concentration\n')
 
 # print water values
 
@@ -1172,13 +1258,14 @@ class contrast_calculator():
         rxstring = '%7.3f' % (rxh2o)
         rhstring = '%7.3f' % (rh2o)
 
-        avars.izfile.write('#\t' + solvstring + '\t' + concstring + '\t' + volstring + '\t' + massstring +
-                           '\t' + bxstring + '\t' + bhstring + '\t' + rxstring + '\t' + rhstring + '\n')
-        avars.cotfile.write('#\t' + solvstring + '\t' + concstring + '\t' + volstring + '\t' +
-                            massstring + '\t' + bxstring + '\t' + bhstring + '\t' + rxstring + '\t' + rhstring + '\n')
-        avars.sldfile.write('#\t' + solvstring + '\t' + concstring + '\t' + volstring + '\t' +
-                            massstring + '\t' + bxstring + '\t' + bhstring + '\t' + rxstring + '\t' + rhstring + '\n')
-
+        ccvars.izfile.write('#\t' + solvstring + '\t' + concstring + '\t' + volstring + '\t' + massstring +
+                            '\t' + bxstring + '\t' + bhstring + '\t' + rxstring + '\t' + rhstring + '\n')
+        ccvars.cotfile.write('#\t' + solvstring + '\t' + concstring + '\t' + volstring + '\t' +
+                             massstring + '\t' + bxstring + '\t' + bhstring + '\t' + rxstring + '\t' + rhstring + '\n')
+        ccvars.sldfile.write('#\t' + solvstring + '\t' + concstring + '\t' + volstring + '\t' +
+                             massstring + '\t' + bxstring + '\t' + bhstring + '\t' + rxstring + '\t' + rhstring + '\n')
+        ccvars.genfile.write(
+            '#\t' + solvstring + '\t' + concstring + '\n')
 
 # print solute values
 
@@ -1194,20 +1281,22 @@ class contrast_calculator():
                 rxstring = '%7.3f' % (rxsolvarray[i])
                 rhstring = '%7.3f' % (rhsolvarray[i])
 
-                avars.izfile.write('#\t' + solvstring + '\t' + concstring + '\t' + volstring + '\t' + massstring +
-                                   '\t' + bxstring + '\t' + bhstring + '\t' + rxstring + '\t' + rhstring + '\n')
-                avars.cotfile.write('#\t' + solvstring + '\t' + concstring + '\t' + volstring + '\t' +
-                                    massstring + '\t' + bxstring + '\t' + bhstring + '\t' + rxstring + '\t' + rhstring + '\n')
-                avars.sldfile.write('#\t' + solvstring + '\t' + concstring + '\t' + volstring + '\t' +
-                                    massstring + '\t' + bxstring + '\t' + bhstring + '\t' + rxstring + '\t' + rhstring + '\n')
+                ccvars.izfile.write('#\t' + solvstring + '\t' + concstring + '\t' + volstring + '\t' + massstring +
+                                    '\t' + bxstring + '\t' + bhstring + '\t' + rxstring + '\t' + rhstring + '\n')
+                ccvars.cotfile.write('#\t' + solvstring + '\t' + concstring + '\t' + volstring + '\t' +
+                                     massstring + '\t' + bxstring + '\t' + bhstring + '\t' + rxstring + '\t' + rhstring + '\n')
+                ccvars.sldfile.write('#\t' + solvstring + '\t' + concstring + '\t' + volstring + '\t' +
+                                     massstring + '\t' + bxstring + '\t' + bhstring + '\t' + rxstring + '\t' + rhstring + '\n')
+                ccvars.genfile.write(
+                    '#\t' + solvstring + '\t' + concstring + '\n')
 
 # print total SL and SLD values if there are non-water solvent components
 
-            avars.izfile.write(
+            ccvars.izfile.write(
                 '#Totals: x-ray SL, neutron SL (10^-12 cm), x-ray SLD, neutron SLD (10^10 cm^-2)\n')
-            avars.cotfile.write(
+            ccvars.cotfile.write(
                 '#Totals: x-ray SL, neutron SL (10^-12 cm), x-ray SLD, neutron SLD (10^10 cm^-2)\n')
-            avars.sldfile.write(
+            ccvars.sldfile.write(
                 '#Totals: x-ray SL, neutron SL (10^-12 cm), x-ray SLD, neutron SLD (10^10 cm^-2)\n')
 
             bxstring = '%7.3f' % (bxsolvtot)
@@ -1215,24 +1304,27 @@ class contrast_calculator():
             rxstring = '%7.3f' % (rsx)
             rhstring = '%7.3f' % (rsh2o)
 
-            avars.izfile.write('#\t' + bxstring + '\t' + bhstring +
-                               '\t' + rxstring + '\t' + rhstring + '\n')
-            avars.cotfile.write('#\t' + bxstring + '\t' + bhstring +
+            ccvars.izfile.write('#\t' + bxstring + '\t' + bhstring +
                                 '\t' + rxstring + '\t' + rhstring + '\n')
-            avars.sldfile.write('#\t' + bxstring + '\t' + bhstring +
-                                '\t' + rxstring + '\t' + rhstring + '\n')
+            ccvars.cotfile.write('#\t' + bxstring + '\t' + bhstring +
+                                 '\t' + rxstring + '\t' + rhstring + '\n')
+            ccvars.sldfile.write('#\t' + bxstring + '\t' + bhstring +
+                                 '\t' + rxstring + '\t' + rhstring + '\n')
 
 
 # calculate x-ray properties of the system:  combine all protein
 # components, all NA (DNA+RNA) and molecule components to find the
 # fraction of proteins, nucleic acids and other molecules in the complex.
 
-        avars.izfile.write('\n#Complex concentration:  ' +
-                           str(mvars.solute_conc) + ' mg/ml\n')
+        ccvars.izfile.write('\n#Complex concentration (mg/ml):' +
+                            '\n#' + str(mvars.solute_conc) + '\n')
+        ccvars.genfile.write('\n#Complex concentration (mg/ml):' +
+                             '\n#' + str(mvars.solute_conc) + '\n\n')
+
 
 # Mw and x-ray scattering length
 
-#        print 'X-RAY'
+#        print('X-RAY')
 
         mwxprot = 0
         bxprot = 0
@@ -1255,17 +1347,17 @@ class contrast_calculator():
         for i in range(len(mwprotarray)):
             mwxprot = mwxprot + mwprotarray[i] / 1.0e3
             bxprot = bxprot + bxtotprotarray[i]
-#        print mwxprot, bxprot
+#        print(mwxprot, bxprot)
 
         for i in range(len(mwdnaarray)):
             mwxdna = mwxdna + mwdnaarray[i] / 1.0e3
             bxdna = bxdna + bxtotdnaarray[i]
-#        print mwxdna, bxdna
+#        print(mwxdna, bxdna)
 
         for i in range(len(mwrnaarray)):
             mwxrna = mwxrna + mwrnaarray[i] / 1.0e3
             bxrna = bxrna + bxtotrnaarray[i]
-#        print mwxrna, bxrna
+#        print(mwxrna, bxrna)
 
         bxtotprot = bxprot
         bxtotdna = bxdna + bxrna
@@ -1278,14 +1370,14 @@ class contrast_calculator():
         pvolx.append(vprot)
         pvolx.append(vdna)
 
-#        print 'mwchemarray length = ', len(mwchemarray)
+#        print('mwchemarray length = ', len(mwchemarray))
 
         for i in range(len(mwchemarray)):
             mwxchem = mwxchem + mwchemarray[i] / 1.0e3
-#        print mwxprot, mwxdna, mwxrna, mwxchem
+#        print(mwxprot, mwxdna, mwxrna, mwxchem)
 
         mwxcomp = mwxprot + mwxdna + mwxrna + mwxchem
-#        print mwxcomp
+#        print(mwxcomp)
 
         fxprot = mwxprot / mwxcomp
         fxdna = (mwxdna + mwxrna) / mwxcomp
@@ -1304,9 +1396,9 @@ class contrast_calculator():
             chemxcontrasttitle.append('Molecule ' + str(i + 1))
             chemxmwtitle.append('Molecule ' + str(i + 1) + ' Mw')
 
-#        print fracx
-#        print volx, pvolx
-#        print bx
+#        print('fracx: ', fracx)
+#        print('volx, pvolx: ', volx, pvolx)
+#        print(bx)
 
 # x-ray SLD, contrast and I(0)
 
@@ -1324,12 +1416,12 @@ class contrast_calculator():
         if (mwxdna + mwxrna) > 0:
             rxdna = (bxtotdna / vxtotdna) / 1.0e10
             rxdnabar = (rxdna - rsx)
-#        print rxdna,rxdnabar
+#        print(rxdna,rxdnabar)
 
         if mwxprot > 0:
             rxprot = (bxtotprot / vxtotprot) / 1.0e10
             rxprotbar = (rxprot - rsx)
-#        print rxprot,rxprotbar
+#        print(rxprot,rxprotbar)
 
         rx.append(rxprot)
         rx.append(rxdna)
@@ -1345,17 +1437,17 @@ class contrast_calculator():
                 rhobarx = (rhox - rsx)
                 rxbar.append(rhobarx)
 
-#        print rx, rsx
-#        print rxbar
+#        print(rx, rsx)
+#        print(rxbar)
 
         for i in range(len(mwchemarray) + 2):
             izeq = izeq + fracx[i] * pvolx[i] * rxbar[i] * 1.0e10
             sldx = sldx + fracx[i] * rx[i]
             contrx = contrx + fracx[i] * rxbar[i]
-#        print sldx, contrx
+#        print(sldx, contrx)
 
         izerox = working_conc * (mwxcomp) * 1.0e3 / na * (izeq)**2
-#        print izerox
+#        print(izerox)
 
 
 #    write information to files
@@ -1400,18 +1492,18 @@ class contrast_calculator():
                 xcontrasttitle = xcontrasttitle + ', ' + chemxcontrasttitle[i]
                 xmwtitle = xmwtitle + ', ' + chemxmwtitle[i]
 
-#        print xsldtitle
-#        print xcontrasttitle
-#        print xmwtitle
+#        print(xsldtitle)
+#        print(xcontrasttitle)
+#        print(xmwtitle)
 
-        avars.izfile.write('\n#XRAY I(0):\n')
-        avars.sldfile.write('\n#XRAY SLD (10^10 cm^-2):\n')
-        avars.cotfile.write('\n#XRAY Contrast (10^10 cm^-2):\n')
+        ccvars.izfile.write('\n#XRAY I(0):\n')
+        ccvars.sldfile.write('\n#XRAY SLD (10^10 cm^-2):\n')
+        ccvars.cotfile.write('\n#XRAY Contrast (10^10 cm^-2):\n')
 
-        avars.izfile.write(
+        ccvars.izfile.write(
             '#' + xmwtitle + ', Complex Mw (kDa), I(0) (cm^-1)\n')
-        avars.sldfile.write('#' + xsldtitle + ', Complex, Solvent\n')
-        avars.cotfile.write('#' + xcontrasttitle + ', Complex\n')
+        ccvars.sldfile.write('#' + xsldtitle + ', Complex, Solvent\n')
+        ccvars.cotfile.write('#' + xcontrasttitle + ', Complex\n')
 
         xsldtable = []
         xcontrasttable = []
@@ -1449,24 +1541,24 @@ class contrast_calculator():
                 xmwtable.append(mwchemarray[j - 2] / 1.0e3)
 
 
-#        print xmwtable
-#        print xcontrasttable
-#        print xsldtable
+#        print(xmwtable)
+#        print(xcontrasttable)
+#        print(xsldtable)
 
         xmwvalstring = '\t'.join(['%8.3f' % (x) for x in xmwtable])
         xmwcompstring = '%8.3f' % (mwxcomp)
         xizerostring = '%7.3f' % (izerox)
-        avars.izfile.write('#' + xmwvalstring + '\t' +
-                           xmwcompstring + '\t' + xizerostring + '\n')
+        ccvars.izfile.write('#' + xmwvalstring + '\t' +
+                            xmwcompstring + '\t' + xizerostring + '\n')
         xsldvalstring = '\t'.join(['%7.3f' % (x) for x in xsldtable])
         xsldcompstring = '%7.3f' % (sldx)
         xrsstring = '%7.3f' % (rsx)
-        avars.sldfile.write('#' + xsldvalstring + '\t' +
-                            xsldcompstring + '\t' + xrsstring + '\n')
+        ccvars.sldfile.write('#' + xsldvalstring + '\t' +
+                             xsldcompstring + '\t' + xrsstring + '\n')
         xcontrastvalstring = '\t'.join(['%7.3f' % (x) for x in xcontrasttable])
         xcontrastcompstring = '%7.3f' % (contrx)
-        avars.cotfile.write('#' + xcontrastvalstring +
-                            '\t' + xcontrastcompstring + '\n')
+        ccvars.cotfile.write('#' + xcontrastvalstring +
+                             '\t' + xcontrastcompstring + '\n')
 
 
 # calculate neutron properties of the system:  number of components for
@@ -1475,13 +1567,13 @@ class contrast_calculator():
 # there will be both DNA and RNA in a complex, but both will be picked up
 # if they exist.)
 
-        avars.izfile.write('\n#NEUTRONS:\n')
-        avars.sldfile.write('\n#NEUTRON SLDs:\n')
-        avars.cotfile.write('\n#NEUTRON Contrast:\n')
+        ccvars.izfile.write('\n#NEUTRONS:\n')
+        ccvars.sldfile.write('\n#NEUTRON SLDs:\n')
+        ccvars.cotfile.write('\n#NEUTRON Contrast:\n')
 
 # determine the number of fd2o values
 
-#        print 'NEUTRON'
+#        print('NEUTRON')
 
         fd2o = []
         rs = []
@@ -1493,9 +1585,9 @@ class contrast_calculator():
             fd2o.append(newfd2o)
 
         fd2otitle = 'frac D2O'
-#        print fd2otitle
-#        print fd2o
-#        print len(fd2o)
+#        print(fd2otitle)
+#        print(fd2o)
+#        print(len(fd2o))
 
 # determine the solvent from the initial values calculated for the solvent
 # + any non-water components
@@ -1519,12 +1611,13 @@ class contrast_calculator():
         chemsldtitle = []
         chemcontrasttitle = []
         chemmwtitle = []
+        chempsvtitle = []
         chemmatchtitle = []
         chemmatchpoint = []
 
         for i in range(len(mwchemarray)):
 
-            #            print 'CHEMICAL FORMULA'
+            #            print('CHEMICAL FORMULA')
 
             working_bchem = 0.0
             working_mwchem = 0.0
@@ -1536,6 +1629,7 @@ class contrast_calculator():
             chemsldtitle.append('Molecule ' + str(i + 1))
             chemcontrasttitle.append('Molecule ' + str(i + 1))
             chemmwtitle.append('Molecule ' + str(i + 1) + ' Mw')
+            chempsvtitle.append('Molecule ' + str(i + 1))
             chemmatchtitle.append('Molecule ' + str(i + 1) + ' Match Point')
 
             for j in range(len(fd2o)):
@@ -1552,34 +1646,36 @@ class contrast_calculator():
                 chemcontrast[j][i] = working_rchembar / 1.0e10
                 temparray.append(working_rchembar)
 
-# calculate protein match point and print to screen and files
+# calculate molecule match point and print to screen and files
 
             x = np.array(fd2o)
             y = np.array(temparray)
             slope, intercept, r_value, p_value, slope_std_error = stats.linregress(
                 x, y)
             x_intercept = -intercept / slope
-#            print slope, intercept, x_intercept
+#            print(slope, intercept, x_intercept)
             matchpoint = x_intercept * 100
             chemmatchpoint.append(matchpoint)
             matchstring = '%.2f' % (matchpoint)
             gui_string = chemmatchtitle[i] + ': ' + matchstring + " %D2O\n\n"
             pgui(gui_string)
-            avars.izfile.write(
+            ccvars.izfile.write(
                 '#' + chemmatchtitle[i] + ': ' + matchstring + " %D2O\n")
-            avars.sldfile.write(
+            ccvars.sldfile.write(
                 '#' + chemmatchtitle[i] + ': ' + matchstring + " %D2O\n")
-            avars.cotfile.write(
+            ccvars.cotfile.write(
+                '#' + chemmatchtitle[i] + ': ' + matchstring + " %D2O\n")
+            ccvars.genfile.write(
                 '#' + chemmatchtitle[i] + ': ' + matchstring + " %D2O\n")
 
-#        print chemmwtitle
-#        print chemmw
-#        print chemsldtitle
-#        print chemsld
-#        print chemcontrasttitle
-#        print chemcontrast
-#        print chemmatchtitle
-#        print chemmatchpoint
+#        print(chemmwtitle)
+#        print(chemmw)
+#        print(chemsldtitle)
+#        print(chemsld)
+#        print(chemcontrasttitle)
+#        print(chemcontrast)
+#        print(chemmatchtitle)
+#        print(chemmatchpoint)
 
 
 # column headings for SLD and contrast will depend on fract deut
@@ -1595,11 +1691,12 @@ class contrast_calculator():
         protcontrasttitle = []
         protmwtitle = []
         protmatchtitle = []
+        protpsvtitle = []
         protmatchpoint = []
 
         for i in range(len(mwprotarray)):
 
-            #            print 'PROTEIN'
+            #            print('PROTEIN')
 
             working_bprot = 0.0
             working_mwprot = 0.0
@@ -1613,11 +1710,13 @@ class contrast_calculator():
                 protsldtitle.append('Protein')
                 protcontrasttitle.append('Protein')
                 protmwtitle.append('Protein Mw')
+                protpsvtitle.append('Protein')
                 protmatchtitle.append('Protein Match Point')
             else:
                 protsldtitle.append(str(percentdeut) + ' %D Protein')
                 protcontrasttitle.append(str(percentdeut) + ' %D Protein')
                 protmwtitle.append(str(percentdeut) + ' %D Protein Mw')
+                protpsvtitle.append(str(percentdeut) + ' %D Protein')
                 protmatchtitle.append(
                     str(percentdeut) + ' %D Protein Match Point')
 
@@ -1642,27 +1741,30 @@ class contrast_calculator():
             slope, intercept, r_value, p_value, slope_std_error = stats.linregress(
                 x, y)
             x_intercept = -intercept / slope
-#            print slope, intercept, x_intercept
+#            print(slope, intercept, x_intercept)
             matchpoint = x_intercept * 100
             protmatchpoint.append(matchpoint)
             matchstring = '%.2f' % (matchpoint)
             gui_string = protmatchtitle[i] + ': ' + matchstring + " %D2O\n\n"
             pgui(gui_string)
-            avars.izfile.write(
+            ccvars.izfile.write(
                 '#' + protmatchtitle[i] + ': ' + matchstring + " %D2O\n")
-            avars.sldfile.write(
+            ccvars.sldfile.write(
                 '#' + protmatchtitle[i] + ': ' + matchstring + " %D2O\n")
-            avars.cotfile.write(
+            ccvars.cotfile.write(
+                '#' + protmatchtitle[i] + ': ' + matchstring + " %D2O\n")
+            ccvars.genfile.write(
                 '#' + protmatchtitle[i] + ': ' + matchstring + " %D2O\n")
 
-#        print protmwtitle
-#        print protmw
-#        print protsldtitle
-#        print protsld
-#        print protcontrasttitle
-#        print protcontrast
-#        print protmatchtitle
-#        print protmatchpoint
+#        print('length  of mwprotarray: ', len(mwprotarray))
+#        print(protmwtitle)
+#        print(protmw)
+#        print(protsldtitle)
+#        print(protsld)
+#        print(protcontrasttitle)
+#        print(protcontrast)
+#        print(protmatchtitle)
+#        print(protmatchpoint)
 
 
 # calculate dna params
@@ -1677,11 +1779,12 @@ class contrast_calculator():
         dnacontrasttitle = []
         dnamwtitle = []
         dnamatchtitle = []
+        dnapsvtitle = []
         dnamatchpoint = []
 
         for i in range(len(mwdnaarray)):
 
-            #            print 'DNA'
+            #            print('DNA')
 
             working_bdna = 0.0
             working_mwdna = 0.0
@@ -1695,11 +1798,13 @@ class contrast_calculator():
                 dnasldtitle.append('DNA')
                 dnacontrasttitle.append('DNA')
                 dnamwtitle.append('DNA Mw')
+                dnapsvtitle.append('DNA')
                 dnamatchtitle.append('DNA Match Point')
             else:
                 dnasldtitle.append(str(dnapercentdeut) + ' %D DNA')
                 dnacontrasttitle.append(str(dnapercentdeut) + ' %D DNA')
                 dnamwtitle.append(str(dnapercentdeut) + ' %D DNA Mw')
+                dnapsvtitle.append(str(dnapercentdeut) + ' %D DNA')
                 dnamatchtitle.append(
                     str(dnapercentdeut) + ' %D DNA Match Point')
 
@@ -1724,27 +1829,29 @@ class contrast_calculator():
             slope, intercept, r_value, p_value, slope_std_error = stats.linregress(
                 x, y)
             x_intercept = -intercept / slope
-#        print slope, intercept, x_intercept
+#            print(slope, intercept, x_intercept)
             matchpoint = x_intercept * 100
             dnamatchpoint.append(matchpoint)
             matchstring = '%.2f' % (matchpoint)
             gui_string = dnamatchtitle[i] + ': ' + matchstring + " %D2O\n\n"
             pgui(gui_string)
-            avars.izfile.write(
+            ccvars.izfile.write(
                 '#' + dnamatchtitle[i] + ': ' + matchstring + " %D2O\n")
-            avars.sldfile.write(
+            ccvars.sldfile.write(
                 '#' + dnamatchtitle[i] + ': ' + matchstring + " %D2O\n")
-            avars.cotfile.write(
+            ccvars.cotfile.write(
+                '#' + dnamatchtitle[i] + ': ' + matchstring + " %D2O\n")
+            ccvars.genfile.write(
                 '#' + dnamatchtitle[i] + ': ' + matchstring + " %D2O\n")
 
-#        print dnamwtitle
-#        print dnamw
-#        print dnasldtitle
-#        print dnasld
-#        print dnacontrasttitle
-#        print dnacontrast
-#        print dnamatchtitle
-#        print dnamatchpoint
+#        print(dnamwtitle)
+#        print(dnamw)
+#        print(dnasldtitle)
+#        print(dnasld)
+#        print(dnacontrasttitle)
+#        print(dnacontrast)
+#        print(dnamatchtitle)
+#        print(dnamatchpoint)
 
 # calculate rna params
 
@@ -1757,12 +1864,13 @@ class contrast_calculator():
         rnasldtitle = []
         rnacontrasttitle = []
         rnamwtitle = []
+        rnapsvtitle = []
         rnamatchtitle = []
         rnamatchpoint = []
 
         for i in range(len(mwrnaarray)):
 
-            #            print 'RNA'
+            #            print('RNA')
 
             working_brna = 0.0
             working_mwrna = 0.0
@@ -1776,11 +1884,13 @@ class contrast_calculator():
                 rnasldtitle.append('RNA')
                 rnacontrasttitle.append('RNA')
                 rnamwtitle.append('RNA Mw')
+                rnapsvtitle.append('RNA')
                 rnamatchtitle.append('RNA Match Point')
             else:
                 rnasldtitle.append(str(rnapercentdeut) + ' %D RNA')
                 rnacontrasttitle.append(str(rnapercentdeut) + ' %D RNA')
                 rnamwtitle.append(str(rnapercentdeut) + ' %D RNA Mw')
+                rnapsvtitle.append(str(rnapercentdeut) + ' %D RNA')
                 rnamatchtitle.append(
                     str(rnapercentdeut) + ' %D RNA Match Point')
 
@@ -1805,27 +1915,29 @@ class contrast_calculator():
             slope, intercept, r_value, p_value, slope_std_error = stats.linregress(
                 x, y)
             x_intercept = -intercept / slope
-#            print slope, intercept, x_intercept
+#            print(slope, intercept, x_intercept)
             matchpoint = x_intercept * 100
             rnamatchpoint.append(matchpoint)
             matchstring = '%.2f' % (matchpoint)
             gui_string = rnamatchtitle[i] + ': ' + matchstring + " %D2O\n\n"
             pgui(gui_string)
-            avars.izfile.write(
+            ccvars.izfile.write(
                 '#' + rnamatchtitle[i] + ': ' + matchstring + " %D2O\n")
-            avars.sldfile.write(
+            ccvars.sldfile.write(
                 '#' + rnamatchtitle[i] + ': ' + matchstring + " %D2O\n")
-            avars.cotfile.write(
+            ccvars.cotfile.write(
+                '#' + rnamatchtitle[i] + ': ' + matchstring + " %D2O\n")
+            ccvars.genfile.write(
                 '#' + rnamatchtitle[i] + ': ' + matchstring + " %D2O\n")
 
-#        print rnamwtitle
-#        print rnamw
-#        print rnasldtitle
-#        print rnasld
-#        print rnacontrasttitle
-#        print rnacontrast
-#        print rnamatchtitle
-#        print rnamatchpoint
+#        print(rnamwtitle)
+#        print(rnamw)
+#        print(rnasldtitle)
+#        print(rnasld)
+#        print(rnacontrasttitle)
+#        print(rnacontrast)
+#        print(rnamatchtitle)
+#        print(rnamatchpoint)
 
 
 # calculate complex parameters
@@ -1842,7 +1954,7 @@ class contrast_calculator():
 
 #    calculate total Mw of the complex as a func of fd2o
 
-#        print 'COMPLEX'
+#        print('COMPLEX')
 
         for j in range(len(fd2o)):
 
@@ -1872,11 +1984,11 @@ class contrast_calculator():
                 mwtotdna[j] + mwtotrna[j] + mwtotchem[j]
             mwcomp.append(working_mwcomp)
 
-#        print mwtotprot
-#        print mwtotdna
-#        print mwtotrna
-#        print mwtotchem
-#        print mwcomp
+#        print(mwtotprot)
+#        print(mwtotdna)
+#        print(mwtotrna)
+#        print(mwtotchem)
+#        print(mwcomp)
 
 # calculate Mw fraction vs Mw total for each protein, DNA, RNA and
 # molecule component
@@ -1902,10 +2014,10 @@ class contrast_calculator():
             for i in range(len(mwchemarray)):
                 fchem[j][i] = chemmw[j][i] / mwcomp[j]
 
-#        print fprot
-#        print fdna
-#        print frna
-#        print fchem
+#        print(fprot)
+#        print(fdna)
+#        print(frna)
+#        print(fchem)
 
 
 # first calculate parameters for protein, DNA, RNA and molecule component
@@ -1992,21 +2104,21 @@ class contrast_calculator():
             sqrtizerocomp.append(working_sqrti)
 
 
-#        print 'SLD'
-#        print sldtotprot
-#        print sldtotdna
-#        print sldtotrna
-#        print sldtotchem
-#        print sldcomp
-#        print 'Contrast'
-#        print contrasttotprot
-#        print contrasttotdna
-#        print contrasttotrna
-#        print contrasttotchem
-#        print contrastcomp
-#        print 'izero'
-#        print izerocomp
-#        print sqrtizerocomp
+#        print('SLD')
+#        print(sldtotprot)
+#        print(sldtotdna)
+#        print(sldtotrna)
+#        print(sldtotchem)
+#        print(sldcomp)
+#        print('Contrast')
+#        print(contrasttotprot)
+#        print(contratotdna)
+#        print(contrasttotrna)
+#        print(contrasttotchem)
+#        print(contrastcomp)
+#        print('izero')
+#        print(izerocomp)
+#        print(sqrtizerocomp)
 
 # calculate Complex match point
 
@@ -2015,14 +2127,18 @@ class contrast_calculator():
         slope, intercept, r_value, p_value, slope_std_error = stats.linregress(
             x, y)
         x_intercept = -intercept / slope
-#        print slope, intercept, x_intercept
+#        print(slope, intercept, x_intercept)
         matchpoint = x_intercept * 100
         matchstring = '%.2f' % (matchpoint)
         gui_string = 'Complex Match Point: ' + matchstring + " %D2O\n\n"
         pgui(gui_string)
-        avars.izfile.write('#Complex Match Point: ' + matchstring + " %D2O\n")
-        avars.sldfile.write('#Complex Match Point: ' + matchstring + " %D2O\n")
-        avars.cotfile.write('#Complex Match Point: ' + matchstring + " %D2O\n")
+        ccvars.izfile.write('#Complex Match Point: ' + matchstring + " %D2O\n")
+        ccvars.sldfile.write('#Complex Match Point: ' +
+                             matchstring + " %D2O\n")
+        ccvars.cotfile.write('#Complex Match Point: ' +
+                             matchstring + " %D2O\n")
+        ccvars.genfile.write('#Complex Match Point: ' +
+                             matchstring + " %D2O\n")
 
 
 # print out fraction of exchangeable protein, nucleic acid and molecule
@@ -2030,28 +2146,34 @@ class contrast_calculator():
 
         fexchp_string = '%.2f' % (mvars.fexchp)
         fexchn_string = '%.2f' % (mvars.fexchn)
-        avars.izfile.write('\n#Fraction of exchanged protein hydrogens: ' +
-                           fexchp_string + '\n')
-        avars.izfile.write(
+        ccvars.izfile.write('\n#Fraction of exchanged protein hydrogens: ' +
+                            fexchp_string + '\n')
+        ccvars.izfile.write(
             '#Fraction of exchanged nucleic acid hydrogens: ' + fexchn_string + '\n')
-        avars.sldfile.write(
+        ccvars.sldfile.write(
             '\n#Fraction of exchanged protein hydrogens: ' + fexchp_string + '\n')
-        avars.sldfile.write(
+        ccvars.sldfile.write(
             '#Fraction of exchanged nucleic acid hydrogens: ' + fexchn_string + '\n')
-        avars.cotfile.write(
+        ccvars.cotfile.write(
             '\n#Fraction of exchanged protein hydrogens: ' + fexchp_string + '\n')
-        avars.cotfile.write(
+        ccvars.cotfile.write(
+            '#Fraction of exchanged nucleic acid hydrogens: ' + fexchn_string + '\n')
+        ccvars.genfile.write(
+            '\n#Fraction of exchanged protein hydrogens: ' + fexchp_string + '\n')
+        ccvars.genfile.write(
             '#Fraction of exchanged nucleic acid hydrogens: ' + fexchn_string + '\n')
 
         for i in range(len(mwchemarray)):
             fexchc = fexchchemarray[i]
             fexchc_string = '%.2f' % (fexchc)
-            avars.izfile.write('#Fraction of exchanged molecule ' +
-                               str(i + 1) + ' hydrogens: ' + fexchc_string + '\n')
-            avars.sldfile.write('#Fraction of exchanged molecule ' +
+            ccvars.izfile.write('#Fraction of exchanged molecule ' +
                                 str(i + 1) + ' hydrogens: ' + fexchc_string + '\n')
-            avars.cotfile.write('#Fraction of exchanged molecule ' +
-                                str(i + 1) + ' hydrogens: ' + fexchc_string + '\n')
+            ccvars.sldfile.write('#Fraction of exchanged molecule ' +
+                                 str(i + 1) + ' hydrogens: ' + fexchc_string + '\n')
+            ccvars.cotfile.write('#Fraction of exchanged molecule ' +
+                                 str(i + 1) + ' hydrogens: ' + fexchc_string + '\n')
+            ccvars.genfile.write('#Fraction of exchanged molecule ' +
+                                 str(i + 1) + ' hydrogens: ' + fexchc_string + '\n')
 
 
 # combine protein, dna, rna and molecule matrices to create contrast, sld
@@ -2061,83 +2183,123 @@ class contrast_calculator():
             sldtitle = protsldtitle[0]
             contrasttitle = protcontrasttitle[0]
             mwtitle = protmwtitle[0]
+            psvtitle = protpsvtitle[0]
             for i in range(1, len(mwprotarray)):
                 sldtitle = sldtitle + ', ' + protsldtitle[i]
                 contrasttitle = contrasttitle + ', ' + protcontrasttitle[i]
                 mwtitle = mwtitle + ', ' + protmwtitle[i]
+                psvtitle = psvtitle + ', ' + protpsvtitle[i]
             if len(mwdnaarray) > 0:
                 for i in range(len(mwdnaarray)):
                     sldtitle = sldtitle + ', ' + dnasldtitle[i]
                     contrasttitle = contrasttitle + ', ' + dnacontrasttitle[i]
                     mwtitle = mwtitle + ', ' + dnamwtitle[i]
+                    psvtitle = psvtitle + ', ' + dnapsvtitle[i]
             if len(mwrnaarray) > 0:
                 for i in range(len(mwrnaarray)):
                     sldtitle = sldtitle + ', ' + rnasldtitle[i]
                     contrasttitle = contrasttitle + ', ' + rnacontrasttitle[i]
                     mwtitle = mwtitle + ', ' + rnamwtitle[i]
+                    psvtitle = psvtitle + ', ' + rnapsvtitle[i]
             if len(mwchemarray) > 0:
                 for i in range(len(mwchemarray)):
                     sldtitle = sldtitle + ', ' + chemsldtitle[i]
                     contrasttitle = contrasttitle + ', ' + chemcontrasttitle[i]
                     mwtitle = mwtitle + ', ' + chemmwtitle[i]
+                    psvtitle = psvtitle + ', ' + chempsvtitle[i]
 
         elif len(mwdnaarray) > 0:
             sldtitle = dnasldtitle[0]
             contrasttitle = dnacontrasttitle[0]
             mwtitle = dnamwtitle[0]
+            psvtitle = dnapsvtitle[0]
             for i in range(1, len(mwdnaarray)):
                 sldtitle = sldtitle + ', ' + dnasldtitle[i]
                 contrasttitle = contrasttitle + ', ' + dnacontrasttitle[i]
                 mwtitle = mwtitle + ', ' + dnamwtitle[i]
+                psvtitle = psvtitle + ', ' + dnapsvtitle[i]
             if len(mwrnaarray) > 0:
                 for i in range(len(mwrnaarray)):
                     sldtitle = sldtitle + ', ' + rnasldtitle[i]
                     contrasttitle = contrasttitle + ', ' + rnacontrasttitle[i]
                     mwtitle = mwtitle + ', ' + rnamwtitle[i]
+                    psvtitle = psvtitle + ', ' + rnapsvtitle[i]
             if len(mwchemarray) > 0:
                 for i in range(len(mwchemarray)):
                     sldtitle = sldtitle + ', ' + chemsldtitle[i]
                     contrasttitle = contrasttitle + ', ' + chemcontrasttitle[i]
                     mwtitle = mwtitle + ', ' + chemmwtitle[i]
+                    psvtitle = psvtitle + ', ' + chempsvtitle[i]
 
         elif len(mwrnaarray) > 0:
             sldtitle = rnasldtitle[0]
             contrasttitle = rnacontrasttitle[0]
             mwtitle = rnamwtitle[0]
+            psvtitle = rnapsvtitle[0]
             for i in range(1, len(mwrnaarray)):
                 sldtitle = sldtitle + ', ' + rnasldtitle[i]
                 contrasttitle = contrasttitle + ', ' + rnacontrasttitle[i]
                 mwtitle = mwtitle + ', ' + rnamwtitle[i]
+                psvtitle = psvtitle + ', ' + rnapsvtitle[i]
             if len(mwchemarray) > 0:
                 for i in range(len(mwchemarray)):
                     sldtitle = sldtitle + ', ' + chemsldtitle[i]
                     contrasttitle = contrasttitle + ', ' + chemcontrasttitle[i]
                     mwtitle = mwtitle + ', ' + chemmwtitle[i]
+                    psvtitle = psvtitle + ', ' + chempsvtitle[i]
 
         elif len(mwchemarray) > 0:
             sldtitle = chemsldtitle[0]
             contrasttitle = chemcontrasttitle[0]
             mwtitle = chemmwtitle[0]
+            psvtitle = chempsvtitle[0]
             for i in range(1, len(mwchemarray)):
                 sldtitle = sldtitle + ', ' + chemsldtitle[i]
                 contrasttitle = contrasttitle + ', ' + chemcontrasttitle[i]
                 mwtitle = mwtitle + ', ' + chemmwtitle[i]
+                psvtitle = psvtitle + ', ' + chempsvtitle[i]
 
-#        print sldtitle
-#        print contrasttitle
-#        print mwtitle
+#        print(sldtitle)
+#        print(contrasttitle)
+#        print(mwtitle)
+#        print(psvtitle)
 
-        avars.sldfile.write('\n#NEUTRON SLDs (10^10 cm^-2):\n')
-        avars.cotfile.write('\n#NEUTRON Contrast (10^10 cm^-2):\n')
-        avars.izfile.write('\n# frac D2O, ' + mwtitle +
-                           ', Complex Mw (kDa), I(0) (cm^-1), sqrtI(0)\n')
-        avars.sldfile.write('# frac D2O, ' + sldtitle + ', Complex, Solvent\n')
-        avars.cotfile.write('# frac D2O, ' + contrasttitle + ', Complex\n')
-
+# combine the partial specific volumes to write to the general output file
+# use copy.deepcopy to avoid overwriting the original arrays
+        psvtable = []
+#        print('mwprotarray', mwprotarray)
         if len(mwprotarray) > 0:
-            sldtable = protsld
-            contrasttable = protcontrast
-            mwtable = protmw
+            psvtable = copy.deepcopy(protpsv)
+            if len(mwdnaarray) > 0:
+                #                print('mwdnaarray', mwdnaarray)
+                psvtable.extend(dnapsv)
+            if len(mwrnaarray) > 0:
+                psvtable.extend(rnapsv)
+            if len(mwchemarray) > 0:
+                psvtable.extend(chempsv)
+#            print('extended psvtable', psvtable)
+        elif len(mwdnaarray) > 0:
+            psvtable = copy.deepcopy(dnapsv)
+            if len(mwrnaarray) > 0:
+                psvtable.extend(rnapsv)
+            if len(mwchemarray) > 0:
+                psvtable.extend(chempsv)
+        elif len(mwrnaarray) > 0:
+            psvtable = copy.deepcopy(rnapsv)
+            if len(mwchemarray) > 0:
+                psvtable.extend(chempsv)
+        elif len(mwchemarray) > 0:
+            psvtable = copy.deepcopy(chempsv)
+
+#        print('protpsv, dnapsv, rnapsv, chempsv: ',
+#              protpsv, dnapsv, rnapsv, chempsv)
+#        print(psvtable)
+
+# combine protein, dna, rna and molecule matrices to create contrast, sld and Mw tables to print to files
+        if len(mwprotarray) > 0:
+            sldtable = copy.deepcopy(protsld)
+            contrasttable = copy.deepcopy(protcontrast)
+            mwtable = copy.deepcopy(protmw)
             for j in range(len(fd2o)):
                 if len(mwdnaarray) > 0:
                     sldtable[j].extend(dnasld[j])
@@ -2152,9 +2314,9 @@ class contrast_calculator():
                     contrasttable[j].extend(chemcontrast[j])
                     mwtable[j].extend(chemmw[j])
         elif len(mwdnaarray) > 0:
-            sldtable = dnasld
-            contrasttable = dnacontrast
-            mwtable = dnamw
+            sldtable = copy.deepcopy(dnasld)
+            contrasttable = copy.deepcopy(dnacontrast)
+            mwtable = copy.deepcopy(dnamw)
             for j in range(len(fd2o)):
                 if len(mwrnaarray) > 0:
                     sldtable[j].extend(rnasld[j])
@@ -2165,18 +2327,44 @@ class contrast_calculator():
                     contrasttable[j].extend(chemcontrast[j])
                     mwtable[j].extend(chemmw[j])
         elif len(mwrnaarray) > 0:
-            sldtable = rnasld
-            contrasttable = rnacontrast
-            mwtable = rnamw
+            sldtable = copy.deepcopy(rnasld)
+            contrasttable = copy.deepcopy(rnacontrast)
+            mwtable = copy.deepcopy(rnamw)
             for j in range(len(fd2o)):
                 if len(mwchemarray) > 0:
                     sldtable[j].extend(chemsld[j])
                     contrasttable[j].extend(chemcontrast[j])
                     mwtable[j].extend(chemmw[j])
         elif len(mwchemarray) > 0:
-            sldtable = chemsld
-            contrasttable = chemcontrast
-            mwtable = chemmw
+            sldtable = copy.deepcopy(chemsld)
+            contrasttable = copy.deepcopy(chemcontrast)
+            mwtable = copy.deepcopy(chemmw)
+
+# write partial specific volumes to the general output file
+        ccvars.genfile.write('\n#Partial Specific Volume (cm^3/gm):')
+
+        ccvars.genfile.write('\n# ' + psvtitle + '\n')
+        psvvalstring = '\t'.join(['%6.2f' % (x) for x in psvtable])
+        ccvars.genfile.write(psvvalstring + '\n')
+
+# write the Mw of the components and complex (kDa) without H-D exchange (fd2o = 0) to the general output file
+        ccvars.genfile.write('\n#Molecular Weight (kDa):')
+        ccvars.genfile.write('\n# ' + mwtitle + ', Complex Mw\n')
+        mwvalstring = '\t'.join(['%8.3f' % (x) for x in mwtable[0]])
+        mwcompstring = '%8.3f' % (mwcomp[0])
+        ccvars.genfile.write(mwvalstring + '\t' + mwcompstring + '\n')
+
+        ccvars.sldfile.write('\n#NEUTRON SLDs (10^10 cm^-2):\n')
+        ccvars.cotfile.write('\n#NEUTRON Contrast (10^10 cm^-2):\n')
+        ccvars.genfile.write(
+            '\n#NEUTRON Contrast (10^10 cm^-2) and I(0) (cm^-1):\n')
+        ccvars.izfile.write('\n# frac D2O, ' + mwtitle +
+                            ', Complex Mw (kDa), I(0) (cm^-1), sqrtI(0)\n')
+        ccvars.sldfile.write('# frac D2O, ' + sldtitle +
+                             ', Complex, Solvent\n')
+        ccvars.cotfile.write('# frac D2O, ' + contrasttitle + ', Complex\n')
+        ccvars.genfile.write(
+            '# frac D2O, ' + contrasttitle + ', Complex, Complex I(0)\n')
 
         for j in range(len(fd2o)):
             fd2ostring = '%5.2f' % (fd2o[j])
@@ -2184,32 +2372,44 @@ class contrast_calculator():
             mwcompstring = '%8.3f' % (mwcomp[j])
             izerostring = '%7.3f' % (izerocomp[j])
             sqrtizerostring = '%7.3f' % (sqrtizerocomp[j])
-            avars.izfile.write(fd2ostring + '\t' + mwvalstring + '\t' + mwcompstring +
-                               '\t' + izerostring + '\t' + sqrtizerostring + '\n')
+            ccvars.izfile.write(fd2ostring + '\t' + mwvalstring + '\t' + mwcompstring +
+                                '\t' + izerostring + '\t' + sqrtizerostring + '\n')
             sldvalstring = '\t'.join(['%7.3f' % (x) for x in sldtable[j]])
             sldcompstring = '%7.3f' % (sldcomp[j])
             rsstring = '%7.3f' % (rs[j])
-            avars.sldfile.write(fd2ostring + '\t' + sldvalstring + '\t' +
-                                sldcompstring + '\t' + rsstring + '\n')
+            ccvars.sldfile.write(fd2ostring + '\t' + sldvalstring + '\t' +
+                                 sldcompstring + '\t' + rsstring + '\n')
             contrastvalstring = '\t'.join(
                 ['%7.3f' % (x) for x in contrasttable[j]])
             contrastcompstring = '%7.3f' % (contrastcomp[j])
-            avars.cotfile.write(fd2ostring + '\t' + contrastvalstring +
-                                '\t' + contrastcompstring + '\n')
+            ccvars.cotfile.write(fd2ostring + '\t' + contrastvalstring +
+                                 '\t' + contrastcompstring + '\n')
+# write the contrasts and I(0) values to the general output file
+            ccvars.genfile.write(fd2ostring + '\t' + contrastvalstring +
+                                 '\t' + contrastcompstring + '\t' + izerostring + '\n')
 
-        gui_string = "\nFiles " + avars.izerofile + ", " + avars.scatlendenfile + \
-            " and " + avars.contrastfile + " written to ./" + avars.contpath + "."
-        pgui(gui_string)
+        gui_string = "\nFiles " + ccvars.izerofile + ", " + ccvars.scatlendenfile + \
+            ", " + ccvars.contrastfile + "and " + ccvars.general_output_file + \
+            " written to ./" + ccvars.contpath + "."
+
+        ccvars.izfile.close()
+        ccvars.sldfile.close()
+        ccvars.cotfile.close()
+        ccvars.genfile.close()
 
 # plot only if there are two components or less
+        ccvars.plotflag = 0
 
-        if (len(mwprotarray) + len(mwdnaarray) + len(mwrnaarray) + len(mwchemarray)) > 2:
-            mvars.plotflag = 0
+        if (len(mwprotarray) + len(mwdnaarray) + len(mwrnaarray) + len(mwchemarray)) <= 2:
+            ccvars.plotflag = 1
+        else:
             pgui(
                 "\n\nResults are not plotted for complexes with more than 2 components.")
 
-        if (mvars.plotflag == 1):
-            pass
+        self.save_data_to_plot_as_json(fd2o, izerocomp, sqrtizerocomp, rs, contrastcomp, sldcomp, protsld, protcontrast, protcontrasttitle, protsldtitle, dnasld, dnacontrast,
+                                       dnacontrasttitle, dnasldtitle, rnasld, rnacontrast, rnacontrasttitle, rnasldtitle, chemsld, chemcontrast, chemcontrasttitle, chemsldtitle)
+
+        time.sleep(0.5)
 
         return
 

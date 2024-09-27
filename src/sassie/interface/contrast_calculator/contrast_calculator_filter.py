@@ -15,9 +15,6 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 import os
-import sys
-import locale
-import string
 import sassie.interface.input_filter as input_filter
 import sasmol.system as system
 import sassie.tools.contrast_calculator.contrast_helper as contrast_helper
@@ -83,7 +80,7 @@ def check_ivariables_exist(ivariables, glbls):
     return error
 
 
-def check_ivariables(inpath, ivariables):
+def check_ivariables(path, ivariables):
 
     error = []
 
@@ -100,10 +97,10 @@ def check_ivariables(inpath, ivariables):
         allmoltype.append(ivariables[i][3])
         allIsFasta.append(ivariables[i][4])
 
-        ev, rv, wv = input_filter.check_permissions(inpath)
+        ev, rv, wv = input_filter.check_permissions(path)
         if (not ev or not rv or not wv):
             error.append('Permission error in input file path ' +
-                         inpath+':  [code = '+str(ev)+str(rv)+str(wv)+']')
+                         path+':  [code = '+str(ev)+str(rv)+str(wv)+']')
             if (ev == False):
                 error.append('Path does not exist.')
             elif (rv == False):
@@ -122,7 +119,7 @@ def check_ivariables(inpath, ivariables):
                 'No input file has been specified on line '+str(i+1)+'.')
             return error
 
-        pdbfile = os.path.join(inpath, filename)
+        pdbfile = os.path.join(path, filename)
         print('pdbfile: ', pdbfile)
         ev, value = input_filter.check_pdb_dcd(pdbfile, 'pdb')
 
@@ -336,7 +333,7 @@ def check_contrast(variables):
     error = []
 
     run_name = variables['run_name'][0]
-    inpath = variables['inpath'][0]
+    path = variables['path'][0]
     outfile = variables['outfile'][0]
     solute_conc = variables['solute_conc'][0]
     d2ostep = variables['d2ostep'][0]

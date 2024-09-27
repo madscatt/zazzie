@@ -23,45 +23,58 @@ def user_variables(self, **kwargs):
     #### user input ####
 
     self.run_name = 'run_0'
-    self.inpath = './'
-    self.outfile = 'test1'
+    self.path = './'
+    self.outfile = 'vn_pai'
     self.numfiles = '2'
+#    self.numfiles = '3'
 #    self.numfiles = '1'
 #    self.numfiles = '0'
-    self.solute_conc = '1.0'
+    self.solute_conc = '8.0'
     self.d2ostep = '5'
     self.fexchp = '0.95'
     self.fexchn = '1.0'
 #    self.seqfiles = ['protein_sequence.txt', 'dna_sequence.txt']
+#    self.seqfiles = ['protein_sequence.txt', 'rna_sequence.txt']
+#    self.seqfiles = ['dna_sequence.txt', 'rna_sequence.txt']
 #    self.seqfiles = ['pai_seq.txt']
 #    self.seqfiles = ['protein_sequence.txt']
+#    self.seqfiles = ['protein_sequence.txt', 'protein_sequence.txt']
 #    self.seqfiles = ['dna_sequence.txt']
 #    self.seqfiles = ['rna_sequence.txt']
 #    self.seqfiles = ['trunc2a_min.pdb']
 #    self.seqfiles = ['hiv1_gag.pdb']
 #    self.seqfiles = ['c36_dsDNA60_min.pdb']
-#    self.seqfiles = ['pai_seq.txt','vn_seq.txt']
+#    self.seqfiles = ['pai_seq.txt', 'vn_seq.txt']
+    self.seqfiles = ['vn_seq.txt', 'pai_seq.txt']
 #    self.seqfiles = ['skp_trimer.pdb','ompA.pdb']
-    self.seqfiles = ['pai_seq.txt', 'c36_dsDNA60_min.pdb']
+#    self.seqfiles = ['pai_seq.txt', 'c36_dsDNA60_min.pdb']
+#    self.seqfiles = ['vn_seq.txt', 'pai_seq.txt', 'c36_dsDNA60_min.pdb']
     self.numunits = ['1', '1']
+#    self.numunits = ['1', '1', '1']
 #    self.numunits = ['1']
 #    self.numunits = ['2']
-    self.fracdeut = ['0', '0']
+#   self.fracdeut = ['0', '0']
+#    self.fracdeut = ['0', '0.6', '0']
 #    self.fracdeut = ['0']
-#    self.fracdeut = ['0.0','0.6']
-    self.moltype = ['protein', 'dna']
+#    self.fracdeut = ['0.6', '0']
+    self.fracdeut = ['0', '0.6']
+#    self.moltype = ['protein', 'rna']
+#    self.moltype = ['dna', 'rna']
+#    self.moltype = ['protein', 'dna']
+#    self.moltype = ['protein', 'protein', 'dna']
 #    self.moltype = ['dna']
 #    self.moltype = ['protein']
 #    self.moltype = ['rna']
-#    self.moltype = ['protein','protein']
-#    self.isFasta = ['1', '1']
+    self.moltype = ['protein', 'protein']
+    self.isFasta = ['1', '1']
 #    self.isFasta = ['1']
 #    self.isFasta = ['0']
 #    self.isFasta = ['1', '1']
 #    self.isFasta = ['0', '0']
-    self.isFasta = ['1', '0']
-    self.plotflag = '0'
-
+#    self.isFasta = ['1', '0']
+#    self.isFasta = ['1', '1', '0']
+# plotflag is no longer an input
+#    self.plotflag = '0'
 
 #    self.numsolv = '0'
     self.numsolv = '2'
@@ -71,8 +84,8 @@ def user_variables(self, **kwargs):
     self.number_of_chemicals = '0'
 #    self.number_of_chemicals = '1'
 #    self.number_of_chemicals = '2'
-    self.formula_array = ['(C3H4O3)12', '(C3H4O3)12']
-#    self.formula_array = ['(C42H82NO8P)130']
+#    self.formula_array = ['(C3H4O3)12', '(C3H4O3)12']
+    self.formula_array = ['(C42H82NO8P)130']
 
     self.number_exchangeable_hydrogens = ['12', '5']
     self.fraction_exchangeable_hydrogens = ['0.95', '0.45']
@@ -104,7 +117,7 @@ def test_variables(self, paths):
     other_data_path = paths['other_data_path']
 
     self.run_name = 'run_0'
-    self.inpath = other_data_path
+    self.path = other_data_path
     self.outfile = 'test'
     self.numfiles = '1'
     self.solute_conc = '1.0'
@@ -116,7 +129,7 @@ def test_variables(self, paths):
     self.fracdeut = ['0']
     self.moltype = ['protein']
     self.isFasta = ['1']
-    self.plotflag = '0'
+#    self.plotflag = '0'
 
     self.numsolv = '0'
     self.solv_comp = []
@@ -143,7 +156,7 @@ def run_module(self, **kwargs):
     svariables = {}
 
     svariables['run_name'] = (self.run_name, 'string')
-    svariables['inpath'] = (self.inpath, 'string')
+    svariables['path'] = (self.path, 'string')
     svariables['outfile'] = (self.outfile, 'string')
     svariables['numfiles'] = (self.numfiles, 'int')
     svariables['solute_conc'] = (self.solute_conc, 'float')
@@ -152,7 +165,7 @@ def run_module(self, **kwargs):
     svariables['fexchp'] = (self.fexchp, 'float')
     svariables['fexchn'] = (self.fexchn, 'float')
     svariables['number_of_chemicals'] = (self.number_of_chemicals, 'int')
-    svariables['plotflag'] = (self.plotflag, 'int')
+#    svariables['plotflag'] = (self.plotflag, 'int')
 
     error, self.variables = input_filter.type_check_and_convert(svariables)
 #    print 'error, length: ', error, len(error)
@@ -192,7 +205,7 @@ def run_module(self, **kwargs):
             self.ivariables.append(
                 [self.seqfiles[i], self.numunits[i], self.fracdeut[i], self.moltype[i], self.isFasta[i]])
         error = contrast_calculator_filter.check_ivariables(
-            self.inpath, self.ivariables)
+            self.path, self.ivariables)
         if len(error) > 0:
             print('error = ', error)
             if not (self.testflag):
@@ -258,8 +271,8 @@ def run_module(self, **kwargs):
 
     run_name = self.variables['run_name'][0]
 
-    if os.path.exists(os.path.join(run_name, self.module)):
-        shutil.rmtree(os.path.join(run_name, self.module))
+#    if os.path.exists(os.path.join(run_name, self.module)):
+#        shutil.rmtree(os.path.join(run_name, self.module))
 
     txtQueue = multiprocessing.JoinableQueue()
     this_contrast_calculator = contrast_calculator.contrast_calculator()
