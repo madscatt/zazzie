@@ -49,7 +49,7 @@ import string
 import time
 import glob
 import sassie.interface.input_filter as input_filter
-import sasmol.sasmol as sasmol
+import sasmol.system as system
 import sassie.util.module_utilities as module_utilities
 import sassie.util.sasconfig as sasconfig
 import sassie.util.folder_management as folder_management
@@ -78,9 +78,9 @@ class merge_utilities():
 
     def main(self, input_variables, txtOutput):
 
-        self.mvars = module_variables()
+        self.module_variables = module_variables()
 
-        self.avars = merge_utilities_input_variables()
+        self.merge_utilities_input_variables = merge_utilities_input_variables()
 
         self.run_utils = module_utilities.run_utils(app, txtOutput)
 
@@ -119,10 +119,10 @@ class merge_utilities():
        '''
 
         log = self.log
-        mvars = self.mvars
+        mvars= self.module_variables
         log.debug('in unpack_variables')
 
-        mvars.runname = variables['runname'][0]
+        mvars.run_name = variables['run_name'][0]
         mvars.pdb_file = variables['pdb_file'][0]                       #option (0==merge dcd/pdb/sas profiles, 1==merge sas only, 2==merge dcd/pdb only
         mvars.merge_option = variables['merge_option'][0]
         mvars.number_of_runs = variables['number_of_runs'][0]
@@ -140,8 +140,8 @@ class merge_utilities():
     def copy_spec_files(self,sas_files, num_files, this_sas_output_path, suffix):
 
         log = self.log
-        mvars = self.mvars
-        avars = self.avars
+        mvars= self.module_variables
+        self.merge_utilities_input_variables
 
         log.debug('in copy spec files')
 
@@ -153,7 +153,7 @@ class merge_utilities():
             if str(number) in avars.mask:
                 numst = str(num_files)
                 numst = numst.zfill(string_fill)
-                runst = mvars.runname + '_' + numst + suffix[1:]
+                runst = mvars.run_name + '_' + numst + suffix[1:]
                 this_file = os.path.join(this_sas_output_path, runst)
                 cpst = 'cp  ' + name + ' ' + this_file
                 log.debug('cpst: ' + cpst)
@@ -175,7 +175,7 @@ class merge_utilities():
         file_exist = os.path.isfile(file_name)
 
         if file_exist:
-            mol = sasmol.SasMol(0)
+            mol = system.Molecule(0)
             binary = input_filter.check_binary(file_name)
 
             if binary:
@@ -197,16 +197,16 @@ class merge_utilities():
         log.debug('in get weight files')
         log.debug('local_value: '+ str(local_value))
         
-        print 'local_value = ', local_value
+        print('local_value = ', local_value)
 
         weights = numpy.loadtxt(local_value)
         fweights = weights[:, 2]
         file_numbers = weights[:, 0]
         x2 = weights[:, 1]
-        for i in xrange(len(x2)):
+        for i in range(len(x2)):
             if(fweights[i] == 1):
                 log.debug('st = '+str(weights[i][0])+' : x2 = '+str(x2[i]))
-                print 'st = ', int(weights[i][0]), ' : x2 = ', x2[i]
+                print('st = ', int(weights[i][0]), ' : x2 = ', x2[i])
 
         try:
             coordinate_flag = kwargs['coordinate_flag']
@@ -216,7 +216,7 @@ class merge_utilities():
         except:
             coordinate_flag = False
 
-        print 'coordinate flag after check: ', coordinate_flag
+        print('coordinate flag after check: ', coordinate_flag)
         
         if not coordinate_flag:
             frame_list = ((numpy.nonzero(fweights))[0]).tolist()
@@ -256,10 +256,10 @@ class merge_utilities():
 #        print 'coordinate flag after check: ', coordinate_flag
 
         if not coordinate_flag:
-            for number in xrange(1, number_of_spec_files + 1, int(local_value)):
+            for number in range(1, number_of_spec_files + 1, int(local_value)):
                 mask.append(str(number))
         elif coordinate_flag:
-            for number in xrange(0, number_of_spec_files, int(local_value)):
+            for number in range(0, number_of_spec_files, int(local_value)):
                 mask.append(number)
 
         log.debug('mask in get frequency: '+ str(mask))
@@ -271,7 +271,7 @@ class merge_utilities():
     def get_sas_mask(self, local_value,**kwargs):
 
         log = self.log
-        mvars = self.mvars
+        mvars= self.module_variables
 
         log.debug('getting SAS mask')
         log.debug('merge type option (get mask): ' + str(mvars.merge_type_option))
@@ -303,15 +303,17 @@ class merge_utilities():
         log.debug('in initialization')
         pgui = self.run_utils.print_gui
 
-        mvars = self.mvars
-        avars = self.avars
+        mvars= self.module_variables
+        avars= self.merge_utilities_input_variables
+
+        self.merge_utilities_input_variables
 
         log.debug(vars(mvars))
         log.debug(vars(avars))
 
         ''' directory and file preparation '''
 
-        avars.output_path = mvars.runname + '/merge_utilities/'
+        avars.output_path = mvars.run_name + '/merge_utilities/'
         log.debug('output_path: '+avars.output_path)
 
 #        version = 'version 0.2 : 04/19/15 : jc'
@@ -341,8 +343,8 @@ class merge_utilities():
         else:
             avars.local_value = mvars.local_value
 
-        print 'merge_type_option = ',mvars.merge_type_option, ; print type(mvars.merge_type_option)
-        print 'local_value = ',avars.local_value, ; print type(avars.local_value)
+        print('merge_type_option = ',mvars.merge_type_option, end=' ') ; print(type(mvars.merge_type_option))
+        print('local_value = ',avars.local_value, end=' ') ; print(type(avars.local_value))
             
 
         if (mvars.merge_option == 0 or mvars.merge_option == 2):
@@ -412,9 +414,9 @@ class merge_utilities():
                     avars.extra = ['*.sav', '*.flm', '*.alm', '*.ans']
                     avars.num_ex_files = [1, 1, 1, 1]
 
-            print 'sas_output_paths = ', avars.sas_output_paths
+            print('sas_output_paths = ', avars.sas_output_paths)
 #           print 'length sas_output_paths: ',len(avars.sas_output_paths)
-            print 'sas_input_paths = ', avars.sas_input_paths 
+            print('sas_input_paths = ', avars.sas_input_paths) 
 #           print 'length sas_input_paths: ',len(avars.sas_input_paths)                                            
 
         log.debug(vars(mvars))
@@ -429,7 +431,7 @@ class merge_utilities():
 
         INPUT: variable descriptions
 
-        runname:                string      project name
+        run_name:                string      project name
         pdb_file                string      input pdb file
         trajectory_names        string      input dcd files to be merged (number of files = number of runs)
         output_filename:        string      output dcd file 
@@ -452,14 +454,15 @@ class merge_utilities():
         pgui = self.run_utils.print_gui
         log.debug('in merge_utilities')
 
-        mvars = self.mvars
-        avars = self.avars
+        mvars = self.module_variables
+        self.merge_utilities_input_variables
+        avars = self.merge_utilities_input_variables
 
         log.debug(vars(mvars))
         log.debug(vars(avars))
 
         ttxt = time.asctime(time.gmtime(time.time()))
-        st = ''.join(['=' for x in xrange(60)])
+        st = ''.join(['=' for x in range(60)])
 
         pgui("\n%s \n" % (st))
         pgui("DATA FROM RUN: %s \n\n" % (ttxt))
@@ -487,7 +490,7 @@ class merge_utilities():
 
             mergest = 'merging trajectory files\n'
             pgui(mergest)
-            avars.trajectory_names = string.split(mvars.trajectory_names, ',')
+            avars.trajectory_names = mvars.trajectory_names.split(',')
 
             self.merge_trajectory_files()
 
@@ -516,28 +519,29 @@ class merge_utilities():
         log.debug('in merge trajectory files')
         pgui = self.run_utils.print_gui
 
-        mvars = self.mvars
-        avars = self.avars
+        mvars= self.module_variables
+        avars = self.merge_utilities_input_variables
+        self.merge_utilities_input_variables
 
         log.debug(vars(mvars))
         log.debug(vars(avars))
 
         cpst = 'cp ' + mvars.pdb_file + ' ' + avars.output_path + os.path.sep
-        print 'cpst: ',cpst
+        print('cpst: ',cpst)
         os.system(cpst)
 
-        m2 = sasmol.SasMol(1)
+        m2 = system.Molecule(1)
         m2.read_pdb(mvars.pdb_file, fastread=True)
         natoms = m2.natoms()
 
         if(avars.output_type == 'dcd'):
             dcdoutfile = m2.open_dcd_write(avars.output_file)
 
-        m1 = sasmol.SasMol(0)
+        m1 = system.Molecule(0)
         m1.read_pdb(mvars.pdb_file, fastread=True)
         k = 0
 
-        for i in xrange(len(avars.trajectory_names)):
+        for i in range(len(avars.trajectory_names)):
 
 #            print 'i, trajectory: ', i, avars.trajectory_names[i]
             avars.input_type = self.check_input_file_type(avars.trajectory_names[i])
@@ -552,7 +556,7 @@ class merge_utilities():
                 number_of_frames = m1.number_of_frames()
 
 
-            avars.rangelist = [num for num in xrange(number_of_frames)]
+            avars.rangelist = [num for num in range(number_of_frames)]
 
             if(mvars.merge_type_option == 1):     # weight_files
                 avars.rangelist = self.get_weight_file(avars.local_value[i], coordinate_flag=True)
@@ -574,7 +578,7 @@ class merge_utilities():
 
             for j in range(0, number_of_frames, avars.step):
                 if j in avars.rangelist:
-                    print '.',
+                    print('.', end=' ')
                     sys.stdout.flush()
                     if(avars.input_type == 'dcd'):
                         m1.read_dcd_step(dcdfile, j)
@@ -615,8 +619,9 @@ class merge_utilities():
         log.debug('in merge sas files')
         pgui = self.run_utils.print_gui
 
-        mvars = self.mvars
-        avars = self.avars
+        mvars= self.module_variables
+        self.merge_utilities_input_variables
+        avars = self.merge_utilities_input_variables
 
         log.debug(vars(mvars))
         log.debug(vars(avars))
@@ -642,11 +647,11 @@ class merge_utilities():
                 result = os.system('mkdir -p ' + sas_output_path)
 
 
-        for i in xrange(len(avars.sas_output_paths)):
+        for i in range(len(avars.sas_output_paths)):
             copy_extras = False
             num_iq_files = 1
             num_log_files = 1
-            for j in xrange(len(avars.sas_input_paths)):
+            for j in range(len(avars.sas_input_paths)):
                 this_path = avars.sas_input_paths[j][i]
 #               print 'i,j,this_path = ', i,j,this_path
                 sys.stdout.flush()
@@ -689,7 +694,7 @@ class merge_utilities():
                                 
 #               print 'i,num_iq_files: ', i, num_iq_files
                 if(copy_extras == True):
-                    for k in xrange(len(avars.extra)):
+                    for k in range(len(avars.extra)):
                         avars.num_ex_files[k] = self.copy_spec_files(extra_files[k], avars.num_ex_files[
                                                   k], avars.sas_output_paths[i], avars.extra[k])
 
@@ -718,7 +723,7 @@ class merge_utilities():
 
         self.run_utils.clean_up(log)
 
-        st = ''.join(['=' for x in xrange(60)])
+        st = ''.join(['=' for x in range(60)])
         pgui("\n%s \n" % (st))
         pgui('\nMERGE UTILITIES IS DONE')
         time.sleep(1.0)

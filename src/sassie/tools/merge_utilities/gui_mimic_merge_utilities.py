@@ -20,7 +20,7 @@ def user_variables(self, **kwargs):
     ### BEGIN USER INPUT ###
     ### BEGIN USER INPUT ###
 
-    self.runname = 'run_0'
+    self.run_name = 'run_0'
     self.pdb_file = os.path.join('./', 'hiv1_gag.pdb')
     self.trajectory_names = os.path.join('./','run_m1.dcd')+','+os.path.join('./','run_m2.dcd')
 #    self.trajectory_names = os.path.join('./','run_m1.pdb')+','+os.path.join('./','run_m2.pdb')    
@@ -61,7 +61,7 @@ def test_variables(self, paths):
     other_data_path = paths['other_data_path']
     module_data_path = paths['module_data_path']
 
-    self.runname = 'run_0'
+    self.run_name = 'run_0'
     self.pdb_file = os.path.join(pdb_data_path, 'hiv1_gag.pdb')
     self.trajectory_names = os.path.join(dcd_data_path,'run_m1.dcd')+','+os.path.join(dcd_data_path,'run_m2.dcd')
     self.output_filename = 'all.dcd'
@@ -86,7 +86,7 @@ def run_module(self, **kwargs):
 
     svariables = {}
 
-    svariables['runname'] = (self.runname, 'string')
+    svariables['run_name'] = (self.run_name, 'string')
     svariables['pdb_file'] = (self.pdb_file, 'string')
     svariables['trajectory_names'] = (self.trajectory_names, 'string')
     svariables['output_filename'] = (self.output_filename, 'string')
@@ -100,11 +100,11 @@ def run_module(self, **kwargs):
     error, self.variables = input_filter.type_check_and_convert(svariables)
 
     if(len(error) > 0):
-        print 'error = ', error
+        print('error = ', error)
         if not(self.testflag):
             sys.exit()
         return error
-
+    '''
     try:
         if kwargs['file_check']:
             error = merge_utilities_filter.check_merge_utilities(
@@ -112,9 +112,9 @@ def run_module(self, **kwargs):
     except:
         error = merge_utilities_filter.check_merge_utilities(
             self.variables, no_file_check="true")
-
+    '''
     if(len(error) > 0):
-        print 'error = ', error
+        print('error = ', error)
         if not(self.testflag):
             sys.exit()
         return error
@@ -125,12 +125,12 @@ def run_module(self, **kwargs):
     except:
         pass
 
-    runname = self.variables['runname'][0]
+    run_name = self.variables['run_name'][0]
 
-    path = os.path.join(runname, self.module)
+    path = os.path.join(run_name, self.module)
 
-    if os.path.exists(os.path.join(runname, self.module)):
-        shutil.rmtree(os.path.join(runname, self.module))
+    if os.path.exists(os.path.join(run_name, self.module)):
+        shutil.rmtree(os.path.join(run_name, self.module))
 
     txtQueue = multiprocessing.JoinableQueue()
     this_merge_utilities = merge_utilities.merge_utilities()
@@ -176,4 +176,4 @@ if __name__ == '__main__':
 
     start = time.time()
     run_gui = gui_mimic_merge_utilities(test, paths)
-    print "time used: ", time.time() - start
+    print("time used: ", time.time() - start)

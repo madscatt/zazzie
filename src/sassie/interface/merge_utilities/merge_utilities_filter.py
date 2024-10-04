@@ -15,7 +15,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 import os,sys,locale,string,glob
-import sasmol.sasmol as sasmol
+import sasmol.system as system
 import sassie.simulate.constraints.constraints as constraints
 #import input_filter
 import sassie.interface.input_filter as input_filter
@@ -79,7 +79,7 @@ def check_merge_utilities(variables,**kwargs):
 # exception below not tested since other tests failed before reaching this point; if this point is reached, file is read successfully
 # kept exception just in case
         try:
-            m1 = sasmol.SasMol(0)
+            m1 = system.Molecule(0)
             m1.read_pdb(pdb_file)
             number_of_frames = m1.number_of_frames()
         except:
@@ -131,7 +131,7 @@ def check_merge_utilities(variables,**kwargs):
 # exception below not tested since other tests failed before reaching this point; if this point is reached, file is read successfully
 # kept exception just in case
             try:
-                m1 = sasmol.SasMol(0)
+                m1 = system.Molecule(0)
                 if infile_type == 'dcd':
                     dcdinputfile = m1.open_dcd_read(trajectory_file)
                     number_of_frames = dcdinputfile[2]
