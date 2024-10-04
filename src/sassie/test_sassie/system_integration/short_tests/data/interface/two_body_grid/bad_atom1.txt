@@ -1,0 +1,1 @@
+INT1 1-20 XA : INT3 1-20 CA : 100.0 : COM : COM

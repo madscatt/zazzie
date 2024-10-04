@@ -1,0 +1,8 @@
+CD C
+CE C
+HE H
+HG H
+ND N
+NB N
+PB P
+PA P

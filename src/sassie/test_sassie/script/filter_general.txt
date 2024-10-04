@@ -1,0 +1,42 @@
+# Readme
+"""
+The present data structure of svariables is:
+{'field_name': ("field_value","data_type")}
+
+The proposed data structure of svariables will be:
+{'field_name': ("field_value","data_type",["field_property"],[SasMol]} (Note, [] means optional)
+
+The "field_property" can be null suggesting a pass for the following check:
+"""
+
+function input_filter_check_file_type_and_dir_permission(svariables):
+
+  Loop over svariables:
+
+    Get its "field_property" and "field_value";
+    Pass if "field_property" is null;
+    Otherwise:
+
+      Check whether the file or directory of "field_value" exist;
+      Return error if the file or directory doesn't exist;
+      Otherwise:
+
+        If "field_property" is a "pdb":
+          Do a quick pdb-type check by reading 1 frame (sasio.read_pdb(...,fastread,...));
+          Save the readed SasMol object to "SasMol" in the svariables dictionary
+
+        If "field_property" is a "dcd":
+          Do a quick dcd-type check by reading its header (sasio.open_dcd_read);
+
+        If "field_property" is a "psf":
+          Do a quick psf-type check by reading its header;
+
+        If "field_property" is a "exe":
+          Check whether the file is an executable binary;
+
+        If "field_property" is a "path":
+          Check whether we have the r/w permission for the directory;
+
+        If ...
+
+        Return error or no-error depending on the check results;
