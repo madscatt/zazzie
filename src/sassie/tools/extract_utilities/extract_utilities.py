@@ -31,7 +31,6 @@ import os
 import sys
 import locale
 import numpy
-import string
 import time
 import glob
 import sassie.interface.input_filter as input_filter
@@ -176,7 +175,7 @@ class extract_utilities():
 
         mvars = self.module_variables
 
-        local_values = string.split(mvars.local_value, '-')
+        local_values = mvars.local_value.split('-')
         first = locale.atoi(local_values[0])
         last = locale.atoi(local_values[1])
 
@@ -190,7 +189,7 @@ class extract_utilities():
         infile = open(mvars.local_value, 'r').readlines()
         mask = []
         for i in range(len(infile)):
-            lin = string.split(infile[i])
+            lin = infile[i].split()
             if(len(lin) > 0):
                 mask.append(lin[0])
 
@@ -287,7 +286,7 @@ class extract_utilities():
 
         mvars = self.module_variables
 
-        local_values = string.split(mvars.local_value, '-')
+        local_values = mvars.local_value.split('-')
         first = locale.atoi(local_values[0]) - 1
         last = locale.atoi(local_values[1]) - 1
         return list(range(first, last + 1))
@@ -302,7 +301,7 @@ class extract_utilities():
 
         frame_list = []
         for i in range(len(infile)):
-            lin = string.split(infile[i])
+            lin = infile[i].split()
             if(len(lin) > 0):
                 this_value = locale.atoi(lin[0]) - 1
                 frame_list.append(this_value)
