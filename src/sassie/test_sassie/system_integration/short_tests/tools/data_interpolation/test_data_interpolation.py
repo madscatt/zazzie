@@ -19,7 +19,6 @@ module_data_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), '..
 paths = {'pdb_data_path': pdb_data_path, 'dcd_data_path': dcd_data_path,
          'other_data_path': other_data_path, 'module_data_path': module_data_path}
 
-
 class Test_Data_Interpolation(TestCase):
 
     module = 'data_interpolation'
@@ -27,33 +26,27 @@ class Test_Data_Interpolation(TestCase):
     def setUp(self):
         gui_mimic_data_interpolation.test_variables(self, paths)
 
-    @patch('sassie.tools.data_interpolation.gui_mimic_data_interpolation.run_module')
-    def test_1(self, MockClass):
+    def test_1(self):
         '''
         test SANS data file
         '''
-        instance = MockClass.return_value
-        instance.some_method.return_value = 'expected_value'
-
+        # Call the actual run_module method
         result = gui_mimic_data_interpolation.run_module(self)
         print('result = ', result)
 
         # confirm output data file is correct
         outfile = os.path.join(self.run_name, self.module, self.ofile)
-        #outfile = os.path.join(self.module, self.ofile)
         correct_outfile = os.path.join(
             module_data_path, 'sans_data.dat')
         self.assertEqual(filecmp.cmp(outfile, correct_outfile), True)
 
         # confirm that output stn_data file is correct
         outfile = os.path.join(self.run_name, self.module,
-        #outfile = os.path.join(self.module,
                                'stn_'+self.ofile)
         correct_outfile = os.path.join(
             module_data_path, 'stn_sans_data.dat')
         self.assertEqual(filecmp.cmp(outfile, correct_outfile), True)
 
-    '''
     def test_2(self):
         """
         test SAXS data file
@@ -78,7 +71,6 @@ class Test_Data_Interpolation(TestCase):
         correct_outfile = os.path.join(
             module_data_path, 'stn_trunc2a.dat')
         self.assertEqual(filecmp.cmp(outfile, correct_outfile), True)
-    '''
 
     def tearDown(self):
         if os.path.exists(self.run_name):
