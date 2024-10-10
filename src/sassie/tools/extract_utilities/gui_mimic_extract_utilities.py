@@ -7,10 +7,8 @@ import os
 import shutil
 import time
 import sassie.tools.extract_utilities.extract_utilities as extract_utilities
-#import extract_utilities as extract_utilities
 import sassie.interface.input_filter as input_filter
 import sassie.interface.extract_utilities.extract_utilities_filter as extract_utilities_filter
-#import extract_utilities_filter as extract_utilities_filter
 import multiprocessing
 
 
