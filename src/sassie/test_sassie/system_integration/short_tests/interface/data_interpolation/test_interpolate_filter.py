@@ -16,13 +16,10 @@
 '''
 
 import os
-import sassie.tools.gui_mimic_data_interpolation as gui_mimic_data_interpolation
-#import gui_mimic_data_interpolation as gui_mimic_data_interpolation
+import sassie.tools.data_interpolation.gui_mimic_data_interpolation as gui_mimic_data_interpolation
 
 import filecmp
-from unittest import main
-from nose.tools import assert_equals
-from mocker import Mocker, MockerTestCase
+import unittest 
 
 pdb_data_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), '..', '..', 'data', 'pdb_common') + os.path.sep
 dcd_data_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), '..', '..', 'data', 'dcd_common') + os.path.sep
@@ -31,8 +28,7 @@ module_data_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), '..
 
 paths = {'pdb_data_path' : pdb_data_path, 'dcd_data_path' : dcd_data_path, 'other_data_path' : other_data_path, 'module_data_path' : module_data_path}
 
-
-class Test_Data_Interpolation_Filter(MockerTestCase):
+class Test_Data_Interpolation_Filter(unittest.TestCase):
 
     '''
     System integration test for data_interpolation.py / sassie 1.0
@@ -44,7 +40,7 @@ class Test_Data_Interpolation_Filter(MockerTestCase):
 
     Inputs tested:
 
-    runname:      string      project name                                          
+    run_name:      string      project name                                          
     expdata:      string      experimental data file                : 2 files (SANS, SAXS)
     ofile:        string      output interpolated data file         : 1 for each above
     io:           float       I(0) value of the data, determined from Guinier, P(r), or other suitable method
@@ -58,7 +54,7 @@ class Test_Data_Interpolation_Filter(MockerTestCase):
 
     1.  check if expdata exists
     2.  check if expdata is a directory
-    3.  check if runname has incorrect character
+    3.  check if run_name has incorrect character
     4.  check for negative dq
     5.  check for maxpoints less than 2
     6.  check dq and maxpoints              NOT TESTED: non-float error occurs in input_filter before getting to this point
@@ -87,7 +83,7 @@ class Test_Data_Interpolation_Filter(MockerTestCase):
         ''' check for file error '''
         expected_error = ['input data file, ' +
                           self.expdata + ', does not exist']
-        assert_equals(return_error, expected_error)
+        self.assertEqual(return_error, expected_error)
 
     def test_2(self):
         '''
@@ -100,19 +96,20 @@ class Test_Data_Interpolation_Filter(MockerTestCase):
         ''' check for file error '''
         expected_error = ['input data file, ' +
                           self.expdata + ', is a directory!']
-        assert_equals(return_error, expected_error)
+        self.assertEqual(return_error, expected_error)
 
     def test_3(self):
         '''
-        test if runname has incorrect character
+        test if run_name has incorrect character
         '''
-        self.runname = 'run_&'
+        self.run_name = 'run_&'
         return_error = gui_mimic_data_interpolation.run_module(
             self, test_filter=True)
 
+        print('return_error = ', return_error)
         ''' check for value error '''
         expected_error = ['file or path : run_& has incorrect character : &']
-        assert_equals(return_error, expected_error)
+        self.assertEqual(return_error, expected_error)
 
     def test_4(self):
         '''
@@ -124,7 +121,7 @@ class Test_Data_Interpolation_Filter(MockerTestCase):
 
         ''' check for value error '''
         expected_error = ['dq needs to be > 0 : -0.05']
-        assert_equals(return_error, expected_error)
+        self.assertEqual(return_error, expected_error)
 
     def test_5(self):
         '''
@@ -136,7 +133,7 @@ class Test_Data_Interpolation_Filter(MockerTestCase):
 
         ''' check for value error '''
         expected_error = ['maxpoints needs to be greater than 2 : 1']
-        assert_equals(return_error, expected_error)
+        self.assertEqual(return_error, expected_error)
 
     def test_6(self):
         '''
@@ -148,7 +145,7 @@ class Test_Data_Interpolation_Filter(MockerTestCase):
 
         ''' check for value error '''
         expected_error = ['input parameters compared to data in file, '+self.expdata+', are not valid : dq*maxpoints > q-range in data file [q-range = last q-value minus first q-value] : dq = '+self.dq+', maxpoints = '+self.maxpoints]
-        assert_equals(return_error, expected_error)
+        self.assertEqual(return_error, expected_error)
 
     def test_7(self):
         '''
@@ -159,14 +156,19 @@ class Test_Data_Interpolation_Filter(MockerTestCase):
         return_error = gui_mimic_data_interpolation.run_module(
             self, test_filter=True)
 
+        print('expdata = ', self.expdata)
+
+        print('return_error = ', return_error)
+
         ''' check for value error '''
-        expected_error = ['in your input file, '+self.expdata[3:]+', found that q-values that are not increasing: duplicate points or successive q-values where q[0] < q[1]']
-        assert_equals(return_error, expected_error)
+        #expected_error = ['in your input file, '+self.expdata[3:]+', found that q-values that are not increasing: duplicate points or successive q-values where q[0] < q[1]']
+        expected_error = ['in your input file, '+self.expdata+', found that q-values that are not increasing: duplicate points or successive q-values where q[0] < q[1]']
+        self.assertEqual(return_error, expected_error)
 
 
     def tearDown(self):
-        if os.path.exists(self.runname):
-            shutil.rmtree(self.runname)
+        if os.path.exists(self.run_name):
+            shutil.rmtree(self.run_name)
 
 if __name__ == '__main__':
-    main()
+    unittest.main()

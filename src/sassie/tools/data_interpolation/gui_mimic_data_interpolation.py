@@ -9,7 +9,7 @@ import time
 
 import sassie.tools.data_interpolation.data_interpolation as data_interpolation
 import sassie.interface.input_filter as input_filter
-import sassie.interface.data_interpolation.interpolate_filter as interpolate_filter
+import sassie.interface.data_interpolation.data_interpolation_filter as data_interpolation_filter
 import multiprocessing
 
 
@@ -94,9 +94,9 @@ def run_module(self, **kwargs):
 
     try:
         if kwargs['file_check']:
-            error = interpolate_filter.check_interpolate(self.variables)
+            error = data_interpolation_filter.check_interpolate(self.variables)
     except:
-        error = interpolate_filter.check_interpolate(
+        error = data_interpolation_filter.check_interpolate(
             self.variables, no_file_check="true")
 
     if(len(error) > 0):

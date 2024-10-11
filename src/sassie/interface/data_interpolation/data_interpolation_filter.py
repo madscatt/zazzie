@@ -16,10 +16,8 @@
 '''
 import os
 import sys
-import string
 import locale
 import sassie.interface.input_filter as input_filter
-
 
 def data_check(expdata, dq, maxpoints, datatype):
     #    returns ev=1 &  value=1 if everything is okay
@@ -28,8 +26,9 @@ def data_check(expdata, dq, maxpoints, datatype):
     #    returns value=2 if npoints can not be read from gui
     #    returns value=3 if interpolate range exceeds the range of data
     #    returns value=4 if dq is smaller than the first point
+    #    returns value=5 if q is not increasing
 
-    print('checking data')
+    #print('checking data')
     ev = 0
     value = 0
     good = 0
@@ -55,8 +54,9 @@ def data_check(expdata, dq, maxpoints, datatype):
                 # data=open(expdata,'r').readlines()
                 data = open(expdata, 'r').read().splitlines()
                 nl = len(data)
-                for k in xrange(nl):
-                    lin = string.split(data[k])
+                for k in range(nl):
+                    #lin = string.split(data[k])
+                    lin = data[k].split()
                     try:
                         dum = float(lin[0])
                         dum = float(lin[1])
@@ -79,9 +79,9 @@ def data_check(expdata, dq, maxpoints, datatype):
 
                         if(x <= last_value):
                             value = 5
-                            print('this_value = ', x)
-                            print('last_value = ', last_value)
-                            print('ERROR')
+                            #print('this_value = ', x)
+                            #print('last_value = ', last_value)
+                            #print('ERROR')
                             return ev, value
                         else:
                             last_value = x
@@ -93,13 +93,13 @@ def data_check(expdata, dq, maxpoints, datatype):
 
                 if(totq > (lastdum1 - eq0)):
                     value = 3
-                    print('first value in data = ', eq0)
-                    print('last value in data = ', lastdum1)
-                    print('totq = ', totq)
+                    #print('first value in data = ', eq0)
+                    #print('last value in data = ', lastdum1)
+                    #print('totq = ', totq)
                     return ev, value
                 if(dq < eq0):
-                    print('dq = ', dq)
-                    print('first_value in data = ', eq0)
+                    #print('dq = ', dq)
+                    #print('first_value in data = ', eq0)
                     value = 4
 #                    return ev,value
         except:
@@ -152,7 +152,8 @@ def check_interpolate(variables, **kwargs):
         #    return error
     elif(value == 5):
         error.append('in your input file, ' +
-                     expdata[3:]+', found that q-values that are not increasing: duplicate points or successive q-values where q[0] < q[1]')
+                     #expdata[3:]+', found that q-values that are not increasing: duplicate points or successive q-values where q[0] < q[1]')
+                     expdata +', found that q-values that are not increasing: duplicate points or successive q-values where q[0] < q[1]')
         return error
     # elif(value == 6):
     #    error.append( 'in your input file, '+expdata[3:]+', found error values <= 0 : all values need to be >= 0')

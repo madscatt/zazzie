@@ -16,7 +16,6 @@
 
 '''
 import os
-import string
 import locale
 import time
 import platform
@@ -138,7 +137,6 @@ class data_interpolation():
         divars.z.append(mvars.ioe)
 
         for line in data_file:
-            # this_line = string.split(line)
             this_line = line.split()
             try:
                 qval = locale.atof(this_line[0])
