@@ -126,8 +126,23 @@ def type_check_and_convert(svariables):
         if svariables[key][1] == "string":
             variables[key] = svariables[key]
 
+        #elif svariables[key][1] == "boolean":
+        #    variables[key] = svariables[key]
+        
         elif svariables[key][1] == "boolean":
-            variables[key] = svariables[key]
+#            print('key = ', key)
+#            print('svaraibles[key][0] = ', svariables[key][0])
+#            print('svaraibles[key][1] = ', svariables[key][1])
+            try:
+                value = svariables[key][0].lower()
+                if value in ['y', 'yes', 'true', '1']:
+                    variables[key] = (True, "boolean")
+                elif value in ['n', 'no', 'false', '0']:
+                    variables[key] = (False, "boolean")
+                else:
+                    raise ValueError(f"{key}: could not be converted to boolean input type")
+            except Exception as e:
+                error.append(str(e))
 
         elif svariables[key][1] == "float":
             try:

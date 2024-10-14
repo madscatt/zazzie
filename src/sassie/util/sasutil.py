@@ -27,8 +27,6 @@
         chemical formula parsing, etc.
 '''
 import sasmol.properties as properties
-import string
-   
 
 NAME, NUM, LPAREN, RPAREN, EOS = list(range(5))
 import re
@@ -298,21 +296,16 @@ def get_chemical_formula(formula_string):
     error = []
 
     try:
-        seq = parse(formula_string.strip(" "),sym2elt)
-        #seq.displaysyms(sym2elt)
+        seq = parse(formula_string.strip(), sym2elt)
         seq.addsyms(1,formula_dictionary)
         items = list(formula_dictionary.items())
         items.sort()
 
-        #for sym, count in items:
-        #    print sym," :: ",count
-
-    except (ValueError, detail):
+    except ValueError as detail:
         print((str(detail)))
         error.append(detail)
 
     return error,formula_dictionary
-
 
 if __name__ == "__main__":
 
@@ -325,7 +318,8 @@ if __name__ == "__main__":
     '''
     while 1:
         x = raw_input("? ")
-        fields = string.split(x)
+        #fields = string.split(x)
+        fields = x.split()
         if len(fields) != 2:
             print("input must have two fields")
             continue

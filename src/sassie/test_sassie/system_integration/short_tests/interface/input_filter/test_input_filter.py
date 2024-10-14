@@ -330,7 +330,6 @@ class Test_Input_Filter(unittest.TestCase):
         expected_error = ['integer_array: could not read array of values']
         self.assertEqual(return_error, expected_error) 
 
-    @unittest.skip("Skipping test_8 for now")
     def test_8(self):
         '''
         test if string can be converted to boolean True or False
@@ -338,9 +337,11 @@ class Test_Input_Filter(unittest.TestCase):
 
         self.test_flag1 = 'Y'
         return_error = self.run_filter()
+        print('return_error: ',return_error)
 
         ''' check for variable error '''
-        expected_error = ['test_flag1: could not boolean input type']
+        #expected_error = ['test_flag1: could not boolean input type']
+        expected_error = None
         self.assertEqual(return_error, expected_error)
 
     ''' Testing check_pdb_dcd'''
@@ -1184,15 +1185,14 @@ class Test_Input_Filter(unittest.TestCase):
             
         error, formulas = input_filter.check_and_convert_formula(self.formula_array)
 
-
         ''' check for file error '''
 
         expected_formulas = []
         self.assertEqual(formulas, expected_formulas)
         expected_error = [ValueError('unexpected character:\nN@Cl\n ^\n',)]
         print('expected_error: ', expected_error)
-        print(expected_error[0].message)
-        self.assertEqual(error[0].message, expected_error[0].message)
+        print(str(expected_error[0]))
+        self.assertEqual(str(error[0]), str(expected_error[0]))
 
     def test_57(self):
         '''
@@ -1204,17 +1204,16 @@ class Test_Input_Filter(unittest.TestCase):
             
         error, formulas = input_filter.check_and_convert_formula(self.formula_array)
 
-
         ''' check for file error '''
         print('error: ', error)
-        print(error[0].message)
+        print(str(error[0]))
 
         expected_formulas = []
         self.assertEqual(formulas, expected_formulas)
         expected_error = [ValueError("'Nacl' is not an element symbol:\nNacl\n^\n",)]
         print('expected_error: ', expected_error)
-        print(expected_error[0].message)
-        self.assertEqual(error[0].message, expected_error[0].message)
+        print(str(expected_error[0]))
+        self.assertEqual(str(error[0]), str(expected_error[0]))
 
     def test_58(self):
         '''
@@ -1222,10 +1221,8 @@ class Test_Input_Filter(unittest.TestCase):
         '''
 
         self.formula_array=None
-#        self.run_filter()
 
         error, formulas = input_filter.check_and_convert_formula(self.formula_array)
-
 
         ''' check for file error '''
 
@@ -1233,9 +1230,6 @@ class Test_Input_Filter(unittest.TestCase):
         self.assertEqual(formulas, expected_formulas)
         expected_error = ['unable to read formula']
         self.assertEqual(error, expected_error)
-
-
-
 
     def tearDown(self):
         if os.path.exists(self.run_name):
