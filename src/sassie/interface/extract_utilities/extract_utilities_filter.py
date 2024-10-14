@@ -37,7 +37,12 @@ def check_extract_utilities(variables, **kwargs):
                 error.append('write permission not allowed')
             return error
 
+    print("extract_trajectory: ", extract_trajectory)
+    print("extract_sas: ", extract_sas)
+
     if not extract_trajectory and not extract_sas:
+
+        print(extract_trajectory, extract_sas)
         error.append("at least one of the options ('extract trajectory' and 'extract SAS') needs to be checked")
         return error
 

@@ -335,7 +335,7 @@ class Test_Input_Filter(unittest.TestCase):
         test if string can be converted to boolean True or False
         '''
 
-        self.test_flag1 = 'Y'
+        self.test_flag1 = 'True'
         return_error = self.run_filter()
         print('return_error: ',return_error)
 

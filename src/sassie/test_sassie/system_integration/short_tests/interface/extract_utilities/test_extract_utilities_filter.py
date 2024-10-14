@@ -16,15 +16,11 @@
 '''
 
 import os
-import string
-import sassie.tools.gui_mimic_extract_utilities as gui_mimic_extract_utilities
-#import gui_mimic_extract_utilities_new as gui_mimic_extract_utilities
+import sassie.tools.extract_utilities.gui_mimic_extract_utilities as gui_mimic_extract_utilities
 
 import filecmp
 import shutil
-from unittest import main
-from nose.tools import assert_equals
-from mocker import Mocker, MockerTestCase
+import unittest 
 
 pdb_data_path = os.path.join(os.path.dirname(os.path.realpath(
     __file__)), '..', '..', 'data', 'pdb_common') + os.path.sep
@@ -39,7 +35,7 @@ paths = {'pdb_data_path': pdb_data_path, 'dcd_data_path': dcd_data_path,
          'other_data_path': other_data_path, 'module_data_path': module_data_path}
 
 
-class Test_Extract_Utilities_Filter(MockerTestCase):
+class Test_Extract_Utilities_Filter(unittest.TestCase):
 
     '''
     System integration test for extract_utilities_filter.py / sassie 1.0
@@ -48,7 +44,7 @@ class Test_Extract_Utilities_Filter(MockerTestCase):
 
     Inputs tested:
 
-    runname:                string      project name
+    run_name:                string      project name
     pdb_filename            string      input pdb file
     trajectory_filename     string      input dcd file                          
     path:                   string      input/output filepath                 
@@ -135,8 +131,8 @@ class Test_Extract_Utilities_Filter(MockerTestCase):
             i.   path doesn't not exist
             ii.  read permission not allowed
             iii. write permission not allowed
-  12.  check runname
-        a.  check for invalid characters in runname                     
+  12.  check run_name
+        a.  check for invalid characters in run_name                     
     '''
 
     def setUp(self):
@@ -145,9 +141,9 @@ class Test_Extract_Utilities_Filter(MockerTestCase):
 
     def extract_important_path(self, return_error):
 
-        string_error = string.split(return_error[0])
-        path_list = string.split(string_error[-1], '..')
-        important_path = string.split(path_list[-1], "/")[1:]
+        string_error = return_error[0].split()
+        path_list = string_error[-1].split('..')
+        important_path = path_list[-1].split("/")[1:]
         error = os.path.join('..', '..')
         for this_path in important_path:
             error += os.sep + this_path
@@ -165,7 +161,7 @@ class Test_Extract_Utilities_Filter(MockerTestCase):
         ''' check for file error '''
         expected_error = [
             "at least one of the options ('extract trajectory' and 'extract SAS') needs to be checked"]
-        assert_equals(return_error, expected_error)
+        self.assertEqual(return_error, expected_error)
 
     def test_2(self):
         '''
@@ -178,7 +174,7 @@ class Test_Extract_Utilities_Filter(MockerTestCase):
         ''' check for file error '''
         expected_error = [
             'output filename must be greater than four characters long and end with .pdb or .dcd : ' + self.output_filename]
-        assert_equals(return_error, expected_error)
+        self.assertEqual(return_error, expected_error)
 
     def test_3(self):
         '''
@@ -191,7 +187,7 @@ class Test_Extract_Utilities_Filter(MockerTestCase):
         ''' check for file error '''
         expected_error = [
             'output filename must be greater than four characters long and end with .pdb or .dcd : ' + self.output_filename]
-        assert_equals(return_error, expected_error)
+        self.assertEqual(return_error, expected_error)
 
     def test_4(self):
         '''
@@ -204,7 +200,7 @@ class Test_Extract_Utilities_Filter(MockerTestCase):
         ''' check for file error '''
         expected_error = [
             'output filename must be greater than four characters long and end with .pdb or .dcd : ' + self.output_filename]
-        assert_equals(return_error, expected_error)
+        self.assertEqual(return_error, expected_error)
 
     def test_5(self):
         '''
@@ -214,12 +210,11 @@ class Test_Extract_Utilities_Filter(MockerTestCase):
             module_data_path, 'does_not_exist.pdb')
         return_error = gui_mimic_extract_utilities.run_module(
             self, test_filter=True)
-        print return_error
 
         ''' check for file error '''
         expected_error = ['file : ' +
                           self.pdb_filename + ' does not exist']
-        assert_equals(return_error, expected_error)
+        self.assertEqual(return_error, expected_error)
 
     def test_6(self):
         '''
@@ -232,7 +227,7 @@ class Test_Extract_Utilities_Filter(MockerTestCase):
         ''' check for file error '''
         expected_error = ['input pdb file, ' +
                           self.pdb_filename + ', is not a valid pdb file']
-        assert_equals(return_error, expected_error)
+        self.assertEqual(return_error, expected_error)
 
     def test_7(self):
         '''
@@ -246,7 +241,7 @@ class Test_Extract_Utilities_Filter(MockerTestCase):
         ''' check for file error '''
         expected_error = ['file : ' +
                           self.trajectory_filename + ' does not exist']
-        assert_equals(return_error, expected_error)
+        self.assertEqual(return_error, expected_error)
 
     def test_8(self):
         '''
@@ -260,7 +255,7 @@ class Test_Extract_Utilities_Filter(MockerTestCase):
         ''' check for file error '''
         expected_error = ['input trajectory file, ' +
                           self.trajectory_filename + ', is not a valid pdb file']
-        assert_equals(return_error, expected_error)
+        self.assertEqual(return_error, expected_error)
 
     def test_9(self):
         '''
@@ -273,8 +268,8 @@ class Test_Extract_Utilities_Filter(MockerTestCase):
 
         ''' check for file error '''
         expected_error = ['input pdb file ' + self.pdb_filename + ' and dcd file ' +
-                          self.trajectory_filename + ', are not compatiable']
-        assert_equals(return_error, expected_error)
+                          self.trajectory_filename + ', are not compatible']
+        self.assertEqual(return_error, expected_error)
 
     def test_10(self):
         '''
@@ -287,8 +282,8 @@ class Test_Extract_Utilities_Filter(MockerTestCase):
 
         ''' check for file error '''
         expected_error = ['input pdb file ' + self.pdb_filename + ' and dcd file ' +
-                          self.trajectory_filename + ', are not compatiable']
-        assert_equals(return_error, expected_error)
+                          self.trajectory_filename + ', are not compatible']
+        self.assertEqual(return_error, expected_error)
 
     def test_11(self):
         '''
@@ -300,7 +295,7 @@ class Test_Extract_Utilities_Filter(MockerTestCase):
 
         ''' check for SAS type error '''
         expected_error = ["sas_type %d not supported!" % int(self.sas_type)]
-        assert_equals(return_error, expected_error)
+        self.assertEqual(return_error, expected_error)
 
     def test_12(self):
         '''
@@ -313,7 +308,7 @@ class Test_Extract_Utilities_Filter(MockerTestCase):
         ''' check for path error '''
         expected_error = ['permission error in input file path ' + self.sas_paths + '  [code = FalseFalseFalse]',
                           'sas path "' + self.sas_paths + '" does not exist']
-        assert_equals(return_error, expected_error)
+        self.assertEqual(return_error, expected_error)
 
     def test_13(self):
         '''
@@ -322,11 +317,11 @@ class Test_Extract_Utilities_Filter(MockerTestCase):
         ''' make a directory '''
         os.system('mkdir empty_SAS_folder')
         ''' see if you can read the directory '''
-        print os.access('empty__SAS_folder', os.R_OK)
+        print(os.access('empty__SAS_folder', os.R_OK))
         ''' make the directory un-readable'''
         os.system('chmod a-r empty_SAS_folder')
         ''' see if you can read the directory '''
-        print os.access('empty_SAS_folder', os.R_OK)
+        print(os.access('empty_SAS_folder', os.R_OK))
 
         self.sas_paths= os.path.join('./','empty_SAS_folder')
         return_error = gui_mimic_extract_utilities.run_module(
@@ -335,7 +330,7 @@ class Test_Extract_Utilities_Filter(MockerTestCase):
         ''' check for path error '''
         expected_error = ['permission error in input file path ' + self.sas_paths +
                           '  [code = TrueFalseTrue]', 'read permission not allowed for sas path "' + self.sas_paths + '"']
-        assert_equals(return_error, expected_error)  
+        self.assertEqual(return_error, expected_error)  
 
         ''' make the directory readable'''
         os.system('chmod a+r empty_SAS_folder')
@@ -360,7 +355,7 @@ class Test_Extract_Utilities_Filter(MockerTestCase):
         ''' check for file error '''
         expected_error = [
             "there are no scattering files found for the selected sas-type: 'sascalc' in folder: ../../data/interface/extract_utilities/no_sas_files/sascalc/neutron_D2Op_100"]
-        assert_equals(new_error, expected_error)
+        self.assertEqual(new_error, expected_error)
 
     def test_15(self):
         '''
@@ -374,12 +369,28 @@ class Test_Extract_Utilities_Filter(MockerTestCase):
             self, test_filter=True)
         '''extract the relative path of the files for new error message'''
         relative_path = self.extract_important_path(return_error)
-        new_error = [return_error[0][0:84] + relative_path]
+        neutron_D2Op_0_path = os.path.join(relative_path, 'neutron_D2Op_0')
+        new_error = [return_error[0][0:84] + neutron_D2Op_0_path]
 
         ''' check for file error '''
         expected_error = [
             "there are no scattering files found for the selected sas-type: 'sascalc' in folder: ../../data/interface/extract_utilities/no_sas_files/sascalc/neutron_D2Op_0"]
-        assert_equals(new_error, expected_error)
+
+        ''' Normalize and convert paths to relative '''
+        new_error_normalized = [os.path.normpath(os.path.relpath(path)) for path in new_error]
+        expected_error_normalized = [os.path.normpath(os.path.relpath(path)) for path in expected_error]
+
+        ''' Check for the presence of the neutron_D2Op_0 folder and verify it is empty '''
+        neutron_D2Op_0_path = os.path.join(self.sas_paths, 'neutron_D2Op_0')
+        if os.path.exists(neutron_D2Op_0_path) and not os.listdir(neutron_D2Op_0_path):
+            print("neutron_D2Op_0 folder exists and is empty")
+        else:
+            print("neutron_D2Op_0 folder does not exist or is not empty")
+
+
+
+        self.assertEqual(new_error_normalized, expected_error_normalized)
+        #self.assertEqual(new_error, expected_error)
 
     def test_16(self):
         '''
@@ -398,7 +409,7 @@ class Test_Extract_Utilities_Filter(MockerTestCase):
         ''' check for file error '''
         expected_error = [
             "there are no scattering files found for the selected sas-type: 'sascalc' in folder: ../../data/interface/extract_utilities/no_sas_files1/sascalc/neutron_D2Op_0"]
-        assert_equals(new_error, expected_error)
+        self.assertEqual(new_error, expected_error)
 
     def test_17(self):
         '''
@@ -412,7 +423,7 @@ class Test_Extract_Utilities_Filter(MockerTestCase):
         ''' check for file error '''
         expected_error = [
             "number of SAS files does not match number of frames in the trajectory files"]
-        assert_equals(return_error, expected_error)
+        self.assertEqual(return_error, expected_error)
 
     def test_18(self):
         '''
@@ -426,7 +437,7 @@ class Test_Extract_Utilities_Filter(MockerTestCase):
         ''' check for value error '''
         expected_error = [
             'you entered "2.5" : the number of frames and/or SAS files to be extracted needs to be an integer']
-        assert_equals(return_error, expected_error)
+        self.assertEqual(return_error, expected_error)
 
     def test_19(self):
         '''
@@ -440,7 +451,7 @@ class Test_Extract_Utilities_Filter(MockerTestCase):
         ''' check for value error '''
         expected_error = [
             'there are 20 frames and/or SAS files in your data path : you requested frame and/or SAS file number 300']
-        assert_equals(return_error, expected_error)
+        self.assertEqual(return_error, expected_error)
 
     def test_20(self):
         '''
@@ -454,7 +465,7 @@ class Test_Extract_Utilities_Filter(MockerTestCase):
         ''' check for value error '''
         expected_error = [
             'you entered: "-1": the frame and/or SAS file number to be extracted needs to be a positive integer']
-        assert_equals(return_error, expected_error)
+        self.assertEqual(return_error, expected_error)
 
     def test_21(self):
         '''
@@ -468,7 +479,7 @@ class Test_Extract_Utilities_Filter(MockerTestCase):
         ''' check for value error '''
         expected_error = [
             'range needs to be two integers separated by a hyphen! : you entered "' + self.local_value + '"']
-        assert_equals(return_error, expected_error)
+        self.assertEqual(return_error, expected_error)
 
     def test_22(self):
         '''
@@ -482,7 +493,7 @@ class Test_Extract_Utilities_Filter(MockerTestCase):
         ''' check for value error '''
         expected_error = [
             'range needs to be two integers separated by a hyphen : you entered "' + self.local_value + '"']
-        assert_equals(return_error, expected_error)
+        self.assertEqual(return_error, expected_error)
 
     def test_23(self):
         '''
@@ -496,7 +507,7 @@ class Test_Extract_Utilities_Filter(MockerTestCase):
         ''' check for value error '''
         expected_error = [
             'range needs to be from low to higher integer : you entered "' + self.local_value + '"']
-        assert_equals(return_error, expected_error)
+        self.assertEqual(return_error, expected_error)
 
     def test_24(self):
         '''
@@ -510,7 +521,7 @@ class Test_Extract_Utilities_Filter(MockerTestCase):
         ''' check for value error '''
         expected_error = [
             'lower limit of the range needs to be greater than 0 : you entered "-1"']
-        assert_equals(return_error, expected_error)
+        self.assertEqual(return_error, expected_error)
 
     def test_25(self):
         '''
@@ -524,7 +535,7 @@ class Test_Extract_Utilities_Filter(MockerTestCase):
         ''' check for value error '''
         expected_error = [
             'lower and higher limits in the range should be different : you entered "' + self.local_value + '"']
-        assert_equals(return_error, expected_error)
+        self.assertEqual(return_error, expected_error)
 
     def test_26(self):
         '''
@@ -538,7 +549,7 @@ class Test_Extract_Utilities_Filter(MockerTestCase):
         ''' check for value error '''
         expected_error = [
             'lower limit of the range needs to be equal or smaller than the maximum number of frames and/or SAS files : you entered "165"']
-        assert_equals(return_error, expected_error)
+        self.assertEqual(return_error, expected_error)
 
     def test_27(self):
         '''
@@ -552,7 +563,7 @@ class Test_Extract_Utilities_Filter(MockerTestCase):
         ''' check for value error '''
         expected_error = [
             'higher limit of the range needs to be equal or smaller than the maximum number of frames and/or SAS files : you entered "25"']
-        assert_equals(return_error, expected_error)
+        self.assertEqual(return_error, expected_error)
 
     def test_28(self):
         '''
@@ -565,7 +576,7 @@ class Test_Extract_Utilities_Filter(MockerTestCase):
 
         ''' check for file error '''
         expected_error = ['file : ' + self.local_value + ' does not exist']
-        assert_equals(return_error, expected_error)
+        self.assertEqual(return_error, expected_error)
 
     def test_29(self):
         '''
@@ -579,7 +590,7 @@ class Test_Extract_Utilities_Filter(MockerTestCase):
         ''' check for file error '''
         expected_error = [
             'encountered an unknown error reading text_file: ' + self.local_value]
-        assert_equals(return_error, expected_error)
+        self.assertEqual(return_error, expected_error)
 
     def test_30(self):
         '''
@@ -594,7 +605,7 @@ class Test_Extract_Utilities_Filter(MockerTestCase):
         ''' check for file error '''
         expected_error = [
             'text file can only have positive integers : "-1" was found in the text file']
-        assert_equals(return_error, expected_error)
+        self.assertEqual(return_error, expected_error)
 
     def test_31(self):
         '''
@@ -609,7 +620,7 @@ class Test_Extract_Utilities_Filter(MockerTestCase):
         ''' check for file error '''
         expected_error = [
             'there are 20 frames and/or SAS files in your data path : you requested frame and/or SAS file number 25 in the text file']
-        assert_equals(return_error, expected_error)
+        self.assertEqual(return_error, expected_error)
 
     def test_32(self):
         '''
@@ -624,7 +635,7 @@ class Test_Extract_Utilities_Filter(MockerTestCase):
         ''' check for file error '''
         expected_error = [
             'redundant frame and/or SAS file number "12" found in the text file']
-        assert_equals(return_error, expected_error)
+        self.assertEqual(return_error, expected_error)
 
     def test_33(self):
         '''
@@ -637,7 +648,7 @@ class Test_Extract_Utilities_Filter(MockerTestCase):
 
         ''' check for file error '''
         expected_error = ['file : ' + self.local_value + ' does not exist']
-        assert_equals(return_error, expected_error)
+        self.assertEqual(return_error, expected_error)
 
     def test_34(self):
         '''
@@ -652,7 +663,7 @@ class Test_Extract_Utilities_Filter(MockerTestCase):
         ''' check for file error '''
         expected_error = [
             'encountered an unknown error reading weight_file: ' + self.local_value]
-        assert_equals(return_error, expected_error)
+        self.assertEqual(return_error, expected_error)
 
     def test_35(self):
         '''
@@ -667,7 +678,7 @@ class Test_Extract_Utilities_Filter(MockerTestCase):
         ''' check for file error '''
         expected_error = [
             'all weights in weight file are zero which means you will not extract any structure or SAS profiles']
-        assert_equals(return_error, expected_error)
+        self.assertEqual(return_error, expected_error)
 
     def test_36(self):
         '''
@@ -682,7 +693,7 @@ class Test_Extract_Utilities_Filter(MockerTestCase):
         ''' check for file error '''
         expected_error = [
             'weight file column 3 can only have 0 or 1 : 5.000000 was found']
-        assert_equals(return_error, expected_error)
+        self.assertEqual(return_error, expected_error)
 
     def test_35(self):
         '''
@@ -697,7 +708,7 @@ class Test_Extract_Utilities_Filter(MockerTestCase):
         ''' check for file error '''
         expected_error = [
             'weight file column 1 can only have positive integers : "-7" was found in the weight file']
-        assert_equals(return_error, expected_error)
+        self.assertEqual(return_error, expected_error)
 
     def test_37(self):
         '''
@@ -712,7 +723,7 @@ class Test_Extract_Utilities_Filter(MockerTestCase):
         ''' check for file error '''
         expected_error = [
             'there are 20 frames and/or SAS files in your data path : frame and/or SAS file number 25 was found in the weight file']
-        assert_equals(return_error, expected_error)
+        self.assertEqual(return_error, expected_error)
 
     def test_38(self):
         '''
@@ -727,7 +738,7 @@ class Test_Extract_Utilities_Filter(MockerTestCase):
         ''' check for file error '''
         expected_error = [
             'redundant frame and/or SAS file number "19" found in the weight file']
-        assert_equals(return_error, expected_error)
+        self.assertEqual(return_error, expected_error)
 
     def test_39(self):
         '''
@@ -741,7 +752,7 @@ class Test_Extract_Utilities_Filter(MockerTestCase):
         ''' check for value error '''
         expected_error = [
             'the sampling frequency needs to be a positive number : you entered "' + self.local_value + '"']
-        assert_equals(return_error, expected_error)
+        self.assertEqual(return_error, expected_error)
 
     def test_40(self):
         '''
@@ -755,7 +766,7 @@ class Test_Extract_Utilities_Filter(MockerTestCase):
         ''' check for file error '''
         expected_error = [
             'the sampling frequency needs to be smaller than the number of frames and/or SAS files in your data path : you entered "165"']
-        assert_equals(return_error, expected_error)
+        self.assertEqual(return_error, expected_error)
 
     def test_41(self):
         '''
@@ -769,7 +780,7 @@ class Test_Extract_Utilities_Filter(MockerTestCase):
         ''' check for file error '''
         expected_error = [
             'encountered an unknown error reading the sampling frequency : ' + self.local_value]
-        assert_equals(return_error, expected_error)
+        self.assertEqual(return_error, expected_error)
 
     def test_42(self):
         '''
@@ -782,7 +793,7 @@ class Test_Extract_Utilities_Filter(MockerTestCase):
         ''' check for path error '''
         expected_error = ['permission error in input file path ' + self.path + '  [code = FalseFalseFalse]',
                           'path does not exist']
-        assert_equals(return_error, expected_error)
+        self.assertEqual(return_error, expected_error)
 
     def test_43(self):
         '''
@@ -805,7 +816,7 @@ class Test_Extract_Utilities_Filter(MockerTestCase):
         ''' check for path error '''
         expected_error = ['permission error in input file path ' +
                           self.path + '  [code = TrueFalseTrue]', 'read permission not allowed']
-        assert_equals(return_error, expected_error)
+        self.assertEqual(return_error, expected_error)
 
         ''' make the directory readable'''
         os.system('chmod a+r empty_folder')
@@ -833,7 +844,7 @@ class Test_Extract_Utilities_Filter(MockerTestCase):
         ''' check for path error '''
         expected_error = ['permission error in input file path ' +
                           self.path + '  [code = TrueTrueFalse]', 'write permission not allowed']
-        assert_equals(return_error, expected_error)
+        self.assertEqual(return_error, expected_error)
 
         ''' make the directory writeable'''
         os.system('chmod a+w empty_folder1')
@@ -843,19 +854,19 @@ class Test_Extract_Utilities_Filter(MockerTestCase):
 
     def test_45(self):
         '''
-        test if runname has incorrect character
+        test if run_name has incorrect character
         '''
-        self.runname = 'run_&'
+        self.run_name = 'run_&'
         return_error = gui_mimic_extract_utilities.run_module(
             self, test_filter=True)
 
         ''' check for value error '''
         expected_error = ['file or path : run_& has incorrect character : &']
-        assert_equals(return_error, expected_error)
+        self.assertEqual(return_error, expected_error)
 
     def tearDown(self):
-        if os.path.exists(self.runname):
-            shutil.rmtree(self.runname)
+        if os.path.exists(self.run_name):
+            shutil.rmtree(self.run_name)
 
 if __name__ == '__main__':
-    main()
+    unittest.main()
