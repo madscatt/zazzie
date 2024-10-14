@@ -1410,8 +1410,25 @@ class Test_Extract_Utilities(TestCase):
 
         ''' confirm output dcd file is correct '''
         outfile = os.path.join(self.run_name, self.module, self.output_filename)
+
+        # Debugging: Print the outfile path
+        print("Output DCD file path:", outfile)
+
+        # Debugging: Check if the outfile exists
+        if not os.path.exists(outfile):
+            print("Output DCD file does not exist:", outfile)
+    
+
         molecule = system.Molecule(0)
         molecule.read_pdb(self.pdb_filename)
+
+        # Debugging: Print the PDB filename path
+        print("PDB file path:", self.pdb_filename)
+    
+        # Debugging: Check if the PDB file exists
+        if not os.path.exists(self.pdb_filename):
+            print("PDB file does not exist:", self.pdb_filename)
+    
         molecule.read_dcd(outfile)
         result_coor = molecule.coor()
 

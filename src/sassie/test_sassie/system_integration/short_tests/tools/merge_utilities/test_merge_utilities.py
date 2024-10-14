@@ -20,14 +20,11 @@ import shutil
 import numpy
 import multiprocessing
 
-import sassie.sasmol.sasmol as sasmol
-import sassie.tools.gui_mimic_merge_utilities as gui_mimic_merge_utilities
-#import gui_mimic_merge_utilities as gui_mimic_merge_utilities
+import sasmol.system as system
+import sassie.tools.merge_utilities.gui_mimic_merge_utilities as gui_mimic_merge_utilities
 
 import filecmp
-from unittest import main
-from nose.tools import assert_equals
-from mocker import Mocker, MockerTestCase
+import unittest
 
 pdb_data_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), '..', '..', 'data', 'pdb_common') + os.path.sep
 dcd_data_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), '..', '..', 'data', 'dcd_common') + os.path.sep
@@ -36,7 +33,7 @@ module_data_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), '..
 
 paths = {'pdb_data_path' : pdb_data_path, 'dcd_data_path' : dcd_data_path, 'other_data_path' : other_data_path, 'module_data_path' : module_data_path}
 
-class Test_Merge_Utilities(MockerTestCase):
+class Test_Merge_Utilities(unittest.TestCase):
 
     '''
     System integration test for merge_utilities.py / sassie 1.0
@@ -82,7 +79,7 @@ class Test_Merge_Utilities(MockerTestCase):
 
     Inputs tested:
 
-    runname:                string      project name
+    run_name:               string      project name
     pdb_file                string      input pdb file
     trajectory_names        string      input dcd files to be merged (number of files = number of runs)
     output_filename:        string      output dcd file 
@@ -92,9 +89,6 @@ class Test_Merge_Utilities(MockerTestCase):
     merge_type_option:      integer     merge type option (0==all, 1==weight files, 2==periodic)               
     sas_type:               integer     integer depends on SAS file type (0==SasCalc, 1==Xtal2sas, 2==Cryson, 3==Crysol)    
     sas_paths:              string      paths to SAS files 
-
-
-
 
     Test tree:
 
@@ -207,15 +201,15 @@ class Test_Merge_Utilities(MockerTestCase):
         gui_mimic_merge_utilities.run_module(self)
 
         ''' confirm output dcd file is correct '''
-        outfile = os.path.join(self.runname, self.module, self.output_filename)
-        molecule = sasmol.SasMol(0)
+        outfile = os.path.join(self.run_name, self.module, self.output_filename)
+        molecule = system.Molecule(0)
         molecule.read_pdb(self.pdb_file)
         molecule.read_dcd(outfile)
         result_coor = molecule.coor()
 
         correct_outfile = os.path.join(
             module_data_path, 'all.dcd')
-        correct_molecule = sasmol.SasMol(0)
+        correct_molecule = system.Molecule(0)
         correct_molecule.read_pdb(self.pdb_file)
         correct_molecule.read_dcd(correct_outfile)
         correct_coor = correct_molecule.coor()
@@ -236,15 +230,15 @@ class Test_Merge_Utilities(MockerTestCase):
         gui_mimic_merge_utilities.run_module(self)
 
         ''' confirm output dcd file is correct '''
-        outfile = os.path.join(self.runname, self.module, self.output_filename)
-        molecule = sasmol.SasMol(0)
+        outfile = os.path.join(self.run_name, self.module, self.output_filename)
+        molecule = system.Molecule(0)
         molecule.read_pdb(self.pdb_file)
         molecule.read_dcd(outfile)
         result_coor = molecule.coor()
 
         correct_outfile = os.path.join(
             module_data_path, 'chosen_weights.dcd')
-        correct_molecule = sasmol.SasMol(0)
+        correct_molecule = system.Molecule(0)
         correct_molecule.read_pdb(self.pdb_file)
         correct_molecule.read_dcd(correct_outfile)
         correct_coor = correct_molecule.coor()
@@ -265,15 +259,15 @@ class Test_Merge_Utilities(MockerTestCase):
         gui_mimic_merge_utilities.run_module(self)
 
         ''' confirm output dcd file is correct '''
-        outfile = os.path.join(self.runname, self.module, self.output_filename)
-        molecule = sasmol.SasMol(0)
+        outfile = os.path.join(self.run_name, self.module, self.output_filename)
+        molecule = system.Molecule(0)
         molecule.read_pdb(self.pdb_file)
         molecule.read_dcd(outfile)
         result_coor = molecule.coor()
 
         correct_outfile = os.path.join(
             module_data_path, 'periodic.dcd')
-        correct_molecule = sasmol.SasMol(0)
+        correct_molecule = system.Molecule(0)
         correct_molecule.read_pdb(self.pdb_file)
         correct_molecule.read_dcd(correct_outfile)
         correct_coor = correct_molecule.coor()
@@ -293,10 +287,10 @@ class Test_Merge_Utilities(MockerTestCase):
         gui_mimic_merge_utilities.run_module(self)
 
         ''' confirm output pdb file is correct '''
-        outfile = os.path.join(self.runname, self.module, self.output_filename)
+        outfile = os.path.join(self.run_name, self.module, self.output_filename)
         correct_outfile = os.path.join(
             module_data_path, 'all.pdb')
-        assert_equals(filecmp.cmp(outfile, correct_outfile), True)
+        self.assertEqual(filecmp.cmp(outfile, correct_outfile), True)
 
     def test_5(self):
         '''
@@ -311,10 +305,10 @@ class Test_Merge_Utilities(MockerTestCase):
         gui_mimic_merge_utilities.run_module(self)
 
         ''' confirm output pdb file is correct '''
-        outfile = os.path.join(self.runname, self.module, self.output_filename)
+        outfile = os.path.join(self.run_name, self.module, self.output_filename)
         correct_outfile = os.path.join(
             module_data_path, 'chosen_weights.pdb')
-        assert_equals(filecmp.cmp(outfile, correct_outfile), True)
+        self.assertEqual(filecmp.cmp(outfile, correct_outfile), True)
 
     def test_6(self):
         '''
@@ -329,10 +323,10 @@ class Test_Merge_Utilities(MockerTestCase):
         gui_mimic_merge_utilities.run_module(self)
 
         ''' confirm output pdb file is correct '''
-        outfile = os.path.join(self.runname, self.module, self.output_filename)
+        outfile = os.path.join(self.run_name, self.module, self.output_filename)
         correct_outfile = os.path.join(
             module_data_path, 'periodic.pdb')
-        assert_equals(filecmp.cmp(outfile, correct_outfile), True)
+        self.assertEqual(filecmp.cmp(outfile, correct_outfile), True)
 
     def test_7(self):
         '''
@@ -346,15 +340,15 @@ class Test_Merge_Utilities(MockerTestCase):
         gui_mimic_merge_utilities.run_module(self)
 
         ''' confirm output dcd file is correct '''
-        outfile = os.path.join(self.runname, self.module, self.output_filename)
-        molecule = sasmol.SasMol(0)
+        outfile = os.path.join(self.run_name, self.module, self.output_filename)
+        molecule = system.Molecule(0)
         molecule.read_pdb(self.pdb_file)
         molecule.read_dcd(outfile)
         result_coor = molecule.coor()
 
         correct_outfile = os.path.join(
             module_data_path, 'all_pdb_input.dcd')
-        correct_molecule = sasmol.SasMol(0)
+        correct_molecule = system.Molecule(0)
         correct_molecule.read_pdb(self.pdb_file)
         correct_molecule.read_dcd(correct_outfile)
         correct_coor = correct_molecule.coor()
@@ -376,15 +370,15 @@ class Test_Merge_Utilities(MockerTestCase):
         gui_mimic_merge_utilities.run_module(self)
 
         ''' confirm output dcd file is correct '''
-        outfile = os.path.join(self.runname, self.module, self.output_filename)
-        molecule = sasmol.SasMol(0)
+        outfile = os.path.join(self.run_name, self.module, self.output_filename)
+        molecule = system.Molecule(0)
         molecule.read_pdb(self.pdb_file)
         molecule.read_dcd(outfile)
         result_coor = molecule.coor()
 
         correct_outfile = os.path.join(
             module_data_path, 'chosen_weights_pdb_input.dcd')
-        correct_molecule = sasmol.SasMol(0)
+        correct_molecule = system.Molecule(0)
         correct_molecule.read_pdb(self.pdb_file)
         correct_molecule.read_dcd(correct_outfile)
         correct_coor = correct_molecule.coor()
@@ -406,15 +400,15 @@ class Test_Merge_Utilities(MockerTestCase):
         gui_mimic_merge_utilities.run_module(self)
 
         ''' confirm output dcd file is correct '''
-        outfile = os.path.join(self.runname, self.module, self.output_filename)
-        molecule = sasmol.SasMol(0)
+        outfile = os.path.join(self.run_name, self.module, self.output_filename)
+        molecule = system.Molecule(0)
         molecule.read_pdb(self.pdb_file)
         molecule.read_dcd(outfile)
         result_coor = molecule.coor()
 
         correct_outfile = os.path.join(
             module_data_path, 'periodic_pdb_input.dcd')
-        correct_molecule = sasmol.SasMol(0)
+        correct_molecule = system.Molecule(0)
         correct_molecule.read_pdb(self.pdb_file)
         correct_molecule.read_dcd(correct_outfile)
         correct_coor = correct_molecule.coor()
@@ -435,10 +429,10 @@ class Test_Merge_Utilities(MockerTestCase):
         gui_mimic_merge_utilities.run_module(self)
 
         ''' confirm output pdb file is correct '''
-        outfile = os.path.join(self.runname, self.module, self.output_filename)
+        outfile = os.path.join(self.run_name, self.module, self.output_filename)
         correct_outfile = os.path.join(
             module_data_path, 'all_pdb_input.pdb')
-        assert_equals(filecmp.cmp(outfile, correct_outfile), True)
+        self.assertEqual(filecmp.cmp(outfile, correct_outfile), True)
 
     def test_11(self):
         '''
@@ -454,10 +448,10 @@ class Test_Merge_Utilities(MockerTestCase):
         gui_mimic_merge_utilities.run_module(self)
 
         ''' confirm output pdb file is correct '''
-        outfile = os.path.join(self.runname, self.module, self.output_filename)
+        outfile = os.path.join(self.run_name, self.module, self.output_filename)
         correct_outfile = os.path.join(
             module_data_path, 'chosen_weights_pdb_input.pdb')
-        assert_equals(filecmp.cmp(outfile, correct_outfile), True)
+        self.assertEqual(filecmp.cmp(outfile, correct_outfile), True)
 
     def test_12(self):
         '''
@@ -473,10 +467,10 @@ class Test_Merge_Utilities(MockerTestCase):
         gui_mimic_merge_utilities.run_module(self)
 
         ''' confirm output pdb file is correct '''
-        outfile = os.path.join(self.runname, self.module, self.output_filename)
+        outfile = os.path.join(self.run_name, self.module, self.output_filename)
         correct_outfile = os.path.join(
             module_data_path, 'periodic_pdb_input.pdb')
-        assert_equals(filecmp.cmp(outfile, correct_outfile), True)
+        self.assertEqual(filecmp.cmp(outfile, correct_outfile), True)
 
     def test_13(self):
         '''
@@ -504,14 +498,14 @@ class Test_Merge_Utilities(MockerTestCase):
 #            print 'base_paths: ', base_paths
 
         for base_path in base_paths:
-            print 'base_path: ', base_path       
+            print('base_path: ', base_path)       
 
-            outdirectory = os.path.join(self.runname, self.module, 'sascalc', base_path)
+            outdirectory = os.path.join(self.run_name, self.module, 'sascalc', base_path)
 #            print 'outdirectory: ',outdirectory
             correct_outdirectory = os.path.join(
-                module_data_path, self.runname, self.module, 'sascalc_all', base_path)
+                module_data_path, self.run_name, self.module, 'sascalc_all', base_path)
 #            print 'correct outdirectory: ', correct_outdirectory
-            assert_equals(self.check_dir_trees_equal(outdirectory,correct_outdirectory), True)
+            self.assertEqual(self.check_dir_trees_equal(outdirectory,correct_outdirectory), True)
 
     def test_14(self):
         '''
@@ -540,14 +534,14 @@ class Test_Merge_Utilities(MockerTestCase):
 #            print 'base_paths: ', base_paths
 
         for base_path in base_paths:
-            print 'base_path: ', base_path       
+            print('base_path: ', base_path)       
 
-            outdirectory = os.path.join(self.runname, self.module, 'sascalc', base_path)
+            outdirectory = os.path.join(self.run_name, self.module, 'sascalc', base_path)
 #            print 'outdirectory: ',outdirectory
             correct_outdirectory = os.path.join(
-                module_data_path, self.runname, self.module, 'sascalc_weight_files', base_path)
+                module_data_path, self.run_name, self.module, 'sascalc_weight_files', base_path)
 #            print 'correct outdirectory: ', correct_outdirectory
-            assert_equals(self.check_dir_trees_equal(outdirectory,correct_outdirectory), True)
+            self.assertEqual(self.check_dir_trees_equal(outdirectory,correct_outdirectory), True)
 
     def test_15(self):
         '''
@@ -576,14 +570,14 @@ class Test_Merge_Utilities(MockerTestCase):
 #            print 'base_paths: ', base_paths
 
         for base_path in base_paths:
-            print 'base_path: ', base_path       
+            print('base_path: ', base_path)       
 
-            outdirectory = os.path.join(self.runname, self.module, 'sascalc', base_path)
+            outdirectory = os.path.join(self.run_name, self.module, 'sascalc', base_path)
 #            print 'outdirectory: ',outdirectory
             correct_outdirectory = os.path.join(
-                module_data_path, self.runname, self.module, 'sascalc_periodic', base_path)
+                module_data_path, self.run_name, self.module, 'sascalc_periodic', base_path)
 #            print 'correct outdirectory: ', correct_outdirectory
-            assert_equals(self.check_dir_trees_equal(outdirectory,correct_outdirectory), True)
+            self.assertEqual(self.check_dir_trees_equal(outdirectory,correct_outdirectory), True)
 
     def test_16(self):
         '''
@@ -596,10 +590,10 @@ class Test_Merge_Utilities(MockerTestCase):
 
         ''' confirm correct SAS files are in merged directories '''
 
-        outdirectory = os.path.join(self.runname, self.module, 'xtal2sas')
+        outdirectory = os.path.join(self.run_name, self.module, 'xtal2sas')
         correct_outdirectory = os.path.join(
-            module_data_path, self.runname, self.module, 'xtal2sas_all')
-        assert_equals(self.check_dir_trees_equal(outdirectory,correct_outdirectory), True)
+            module_data_path, self.run_name, self.module, 'xtal2sas_all')
+        self.assertEqual(self.check_dir_trees_equal(outdirectory,correct_outdirectory), True)
 
     def test_17(self):
         '''
@@ -614,10 +608,10 @@ class Test_Merge_Utilities(MockerTestCase):
 
         ''' confirm correct SAS files are in merged directories '''
 
-        outdirectory = os.path.join(self.runname, self.module, 'xtal2sas')
+        outdirectory = os.path.join(self.run_name, self.module, 'xtal2sas')
         correct_outdirectory = os.path.join(
-            module_data_path, self.runname, self.module, 'xtal2sas_weight_files')
-        assert_equals(self.check_dir_trees_equal(outdirectory,correct_outdirectory), True)
+            module_data_path, self.run_name, self.module, 'xtal2sas_weight_files')
+        self.assertEqual(self.check_dir_trees_equal(outdirectory,correct_outdirectory), True)
                                                
     def test_18(self):
         '''
@@ -632,10 +626,10 @@ class Test_Merge_Utilities(MockerTestCase):
 
         ''' confirm correct SAS files are in merged directories '''
 
-        outdirectory = os.path.join(self.runname, self.module, 'xtal2sas')
+        outdirectory = os.path.join(self.run_name, self.module, 'xtal2sas')
         correct_outdirectory = os.path.join(
-            module_data_path, self.runname, self.module, 'xtal2sas_periodic')
-        assert_equals(self.check_dir_trees_equal(outdirectory,correct_outdirectory), True)
+            module_data_path, self.run_name, self.module, 'xtal2sas_periodic')
+        self.assertEqual(self.check_dir_trees_equal(outdirectory,correct_outdirectory), True)
                                                                                               
     def test_19(self):
         '''
@@ -650,10 +644,10 @@ class Test_Merge_Utilities(MockerTestCase):
 
         ''' confirm correct SAS files are in merged directories '''
 
-        outdirectory = os.path.join(self.runname, self.module, 'cryson')
+        outdirectory = os.path.join(self.run_name, self.module, 'cryson')
         correct_outdirectory = os.path.join(
-            module_data_path, self.runname, self.module, 'cryson_all')
-        assert_equals(self.check_dir_trees_equal(outdirectory,correct_outdirectory), True)
+            module_data_path, self.run_name, self.module, 'cryson_all')
+        self.assertEqual(self.check_dir_trees_equal(outdirectory,correct_outdirectory), True)
 
     def test_20(self):
         '''
@@ -670,10 +664,10 @@ class Test_Merge_Utilities(MockerTestCase):
 
         ''' confirm correct SAS files are in merged directories '''
 
-        outdirectory = os.path.join(self.runname, self.module, 'cryson')
+        outdirectory = os.path.join(self.run_name, self.module, 'cryson')
         correct_outdirectory = os.path.join(
-            module_data_path, self.runname, self.module, 'cryson_weight_files')
-        assert_equals(self.check_dir_trees_equal(outdirectory,correct_outdirectory), True)
+            module_data_path, self.run_name, self.module, 'cryson_weight_files')
+        self.assertEqual(self.check_dir_trees_equal(outdirectory,correct_outdirectory), True)
 
     def test_21(self):
         '''
@@ -690,10 +684,10 @@ class Test_Merge_Utilities(MockerTestCase):
 
         ''' confirm correct SAS files are in merged directories '''
 
-        outdirectory = os.path.join(self.runname, self.module, 'cryson')
+        outdirectory = os.path.join(self.run_name, self.module, 'cryson')
         correct_outdirectory = os.path.join(
-            module_data_path, self.runname, self.module, 'cryson_periodic')
-        assert_equals(self.check_dir_trees_equal(outdirectory,correct_outdirectory), True)
+            module_data_path, self.run_name, self.module, 'cryson_periodic')
+        self.assertEqual(self.check_dir_trees_equal(outdirectory,correct_outdirectory), True)
 
     def test_22(self):
         '''
@@ -708,10 +702,10 @@ class Test_Merge_Utilities(MockerTestCase):
 
         ''' confirm correct SAS files are in merged directories '''
 
-        outdirectory = os.path.join(self.runname, self.module, 'crysol')
+        outdirectory = os.path.join(self.run_name, self.module, 'crysol')
         correct_outdirectory = os.path.join(
-            module_data_path, self.runname, self.module, 'crysol_all')
-        assert_equals(self.check_dir_trees_equal(outdirectory,correct_outdirectory), True)
+            module_data_path, self.run_name, self.module, 'crysol_all')
+        self.assertEqual(self.check_dir_trees_equal(outdirectory,correct_outdirectory), True)
 
     def test_23(self):
         '''
@@ -728,10 +722,10 @@ class Test_Merge_Utilities(MockerTestCase):
 
         ''' confirm correct SAS files are in merged directories '''
 
-        outdirectory = os.path.join(self.runname, self.module, 'crysol')
+        outdirectory = os.path.join(self.run_name, self.module, 'crysol')
         correct_outdirectory = os.path.join(
-            module_data_path, self.runname, self.module, 'crysol_weight_files')
-        assert_equals(self.check_dir_trees_equal(outdirectory,correct_outdirectory), True)
+            module_data_path, self.run_name, self.module, 'crysol_weight_files')
+        self.assertEqual(self.check_dir_trees_equal(outdirectory,correct_outdirectory), True)
 
     def test_24(self):
         '''
@@ -748,10 +742,10 @@ class Test_Merge_Utilities(MockerTestCase):
 
         ''' confirm correct SAS files are in merged directories '''
 
-        outdirectory = os.path.join(self.runname, self.module, 'crysol')
+        outdirectory = os.path.join(self.run_name, self.module, 'crysol')
         correct_outdirectory = os.path.join(
-            module_data_path, self.runname, self.module, 'crysol_periodic')
-        assert_equals(self.check_dir_trees_equal(outdirectory,correct_outdirectory), True)
+            module_data_path, self.run_name, self.module, 'crysol_periodic')
+        self.assertEqual(self.check_dir_trees_equal(outdirectory,correct_outdirectory), True)
 
     def test_25(self):
         '''
@@ -767,15 +761,15 @@ class Test_Merge_Utilities(MockerTestCase):
         gui_mimic_merge_utilities.run_module(self)
 
         ''' confirm output dcd file is correct '''
-        outfile = os.path.join(self.runname, self.module, self.output_filename)
-        molecule = sasmol.SasMol(0)
+        outfile = os.path.join(self.run_name, self.module, self.output_filename)
+        molecule = system.Molecule(0)
         molecule.read_pdb(self.pdb_file)
         molecule.read_dcd(outfile)
         result_coor = molecule.coor()
 
         correct_outfile = os.path.join(
             module_data_path, 'all_dcd_input_sascalc.dcd')
-        correct_molecule = sasmol.SasMol(0)
+        correct_molecule = system.Molecule(0)
         correct_molecule.read_pdb(self.pdb_file)
         correct_molecule.read_dcd(correct_outfile)
         correct_coor = correct_molecule.coor()
@@ -797,14 +791,14 @@ class Test_Merge_Utilities(MockerTestCase):
 #            print 'base_paths: ', base_paths
 
         for base_path in base_paths:
-            print 'base_path: ', base_path       
+            print('base_path: ', base_path)       
 
-            outdirectory = os.path.join(self.runname, self.module, 'sascalc', base_path)
+            outdirectory = os.path.join(self.run_name, self.module, 'sascalc', base_path)
 #            print 'outdirectory: ',outdirectory
             correct_outdirectory = os.path.join(
-                module_data_path, self.runname, self.module, 'sascalc_all_dcd_input', base_path)
+                module_data_path, self.run_name, self.module, 'sascalc_all_dcd_input', base_path)
 #            print 'correct outdirectory: ', correct_outdirectory
-            assert_equals(self.check_dir_trees_equal(outdirectory,correct_outdirectory), True)
+            self.assertEqual(self.check_dir_trees_equal(outdirectory,correct_outdirectory), True)
 
     def test_26(self):
         '''
@@ -821,10 +815,10 @@ class Test_Merge_Utilities(MockerTestCase):
         gui_mimic_merge_utilities.run_module(self)
 
         ''' confirm output pdb file is correct '''
-        outfile = os.path.join(self.runname, self.module, self.output_filename)
+        outfile = os.path.join(self.run_name, self.module, self.output_filename)
         correct_outfile = os.path.join(
             module_data_path, 'weight_files_dcd_input_sascalc.pdb')
-        assert_equals(filecmp.cmp(outfile, correct_outfile), True)
+        self.assertEqual(filecmp.cmp(outfile, correct_outfile), True)
         ''' confirm correct SAS files are in merged directories '''
 
         self.sas_paths = [x.strip() for x in self.sas_paths.split(',')]
@@ -839,21 +833,21 @@ class Test_Merge_Utilities(MockerTestCase):
 #            print 'base_paths: ', base_paths
 
         for base_path in base_paths:
-            print 'base_path: ', base_path       
+            print('base_path: ', base_path)       
 
-            outdirectory = os.path.join(self.runname, self.module, 'sascalc', base_path)
+            outdirectory = os.path.join(self.run_name, self.module, 'sascalc', base_path)
 #            print 'outdirectory: ',outdirectory
             correct_outdirectory = os.path.join(
-                module_data_path, self.runname, self.module, 'sascalc_weight_files_dcd_input', base_path)
+                module_data_path, self.run_name, self.module, 'sascalc_weight_files_dcd_input', base_path)
 #            print 'correct outdirectory: ', correct_outdirectory
-            assert_equals(self.check_dir_trees_equal(outdirectory,correct_outdirectory), True)
+            self.assertEqual(self.check_dir_trees_equal(outdirectory,correct_outdirectory), True)
                                                                                             
         
     def tearDown(self):
-        if os.path.exists(self.runname):
-            shutil.rmtree(self.runname)
+        if os.path.exists(self.run_name):
+            shutil.rmtree(self.run_name)
 
 
 if __name__=='__main__':
-    main()
+    unittest.main()
 

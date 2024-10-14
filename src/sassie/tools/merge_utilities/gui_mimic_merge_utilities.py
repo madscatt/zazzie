@@ -104,7 +104,7 @@ def run_module(self, **kwargs):
         if not(self.testflag):
             sys.exit()
         return error
-    '''
+    
     try:
         if kwargs['file_check']:
             error = merge_utilities_filter.check_merge_utilities(
@@ -112,7 +112,7 @@ def run_module(self, **kwargs):
     except:
         error = merge_utilities_filter.check_merge_utilities(
             self.variables, no_file_check="true")
-    '''
+    
     if(len(error) > 0):
         print('error = ', error)
         if not(self.testflag):

@@ -45,7 +45,6 @@ import os
 import sys
 import locale
 import numpy
-import string
 import time
 import glob
 import sassie.interface.input_filter as input_filter
@@ -141,7 +140,7 @@ class merge_utilities():
 
         log = self.log
         mvars= self.module_variables
-        self.merge_utilities_input_variables
+        avars= self.merge_utilities_input_variables
 
         log.debug('in copy spec files')
 
@@ -339,7 +338,7 @@ class merge_utilities():
 #        print 'local_value: ', mvars.local_value        
 
         if mvars.merge_type_option == 1:
-            avars.local_value = string.split(mvars.local_value, ',')
+            avars.local_value = mvars.local_value.split(',')
         else:
             avars.local_value = mvars.local_value
 
@@ -431,7 +430,7 @@ class merge_utilities():
 
         INPUT: variable descriptions
 
-        run_name:                string      project name
+        run_name:               string      project name
         pdb_file                string      input pdb file
         trajectory_names        string      input dcd files to be merged (number of files = number of runs)
         output_filename:        string      output dcd file 
@@ -700,8 +699,6 @@ class merge_utilities():
 
             pgui('wrote %i sas files to %s\n' %
                             (num_iq_files - 1, './' + avars.sas_output_paths[i]))
-#            print('wrote %i sas files to %s\n' %
-#                            (num_iq_files - 1, './' + avars.sas_output_paths[i]))
             avars.output_log_file.write('wrote %i sas files to %s\n' %
                             (num_iq_files - 1, './' + avars.sas_output_paths[i]))
 

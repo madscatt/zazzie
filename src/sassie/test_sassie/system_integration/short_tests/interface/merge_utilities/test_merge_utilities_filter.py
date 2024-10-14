@@ -16,14 +16,10 @@
 '''
 
 import os
-import string
-import sassie.tools.gui_mimic_merge_utilities as gui_mimic_merge_utilities
-#import gui_mimic_merge_utilities as gui_mimic_merge_utilities
+import sassie.tools.merge_utilities.gui_mimic_merge_utilities as gui_mimic_merge_utilities
 
 import filecmp
-from unittest import main
-from nose.tools import assert_equals
-from mocker import Mocker, MockerTestCase
+import unittest
 
 pdb_data_path = os.path.join(os.path.dirname(os.path.realpath(
     __file__)), '..', '..', 'data', 'pdb_common') + os.path.sep
@@ -38,7 +34,7 @@ paths = {'pdb_data_path': pdb_data_path, 'dcd_data_path': dcd_data_path,
          'other_data_path': other_data_path, 'module_data_path': module_data_path}
 
 
-class Test_Merge_Utilities_Filter(MockerTestCase):
+class Test_Merge_Utilities_Filter(unittest.TestCase):
 
     '''
     System integration test for merge_utilities_filter.py / sassie 1.0
@@ -47,7 +43,7 @@ class Test_Merge_Utilities_Filter(MockerTestCase):
 
     Inputs tested:
 
-    runname:                string      project name
+    run_name:               string      project name
     pdb_file                string      input pdb file
     trajectory_names        string      input dcd files to be merged (number of files = number of runs)
     output_filename:        string      output dcd file 
@@ -101,8 +97,8 @@ class Test_Merge_Utilities_Filter(MockerTestCase):
         a. value must be positive
         b. value must be smaller than the number of frames in the trajectory file
         c. unknown error encountered   
-    11. check runname
-        a.  check for invalid characters in runname 
+    11. check run_name
+        a.  check for invalid characters in run_name 
                     
     '''
 
@@ -111,10 +107,10 @@ class Test_Merge_Utilities_Filter(MockerTestCase):
         gui_mimic_merge_utilities.test_variables(self, paths)
 
     def extract_important_path0(self, return_error):
+        string_error = return_error[0].split()
+        path_list = string_error[-1].split('..')
+        important_path = path_list[-1].split("/")[1:]
 
-        string_error = string.split(return_error[0])
-        path_list = string.split(string_error[-1], '..')
-        important_path = string.split(path_list[-1], "/")[1:]
         error = os.path.join('..', '..')
         for this_path in important_path:
             error += os.sep + this_path
@@ -122,9 +118,10 @@ class Test_Merge_Utilities_Filter(MockerTestCase):
 
     def extract_important_path1(self, return_error):
 
-        string_error = string.split(return_error[0])
-        path_list = string.split(string_error[-13], '..')
-        important_path1 = string.split(path_list[-1], "/")[1:]
+        string_error = return_error[0].split()
+        path_list = string_error[-13].split('..')
+        important_path1 = path_list[-1].split("/")[1:] 
+
         error = os.path.join('..', '..')
         for this_path in important_path1:
             error += os.sep + this_path
@@ -132,9 +129,10 @@ class Test_Merge_Utilities_Filter(MockerTestCase):
 
     def extract_important_path2(self, return_error):
 
-        string_error = string.split(return_error[0])
-        path_list = string.split(string_error[-4], '..')
-        important_path2 = string.split(path_list[-1], "/")[1:]
+        string_error = return_error[0].split()
+        path_list = string_error[-4].split('..')
+        important_path2 = path_list[-1].split("/")[1:]
+  
         error = os.path.join('..', '..')
         for this_path in important_path2:
             error += os.sep + this_path
@@ -149,11 +147,14 @@ class Test_Merge_Utilities_Filter(MockerTestCase):
         self.merge_option = '3'
         return_error = gui_mimic_merge_utilities.run_module(
             self, test_filter=True)
+    
+        ''' Print debug information '''
+        print("Return Error: ", return_error)
 
         ''' check for file error '''
         expected_error = [
             'merge option needs to be 0, 1, or 2, you entered : 3']
-        assert_equals(return_error, expected_error)
+        self.assertEqual(return_error, expected_error)
 
     def test_2(self):
         '''
@@ -167,7 +168,7 @@ class Test_Merge_Utilities_Filter(MockerTestCase):
         ''' check for file error '''
         expected_error = [
             'merge_type option needs to be 0, 1, or 2, you entered : 3']
-        assert_equals(return_error, expected_error)
+        self.assertEqual(return_error, expected_error)
 
     def test_3(self):
         '''
@@ -181,7 +182,7 @@ class Test_Merge_Utilities_Filter(MockerTestCase):
         ''' check for file error '''
         expected_error = [
             'sas type needs to be 0, 1, 2, or 3, you entered : 4']
-        assert_equals(return_error, expected_error)
+        self.assertEqual(return_error, expected_error)
 
     def test_4(self):
         '''
@@ -194,7 +195,7 @@ class Test_Merge_Utilities_Filter(MockerTestCase):
         ''' check for file error '''
         expected_error = [
             'output filename must be greater than four characters long and end with .pdb or .dcd : ' + self.output_filename]
-        assert_equals(return_error, expected_error)
+        self.assertEqual(return_error, expected_error)
 
     def test_5(self):
         '''
@@ -206,7 +207,7 @@ class Test_Merge_Utilities_Filter(MockerTestCase):
 
         ''' check for file error '''
         expected_error = ['number of trajectory files "2" does not match number of runs "3"']
-        assert_equals(return_error, expected_error)
+        self.assertEqual(return_error, expected_error)
 
     def test_6(self):
         '''
@@ -220,7 +221,7 @@ class Test_Merge_Utilities_Filter(MockerTestCase):
         ''' check for file error '''
         expected_error = ['file : ' +
                           self.pdb_file+' does not exist']
-        assert_equals(return_error, expected_error)
+        self.assertEqual(return_error, expected_error)
 
     def test_7(self):
         '''
@@ -233,7 +234,7 @@ class Test_Merge_Utilities_Filter(MockerTestCase):
         ''' check for file error '''
         expected_error = ['input pdb file, ' +
                           self.pdb_file + ', is not a valid pdb file']
-        assert_equals(return_error, expected_error)
+        self.assertEqual(return_error, expected_error)
 
     def test_8a(self):
         '''
@@ -246,7 +247,7 @@ class Test_Merge_Utilities_Filter(MockerTestCase):
         ''' check for file error '''
         expected_error = ['file : ' +
                           self.trajectory_names.split(',')[0]+' does not exist']               
-        assert_equals(return_error, expected_error)
+        self.assertEqual(return_error, expected_error)
 
     def test_8b(self):
         '''
@@ -259,7 +260,7 @@ class Test_Merge_Utilities_Filter(MockerTestCase):
         ''' check for file error '''
         expected_error = ['file : ' +
                           self.trajectory_names.split(',')[1]+' does not exist']                 
-        assert_equals(return_error, expected_error)
+        self.assertEqual(return_error, expected_error)
  
     def test_9(self):
         '''
@@ -274,7 +275,7 @@ class Test_Merge_Utilities_Filter(MockerTestCase):
         ''' check for file error '''
         expected_error = ['input trajectory file, ' +
                           self.trajectory_names + ', is not a valid dcd file']
-        assert_equals(return_error, expected_error)
+        self.assertEqual(return_error, expected_error)
 
     def test_10(self):
         '''
@@ -289,7 +290,7 @@ class Test_Merge_Utilities_Filter(MockerTestCase):
         ''' check for file error '''
         expected_error = ['input pdb file ' + self.pdb_file + ' and dcd file ' +
                           self.trajectory_names + ', are not compatible']                 
-        assert_equals(return_error, expected_error)
+        self.assertEqual(return_error, expected_error)
  
     def test_11(self):
         '''
@@ -304,7 +305,7 @@ class Test_Merge_Utilities_Filter(MockerTestCase):
         ''' check for file error '''
         expected_error = ['input trajectory file, ' +
                           self.trajectory_names + ', is not a valid pdb file']
-        assert_equals(return_error, expected_error)
+        self.assertEqual(return_error, expected_error)
 
     def test_12(self):
         '''
@@ -319,7 +320,7 @@ class Test_Merge_Utilities_Filter(MockerTestCase):
         ''' check for file error '''
         expected_error = ['input pdb file ' + self.pdb_file + ' and pdb file ' +
                           self.trajectory_names + ', are not compatible']                 
-        assert_equals(return_error, expected_error)
+        self.assertEqual(return_error, expected_error)
 
     def test_13(self):
         '''
@@ -332,7 +333,7 @@ class Test_Merge_Utilities_Filter(MockerTestCase):
 
         ''' check for file error '''
         expected_error = ['number of SAS folders "2" does not match number of runs "1"']                 
-        assert_equals(return_error, expected_error)
+        self.assertEqual(return_error, expected_error)
  
     def test_14(self):
         '''
@@ -344,7 +345,7 @@ class Test_Merge_Utilities_Filter(MockerTestCase):
 
         ''' check for file error '''
         expected_error = ['the SAS type "crysol" you entered is not compatiable with the SAS type in the SAS data path you selected']             
-        assert_equals(return_error, expected_error)
+        self.assertEqual(return_error, expected_error)
         
     def test_15(self):
         '''
@@ -359,7 +360,7 @@ class Test_Merge_Utilities_Filter(MockerTestCase):
         ''' check for path error '''
         expected_error = ['permission error in input file path ' + self.sas_paths + '  [code = FalseFalseFalse]',
                           'sas path "' + self.sas_paths + '" does not exist']
-        assert_equals(return_error, expected_error)
+        self.assertEqual(return_error, expected_error)
 
     def test_16(self):
         '''
@@ -384,7 +385,7 @@ class Test_Merge_Utilities_Filter(MockerTestCase):
         ''' check for path error '''
         expected_error = ['permission error in input file path ' +
                           self.sas_paths + '  [code = TrueFalseTrue]', 'read permission not allowed for sas path "'+self.sas_paths+'"']
-        assert_equals(return_error, expected_error)
+        self.assertEqual(return_error, expected_error)
 
         ''' make the directory readable'''
         os.system('chmod a+r empty_folder')
@@ -403,13 +404,13 @@ class Test_Merge_Utilities_Filter(MockerTestCase):
             self, test_filter=True)
         '''extract the relative path of the files for new error message'''
         relative_path = self.extract_important_path0(return_error)
-        print 'relative path: ', relative_path
+        print('relative path: ', relative_path)
         new_error = [return_error[0][0:83] + relative_path]
 
         ''' check for file error '''
         expected_error = [
             "there are no scattering files found for the selected sas-type: xtal2sas in folder: ../../data/interface/merge_utilities/no_sas_files_0/run_0/xtal2sas"]
-        assert_equals(new_error, expected_error)
+        self.assertEqual(new_error, expected_error)
 
     def test_17b(self):
         '''
@@ -428,7 +429,7 @@ class Test_Merge_Utilities_Filter(MockerTestCase):
         ''' check for file error '''
         expected_error = [
             "there are no scattering files found for the selected sas-type: xtal2sas in folder: ../../data/interface/merge_utilities/no_sas_files_1/run_1/xtal2sas"]
-        assert_equals(new_error, expected_error)
+        self.assertEqual(new_error, expected_error)
 
     def test_18a(self):
         '''
@@ -443,13 +444,13 @@ class Test_Merge_Utilities_Filter(MockerTestCase):
             self, test_filter=True)
         '''extract the relative path of the files for new error message'''
         relative_path = self.extract_important_path0(return_error)
-        print 'relative path: ', relative_path
+        print('relative path: ', relative_path)
         new_error = [return_error[0][0:82] + relative_path]
 
         ''' check for file error '''
         expected_error = [
             "there are no scattering files found for the selected sas-type: sascalc in folder: ../../data/interface/merge_utilities/no_sas_files_0/run_0/sascalc/neutron_D2Op_80"]
-        assert_equals(new_error, expected_error)
+        self.assertEqual(new_error, expected_error)
 
     def test_18b(self):
         '''
@@ -469,7 +470,7 @@ class Test_Merge_Utilities_Filter(MockerTestCase):
         ''' check for file error '''
         expected_error = [
             "there are no scattering files found for the selected sas-type: sascalc in folder: ../../data/interface/merge_utilities/no_sas_files_1/run_1/sascalc/neutron_D2Op_80"]
-        assert_equals(new_error, expected_error)
+        self.assertEqual(new_error, expected_error)
 
     def test_19a(self):
         '''
@@ -489,7 +490,7 @@ class Test_Merge_Utilities_Filter(MockerTestCase):
         ''' check for file error '''
         expected_error = [
             'number of SAS files in folder "'+'../../data/interface/merge_utilities/wrong_number_of_sas_files_0/run_0/xtal2sas" does not match number of frames of the PDB/DCD file in "../../data/dcd_common/run_m1.dcd"']
-        assert_equals(new_error, expected_error)
+        self.assertEqual(new_error, expected_error)
 
     def test_19b(self):
         '''
@@ -508,7 +509,7 @@ class Test_Merge_Utilities_Filter(MockerTestCase):
 
         expected_error = [
             'number of SAS files in folder "'+'../../data/interface/merge_utilities/wrong_number_of_sas_files_1/run_1/xtal2sas" does not match number of frames of the PDB/DCD file in "../../data/dcd_common/run_m2.dcd"']
-        assert_equals(new_error, expected_error)
+        self.assertEqual(new_error, expected_error)
 
     def test_20a(self):
         '''
@@ -529,7 +530,7 @@ class Test_Merge_Utilities_Filter(MockerTestCase):
         ''' check for file error '''
         expected_error = [
             'number of SAS files in folder "'+'../../data/interface/merge_utilities/wrong_number_of_sas_files_0/run_0/sascalc/neutron_D2Op_80" does not match number of frames of the PDB/DCD file in "../../data/dcd_common/run_m1.dcd"']
-        assert_equals(new_error, expected_error)
+        self.assertEqual(new_error, expected_error)
 
     def test_20b(self):
         '''
@@ -549,7 +550,7 @@ class Test_Merge_Utilities_Filter(MockerTestCase):
 
         expected_error = [
             'number of SAS files in folder "'+'../../data/interface/merge_utilities/wrong_number_of_sas_files_1/run_1/sascalc/neutron_D2Op_80" does not match number of frames of the PDB/DCD file in "../../data/dcd_common/run_m2.dcd"']
-        assert_equals(new_error, expected_error)
+        self.assertEqual(new_error, expected_error)
 
 
     def test_21(self):
@@ -564,7 +565,7 @@ class Test_Merge_Utilities_Filter(MockerTestCase):
 
         ''' check for file error '''
         expected_error = ['number of weight files "1" does not match number of runs "2"']                 
-        assert_equals(return_error, expected_error)        
+        self.assertEqual(return_error, expected_error)        
 
     def test_22a(self):
         '''
@@ -576,14 +577,14 @@ class Test_Merge_Utilities_Filter(MockerTestCase):
         self.local_value = os.path.join(other_data_path, 'non_existent.txt')+','+os.path.join(other_data_path, 'weights_file_m2.txt')
         return_error = gui_mimic_merge_utilities.run_module(
             self, test_filter=True)
-        print 'return_error: ', return_error
+        print('return_error: ', return_error)
         '''extract the relative path of the files for new error message'''
         relative_path = self.extract_important_path2(return_error)
         new_error = [return_error[0][0:7] + relative_path + ' does not exist']
 
         expected_error = [
             'file : ../../data/other_common/non_existent.txt does not exist']
-        assert_equals(new_error, expected_error)
+        self.assertEqual(new_error, expected_error)
 
     def test_22b(self):
         '''
@@ -595,15 +596,15 @@ class Test_Merge_Utilities_Filter(MockerTestCase):
         self.local_value = os.path.join(other_data_path, 'weights_file_m1.txt')+','+os.path.join(other_data_path, 'non_existent.txt')
         return_error = gui_mimic_merge_utilities.run_module(
             self, test_filter=True)
-        print 'return_error: ', return_error
+        print('return_error: ', return_error)
         '''extract the relative path of the files for new error message'''
         relative_path = self.extract_important_path2(return_error)
         new_error = [return_error[0][0:7] + relative_path + ' does not exist']
-        print 'new_error: ', new_error
+        print('new_error: ', new_error)
 
         expected_error = [
             'file : ../../data/other_common/non_existent.txt does not exist']
-        assert_equals(new_error, expected_error)
+        self.assertEqual(new_error, expected_error)
 
     def test_23(self):
         '''
@@ -622,7 +623,7 @@ class Test_Merge_Utilities_Filter(MockerTestCase):
         ''' check for file error '''
         expected_error = [
             'weight file column 3 can only have 0 or 1 : 5.000000 was found']
-        assert_equals(return_error, expected_error)
+        self.assertEqual(return_error, expected_error)
 
     def test_24(self):
         '''
@@ -641,7 +642,7 @@ class Test_Merge_Utilities_Filter(MockerTestCase):
         ''' check for file error '''
         expected_error = [
             'all weights in weight file are zero which means you will not extract any structure or SAS profiles']
-        assert_equals(return_error, expected_error)
+        self.assertEqual(return_error, expected_error)
 
     def test_25(self):
         '''
@@ -660,7 +661,7 @@ class Test_Merge_Utilities_Filter(MockerTestCase):
         ''' check for file error '''
         expected_error = [
             'weight file column 1 can only have positive integers : "-7" was found in the weight file']
-        assert_equals(return_error, expected_error)
+        self.assertEqual(return_error, expected_error)
 
     def test_26(self):
         '''
@@ -679,7 +680,7 @@ class Test_Merge_Utilities_Filter(MockerTestCase):
         ''' check for file error '''
         expected_error = [
             'there are 39 frames and/or SAS files in your data path : frame and/or SAS file number 45 was found in the weight file']
-        assert_equals(return_error, expected_error)
+        self.assertEqual(return_error, expected_error)
 
     def test_27(self):
         '''
@@ -698,7 +699,7 @@ class Test_Merge_Utilities_Filter(MockerTestCase):
         ''' check for file error '''
         expected_error = [
             'redundant SAS file number "19" found in the weight file']
-        assert_equals(return_error, expected_error)
+        self.assertEqual(return_error, expected_error)
 
     def test_28(self):
         '''
@@ -717,7 +718,7 @@ class Test_Merge_Utilities_Filter(MockerTestCase):
         ''' check for file error '''
         expected_error = [
             'encountered an unknown error reading weight_file: ' + self.local_value]
-        assert_equals(return_error, expected_error)
+        self.assertEqual(return_error, expected_error)
 
     def test_29(self):
         '''
@@ -735,7 +736,7 @@ class Test_Merge_Utilities_Filter(MockerTestCase):
         ''' check for file error '''
         expected_error = [
             'the sampling frequency needs to be a positive number : you entered "'+self.local_value+'"']
-        assert_equals(return_error, expected_error)
+        self.assertEqual(return_error, expected_error)
 
     def test_30(self):
         '''
@@ -753,7 +754,7 @@ class Test_Merge_Utilities_Filter(MockerTestCase):
         ''' check for file error '''
         expected_error = [
             'the sampling frequency needs to be smaller than the number of frames and/or SAS files in your data path : you entered "'+self.local_value+'"']
-        assert_equals(return_error, expected_error)
+        self.assertEqual(return_error, expected_error)
 
 
     def test_31(self):
@@ -772,25 +773,25 @@ class Test_Merge_Utilities_Filter(MockerTestCase):
         ''' check for file error '''
         expected_error = [
             'encountered an unknown error reading the sampling frequency : '+ self.local_value]
-        assert_equals(return_error, expected_error)
+        self.assertEqual(return_error, expected_error)
 
 
     def test_32(self):
         '''
-        test if runname has incorrect character
+        test if run_name has incorrect character
         '''
-        self.runname = 'run_&'
+        self.run_name = 'run_&'
         return_error = gui_mimic_merge_utilities.run_module(
             self, test_filter=True)
 
         ''' check for value error '''
         expected_error = ['file or path : run_& has incorrect character : &']
-        assert_equals(return_error, expected_error)
+        self.assertEqual(return_error, expected_error)
 
 
     def tearDown(self):
-        if os.path.exists(self.runname):
-            shutil.rmtree(self.runname)
+        if os.path.exists(self.run_name):
+            shutil.rmtree(self.run_name)
 
 if __name__ == '__main__':
-    main()
+    unittest.main()

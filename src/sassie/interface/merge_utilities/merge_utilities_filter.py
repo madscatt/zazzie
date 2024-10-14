@@ -17,11 +17,10 @@
 import os,sys,locale,string,glob
 import sasmol.system as system
 import sassie.simulate.constraints.constraints as constraints
-#import input_filter
 import sassie.interface.input_filter as input_filter
 
 def check_merge_utilities(variables,**kwargs):
-    runname             = variables['runname'][0]
+    run_name             = variables['run_name'][0]
     pdb_file            = variables['pdb_file'][0]
     merge_option        = variables['merge_option'][0]
     number_of_runs      = variables['number_of_runs'][0]
@@ -33,9 +32,14 @@ def check_merge_utilities(variables,**kwargs):
     output_filename     = variables['output_filename'][0]
 
     error=[]
-    error = input_filter.check_name(runname)
+    error = input_filter.check_name(run_name)
     if(error!=[]):
         return error
+
+
+    ## Debugging: Print the type and value of merge_option
+    print("merge_option type:", type(merge_option))
+    print("merge_option value:", merge_option)
 
     ## @NOTE to ZHL: do I really need to do the following check for options/types?
     if merge_option not in [0,1,2]:
