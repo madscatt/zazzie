@@ -159,7 +159,25 @@ class Test_Merge_Utilities(unittest.TestCase):
        gui_mimic_merge_utilities.test_variables(self, paths)
 
 
-    def assert_list_almost_equal(self, a, b, places=5):
+
+    def assert_list_almost_equal(self, list1, list2, precision):
+        self.assertTrue(numpy.allclose(list1, list2, atol=10**-precision))
+
+    def assert_list_almost_equal(self, list1, list2, precision):
+        if not numpy.allclose(list1, list2, atol=10**-precision):
+            diff = numpy.abs(numpy.array(list1) - numpy.array(list2))
+            max_diff = numpy.max(diff)
+            print(f"Debug: Differences found. Max difference: {max_diff}")
+            print(f"List1: {list1}")
+            print(f"List2: {list2}")
+            print(f"Differences: {diff}")
+            raise AssertionError(f"Lists are not almost equal within {precision} places. "
+                                 f"Max difference: {max_diff}. "
+                                 f"List1: {list1}. "
+                                 f"List2: {list2}. "
+                                 f"Differences: {diff}")
+
+    def old_assert_list_almost_equal(self, a, b, places=5):
         if (len(a) != len(b)):
             raise TypeError
         else:
@@ -189,6 +207,27 @@ class Test_Merge_Utilities(unittest.TestCase):
             if not self.check_dir_trees_equal(new_dir1, new_dir2):
                 return False
         return True
+
+    def old_write_differences_to_file(self, result_coor, correct_coor, filename, precision=None):
+        with open(filename, 'w') as f:
+            f.write(f"{'Index':<10}{'Result_Coor':<20}{'Correct_Coor':<20}{'Difference':<20}\n")
+            f.write("="*70 + "\n")
+            for i, (res_row, cor_row) in enumerate(zip(result_coor, correct_coor)):
+                for j, (res, cor) in enumerate(zip(res_row, cor_row)):
+                    diff = abs(res - cor)
+                    if precision is None or diff > 10**-precision:
+                        f.write(f"{i},{j:<10}{str(res):<20}{str(cor):<20}{str(diff):<20}\n")
+
+    def write_differences_to_file(self, result_coor, correct_coor, filename, precision=None):
+        with open(filename, 'w') as f:
+            f.write(f"{'Index':<10}{'Result_Coor':<20}{'Correct_Coor':<20}{'Difference':<20}\n")
+            f.write("="*70 + "\n")
+            for i, (res_row, cor_row) in enumerate(zip(result_coor, correct_coor)):
+                for j, (res, cor) in enumerate(zip(res_row, cor_row)):
+                    diff = abs(res - cor)
+                    if precision is None or numpy.any(diff > 10**-precision):
+                        f.write(f"{i},{j:<10}{str(res):<20}{str(cor):<20}{str(diff):<20}\n")
+
 
     def test_1(self):
         '''
@@ -243,8 +282,14 @@ class Test_Merge_Utilities(unittest.TestCase):
         correct_molecule.read_dcd(correct_outfile)
         correct_coor = correct_molecule.coor()
 
-        self.assert_list_almost_equal(
-            correct_coor, result_coor, self.precision)
+        # Write all differences to a file
+        self.write_differences_to_file(result_coor, correct_coor, 'coordinate_differences.txt')
+
+        # Write differences violating precision to a file
+        self.write_differences_to_file(result_coor, correct_coor, 'prec_differences.txt', self.precision)
+
+        self.assert_list_almost_equal(correct_coor, result_coor, self.precision)
+
 
     def test_3(self):
         '''
