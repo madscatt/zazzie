@@ -306,37 +306,42 @@ def get_match_point(other_self):
     pgui('results written to output file: %s \n' %
          (mcavars.multi_component_analysis_path+mvars.output_file_name))
     pgui('-------------------------------\n')
-    mcavars.outfile.write('--------------------------------\n')
+    mcavars.outfile.write('#--------------------------------\n')
     pgui('Final Results\n')
-    mcavars.outfile.write('Final Results\n')
+    mcavars.outfile.write('#Final Results\n')
     pgui('number of points fit: ' + str(mvars.number_of_contrast_points) + '\n')
-    mcavars.outfile.write('number of points fit: ' +
+    mcavars.outfile.write('#number of points fit: ' +
                           str(mvars.number_of_contrast_points) + '\n')
     if (mvars.initial_match_point_guess_flag == False):
         pgui('initial match point guess from polynomial fit: ' +
              str(round(match_point_guess, 4)) + '\n')
-        mcavars.outfile.write('initial match point guess from polynomial fit: ' +
+        mcavars.outfile.write('#initial match point guess from polynomial fit: ' +
                               str(round(match_point_guess, 4)) + '\n')
     else:
         pgui('initial match point guess: ' +
              str(round(match_point_guess, 4)) + '\n')
-        mcavars.outfile.write('initial match point guess: ' +
+        mcavars.outfile.write('#initial match point guess: ' +
                               str(round(match_point_guess, 4)) + '\n')
     pgui('match point: ' + str(round(match_point, 4)) +
          ' +/- ' + str(round(match_point_error, 4)) + '\n')
-    mcavars.outfile.write('match point: ' + str(round(match_point, 4)) +
+    mcavars.outfile.write('#match point: ' + str(round(match_point, 4)) +
                           ' +/- ' + str(round(match_point_error, 4)) + '\n')
-# TODO:  check for reduced chi-squared = -1 and print out N/A message instead of value; could occur if user only has 2 contrast points, i.e., H2O and D2O; this is not typical for a contrast variation study and the polynomial fit might fail, so user would want to enter an initial match point guess
-    mcavars.outfile.write('reduced chi-squared for linear fit: ' +
-                          str(round(line_fit_reduced_chi_squared, 4)) + '\n')
+
+# check for reduced chi-squared = -1 and print out N/A message instead of value; could occur if user only has 2 contrast points, i.e., H2O and D2O; this is not typical for a contrast variation study and the polynomial fit might fail, so user would want to enter an initial match point guess
+
+    if (line_fit_reduced_chi_squared >= 0):
+        mcavars.outfile.write('#reduced chi-squared for linear fit: ' +
+                              str(round(line_fit_reduced_chi_squared, 4)) + '\n')
+    else:
+        mcavars.outfile.write(
+            '#reduced chi-squared for linear fit: N/A (number of contrast points = number of unknowns for the linear fit)\n')
+
     mcavars.outfile.write(
-        'fraction_d2o  sqrt[I(0)/c]  sqrt[I(0)/c]_error  sqrt[I(0)/c]_calc  sqrt[I(0)/c]-sqrt[I(0)/c]_calc\n')
+        '#fraction_d2o  sqrt[I(0)/c]  sqrt[I(0)/c]_error  sqrt[I(0)/c]_calc  sqrt[I(0)/c]-sqrt[I(0)/c]_calc\n')
     for i in range(mvars.number_of_contrast_points):
         mcavars.outfile.write('%9.4f\t%9.4f\t%9.4f\t%9.4f\t\t%9.4f\n' % (
             mvars.fraction_d2o[i], square_root_izero[i], square_root_izero_error[i], square_root_izero_calculated[i], diff[i]))
     mcavars.outfile.close()
-
-# TODO: plot sqrt[I(0)/c] with errorbars and sqrt[I(0)/c]_calc vs fraction D2O and the residuals, i.e., diff = sqrt[I(0)/c]-sqrt[I(0)/c]_calc, with residuals on a separate plot.  The values will be read from mcavars.outfile.
 
     save_data_to_plot_as_json(other_self, square_root_izero, square_root_izero_error,
                               square_root_izero_calculated, diff, match_point, match_point_error)

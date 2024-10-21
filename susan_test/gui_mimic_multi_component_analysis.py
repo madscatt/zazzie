@@ -37,12 +37,12 @@ import os
 import shutil
 import time
 
-# import sassie.contrast.multi_component_analysis.multi_component_analysis as multi_component_analysis
-# import sassie.interface.input_filter as input_filter
-# import sassie.interface.multi_component_analysis.multi_component_analysis_filter as multi_component_analysis_filter
-import multi_component_analysis as multi_component_analysis
-import input_filter as input_filter
-import multi_component_analysis_filter as multi_component_analysis_filter
+import sassie.contrast.multi_component_analysis.multi_component_analysis as multi_component_analysis
+import sassie.interface.input_filter as input_filter
+import sassie.interface.multi_component_analysis.multi_component_analysis_filter as multi_component_analysis_filter
+# import multi_component_analysis as multi_component_analysis
+# import input_filter as input_filter
+# import multi_component_analysis_filter as multi_component_analysis_filter
 import multiprocessing
 
 
@@ -69,14 +69,14 @@ def user_variables(self, **kwargs):
     self.decomposition_flag = False
     self.stoichiometry_flag = False
 
-#    self.match_point_flag = True
+    self.match_point_flag = True
 #    self.stuhrmann_parallel_axis_flag = True
 #    self.stoichiometry_flag = True
-    self.decomposition_flag = True
+#    self.decomposition_flag = True
 
     # INPUT VARIABLES FOR ALL METHODS
 
-    self.run_name = "run_0"
+    self.run_name = "run_1"
     self.output_file_name = "general_output_file.out"
 
 #    self.read_from_contrast_calculator_output_file = True

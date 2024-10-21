@@ -126,8 +126,25 @@ def type_check_and_convert(svariables):
         if svariables[key][1] == "string":
             variables[key] = svariables[key]
 
+        #elif svariables[key][1] == "boolean":
+        #    variables[key] = svariables[key]
+
         elif svariables[key][1] == "boolean":
-            variables[key] = svariables[key]
+            value = svariables[key][0]
+            if isinstance(value, bool):
+                variables[key] = (value, "boolean")
+            else:
+                value = value.lower()
+                if value == 'true':
+                    variables[key] = (True, "boolean")
+                elif value == 'false':
+                    variables[key] = (False, "boolean")
+                else:
+                    error.append(
+                        key
+                        + " is not a valid boolean: "
+                        + str(svariables[key][0])
+                    )
 
         elif svariables[key][1] == "float":
             try:
